@@ -67,3 +67,20 @@ The two elements for ComPDFKit PDF SDK:
 ## 1.3 License
 
 ComPDFKit PDF SDK is a commercial SDK, which requires a license to grant developer permission to release their apps. Each license is only valid for one application ID in development mode. Other flexible licensing options are also supported, please contact [our marketing team](mailto:support@compdf.com) to know more.  However, any documents, sample code, or source code distribution from the released package of ComPDFKit PDF SDK to any third party is prohibited.
+
+# 2 Get Started
+
+It is easy to embed  ComPDFKit PDF SDK in your Android application with a few lines of Java code. Takes just a few minutes and gets started. 
+
+The following sections introduce the structure of the installation package, how to run a demo, and how to make an Android app in Java with ComPDFKit PDF SDK.
+
+## 2.1 Requirements
+
+ComPDFKit PDF SDK is supported on Android devices running API level 19 or newer and targeting the latest stable Android version 4.4 or higher. Furthermore, ComPDFKit PDF SDK requires apps to enable Java 8 language features to build.
+
+- Android Studio 3.2 or newer (support AndroidX).
+- Project specifications.
+  - A `minSdkVersion` of `19` or higher.
+  - A `compileSdkVersion` of `30` or higher.
+  - A `targetSdkVersion` of `30` or higher.
+  - Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
