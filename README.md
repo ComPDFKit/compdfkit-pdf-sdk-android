@@ -84,3 +84,20 @@ ComPDFKit PDF SDK is supported on Android devices running API level 19 or newer 
   - A `compileSdkVersion` of `30` or higher.
   - A `targetSdkVersion` of `30` or higher.
   - Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
+
+## 2.2 Android Package Structure
+
+The package of ComPDFKit PDF SDK for Android includes the following files as shown in Figure 2-1:
+
+- **libs** - A folder containing **ComPDFKit.aar**, **ComPDFKit-UI.aar**, and **ComPDFKit-Utils.aar**. **ComPDFKit.aar** is PDF Core API. **ComPDFKit-UI.aar** is PDF View. **ComPDFKit-Utils.aar** includes UI extensions component based on the fundamental layout classes: `ReaderFragment` or `ReaderActivity`.
+- **PDFViewer** - A folder containing Android sample projects.
+- **api_reference_android** - API reference.
+- **developer_guide_android.pdf** - Developer guide.
+- **release_notes.txt** - Release information.
+- **legal.txt** - Legal and copyright information.
+
+![Alt text](https://github.com/ComPDFKit/PDF-SDK-Android/blob/main/image-android/2.2.png)
+
+<p align="center">
+Figure 2-1
+</p>
