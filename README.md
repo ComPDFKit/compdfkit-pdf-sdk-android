@@ -101,3 +101,7 @@ The package of ComPDFKit PDF SDK for Android includes the following files as sho
 <p align="center">
 Figure 2-1
 </p>
+
+## 2.3 How to Run a Demo 
+
+ComPDFKit PDF SDK for Android provides one demo in Java for developers to learn how to call the SDK on Android. You can find them in the ***"PDFViewer"*** folder. In this guide, it takes the "Java" demo as an example to show how to run it in Android.
