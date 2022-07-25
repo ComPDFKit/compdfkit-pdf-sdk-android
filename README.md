@@ -105,3 +105,8 @@ Figure 2-1
 ## 2.3 How to Run a Demo 
 
 ComPDFKit PDF SDK for Android provides one demo in Java for developers to learn how to call the SDK on Android. You can find them in the ***"PDFViewer"*** folder. In this guide, it takes the "Java" demo as an example to show how to run it in Android.
+
+1. Import the ***"PDFViewer"*** project on Android Studio.
+2. In the toolbar, select ***"PDFViewer"*** from the run configurations drop-down menu.
+3. From the target device drop-down menu, select the device that you want to run ***"ComPDFKit_Demo"*** on.
+4. Click ***"Run"***.
