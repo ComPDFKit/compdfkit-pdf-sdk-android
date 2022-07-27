@@ -110,3 +110,7 @@ ComPDFKit PDF SDK for Android provides one demo in Java for developers to learn 
 2. In the toolbar, select ***"PDFViewer"*** from the run configurations drop-down menu.
 3. From the target device drop-down menu, select the device that you want to run ***"ComPDFKit_Demo"*** on.
 4. Click ***"Run"***.
+
+If you don't have any devices configured, then you need to either connect a device via USB or create an AVD to use the Android Emulator.
+
+![Alt text](https://github.com/ComPDFKit/PDF-SDK-Android/blob/main/image-android/2.3.png)
