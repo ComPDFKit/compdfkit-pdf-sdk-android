@@ -114,3 +114,5 @@ ComPDFKit PDF SDK for Android provides one demo in Java for developers to learn 
 If you don't have any devices configured, then you need to either connect a device via USB or create an AVD to use the Android Emulator.
 
 ![Alt text](https://github.com/ComPDFKit/PDF-SDK-Android/blob/main/image-android/2.3.png)
+
+**Note:** *This is a demo project, presenting completed ComPDFKit PDF SDK functions. The functions might be different based on the license you have purchased. Please check that the functions you choose work fine in this demo project.*
