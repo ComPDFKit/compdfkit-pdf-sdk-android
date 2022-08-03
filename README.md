@@ -116,3 +116,7 @@ If you don't have any devices configured, then you need to either connect a devi
 ![Alt text](https://github.com/ComPDFKit/PDF-SDK-Android/blob/main/image-android/2.3.png)
 
 **Note:** *This is a demo project, presenting completed ComPDFKit PDF SDK functions. The functions might be different based on the license you have purchased. Please check that the functions you choose work fine in this demo project.*
+
+## 2.4 How to Make an Android App in Java With ComPDFKit PDF SDK
+
+This section will help you to quickly get started with ComPDFKit PDF SDK to make an Android app in Java with step-by-step instructions.
