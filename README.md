@@ -119,4 +119,29 @@ If you don't have any devices configured, then you need to either connect a devi
 
 ## 2.4 How to Make an Android App in Java With ComPDFKit PDF SDK
 
-This section will help you to quickly get started with ComPDFKit PDF SDK to make an Android app in Java with step-by-step instructions.
+This section will help you to quickly get started with ComPDFKit PDF SDK to make an Android app in Java with step-by-step instructions, which includes the following steps:
+
+1. Use Android Studio to create a Phone & Tablet project.
+2. Copy ***"ComPDFKit.aar"*** and ***"ComPDFKit-UI.aar"*** to the ***"libs"*** directory of the app.
+3. Add the following code into the app’s build.gradle file:
+```
+android{
+	repositories {
+        flatDir {
+        /* Folder path where aar is located */
+            dirs 'libs'  
+        }
+	}
+	compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+	...
+}
+dependencies {
+	...
+	/*ComPDFKit SDK*/
+	implementation(name: 'ComPDFKit', ext: 'aar')
+	implementation(name: 'ComPDFKit-UI', ext: 'aar')
+}
+```
