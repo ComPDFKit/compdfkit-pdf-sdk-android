@@ -124,6 +124,7 @@ This section will help you to quickly get started with ComPDFKit PDF SDK to make
 1. Use Android Studio to create a Phone & Tablet project.
 2. Copy ***"ComPDFKit.aar"*** and ***"ComPDFKit-UI.aar"*** to the ***"libs"*** directory of the app.
 3. Add the following code into the app’s build.gradle file:
+
 ```
 android{
 	repositories {
@@ -147,3 +148,14 @@ dependencies {
 ```
 
 4. Include ComPDFKit PDF SDK for Android as a dependency in the project. Inside the app’s build.gradle, add ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"*** and the related support libraries to the dependencies. 
+
+```
+dependencies {
+    ...
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+	
+    implementation 'androidx.documentfile:documentfile:1.0.1'
+}
+```
