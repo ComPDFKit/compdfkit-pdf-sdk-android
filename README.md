@@ -159,3 +159,12 @@ dependencies {
     implementation 'androidx.documentfile:documentfile:1.0.1'
 }
 ```
+
+5. Apply for read and write permissions in AndroidManifest.xml:
+
+```
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+```
+
+**Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permission to external storage at runtime.*
