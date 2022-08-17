@@ -168,3 +168,14 @@ dependencies {
 ```
 
 **Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permission to external storage at runtime.*
+
+6. Add this license in the AndroidManifest.xml of the main module:
+
+```
+<meta-data
+     android:name="compdfkit_license"
+     android:value="{your ComPDFKit license}" />
+ <meta-data
+     android:name="compdfkit_message"
+     android:value="{your ComPDFKit message}" /> />
+```
