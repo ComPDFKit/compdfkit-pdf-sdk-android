@@ -179,3 +179,5 @@ dependencies {
      android:name="compdfkit_message"
      android:value="{your ComPDFKit message}" /> />
 ```
+
+7. Copy a PDF document into the assets directory of your Android project — for example, to **src/main/assets/Quick Start Guide.pdf**.
