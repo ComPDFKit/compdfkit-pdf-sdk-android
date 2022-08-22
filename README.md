@@ -181,3 +181,20 @@ dependencies {
 ```
 
 7. Copy a PDF document into the assets directory of your Android project — for example, to **src/main/assets/Quick Start Guide.pdf**.
+
+8. Open the document. This is a time-consuming process, so it needs to be executed in a sub-thread. After the document is opened successfully, the UI that renders the PDF is initiated:
+
+```
+CPDFDocument document = new CPDFDocument(context);
+//Open document.
+CPDFDocument.PDFDocumentError error = document.open(pdfUri);
+if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorPassword) {
+  //The document is encrypted and requires a password to open.
+  error = document.open(pdfUri, "password");
+}
+if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess) {
+  //The document is opened successfully and data can be parsed and manipulated.
+} else {
+  //The PDF file failed to open. You can refer to the API file for specific error 		   messages.
+}
+```
