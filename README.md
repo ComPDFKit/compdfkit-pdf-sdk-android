@@ -198,3 +198,12 @@ if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess) {
   //The PDF file failed to open. You can refer to the API file for specific error 		   messages.
 }
 ```
+
+9. Create a `CPDFReaderView` in layout.xml to display the contents of the PDF document or create a `CPDFReaderView` directly in the code:
+
+```
+<com.compdfkit.ui.reader.CPDFReaderView
+     android:id="@+id/readerview"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent" />
+```
