@@ -215,3 +215,9 @@ readerView = findViewById(R.id.readerview);
 // Code to create CPDFReaderView
 //readerView = new CPDFReaderView(context);
 ```
+
+10. Set the basic properties of `CPDFReaderView`:
+```
+//Set the PDF document type to CPDFReaderView
+readerView.setPDFDocument(document);
+```
