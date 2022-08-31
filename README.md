@@ -221,3 +221,5 @@ readerView = findViewById(R.id.readerview);
 //Set the PDF document type to CPDFReaderView
 readerView.setPDFDocument(document);
 ```
+
+## 2.5 How to Integrate ComPDFKit PDF SDK Using UI Extensions Component
