@@ -223,3 +223,5 @@ readerView.setPDFDocument(document);
 ```
 
 ## 2.5 How to Integrate ComPDFKit PDF SDK Using UI Extensions Component
+
+ComPDFKit PDF SDK for Android provides the source code of the UI Extensions Component that contains ready-to-use UI module implementations, which lets the developers have full control of styling the appearance as desired.
