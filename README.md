@@ -227,3 +227,5 @@ readerView.setPDFDocument(document);
 ComPDFKit PDF SDK for Android provides the source code of the UI Extensions Component that contains ready-to-use UI module implementations, which lets the developers have full control of styling the appearance as desired.
 
 1. Copy ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"*** and ***"ComPDFKit-Utils.aar"*** to the ***"libs"*** directory of the app.
+
+   Find **build.gradle** in the ***"ComPDFKit_Demo"*** module, and add the following configuration into build.gradle file:
