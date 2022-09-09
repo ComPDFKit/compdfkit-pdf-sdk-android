@@ -229,3 +229,27 @@ ComPDFKit PDF SDK for Android provides the source code of the UI Extensions Comp
 1. Copy ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"*** and ***"ComPDFKit-Utils.aar"*** to the ***"libs"*** directory of the app.
 
    Find **build.gradle** in the ***"ComPDFKit_Demo"*** module, and add the following configuration into build.gradle file:
+
+```
+android{
+	repositories {
+        flatDir {
+        /* Folder path where aar is located */
+            dirs '../AAR Directory folder/libs'  
+        }
+	}
+	compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+	...
+}
+dependencies {
+	...
+	/*ComPDFKit_demo_utils*/
+	implementation(name: 'ComPDFKit-Utils', ext: 'aar')
+  /*ComPDFKit SDK*/
+	implementation(name: 'ComPDFKit' ext: 'aar')
+	implementation(name: 'ComPDFKit-UI', ext: 'aar')
+}
+```
