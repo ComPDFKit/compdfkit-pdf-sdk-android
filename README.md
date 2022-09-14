@@ -253,3 +253,5 @@ dependencies {
 	implementation(name: 'ComPDFKit-UI', ext: 'aar')
 }
 ```
+
+2. Create an activity or fragment to implement `ReaderActivity` or `ReaderFragment`.
