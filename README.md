@@ -255,3 +255,13 @@ dependencies {
 ```
 
 2. Create an activity or fragment to implement `ReaderActivity` or `ReaderFragment`.
+
+```
+public class PDFReaderActivity extends ReaderActivity {
+  //Do something...
+}
+
+public class PDFReaderFragment extends ReaderFragment {
+  //Do something...
+}
+```
