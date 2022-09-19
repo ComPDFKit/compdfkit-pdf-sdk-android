@@ -265,3 +265,5 @@ public class PDFReaderFragment extends ReaderFragment {
   //Do something...
 }
 ```
+
+3. Configure Document Viewer.
