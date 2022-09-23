@@ -267,5 +267,3 @@ public class PDFReaderFragment extends ReaderFragment {
 ```
 
 3. Configure Document Viewer.
-
-`ReaderActivity` and `ReaderFragment` can be initialized using `ViewerConfig`, which can be created with a `ViewerConfig.Builder` object.
