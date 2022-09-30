@@ -269,3 +269,10 @@ public class PDFReaderFragment extends ReaderFragment {
 3. Configure Document Viewer.
 
 `ReaderActivity` and `ReaderFragment` can be initialized using `ViewerConfig`, which can be created with a `ViewerConfig.Builder` object.
+
+```Java
+// Customize settings in ViewerConfig
+static ViewerConfig getDefaultViewerConfig() {
+    ViewerConfig.Builder builder = new ViewerConfig.Builder();
+    builder.showSDKIndicator(true)
+```
