@@ -230,7 +230,7 @@ ComPDFKit PDF SDK for Android provides the source code of the UI Extensions Comp
 
    Find **build.gradle** in the ***"ComPDFKit_Demo"*** module, and add the following configuration into build.gradle file:
 
-```
+```groovy
 android{
 	repositories {
         flatDir {
@@ -256,7 +256,7 @@ dependencies {
 
 2. Create an activity or fragment to implement `ReaderActivity` or `ReaderFragment`.
 
-```
+```Java
 public class PDFReaderActivity extends ReaderActivity {
   //Do something...
 }
