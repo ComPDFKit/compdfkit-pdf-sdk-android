@@ -275,4 +275,29 @@ public class PDFReaderFragment extends ReaderFragment {
 static ViewerConfig getDefaultViewerConfig() {
     ViewerConfig.Builder builder = new ViewerConfig.Builder();
     builder.showSDKIndicator(true)
+            .fullscreenModeEnabled(true)
+            .showAddBookmarkOption(true)
+            .showAnnotationToolbarOption(true)
+            .showCleanSignatureOption(true)
+            .showDeleteAllAnnotOption(true)
+            .showDocumentInfoOption(true)
+            .showEditPagesOption(true)
+            .showFormEditor(true)
+            .showHighlightLinkOption(true)
+            .showImportAndExportAnnotOption(true)
+            .showMoreSettingsOption(true)
+            .showPageNumberIndicator(true)
+            .showPageShareOption(true)
+            .showPageTurningToolOption(true)
+            .showPreviousPageIndicator(true)
+            .showSearchToolView(true)
+            .showThemeOption(true)
+            .showTopToolBar(true)
+            .showUserBookmarksListOption(true)
+            .showWatermarkToolOption(true)
+            .showCompress(true)
+            .showRemoveAllFormAnnotationOption(true)
+            .showGetAllAnnotationOption(true);
+    return builder.build();
+}
 ```
