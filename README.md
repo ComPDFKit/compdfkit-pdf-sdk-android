@@ -217,7 +217,7 @@ readerView = findViewById(R.id.readerview);
 ```
 
 10. Set the basic properties of `CPDFReaderView`:
-```
+```Java
 //Set the PDF document type to CPDFReaderView
 readerView.setPDFDocument(document);
 ```
