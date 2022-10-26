@@ -301,3 +301,5 @@ static ViewerConfig getDefaultViewerConfig() {
     return builder.build();
 }
 ```
+
+4. Include ComPDFKit PDF SDK for Android as a dependency in the project. Inside the app’s build.gradle, add ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"*** and the related support libraries to the dependencies. 
