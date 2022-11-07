@@ -125,7 +125,7 @@ This section will help you to quickly get started with ComPDFKit PDF SDK to make
 2. Copy ***"ComPDFKit.aar"*** and ***"ComPDFKit-UI.aar"*** to the ***"libs"*** directory of the app.
 3. Add the following code into the app’s build.gradle file:
 
-```
+```groovy
 android{
 	repositories {
         flatDir {
