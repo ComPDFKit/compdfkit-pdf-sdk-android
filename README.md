@@ -316,4 +316,16 @@ public static void open(Context context, String filePath, ViewerConfig viewerCon
         e.printStackTrace();
     }
 }
+
+public static void open(Context context, Uri absolutePathUri, ViewerConfig viewerConfig) {
+    try {
+        Intent intent = new Intent(context, PDFReaderActivity.class);
+        intent.putExtra(FILE_PATH_URI, absolutePathUri);
+        intent.putExtra(VIEWER_CONFIG, viewerConfig);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 ```
