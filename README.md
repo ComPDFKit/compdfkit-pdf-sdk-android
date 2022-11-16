@@ -208,7 +208,7 @@ if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess) {
      android:layout_height="match_parent" />
 ```
 
-```
+```Java
 CPDFReaderView readerView;
 // Get CPDFReaderView from xml
 readerView = findViewById(R.id.readerview);
