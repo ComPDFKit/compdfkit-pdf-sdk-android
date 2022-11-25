@@ -201,7 +201,7 @@ if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess) {
 
 9. Create a `CPDFReaderView` in layout.xml to display the contents of the PDF document or create a `CPDFReaderView` directly in the code:
 
-```
+```xml
 <com.compdfkit.ui.reader.CPDFReaderView
      android:id="@+id/readerview"
      android:layout_width="match_parent"
