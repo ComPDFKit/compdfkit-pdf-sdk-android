@@ -303,3 +303,17 @@ static ViewerConfig getDefaultViewerConfig() {
 ```
 
 4. Start customizable activity.
+
+```
+public static void open(Context context, String filePath, ViewerConfig viewerConfig) {
+    try {
+        Intent intent = new Intent(context, PDFReaderActivity.class);
+        intent.putExtra(FILE_PATH, filePath);
+        intent.putExtra(VIEWER_CONFIG, viewerConfig);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+```
