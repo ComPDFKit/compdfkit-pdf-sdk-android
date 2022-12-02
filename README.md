@@ -304,7 +304,7 @@ static ViewerConfig getDefaultViewerConfig() {
 
 4. Start customizable activity.
 
-```
+```Java
 public static void open(Context context, String filePath, ViewerConfig viewerConfig) {
     try {
         Intent intent = new Intent(context, PDFReaderActivity.class);
