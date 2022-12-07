@@ -184,7 +184,7 @@ dependencies {
 
 8. Open the document. This is a time-consuming process, so it needs to be executed in a sub-thread. After the document is opened successfully, the UI that renders the PDF is initiated:
 
-```
+```Java
 CPDFDocument document = new CPDFDocument(context);
 //Open document.
 CPDFDocument.PDFDocumentError error = document.open(pdfUri);
