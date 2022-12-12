@@ -171,7 +171,7 @@ dependencies {
 
 6. Add this license in the AndroidManifest.xml of the main module:
 
-```
+```xml
 <meta-data
      android:name="compdfkit_license"
      android:value="{your ComPDFKit license}" />
