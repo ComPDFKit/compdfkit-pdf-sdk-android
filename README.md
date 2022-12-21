@@ -329,3 +329,4 @@ public static void open(Context context, Uri absolutePathUri, ViewerConfig viewe
     }
 }
 ```
+# 3 Support
