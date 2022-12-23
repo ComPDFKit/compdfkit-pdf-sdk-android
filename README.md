@@ -330,3 +330,5 @@ public static void open(Context context, Uri absolutePathUri, ViewerConfig viewe
 }
 ```
 # 3 Support
+
+## 3.1 Reporting Problems
