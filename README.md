@@ -332,3 +332,5 @@ public static void open(Context context, Uri absolutePathUri, ViewerConfig viewe
 # 3 Support
 
 ## 3.1 Reporting Problems
+
+Thank you for your interest in ComPDFKit PDF SDK, the only easy-to-use but powerful development solution to integrate high quality PDF rendering capabilities to your applications.
