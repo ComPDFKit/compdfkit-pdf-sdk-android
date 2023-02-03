@@ -336,3 +336,4 @@ public static void open(Context context, Uri absolutePathUri, ViewerConfig viewe
 Thank you for your interest in ComPDFKit PDF SDK, the only easy-to-use but powerful development solution to integrate high quality PDF rendering capabilities to your applications. If you encounter any technical questions or bug issues when using ComPDFKit PDF SDK for Android, please submit the problem report to the ComPDFKit team. More information as follows would help us to solve your problem:
 
 - ComPDFKit PDF SDK product and version.
+- Your operating system and IDE version.
