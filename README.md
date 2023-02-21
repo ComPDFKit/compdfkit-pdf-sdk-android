@@ -337,3 +337,20 @@ Thank you for your interest in ComPDFKit PDF SDK, the only easy-to-use but power
 
 - ComPDFKit PDF SDK product and version.
 - Your operating system and IDE version.
+- Detailed descriptions of the problem.
+- Any other related information, such as an error screenshot.
+
+## 3.2 Contact Information
+
+**Home Link:**
+
+[https://www.compdf.com](https://www.compdf.com)
+
+**Support & General Contact:**
+
+Email: support@compdf.com 
+
+
+
+Thanks,
+The ComPDFKit Team
