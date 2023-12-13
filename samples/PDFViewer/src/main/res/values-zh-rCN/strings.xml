@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    Setting Activity start -->
+    <string name="tools_settings">设置</string>
+    <string name="tools_global_setting">设置</string>
+    <string name="tools_highlight_links">高亮链接文字</string>
+    <string name="tools_highlight_form_fields">高亮表单域</string>
+    <string name="tools_file_author">文档作者</string>
+    <string name="tools_sdk_information">SDK 信息</string>
+    <string name="tools_versions">版本</string>
+    <string name="tools_company_information">公司信息</string>
+    <string name="tools_about_compdfkit">关于 ComPDFKit</string>
+    <string name="tools_contact_sales">联系销售</string>
+    <string name="tools_technical_support">技术支持</string>
+    <string name="tools_email_technical_support_title">ComPDFKit技术支持请求</string>
+    <string name="tools_privacy_policy">隐私协议</string>
+    <string name="tools_terms_of_service">服务条款</string>
+    <!--    Setting Activity end -->
+
+    <string name="tools_click_to_open_process">点击打开 &amp; 处理文档</string>
+    <string name="tools_features">功能</string>
+    <string name="tools_fun_viewer">查看器</string>
+    <string name="tools_fun_viewer_desc">高质量的渲染速度、丰富的阅读工具为您提供流畅的阅读体验。</string>
+    <string name="tools_fun_annotations">注释</string>
+    <string name="tools_fun_annotations_desc">在PDF上添加各种注释、标记。支持创建、删除、编辑，以及导入、导出和展平PDF注释。</string>
+    <string name="tools_fun_forms">表单</string>
+    <string name="tools_fun_forms_desc">创建、编辑和填写PDF表单，支持导入、导出和展平表单。</string>
+    <string name="tools_fun_signatures">签名</string>
+    <string name="tools_fun_signatures_desc">轻松用数字或电子签名签署PDF，可选择绘制、图片或输入签名方式，也可用数字ID安全签署。</string>
+    <string name="tools_fun_document_editor">文档编辑器</string>
+    <string name="tools_fun_document_editor_desc">添加、插入、替换、提取、倒序、移动、复制、粘贴、旋转、删除、裁剪、缩放PDF页面。</string>
+    <string name="tools_fun_content_editor">内容编辑器</string>
+    <string name="tools_fun_content_editor_desc">使用ComPDFKit内容编辑器编辑PDF文本和图像。您可以自由调整大小、位置、样式、字体等。</string>
+    <string name="tools_fun_security">安全</string>
+    <string name="tools_fun_security_desc">支持加密/解密文档、编辑文件权限、页眉和页脚、背景、贝茨码等。</string>
+    <string name="tools_fun_redaction">密文标记</string>
+    <string name="tools_fun_redaction_desc">使用密文标记功能删除敏感图像、文本和矢量图形等信息，一旦应用无法恢复被标记的数据。</string>
+    <string name="tools_fun_watermark">水印</string>
+    <string name="tools_fun_watermark_desc">创建、插入和删除文字或图像水印，品牌化公司文件阻止未经授权的使用。</string>
+    <string name="tools_fun_compare_documents">文档对比</string>
+    <string name="tools_fun_compare_documents_desc">允许通过内容对比和覆盖对比，对PDF文件和设计图纸进行比较。</string>
+    <string name="tools_fun_conversion">转档</string>
+    <string name="tools_fun_conversion_desc">支持PDF文件与Word、Excel、PPT、HTML、PDF/A、图片类、文本类等格式的相互转换。</string>
+    <string name="tools_fun_compress">压缩</string>
+    <string name="tools_fun_compress_desc">通过压缩来优化您的PDF文件，减小PDF文档大小，且无视觉质量损失。</string>
+    <string name="tools_fun_measurement">测量</string>
+    <string name="tools_fun_measurement_desc">测量距离、周长、面积、角度、直径、半径和体积等。支持调整测量比例和精度。</string>
+    <string name="tools_create_a_new_file">新建</string>
+
+    <string name="tools_add_watermark">添加水印</string>
+    <string name="tools_remove_watermark">移除水印</string>
+    <string name="tools_remove_watermark_info">确定删除水印？</string>
+
+    <string name="tools_compdfkit_sample_file_android">ComPDFKit_Android_示例文档.pdf</string>
+    <string name="tools_compdfkit_sample_file_viewer">PDF查看_ComPDFKit_示例文档.pdf</string>
+    <string name="tools_compdfkit_sample_file_annotations">PDF注释_ComPDFKit_示例文档.pdf</string>
+    <string name="tools_compdfkit_sample_file_forms">表单功能_ComPDFKit_示例文档.pdf</string>
+    <string name="tools_compdfkit_sample_file_signatures">签名_ComPDFKit_示例文档.pdf</string>
+    <string name="tools_compdfkit_sample_file_document_editor">文档编辑器_ComPDFKit_示例文档.pdf</string>
+    <string name="tools_compdfkit_sample_file_content_editor">内容编辑器_ComPDFKit_示例文档.pdf</string>
+    <string name="tools_compdfkit_sample_file_security">文档密码_compdfkit_ComPDFKit_PDF安全_示例文档.pdf</string>
+    <string name="tools_compdfkit_sample_file_watermark">水印_ComPDFKit_示例文档.pdf</string>
+
+</resources>

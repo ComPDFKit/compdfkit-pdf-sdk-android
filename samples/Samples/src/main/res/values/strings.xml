@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">Samples_ComPDFKit</string>
+    <string name="samples">Samples</string>
+
+    <string name="sample_header">Running %s sample&#8230;</string>
+    <string name="sample_footer">Done!</string>
+
+    <string name="interactive_forms_test_title">InteractiveForms</string>
+    <string name="interactive_forms_test_desc">This sample shows how to print form list information, set up interactive forms (including text, checkbox, radioButton, button, list, Combox, and sign forms, delete forms), and fill out form information</string>
+
+    <string name="pdf_page_test_title">PDFPage</string>
+    <string name="pdf_page_test_desc">This sample shows how to manipulate multiple pages of a pdf document, including inserting a blank page, inserting a PDF document page, splitting a page, merging a page, deleting a page, rotating a page, replacing a document page, and exporting a document page</string>
+
+    <string name="image_extract_test_title">ImageExtract</string>
+    <string name="image_extract_test_desc">This sample shows how to extract all the images of a PDF document</string>
+
+    <string name="text_extract_test_title">TextExtract</string>
+    <string name="text_extract_test_desc">This sample shows how to extract all the text of a PDF</string>
+
+    <string name="watermark_test_title">Watermark</string>
+    <string name="watermark_test_desc">This sample shows how to add watermarks, including text, image and tile watermarks, and delete watermarks</string>
+
+    <string name="background_test_title">Background</string>
+    <string name="background_test_desc">This sample shows how to add color and picture backs and delete backgrounds</string>
+
+    <string name="bookmark_test_title">Bookmark</string>
+    <string name="bookmark_test_desc">This sample shows how to create a new bookmark and implement a bookmark jump</string>
+
+    <string name="outline_test_title">Outline</string>
+    <string name="outline_test_desc">This sample shows how to create an outline and get existing outline information</string>
+
+    <string name="pdf_to_image_test_title">PDFToImage</string>
+    <string name="pdf_to_image_test_desc">This sample shows how to convert PDF to image</string>
+
+    <string name="text_search_test_title">TextSearch</string>
+    <string name="text_search_test_desc">This sample shows how to do a full document search and highlight for keywords</string>
+
+    <string name="annotation_test_title">Annotation</string>
+    <string name="annotation_test_desc">This sample shows how to print the annotation list information, set the annotations (including markup, note, ink, freetext, circle, square, line, stamp, and sound annotations), and delete the annotations</string>
+
+    <string name="header_footer_test_title">HeaderFooter</string>
+    <string name="header_footer_test_desc">This sample shows how to add and remove headers and footers</string>
+
+    <string name="document_test_title">DocumentInfo</string>
+    <string name="document_test_desc">This sample shows how to extract information about PDF documents, such as: author, date created</string>
+
+    <string name="bates_test_title">Bates</string>
+    <string name="bates_test_desc">This sample shows how to add and remove bates codes</string>
+
+    <string name="redact_test_title">PDFRedact</string>
+    <string name="redact_test_desc">This sample shows how to tag ciphertext and is a separate permissioned add-on that provides options to delete (not just overwrite or obscure) content within the PDF area. For a printed page, redaction involves removing or deleting certain areas of the printed page. For electronic documents that use formats such as PDF, redaction typically involves removing sensitive content from the document for safe distribution to courts, patent and government agencies, the media, customers, suppliers, or any other audience with restricted access to the content.</string>
+
+    <string name="encrypt_test_title">Encrypt</string>
+    <string name="encrypt_test_desc">This sample shows how to set user password and permission password, decrypt, set document permission</string>
+
+    <string name="pdf_a_test_title">PDFA</string>
+    <string name="pdf_a_test_desc">This sample shows how to convert PDF to PDFA1a and PDFA1b formats</string>
+
+    <string name="flatten_test_title">Flatten</string>
+    <string name="flatten_test_desc">This sample shows how to create a copy of Flattened</string>
+
+    <string name="annotation_import_export_test_title">AnnotationImportExport</string>
+    <string name="annotation_import_export_test_desc">This sample shows how to set up the export and import of annotations. The document from which the annotations are exported is an xfdf file</string>
+
+    <string name="digital_signature_title">DigitalSignature</string>
+    <string name="digital_signature_desc">This sample demonstrates the creation of digital certificates, the generation of digital signatures, the verification of digital certificates, the validation of digital signatures, the reading of digital signature information, certificate trust, and signature removal functionality.</string>
+
+    <string name="tools_allowed">Allowed</string>
+    <string name="tools_not_allowed">Not Allowed</string>
+
+    <string name="run">Run</string>
+    <string name="open_files">Open Files</string>
+    <string name="choose_a_file_to_open">Choose a file to open</string>
+</resources>

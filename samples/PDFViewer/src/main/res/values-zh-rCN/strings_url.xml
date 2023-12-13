@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tools_compdf_website">https://www.compdf.com/zh-cn</string>
+    <string name="tools_about_compdfkit_url">https://www.compdf.com/company/about</string>
+    <string name="tools_contact_sales_url">https://www.compdf.com/zh-cn/contact-sales</string>
+    <string name="tools_privacy_policy_url">https://www.compdf.com/zh-cn/privacy-policy/</string>
+    <string name="tools_terms_of_service_url">https://www.compdf.com/zh-cn/terms-of-service</string>
+
+
+    <string name="tools_compdf_security_url">https://www.compdf.com/pdf-sdk/security</string>
+    <string name="tools_compdf_compare_url">https://www.compdf.com/pdf-sdk/document-comparison</string>
+    <string name="tools_compdf_conversion_url">https://www.compdf.com/conversion</string>
+
+</resources>

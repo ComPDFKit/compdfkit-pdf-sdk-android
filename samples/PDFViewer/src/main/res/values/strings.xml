@@ -1,0 +1,69 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">ComPDFKit</string>
+
+    <!--    Setting Activity start -->
+    <string name="home_title">ComPDFKit Demo for Android</string>
+    <string name="tools_settings">Settings</string>
+    <string name="tools_global_setting">Settings</string>
+    <string name="tools_highlight_links">Highlight Links</string>
+    <string name="tools_highlight_form_fields">Highlight Form Fields</string>
+    <string name="tools_file_author">File Author</string>
+    <string name="tools_compdfkit_author" translatable="false">ComPDFKit</string>
+    <string name="tools_sdk_information">SDK Information</string>
+    <string name="tools_versions">Versions</string>
+    <string name="tools_company_information">Company Information</string>
+    <string name="tools_about_compdfkit">About ComPDFKit</string>
+    <string name="tools_contact_sales">Contact Sales</string>
+    <string name="tools_technical_support">Technical Support</string>
+    <string name="tools_email_technical_support_title">Technical Support</string>
+    <string name="tools_copy_right" translatable="false">© 2014-2023 PDF Technologies, Inc. All Rights\nReserved.</string>
+    <string name="tools_privacy_policy">Privacy Policy</string>
+    <string name="tools_terms_of_service">Terms of Service</string>
+    <!--    Setting Activity end -->
+    <!--    Home start-->
+    <string name="tools_click_to_open_process">Click to Open &amp; Process</string>
+    <string name="tools_features">Features</string>
+    <string name="tools_fun_viewer">Viewer</string>
+    <string name="tools_fun_viewer_desc">High-quality rendering speed and rich reading tools support a smooth reading experience.</string>
+    <string name="tools_fun_annotations">Annotations</string>
+    <string name="tools_fun_annotations_desc">Add, edit, delete, export, import, and flatten various annotations and markups on PDFs.</string>
+    <string name="tools_fun_forms">Forms</string>
+    <string name="tools_fun_forms_desc">Create, edit, and fill in PDF forms, with support for importing, exporting, and flattening forms.</string>
+    <string name="tools_fun_signatures">Signatures</string>
+    <string name="tools_fun_signatures_desc">Easily sign PDFs with drawn, images, typed signatures, or a digital ID.</string>
+    <string name="tools_fun_document_editor">Document Editor</string>
+    <string name="tools_fun_document_editor_desc">Add, insert, replace, extract, reverse, move, copy, paste, rotate, delete, crop, and zoom PDF pages.</string>
+    <string name="tools_fun_content_editor">Content Editor</string>
+    <string name="tools_fun_content_editor_desc">Edit the PDF text and images like edit in Word. You can freely adjust the size, position, style, font, etc.</string>
+    <string name="tools_fun_security">Security</string>
+    <string name="tools_fun_security_desc">Encrypt/decrypt PDFs, edit file permissions, headers and footers, backgrounds, Bates numbers, etc.</string>
+    <string name="tools_fun_redaction">Redaction</string>
+    <string name="tools_fun_redaction_desc">Use redaction to remove sensitive images, text, and vector graphics.</string>
+    <string name="tools_fun_watermark">Watermark</string>
+    <string name="tools_fun_watermark_desc">Create, insert, and remove text or image watermarks to brand the files.</string>
+    <string name="tools_fun_compare_documents">Compare Documents</string>
+    <string name="tools_fun_compare_documents_desc">Allow to compare PDF files and design drawings with content comparison and overlay comparison.</string>
+    <string name="tools_fun_conversion">Conversion</string>
+    <string name="tools_fun_conversion_desc">Support the mutual conversion between PDF files and Office, image types, text types, HTML, PDF/A, etc.</string>
+    <string name="tools_fun_compress">Compress</string>
+    <string name="tools_fun_compress_desc">Optimize and reduce PDF document size with no or minimum visual quality loss.</string>
+    <string name="tools_fun_measurement">Measurement</string>
+    <string name="tools_fun_measurement_desc">Measure the distance, perimeter, area, angle, diameter, radius, and volume measurement annotations.</string>
+    <string name="tools_create_a_new_file">Create a New File</string>
+    <!--    Home end-->
+
+    <string name="tools_add_watermark">Add Watermark</string>
+    <string name="tools_remove_watermark">Remove Watermark</string>
+    <string name="tools_remove_watermark_info">Are you sure to delete the watermarks？</string>
+
+    <string name="tools_compdfkit_sample_file_android">ComPDFKit_Sample_File_Android.pdf</string>
+    <string name="tools_compdfkit_sample_file_viewer">ComPDFKit_Viewer_Sample_File.pdf</string>
+    <string name="tools_compdfkit_sample_file_annotations">ComPDFKit_Annotations_Sample_File.pdf</string>
+    <string name="tools_compdfkit_sample_file_forms">ComPDFKit_Forms_Sample_File.pdf</string>
+    <string name="tools_compdfkit_sample_file_signatures">ComPDFKit_Signatures_Sample_File.pdf</string>
+    <string name="tools_compdfkit_sample_file_document_editor">ComPDFKit_Document_Editor_Sample_File.pdf</string>
+    <string name="tools_compdfkit_sample_file_content_editor">ComPDFKit_Content_Editor_Sample_File.pdf</string>
+    <string name="tools_compdfkit_sample_file_security">Password_compdfkit_ComPDFKit_Security_Sample_File.pdf</string>
+    <string name="tools_compdfkit_sample_file_watermark">ComPDFKit_Watermark_Sample_File.pdf</string>
+
+</resources>

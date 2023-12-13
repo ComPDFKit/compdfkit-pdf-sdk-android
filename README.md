@@ -1,153 +1,127 @@
-# 1 Overview
+# Introduction
 
-ComPDFKit, a software development kit (SDK), consists of PDF SDK and PDF Conversion SDK. With ComPDFKit, even developers with limited knowledge of PDF can quickly integrate professional PDF functions with just a few lines of code on multiple platforms. And we will introduce ComPDFKit PDF SDK for Android here.
+[ComPDFKit](https://www.compdf.com/) PDF SDK is a powerful PDF library for developers to add robust PDF functionality to their applications, which ships with simple-to-use Java APIs to offer document viewing, creation, searching, annotation, and editing. With this SDK, even developers with limited knowledge of PDF can quickly build a professional PDF viewer with just a few lines of code on the Android platform.
 
-ComPDFKit PDF SDK for Android is a powerful PDF library for developers to add robust PDF functionality to their applications, which ships with simple-to-use java APIs to offer document viewing, creation, searching, annotation, and editing.
+[ComPDFKit API](https://api.compdf.com/api/pricing) allows you to get 1000 files processing monthly now! Just [sign up](https://api.compdf.com/signup) for a free trial and enjoy comprehensive PDF functions.
 
-## 1.1 ComPDFKit PDF SDK
 
-ComPDFKit PDF SDK consists of two elements as shown in the following picture.
+# Related
 
-![Alt text](https://github.com/ComPDFKit/PDF-SDK-Android/blob/main/image-android/ComPDFKit.png)
+- [ComPDFKit PDF Library for iOS](https://github.com/ComPDFKit/PDF-SDK-iOS)
 
-The two elements for ComPDFKit PDF SDK:
+- ComPDFKit PDF SDK - [Flutter Library](https://pub.dev/packages/compdfkit_flutter)
 
-- **PDF Core API**
+- ComPDFKit PDF SDK - [React Native Library](https://www.compdf.com/react-native)
 
-  A parser for PDF documents (also known as PDF Data layer) doesn’t include any UI components. If you just need to render a PDF document without displaying any content inside the PDF, you can just integrate this into your application.
+- [How to Build an Android PDF Viewer or Editor in Kotlin](https://www.compdf.com/blog/build-an-android-pdf-viewer-or-editor-in-kotlin)
 
-- **PDF View**
 
-  The rendering library for PDF documents (also known as the PDF UI layer) relies on **ComPDFKit-UI.aar**. It is a visual operation logic package for page rendering, annotation operations, and form operations. You can customize page rendering and operations based on the file library.
+# Get Started
 
-## 1.2 Key Features
+[ComPDFKit SDK for Android](https://www.compdf.com/android) is a [powerful PDF SDK](https://www.compdf.com/pdf-sdk) that is easy to be embedded in any Android application with a few lines of Java code. The following sections introduce the requirements, the structure of the installation package, and how to make an Android PDF Reader in Java with ComPDFKit PDF SDK. Now, start to take a few minutes to build your Android PDF Viewer.
 
-**Viewer** component offers: 
 
-- Standard page display modes, including Scrolling, Double page, Crop mode, and Cover mode.
-- Navigation with thumbnails, outlines, and bookmarks.
-- Text search & selection.
-- Zoom in and out.
-- Switch between different themes, including Dark mode, Sepia mode, Reseda mode, and Custom color mode.
-- Text reflow.
+## Requirements
 
-**Annotations** component offers:
-
-- Create, edit and remove annotations, including Notes, Link, Freetext, Line, Square, Circle, Highlight, Underline, Squiggly, Strikeout, Ink, and Stamp.
-- Support for annotation appearances.
-- Import and export annotations to/from XFDF.
-- Support for annotation flattening.
-
-**Forms** component offers:
-
-- Create, edit and remove form fields, including Push Button, Check Box, Radio Button, Text Field, Combo Box, List Box, and Signature.
-- Fill PDF Forms.
-- Support for PDF form flattening.
-
-**Document editor** component offers:
-
-- PDF manipulation, including Split pages, Extract pages, and Merge pages.
-- Page edit, including Delete pages, Insert pages, Move pages, Rotate pages, Replace pages, and Exchange pages.
-- Access document information.
-- Extract images.
-
-**Security** component offers:
-
-- Encrypt and decrypt PDFs, including Permission setting and Password protected.
-- Create, edit, and remove watermark.
-- Redact content including images, text, and vector graphics.
-- Create, edit, and remove header & footer, including dates, page numbers, document name, author name, and chapter name.
-- Create, edit, and remove bates numbers.
-- Create, edit, and remove background that can be a solid color or an image.
-
-**Conversion** component offers:
-
-- PDF to PDF/A.
-
-## 1.3 License
-
-ComPDFKit PDF SDK is a commercial SDK, which requires a license to grant developer permission to release their apps. Each license is only valid for one application ID in development mode. Other flexible licensing options are also supported, please contact [our marketing team](mailto:support@compdf.com) to know more.  However, any documents, sample code, or source code distribution from the released package of ComPDFKit PDF SDK to any third party is prohibited.
-
-# 2 Get Started
-
-It is easy to embed  ComPDFKit PDF SDK in your Android application with a few lines of Java code. Takes just a few minutes and gets started. 
-
-The following sections introduce the structure of the installation package, how to run a demo, and how to make an Android app in Java with ComPDFKit PDF SDK.
-
-## 2.1 Requirements
-
-ComPDFKit PDF SDK is supported on Android devices running API level 19 or newer and targeting the latest stable Android version 4.4 or higher. Furthermore, ComPDFKit PDF SDK requires apps to enable Java 8 language features to build.
+[ComPDFKit Android PDF SDK](https://www.compdf.com/guides/pdf-sdk/android/overview) supports Android devices running API level 19 or newer and targets the latest stable Android 4.4 or later. In addition, it requires applications to be built with Java 8 language features enabled.
 
 - Android Studio 3.2 or newer (support AndroidX).
 - Project specifications.
-  - A `minSdkVersion` of `19` or higher.
-  - A `compileSdkVersion` of `30` or higher.
-  - A `targetSdkVersion` of `30` or higher.
-  - Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
+    - A `minSdkVersion` of `19` or higher.  
+    - A `compileSdkVersion` of `30` or higher.  
+    - A `targetSdkVersion` of `30` or higher.  
+    - Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
 
-## 2.2 Android Package Structure
+## How to Run a Demo
 
-The package of ComPDFKit PDF SDK for Android includes the following files as shown in Figure 2-1:
+ComPDFKit PDF SDK for Android provides multiple demos in Java for developers to learn how to call the SDK on Android. You can find them in the ***"Samples"*** folder. In this guide, we take ***"PDFViewer"*** as an example to show how to run it on Android.
 
-- **libs** - A folder containing **ComPDFKit.aar**, **ComPDFKit-UI.aar**, and **ComPDFKit-Utils.aar**. **ComPDFKit.aar** is PDF Core API. **ComPDFKit-UI.aar** is PDF View. **ComPDFKit-Utils.aar** includes UI extensions component based on the fundamental layout classes: `ReaderFragment` or `ReaderActivity`.
-- **PDFViewer** - A folder containing Android sample projects.
-- **api_reference_android** - API reference.
-- **developer_guide_android.pdf** - Developer guide.
-- **release_notes.txt** - Release information.
-- **legal.txt** - Legal and copyright information.
-
-![Alt text](https://github.com/ComPDFKit/PDF-SDK-Android/blob/main/image-android/2.2.png)
-
-<p align="center">
-Figure 2-1
-</p>
-
-## 2.3 How to Run a Demo 
-
-ComPDFKit PDF SDK for Android provides one demo in Java for developers to learn how to call the SDK on Android. You can find them in the ***"PDFViewer"*** folder. In this guide, it takes the "Java" demo as an example to show how to run it in Android.
-
-1. Import the ***"PDFViewer"*** project on Android Studio.
+1. Import the ***"Samples"*** project on Android Studio.
 2. In the toolbar, select ***"PDFViewer"*** from the run configurations drop-down menu.
-3. From the target device drop-down menu, select the device that you want to run ***"ComPDFKit_Demo"*** on.
-4. Click ***"Run"***.
+3. From the target device drop-down menu, select the device that you want to run ***"PDFViewer"*** on.
+
+4. Click **Run**.
 
 If you don't have any devices configured, then you need to either connect a device via USB or create an AVD to use the Android Emulator.
 
-![Alt text](https://github.com/ComPDFKit/PDF-SDK-Android/blob/main/image-android/2.3.png)
+<img src="./image-android/2.4.png" alt="截屏2023-12-13 09.58.50" style="zoom: 33%;" />
 
-**Note:** *This is a demo project, presenting completed ComPDFKit PDF SDK functions. The functions might be different based on the license you have purchased. Please check that the functions you choose work fine in this demo project.*
+**Note:** *This is a demo project, presenting completed [ComPDFKit PDF SDK](https://compdf.com/pdf-sdk/) functions. The functions might be different based on the license you have purchased. Please check that the functions you choose work fine in this demo project.*
 
-## 2.4 How to Make an Android App in Java With ComPDFKit PDF SDK
 
-This section will help you to quickly get started with ComPDFKit PDF SDK to make an Android app in Java with step-by-step instructions, which includes the following steps:
 
-1. Use Android Studio to create a Phone & Tablet project.
-2. Copy ***"ComPDFKit.aar"*** and ***"ComPDFKit-UI.aar"*** to the ***"libs"*** directory of the app.
-3. Add the following code into the app’s build.gradle file:
+## How to Make an Android PDF Viewer in Java
 
-```groovy
-android{
-	repositories {
-        flatDir {
-        /* Folder path where aar is located */
-            dirs 'libs'  
-        }
-	}
-	compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+This section will help you quickly get started with ComPDFKit PDF SDK to make an Android app in Java with step-by-step instructions. Through the following steps, you will get a simple application that can display the contents of a specified PDF file.
+
+
+
+### Create a New Project
+
+1. Use Android Studio to create a Phone & Tablet project. Here we create a **No Activity** project.
+
+![create_project.png](./image-android/create_project.png)
+
+
+
+### Installation
+
+#### Integrate With Gradle
+
+1. Open the `settings.gradle` file located in your project's root directory and add the `mavenCentral` repository:
+
+```diff
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
++       mavenCentral()
     }
-	...
-}
-dependencies {
-	...
-	/*ComPDFKit SDK*/
-	implementation(name: 'ComPDFKit', ext: 'aar')
-	implementation(name: 'ComPDFKit-UI', ext: 'aar')
 }
 ```
 
-4. Include ComPDFKit PDF SDK for Android as a dependency in the project. Inside the app’s build.gradle, add ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"*** and the related support libraries to the dependencies. 
+2. Open the `build.gradle` file in the application module directory:
+
+<img src="./image-android/2.4.2.1-1.png" alt="2.4.2.1-1" style="zoom:33%;" />
+
+Edit it and add the complete `ComPDFKit SDK` dependency:
+
+```groovy
+dependencies {
+  implementation 'com.compdf:compdfkit:1.11.0'
+  implementation 'com.compdf:compdfkit-ui:1.11.0'
+}
+```
+
+3. Apply for read and write permissions in `AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+```
+
+**Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permissions to external storage at runtime.*
+
+#### Integrate Manually
+
+1. Copy ***"ComPDFKit.aar"*** and ***"ComPDFKit-UI.aar"*** to the ***"libs"*** directory of the **app**.
+
+![libs.png](./image-android/libs.png)
+
+2. Add the following code into the **app** dictionary's ***"build.gradle"*** file:
+
+```groovy
+...
+dependencies {
+    /*ComPDFKit SDK*/
+    implementation(fileTree('libs'))
+    ...
+}
+...
+```
+
+3. Add [ComPDFKit PDF SDK for Android](https://www.compdf.com/blog/compdfkit-for-android) as a dependency to the project. Inside the **app** dictionary's ***"build.gradle"***, add ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"***, and the related support libraries to the `dependencies`. For simplicity, update the dependencies as follows:
+
 
 ```groovy
 dependencies {
@@ -155,202 +129,326 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-	
+
     implementation 'androidx.documentfile:documentfile:1.0.1'
 }
 ```
 
-5. Apply for read and write permissions in AndroidManifest.xml:
+4. Apply for read and write permissions in `AndroidManifest.xml`:
 
 ```xml
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 ```
 
-**Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permission to external storage at runtime.*
+**Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permissions to external storage at runtime.*
 
-6. Add this license in the AndroidManifest.xml of the main module:
+
+
+### Apply the License Key
+
+Contact [ComPDFKit's sales team](https://www.compdf.com/contact-sales) to get a license for free to test this project. Add this license in the **AndroidManifest.xml** of the main module:
 
 ```xml
 <meta-data
-     android:name="compdfkit_license"
-     android:value="{your ComPDFKit license}" />
- <meta-data
-     android:name="compdfkit_message"
-     android:value="{your ComPDFKit message}" /> />
+    android:name="compdfkit_key"
+    android:value="{your ComPDFKit key}" />
 ```
 
-7. Copy a PDF document into the assets directory of your Android project — for example, to **src/main/assets/Quick Start Guide.pdf**.
 
-8. Open the document. This is a time-consuming process, so it needs to be executed in a sub-thread. After the document is opened successfully, the UI that renders the PDF is initiated:
 
-```Java
-CPDFDocument document = new CPDFDocument(context);
-//Open document.
-CPDFDocument.PDFDocumentError error = document.open(pdfUri);
-if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorPassword) {
-  //The document is encrypted and requires a password to open.
-  error = document.open(pdfUri, "password");
-}
-if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess) {
-  //The document is opened successfully and data can be parsed and manipulated.
-} else {
-  //The PDF file failed to open. You can refer to the API file for specific error 		   messages.
-}
+### Add Proguard Rules
+
+In the `proguard-rules.pro` file, please add the obfuscation configuration information for `compdfkit` as follows:
+
+```
+-keep class com.compdfkit.ui.** {*;}
+-keep class com.compdfkit.core.** {*;}
 ```
 
-9. Create a `CPDFReaderView` in layout.xml to display the contents of the PDF document or create a `CPDFReaderView` directly in the code:
+
+
+### Display a PDF Document
+
+1. Copy a PDF document into the **assets** directory of your Android project. For example, import the file ***"Quick Start Guide.pdf"*** to the path **src/main/assets**.
+
+
+![structure.png](./image-android/structure.png)
+
+2. Create a new **Empty Activity** under your package, and set the activity name to **MainActivity**.
+
+
+![new_activity.png](./image-android/new_activity.png)
+
+Android Studio will automatically generate a source file called ***"MainActivity.java"*** and a layout file called ***"activity_main.xml"***.
+
+The source file:
+
+![activity_java.png](./image-android/activity_java.png)
+
+The layout file:
+
+![layout.png](./image-android/layout.png)
+
+3. Create a `CPDFReaderView` in your ***"activity_main.xml"*** to display the contents of the PDF document:
 
 ```xml
-<com.compdfkit.ui.reader.CPDFReaderView
-     android:id="@+id/readerview"
-     android:layout_width="match_parent"
-     android:layout_height="match_parent" />
+<!-- Your activity_main.xml file -->
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Create a CPDFReaderView -->
+    <com.compdfkit.ui.reader.CPDFReaderView
+        android:id="@+id/readerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 ```
+
+Get the `CPDFReaderView` from the layout or create a `CPDFReaderView` directly in the code in the corresponding ***MainActivity.java*** file:
 
 ```Java
-CPDFReaderView readerView;
-// Get CPDFReaderView from xml
-readerView = findViewById(R.id.readerview);
-// Code to create CPDFReaderView
-//readerView = new CPDFReaderView(context);
-```
+// Your MainActivity.java file
 
-10. Set the basic properties of `CPDFReaderView`:
+package com.compdfkit.pdfviewer;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import com.compdfkit.ui.reader.CPDFReaderView;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Get CPDFReaderView from xml.
+        CPDFReaderView readerView = findViewById(R.id.readerview);
+        // Code to create CPDFReaderView.
+        // CPDFDocument readerView = new CPDFReaderView(content);
+    }
+}
+```
+4. Open the document. This is a time-consuming process, so it needs to be executed in a **sub-thread**. After the document is opened successfully, the UI that renders the PDF is initiated:
+
 ```Java
-//Set the PDF document type to CPDFReaderView
-readerView.setPDFDocument(document);
-```
+// Your MainActivity.java file
 
-## 2.5 How to Integrate ComPDFKit PDF SDK Using UI Extensions Component
+... //imports
 
-ComPDFKit PDF SDK for Android provides the source code of the UI Extensions Component that contains ready-to-use UI module implementations, which lets the developers have full control of styling the appearance as desired.
+public class MainActivity extends AppCompatActivity {
 
-1. Copy ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"*** and ***"ComPDFKit-Utils.aar"*** to the ***"libs"*** directory of the app.
+    // Copy the PDF file from the assets folder to the cache folder.
+    private void copyPdfFromAssetsToCache(String fileName) {
+        try {
+            InputStream inputStream = getAssets().open(fileName);
+            File outputFile = new File(getCacheDir(), fileName);
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
 
-   Find **build.gradle** in the ***"ComPDFKit_Demo"*** module, and add the following configuration into build.gradle file:
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
 
-```groovy
-android{
-	repositories {
-        flatDir {
-        /* Folder path where aar is located */
-            dirs '../AAR Directory folder/libs'  
+            inputStream.close();
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-	}
-	compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
-	...
-}
-dependencies {
-	...
-	/*ComPDFKit_demo_utils*/
-	implementation(name: 'ComPDFKit-Utils', ext: 'aar')
-  /*ComPDFKit SDK*/
-	implementation(name: 'ComPDFKit' ext: 'aar')
-	implementation(name: 'ComPDFKit-UI', ext: 'aar')
-}
-```
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-2. Create an activity or fragment to implement `ReaderActivity` or `ReaderFragment`.
+        CPDFReaderView readerView = findViewById(R.id.readerview);
+        // Code to create CPDFReaderView.
+        // CPDFDocument readerView = new CPDFReaderView(content);
 
-```Java
-public class PDFReaderActivity extends ReaderActivity {
-  //Do something...
-}
+        //Create a document object.
+        CPDFDocument document = new CPDFDocument(this);
+        
 
-public class PDFReaderFragment extends ReaderFragment {
-  //Do something...
-}
-```
+        new Thread(() -> {
+            String fileName = "Quick Start Guide.pdf";
+            copyPdfFromAssetsToCache(fileName);
 
-3. Configure Document Viewer.
+            File file = new File(getCacheDir(), fileName);
+            String filePath = file.getAbsolutePath();
 
-`ReaderActivity` and `ReaderFragment` can be initialized using `ViewerConfig`, which can be created with a `ViewerConfig.Builder` object.
+            //Open document.
+            CPDFDocument.PDFDocumentError error = document.open(filePath);
+            if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorPassword) {
+                //The document is encrypted and requires a password to open.
+                error = document.open(filePath, "password");
+            }
 
-```Java
-// Customize settings in ViewerConfig
-static ViewerConfig getDefaultViewerConfig() {
-    ViewerConfig.Builder builder = new ViewerConfig.Builder();
-    builder.showSDKIndicator(true)
-            .fullscreenModeEnabled(true)
-            .showAddBookmarkOption(true)
-            .showAnnotationToolbarOption(true)
-            .showCleanSignatureOption(true)
-            .showDeleteAllAnnotOption(true)
-            .showDocumentInfoOption(true)
-            .showEditPagesOption(true)
-            .showFormEditor(true)
-            .showHighlightLinkOption(true)
-            .showImportAndExportAnnotOption(true)
-            .showMoreSettingsOption(true)
-            .showPageNumberIndicator(true)
-            .showPageShareOption(true)
-            .showPageTurningToolOption(true)
-            .showPreviousPageIndicator(true)
-            .showSearchToolView(true)
-            .showThemeOption(true)
-            .showTopToolBar(true)
-            .showUserBookmarksListOption(true)
-            .showWatermarkToolOption(true)
-            .showCompress(true)
-            .showRemoveAllFormAnnotationOption(true)
-            .showGetAllAnnotationOption(true);
-    return builder.build();
-}
-```
-
-4. Start customizable activity.
-
-```Java
-public static void open(Context context, String filePath, ViewerConfig viewerConfig) {
-    try {
-        Intent intent = new Intent(context, PDFReaderActivity.class);
-        intent.putExtra(FILE_PATH, filePath);
-        intent.putExtra(VIEWER_CONFIG, viewerConfig);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-
-public static void open(Context context, Uri absolutePathUri, ViewerConfig viewerConfig) {
-    try {
-        Intent intent = new Intent(context, PDFReaderActivity.class);
-        intent.putExtra(FILE_PATH_URI, absolutePathUri);
-        intent.putExtra(VIEWER_CONFIG, viewerConfig);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    } catch (Exception e) {
-        e.printStackTrace();
+            if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess) {
+                //The document is opened successfully and data can be parsed and manipulated.
+            } else {
+                //The PDF file failed to open. You can refer to the API file for specific error
+            }
+        }).start();
     }
 }
 ```
-# 3 Support
 
-## 3.1 Reporting Problems
+5. Set the basic properties of `CPDFReaderView` :
 
-Thank you for your interest in ComPDFKit PDF SDK, the only easy-to-use but powerful development solution to integrate high quality PDF rendering capabilities to your applications. If you encounter any technical questions or bug issues when using ComPDFKit PDF SDK for Android, please submit the problem report to the ComPDFKit team. More information as follows would help us to solve your problem:
+```Java
+// Your MainActivity.java file
 
-- ComPDFKit PDF SDK product and version.
-- Your operating system and IDE version.
-- Detailed descriptions of the problem.
-- Any other related information, such as an error screenshot.
+... // imports
 
-## 3.2 Contact Information
+public class MainActivity extends AppCompatActivity {
+    // Create a handler to run the code on the main thread.
+    private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+...
+    if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess) {
+        // The document is opened successfully and data can be parsed and manipulated.
+        mainThreadHandler.post(() -> {
+            // Set the document content for UI.
+            readerView.setPDFDocument(document);
+        });
+    } else {
+        // The PDF file failed to open. You can refer to the API file for specific error
+    }
+...
+}
+```
 
-**Home Link:**
+6. Your code may resemble the following at this stage: 
 
-[https://www.compdf.com](https://www.compdf.com)
+```Java
+// Your MainActivity.java file
 
-**Support & General Contact:**
+... // imports
 
-Email: support@compdf.com 
+public class MainActivity extends AppCompatActivity {
+    // Create a handler to run the code on the main thread.
+    private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+    // Copy the PDF file from the assets folder to the cache folder.
+    private void copyPdfFromAssetsToCache(String fileName) {
+        try {
+            InputStream inputStream = getAssets().open(fileName);
+            File outputFile = new File(getCacheDir(), fileName);
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            inputStream.close();
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        CPDFReaderView readerView = findViewById(R.id.readerview);
+
+        //Create a document object.
+        CPDFDocument document = new CPDFDocument(this);
+
+        new Thread(() -> {
+            String fileName = "Quick Start Guide.pdf";
+            copyPdfFromAssetsToCache(fileName);
+
+            File file = new File(getCacheDir(), fileName);
+            String filePath = file.getAbsolutePath();
+
+            //Open document.
+            CPDFDocument.PDFDocumentError error = document.open(filePath);
+            if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorPassword) {
+                //The document is encrypted and requires a password to open.
+                error = document.open(filePath, "password");
+            }
+
+            if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess) {
+                //The document is opened successfully and data can be parsed and manipulated.
+                mainThreadHandler.post(() -> {
+                    //Set the document to the reader view.
+                    readerView.setPDFDocument(document);
+                });
+            } else {
+                //The PDF file failed to open. You can refer to the API file for specific error
+            }
+        }).start();
+    }
+}
+```
+
+```xml
+<!-- Your activity_main.xml file -->
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.compdfkit.ui.reader.CPDFReaderView
+        android:id="@+id/readerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+7. Run the application.
+
+<img src="./image-android/screen_shot.png" alt="screen_shot.png" style="zoom: 50%;" />
+
+Now, with the help of ComPDFKit, you can get a simple application to display a PDF file.
+
+
+# Examples
+
+There are many samples in the [**samples**](./samples) folder that demonstrate the main features of the [ComPDFKit API](https://api.compdf.com/) and how to use them, such as adding watermarks, comments, forms, etc. to PDFs. You can copy the code, add it to your project and run it directly. Or, you can get our [code examples for Android](https://www.compdf.com/guides/pdf-sdk/android/examples). To learn more about the ComPDFKit API, please visit our [API Reference](https://developers.compdf.com/guides/pdf-sdk/android/api-reference/index).
+
+# Support
+
+[ComPDFKit]((https://www.compdf.com)) has a professional R&D team that produces comprehensive technical documentation and guides to help developers. Also, you can get an immediate response when reporting your problems to our support team.
+
+- For detailed information, please visit our [Guides](https://www.compdf.com/guides/pdf-sdk/android/overview) page.
+
+- Stay updated with the latest improvements through our [Changelog](https://www.compdf.com/pdf-sdk/changelog-android).
+
+- For technical assistance, please reach out to our [Technical Support](https://www.compdf.com/support).
+
+- To get more details and an accurate quote, please contact our [Sales Team](https://compdf.com/contact-us).
 
 
 
-Thanks,
-The ComPDFKit Team
+
+# License
+
+ComPDFKit PDF SDK supports flexible licensing options, please contact [our sales team](mailto:support@compdf.com) to know more. Each license is only valid for one application ID in development mode.  However, any documents, sample code, or source code distribution from the released package of ComPDFKit PDF SDK to any third party is prohibited.
+
+
+
+# Note
+
+We are glad to announce that you can register a ComPDFKit API account for a [free trial](https://api.compdf.com/api/pricing) to process 1000 documents per month for free.
+

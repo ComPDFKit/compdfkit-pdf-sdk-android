@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+
+    <cache-path name="compdfkit/"
+        path="." />
+
+    <cache-path name="media/"
+        path="compdfkit/temp/" />
+
+    <files-path
+        name="media/"
+        path="."/>
+
+    <files-path name="media/"
+        path="compdfkit/temp/" />
+
+    <files-path
+        name="file/"
+        path="."/>
+
+    <external-path
+        name="compdf/"
+        path="."/>
+
+</paths>
