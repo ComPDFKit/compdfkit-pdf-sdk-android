@@ -44,7 +44,7 @@ ComPDFKit PDF SDK for Android provides multiple demos in Java for developers to 
 
 If you don't have any devices configured, then you need to either connect a device via USB or create an AVD to use the Android Emulator.
 
-<img src="./image-android/2.4.png" alt="截屏2023-12-13 09.58.50" style="zoom: 33%;" />
+<img src="./image-android/2.4.png" alt="2.4" width="70%" height="70%" />
 
 **Note:** *This is a demo project, presenting completed [ComPDFKit PDF SDK](https://compdf.com/pdf-sdk/) functions. The functions might be different based on the license you have purchased. Please check that the functions you choose work fine in this demo project.*
 
@@ -60,8 +60,7 @@ This section will help you quickly get started with ComPDFKit PDF SDK to make an
 
 1. Use Android Studio to create a Phone & Tablet project. Here we create a **No Activity** project.
 
-![create_project.png](./image-android/create_project.png)
-
+<img src="./image-android/create_project.png" alt="create_project" width="60%" height="60%" />
 
 
 ### Installation
@@ -82,7 +81,7 @@ dependencyResolutionManagement {
 
 2. Open the `build.gradle` file in the application module directory:
 
-<img src="./image-android/2.4.2.1-1.png" alt="2.4.2.1-1" style="zoom:33%;" />
+<img src="./image-android/2.4.2.1-1.png" alt="2.4.2.1-1" width="40%" height="40%" />
 
 Edit it and add the complete `ComPDFKit SDK` dependency:
 
@@ -178,7 +177,7 @@ In the `proguard-rules.pro` file, please add the obfuscation configuration infor
 2. Create a new **Empty Activity** under your package, and set the activity name to **MainActivity**.
 
 
-![new_activity.png](./image-android/new_activity.png)
+<img src="./image-android/new_activity.png" alt="new_activity" width="40%" height="40%" />
 
 Android Studio will automatically generate a source file called ***"MainActivity.java"*** and a layout file called ***"activity_main.xml"***.
 
@@ -418,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
 
 7. Run the application.
 
-<img src="./image-android/screen_shot.png" alt="screen_shot.png" style="zoom: 50%;" />
+<img src="./image-android/screen_shot.png" alt="screen_shot.png" width="25%" height="25%" />
 
 Now, with the help of ComPDFKit, you can get a simple application to display a PDF file.
 
