@@ -10,6 +10,7 @@
 package com.compdfkit.tools.common.basic.activity;
 
 
+import android.Manifest;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
@@ -165,7 +166,7 @@ public class CBasicPDFActivity extends CPermissionActivity {
         boolean isExternalFile = !TextUtils.isEmpty(document.getAbsolutePath()) &&
                 document.getAbsolutePath().startsWith("/storage/emulated/0");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && isExternalFile) {
-            if (!Environment.isExternalStorageManager()) {
+            if (CPermissionUtil.checkManifestPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE) && !Environment.isExternalStorageManager()) {
                 CPermissionUtil.openManageAllFileAppSettings(this);
                 return;
             }

@@ -10,6 +10,15 @@
 package com.compdfkit.tools.common.views.directory;
 
 
+import static com.compdfkit.tools.common.utils.CPermissionUtil.VERSION_R;
+
+import android.Manifest;
+import android.content.Context;
+import android.os.Build;
+import android.os.Environment;
+
+import com.compdfkit.tools.common.utils.CPermissionUtil;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,10 +27,32 @@ import java.util.List;
 public class CFileDirectoryDatas {
 
 
-    public static List<File> getDirectories(String rootDir){
+    public static List<File> getDirectories(Context context, String rootDir){
         List<File> list = new ArrayList<>();
         File file = new File(rootDir);
-        File[] files = file.listFiles(pathname -> !pathname.isHidden() && pathname.isDirectory());
+        boolean hasStoragePermission = CPermissionUtil.hasStoragePermissions(context);
+        if (Build.VERSION.SDK_INT >= VERSION_R){
+            if (!CPermissionUtil.checkManifestPermission(context, Manifest.permission.MANAGE_EXTERNAL_STORAGE) ||
+                    !Environment.isExternalStorageManager()){
+                hasStoragePermission = false;
+            }
+        }
+        List<String> publicDirectoryList = publicDirectoryList();
+        boolean finalHasStoragePermission = hasStoragePermission;
+        File[] files = file.listFiles(pathname -> {
+            if (finalHasStoragePermission){
+                return !pathname.isHidden() && pathname.isDirectory();
+            }else {
+                boolean isPublicDirectory =false;
+                for (String s : publicDirectoryList) {
+                    if (pathname.getAbsolutePath().startsWith(s)){
+                        isPublicDirectory = true;
+                        break;
+                    }
+                }
+                return !pathname.isHidden() && pathname.isDirectory() && isPublicDirectory;
+            }
+        });
         if (files == null || files.length == 0){
             return list;
         }else {
@@ -31,5 +62,12 @@ public class CFileDirectoryDatas {
         }
     }
 
+    public static List<String> publicDirectoryList(){
+        List<String> list = new ArrayList<>();
+        list.add(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+        list.add(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        list.add(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath());
+        return list;
+    }
 
 }

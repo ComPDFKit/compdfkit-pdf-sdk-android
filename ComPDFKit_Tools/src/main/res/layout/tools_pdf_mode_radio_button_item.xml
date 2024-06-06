@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatRadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    style="@style/tools_pdf_reader_mode_radio_button_style"
+    tools:drawableStart="@drawable/tools_ic_preview_settings"
+    tools:text="@string/tools_pdf_viewer_mode"
+    >
+
+</androidx.appcompat.widget.AppCompatRadioButton>

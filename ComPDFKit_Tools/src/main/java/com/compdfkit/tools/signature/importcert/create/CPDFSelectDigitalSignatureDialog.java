@@ -130,7 +130,8 @@ public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements 
             dismiss();
         } else if (v.getId() == R.id.btn_confirm) {
             if (!CPermissionUtil.hasStoragePermissions(getContext())){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_R &&
+                CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE)) {
                     CPermissionUtil.openManageAllFileAppSettings(getContext());
                 }else {
                     requestStorageLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);

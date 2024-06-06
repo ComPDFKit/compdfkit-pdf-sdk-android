@@ -481,5 +481,7 @@
     <string name="tools_setting">设置</string>
     <string name="tools_effective_immediately_after_setting">设置后立即生效</string>
     <string name="tools_loading">加载中…</string>
+    <string name="tools_flattened_suffix">_扁平化文档.pdf</string>
+
 
 </resources>

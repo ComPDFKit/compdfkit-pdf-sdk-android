@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tools_annot_style_dialog_window_bg"
+    >
+
+    <include
+        android:id="@+id/cl_tool_bar"
+        layout="@layout/tools_dialog_tool_bar" />
+
+    <com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView
+        android:id="@+id/sw_ignore_case"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:checked="true"
+        android:title="@string/tools_ignore_case"
+        app:layout_constraintTop_toBottomOf="@id/cl_tool_bar" />
+
+    <com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView
+        android:id="@+id/sw_whole_words_only"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:checked="false"
+        android:title="@string/tools_whole_words_only"
+        app:layout_constraintTop_toBottomOf="@id/sw_ignore_case" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,14 +10,17 @@
 package com.compdfkit.tools.common.utils;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -25,6 +28,10 @@ import androidx.fragment.app.FragmentManager;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CPermissionUtil {
 
@@ -42,7 +49,11 @@ public class CPermissionUtil {
             return true;
         }
         if (Build.VERSION.SDK_INT >= VERSION_TIRAMISU) {
-            return Environment.isExternalStorageManager();
+            if (CPermissionUtil.checkManifestPermission(context, Manifest.permission.MANAGE_EXTERNAL_STORAGE)){
+                return Environment.isExternalStorageManager();
+            }else {
+                return true;
+            }
         }
         if (Build.VERSION.SDK_INT >= VERSION_R) {
             boolean hasPermission = true;
@@ -53,7 +64,11 @@ public class CPermissionUtil {
                     break;
                 }
             }
-            return Environment.isExternalStorageManager() && hasPermission;
+            if (CPermissionUtil.checkManifestPermission(context, Manifest.permission.MANAGE_EXTERNAL_STORAGE)){
+                return Environment.isExternalStorageManager() && hasPermission;
+            }else {
+                return hasPermission;
+            }
         }
         for (String perm : STORAGE_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(context, perm)
@@ -105,4 +120,32 @@ public class CPermissionUtil {
         alertDialog.setCancelClickListener(v -> alertDialog.dismiss());
         alertDialog.show(fragmentManager, "permissionRequiredDialog");
     }
+
+    public static List<String> getManifestPermissions(Context context){
+        ArrayList<String> requestedPermissionsArrayList = new ArrayList<String>();
+        PackageManager pm = context.getPackageManager();
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_PERMISSIONS);
+            String[] requestedPermissions = null;
+            if (packageInfo != null) {
+                requestedPermissions = packageInfo.requestedPermissions;
+            }
+
+            if (requestedPermissions != null && requestedPermissions.length > 0) {
+                List<String> requestedPermissionsList = Arrays.asList(requestedPermissions);
+                requestedPermissionsArrayList.addAll(requestedPermissionsList);
+            }
+            return requestedPermissionsArrayList;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return requestedPermissionsArrayList;
+    }
+
+    public static boolean checkManifestPermission(Context context, String permission) {
+        List<String> manifestPermissions = getManifestPermissions(context);
+        return manifestPermissions.contains(permission);
+    }
+
+
 }

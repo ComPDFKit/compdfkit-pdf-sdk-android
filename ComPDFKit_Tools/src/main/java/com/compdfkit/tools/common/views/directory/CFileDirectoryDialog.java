@@ -205,7 +205,7 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
 
             @Override
             protected List<File> onRun() {
-                return CFileDirectoryDatas.getDirectories(rootDir);
+                return CFileDirectoryDatas.getDirectories(getContext(), rootDir);
             }
 
             @Override

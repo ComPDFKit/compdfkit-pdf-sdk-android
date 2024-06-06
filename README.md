@@ -87,8 +87,8 @@ Edit it and add the complete `ComPDFKit SDK` dependency:
 
 ```groovy
 dependencies {
-  implementation 'com.compdf:compdfkit:1.12.0'
-  implementation 'com.compdf:compdfkit-ui:1.12.0'
+  implementation 'com.compdf:compdfkit:1.13.0'
+  implementation 'com.compdf:compdfkit-ui:1.13.0'
 }
 ```
 
@@ -100,6 +100,13 @@ dependencies {
 ```
 
 **Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permissions to external storage at runtime.*
+
+4. If you use an online license, please add network access permissions in `AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET"/>
+```
+
 
 #### Integrate Manually
 
@@ -142,16 +149,49 @@ dependencies {
 
 **Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permissions to external storage at runtime.*
 
+5. If you use an online license, please add network access permissions in `AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET"/>
+```
+
 
 
 ### Apply the License Key
 
-Contact [ComPDFKit's sales team](https://www.compdf.com/contact-sales) to get a license for free to test this project. Add this license in the **AndroidManifest.xml** of the main module:
+
+Add this license in the **AndroidManifest.xml** of the main module. In version **1.13.0**, we introduced a brand-new online authentication license scheme for ComPDFKit SDK. By default, the SDK performs online authentication. If you are using a version prior to **1.13.0**, please refer to the following example to configure the SDK for offline authentication mode:<br/>
+
+* **Online license**
 
 ```xml
+<!-- Each ComPDFKit license is bound to a specific applicationId -->
+<!-- For example: com.compdfkit.pdfviewer -->
+<meta-data
+    android:name="compdfkit_key_online"
+    android:value="Your ComPDFKit Key" />
+```
+
+You can also initialize ComPDFKit SDK in code using:
+
+```java
+CPDFSdk.init(context, "your compdfkit license", false);
+```
+
+* **Offline license**
+
+```xml
+<!-- Each ComPDFKit license is bound to a specific applicationId -->
+<!-- For example: com.compdfkit.pdfviewer -->
 <meta-data
     android:name="compdfkit_key"
-    android:value="{your ComPDFKit key}" />
+    android:value="Your ComPDFKit Key" />
+```
+
+You can also initialize ComPDFKit SDK in code using:
+
+```java
+CPDFSdk.init(context, "your compdfkit license");
 ```
 
 

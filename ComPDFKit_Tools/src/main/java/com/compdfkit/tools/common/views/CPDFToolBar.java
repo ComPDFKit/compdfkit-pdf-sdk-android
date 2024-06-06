@@ -70,6 +70,8 @@ public class CPDFToolBar extends FrameLayout {
 
     private LinearLayout llMenu;
 
+    private AppCompatImageView ivBack;
+
     private LinkedHashSet<CPreviewMode> previewModes = new LinkedHashSet<>();
 
     private CPreviewMode currentPreviewMode = CPreviewMode.Viewer;
@@ -95,6 +97,7 @@ public class CPDFToolBar extends FrameLayout {
         clMainToolbar.setOnClickListener(v -> {});
         llMenu = findViewById(R.id.ll_menu);
         tvToolBarTitle = findViewById(R.id.tv_tool_bar_title);
+        ivBack = findViewById(R.id.iv_back_action);
         LinearLayout llTitle = findViewById(R.id.ll_title);
         llTitle.setOnClickListener(v -> {
             if (previewModes != null && previewModes.size() > 1) {
@@ -157,6 +160,11 @@ public class CPDFToolBar extends FrameLayout {
         if (llMenu != null) {
             llMenu.addView(itemView);
         }
+    }
+
+    public void addBackPressedAction(View.OnClickListener listener){
+        ivBack.setVisibility(View.VISIBLE);
+        ivBack.setOnClickListener(listener);
     }
 
     public void setPreviewModeChangeListener(CModeSwitchDialogFragment.OnPreviewModeChangeListener changeListener) {

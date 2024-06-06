@@ -247,13 +247,12 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
                 CToastUtil.showLongToast(getContext(), R.string.tools_password_must_be_different);
                 return;
             }
-
             // Check the storage permissions to ensure that
             // you can select the directory and save to the corresponding directory normally.
             if (CPermissionUtil.hasStoragePermissions(getContext())) {
                 showSelectDirDialog();
             }else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE) && Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_R) {
                     CPermissionUtil.openManageAllFileAppSettings(getContext());
                 } else {
                     multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {

@@ -38,14 +38,14 @@
             android:exported="true"
             android:theme="@style/Tools_Base_Theme"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter tools:ignore="AppLinkUrlError"
-                android:scheme="http">
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.SEND" />
+<!--            <intent-filter tools:ignore="AppLinkUrlError"-->
+<!--                android:scheme="http">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+<!--                <action android:name="android.intent.action.SEND" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="application/pdf" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <data android:mimeType="application/pdf" />-->
+<!--            </intent-filter>-->
         </activity>
 
     </application>

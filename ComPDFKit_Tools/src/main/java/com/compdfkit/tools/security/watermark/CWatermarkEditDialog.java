@@ -168,7 +168,7 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
             if (CPermissionUtil.hasStoragePermissions(getContext())) {
                 save();
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE) && Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_R) {
                     CPermissionUtil.openManageAllFileAppSettings(getContext());
                 } else {
                     multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {

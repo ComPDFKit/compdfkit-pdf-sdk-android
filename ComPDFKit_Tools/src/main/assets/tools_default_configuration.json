@@ -1,0 +1,256 @@
+{
+  "modeConfig": {
+    "initialViewMode": "viewer",
+    "availableViewModes": [
+      "viewer",
+      "annotations",
+      "contentEditor",
+      "forms",
+      "signatures"
+    ]
+  },
+  "toolbarConfig": {
+    "androidAvailableActions": [
+      "thumbnail",
+      "search",
+      "bota",
+      "menu"
+    ],
+    "iosLeftBarAvailableActions": [
+      "back",
+      "thumbnail"
+    ],
+    "iosRightBarAvailableActions": [
+      "search",
+      "bota",
+      "menu"
+    ],
+    "availableMenus": [
+      "viewSettings",
+      "documentEditor",
+      "documentInfo",
+      "save",
+      "flattened",
+      "share",
+      "openDocument"
+    ]
+  },
+  "annotationsConfig": {
+    "availableTypes": [
+      "note",
+      "highlight",
+      "underline",
+      "squiggly",
+      "strikeout",
+      "ink",
+      "circle",
+      "square",
+      "arrow",
+      "line",
+      "freetext",
+      "signature",
+      "stamp",
+      "pictures",
+      "link",
+      "sound"
+    ],
+    "availableTools": [
+      "setting",
+      "undo",
+      "redo"
+    ],
+    "initAttribute": {
+      "note": {
+        "color": "#1460F3",
+        "alpha": 255
+      },
+      "highlight": {
+        "color": "#1460F3",
+        "alpha": 77
+      },
+      "underline": {
+        "color": "#1460F3",
+        "alpha": 77
+      },
+      "squiggly": {
+        "color": "#1460F3",
+        "alpha": 77
+      },
+      "strikeout": {
+        "color": "#1460F3",
+        "alpha": 77
+      },
+      "ink": {
+        "color": "#1460F3",
+        "alpha": 100,
+        "borderWidth": 10
+      },
+      "square": {
+        "fillColor": "#1460F3",
+        "borderColor": "#000000",
+        "colorAlpha" : 128,
+        "borderWidth": 2,
+        "borderStyle": {
+          "style": "solid",
+          "dashGap": 0.0
+        }
+      },
+      "circle": {
+        "fillColor": "#1460F3",
+        "borderColor": "#000000",
+        "colorAlpha" : 128,
+        "borderWidth": 2,
+        "borderStyle": {
+          "style": "solid",
+          "dashGap": 0.0
+        }
+      },
+      "line": {
+        "borderColor": "#1460F3",
+        "borderAlpha": 100,
+        "borderWidth": 5,
+        "borderStyle": {
+          "style": "solid",
+          "dashGap": 0.0
+        }
+      },
+      "arrow": {
+        "borderColor": "#1460F3",
+        "borderAlpha": 100,
+        "borderWidth": 5,
+        "borderStyle": {
+          "style": "solid",
+          "dashGap": 0.0
+        },
+        "startLineType": "none",
+        "tailLineType": "openArrow"
+      },
+      "freeText": {
+        "fontColor": "#000000",
+        "fontColorAlpha": 255,
+        "fontSize": 30,
+        "isBold": false,
+        "isItalic": false,
+        "alignment": "left",
+        "typeface": "Helvetica"
+      }
+    }
+  },
+  "contentEditorConfig": {
+    "availableTypes": [
+      "editorText",
+      "editorImage"
+    ],
+    "availableTools": [
+      "setting",
+      "undo",
+      "redo"
+    ],
+    "initAttribute": {
+      "text": {
+        "fontColor": "#000000",
+        "fontColorAlpha" : 100,
+        "fontSize": 30,
+        "isBold": false,
+        "isItalic": false,
+        "typeface": "Times-Roman",
+        "alignment": "left"
+      }
+    }
+  },
+  "formsConfig": {
+    "availableTypes": [
+      "textField",
+      "checkBox",
+      "radioButton",
+      "listBox",
+      "comboBox",
+      "signaturesFields",
+      "pushButton"
+    ],
+    "availableTools": [
+      "undo",
+      "redo"
+    ],
+    "initAttribute": {
+      "textField": {
+        "fillColor": "#DDE9FF",
+        "borderColor": "#1460F3",
+        "borderWidth": 2,
+        "fontColor": "#000000",
+        "fontSize": 20,
+        "isBold": false,
+        "isItalic": false,
+        "alignment": "left",
+        "multiline": true,
+        "typeface": "Helvetica"
+      },
+      "checkBox": {
+        "fillColor": "#DDE9FF",
+        "borderColor": "#1460F3",
+        "borderWidth": 2,
+        "checkedColor": "#43474D",
+        "isChecked": false,
+        "checkedStyle": "check"
+      },
+      "radioButton": {
+        "fillColor": "#DDE9FF",
+        "borderColor": "#1460F3",
+        "borderWidth": 2,
+        "checkedColor": "#43474D",
+        "isChecked": false,
+        "checkedStyle": "circle"
+      },
+      "listBox": {
+        "fillColor": "#DDE9FF",
+        "borderColor": "#1460F3",
+        "borderWidth": 2,
+        "fontColor": "#000000",
+        "fontSize": 20,
+        "typeface": "Helvetica",
+        "isBold": false,
+        "isItalic": false
+      },
+      "comboBox": {
+        "fillColor": "#DDE9FF",
+        "borderColor": "#1460F3",
+        "borderWidth": 2,
+        "fontColor": "#000000",
+        "fontSize": 20,
+        "typeface": "Helvetica",
+        "isBold": false,
+        "isItalic": false
+      },
+      "pushButton": {
+        "fillColor": "#DDE9FF",
+        "borderColor": "#1460F3",
+        "borderWidth": 2,
+        "fontColor": "#000000",
+        "fontSize": 20,
+        "title": "Button",
+        "typeface": "Helvetica",
+        "isBold": false,
+        "isItalic": false
+      },
+      "signaturesFields": {
+        "fillColor": "#DDE9FF",
+        "borderColor": "#000000",
+        "borderWidth": 2
+      }
+    }
+  },
+  "readerViewConfig": {
+    "linkHighlight": true,
+    "formFieldHighlight": true,
+    "displayMode": "singlePage",
+    "continueMode": true,
+    "verticalMode": true,
+    "cropMode": false,
+    "themes" : "light",
+    "enableSliderBar": true,
+    "enablePageIndicator": true,
+    "pageSpacing": 10,
+    "pageScale": 1.0,
+    "pageSameWidth": true
+  }
+}
