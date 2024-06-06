@@ -123,10 +123,18 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
                 }
                 if (progress == 0) {
                     style.setStyle(CPDFBorderStyle.Style.Border_Solid);
-                    style.setDashArr(new float[]{8.0F, progress});
+                    float[] dashAttr = new float[]{8.0F, progress};
+                    if (style.getDashArr() != null) {
+                        dashAttr = new float[]{style.getDashArr()[0], progress};
+                    }
+                    style.setDashArr(dashAttr);
                 } else {
+                    float[] dashAttr = new float[]{8.0F, progress};
+                    if (style.getDashArr() != null) {
+                        dashAttr = new float[]{style.getDashArr()[0], progress};
+                    }
                     style.setStyle(CPDFBorderStyle.Style.Border_Dashed);
-                    style.setDashArr(new float[]{8.0F, progress});
+                    style.setDashArr(dashAttr);
                 }
                 viewModel.getStyle().setBorderStyle(style);
             }

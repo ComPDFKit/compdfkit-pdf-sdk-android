@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.PopupWindow;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditManager;
@@ -31,6 +32,7 @@ import com.compdfkit.tools.common.contextmenu.impl.CLongPressContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CMarkupContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CPushButtonContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CRadioButtonContextMenuView;
+import com.compdfkit.tools.common.contextmenu.impl.CSearchReplaceContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSelectContentContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CShapeContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSignatureContextMenuView;
@@ -50,11 +52,11 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuListBoxProvi
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuLongPressProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuMarkupProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuRadioButtonProvider;
+import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSearchReplaceProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSelectContentProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSoundContentProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuStampProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuTextFieldProvider;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.security.encryption.CInputOwnerPwdDialog;
 import com.compdfkit.tools.viewer.contextmenu.CopyContextMenuView;
@@ -278,6 +280,14 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
     }
 
     @Override
+    public View getSearchReplaceContentView(CPDFPageView cpdfPageView, LayoutInflater layoutInflater) {
+        if (helperParams.searchReplaceProvider != null){
+            return helperParams.searchReplaceProvider.createSearchReplaceContentView(cpdfPageView, layoutInflater, this);
+        }
+        return super.getSearchReplaceContentView(cpdfPageView, layoutInflater);
+    }
+
+    @Override
     public void dismissContextMenu() {
         if (popupWindow != null) {
             popupWindow.setOnDismissListener(()->{
@@ -332,6 +342,14 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
 
     public CPDFReaderView getReaderView(){
         return readerView;
+    }
+
+    public FragmentManager getFragmentManager(){
+        if (context instanceof FragmentActivity){
+            return ((FragmentActivity) context).getSupportFragmentManager();
+        } else {
+            return null;
+        }
     }
 
     public boolean isAllowsCopying(){
@@ -428,6 +446,11 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
             return this;
         }
 
+        public Builder setSearchReplaceContextMenu(ContextMenuSearchReplaceProvider searchReplaceProvider){
+            this.params.searchReplaceProvider = searchReplaceProvider;
+            return this;
+        }
+
         public CPDFContextMenuHelper create(CPDFViewCtrl pdfView){
             return new CPDFContextMenuHelper(pdfView, params);
         }
@@ -442,6 +465,7 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
             params.freeTextProvider = new CFreeTextContextMenuView();
             params.stampProvider = new CStampContextMenuView();
             params.linkProvider = new CLinkContextMenuView();
+            params.searchReplaceProvider = new CSearchReplaceContextMenuView();
             return this;
         }
 

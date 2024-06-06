@@ -1,9 +1,7 @@
 package com.compdfkit.tools.common.contextmenu.impl;
 
-import static com.compdfkit.ui.contextmenu.CPDFContextMenuShowHelper.ReplaceEditImageArea;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -12,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
@@ -19,6 +18,8 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditImagePro
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuMultipleLineView;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.utils.CToastUtil;
+import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts;
+import com.compdfkit.tools.common.utils.dialog.CImportImageDialogFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -57,12 +58,16 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
             pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.ROTATE, 90.0f);
         });
         menuView.addItem(R.string.tools_context_menu_image_replace, 1, v -> {
-            if (helper.getReaderView().getContext() instanceof FragmentActivity) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                Context context = helper.getReaderView().getContext();
-                ((FragmentActivity) context).startActivityForResult(intent, ReplaceEditImageArea);
+            CImportImageDialogFragment fragment = CImportImageDialogFragment.quickStart(CImageResultContracts.RequestType.PHOTO_ALBUM);
+            fragment.setImportImageListener(imageUri -> {
+                fragment.dismiss();
+                if (imageUri != null) {
+                    pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.REPLACE, imageUri);
+                }
+            });
+            FragmentManager fragmentManager = helper.getFragmentManager();
+            if (fragmentManager != null) {
+                fragment.show(fragmentManager, "replaceEditImageDialog");
                 helper.dismissContextMenu();
             }
         });

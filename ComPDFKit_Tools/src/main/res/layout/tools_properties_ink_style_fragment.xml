@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="10"
-            android:min="1"
+            android:min="0"
             android:title="@string/tools_thickness"
             android:layout_marginBottom="8dp"
             app:tools_value_unit="pt"

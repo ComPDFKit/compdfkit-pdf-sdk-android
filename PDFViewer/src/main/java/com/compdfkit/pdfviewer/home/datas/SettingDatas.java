@@ -15,7 +15,7 @@ import android.content.Context;
 public class SettingDatas {
 
     public static boolean isHighlightLink(Context context){
-        return SpUtils.getBooleanValue(context, "highlight_link", false);
+        return SpUtils.getBooleanValue(context, "highlight_link", true);
     }
 
     public static void setHighlightLink(Context context, boolean highLight){
@@ -23,7 +23,7 @@ public class SettingDatas {
     }
 
     public static boolean isHighlightForm(Context context){
-        return SpUtils.getBooleanValue(context, "highlight_form", false);
+        return SpUtils.getBooleanValue(context, "highlight_form", true);
     }
 
     public static void setHighlightForm(Context context, boolean highLight){

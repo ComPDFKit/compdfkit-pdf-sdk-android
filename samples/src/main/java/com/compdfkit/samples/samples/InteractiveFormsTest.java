@@ -74,7 +74,7 @@ public class InteractiveFormsTest extends PDFSamples {
         CPDFPage cpdfPage = document.pageAtIndex(pageNumber);
 
         //Insert a single-line TextField.
-        RectF singleLineTextRect = new RectF(28, 32, 237, 75);
+        RectF singleLineTextRect = new RectF(28F, 32F, 237F, 75F);
         singleLineTextRect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), singleLineTextRect);
         CPDFTextWidget singleLineTextWidget = (CPDFTextWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_TextField);
         singleLineTextWidget.setRect(singleLineTextRect);
@@ -85,7 +85,7 @@ public class InteractiveFormsTest extends PDFSamples {
         singleLineTextWidget.updateAp();
 
         //Insert a multiline TextField.
-        RectF multilineTextRect = new RectF(28, 97, 237, 189);
+        RectF multilineTextRect = new RectF(28F, 97F, 237F, 189F);
         multilineTextRect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), multilineTextRect);
         CPDFTextWidget multiLineTextWidget = (CPDFTextWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_TextField);
         multiLineTextWidget.setRect(multilineTextRect);
@@ -97,11 +97,14 @@ public class InteractiveFormsTest extends PDFSamples {
         multiLineTextWidget.updateAp();
 
         //Insert a ListBox widget.
-        RectF listBoxRect = new RectF(267, 32, 567, 138);
+        RectF listBoxRect = new RectF(267F, 32F, 567F, 138F);
         listBoxRect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), listBoxRect);
         CPDFListboxWidget listBoxWidget = (CPDFListboxWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_ListBox);
         listBoxWidget.setRect(listBoxRect);
         listBoxWidget.setFieldName("ListBox1");
+        listBoxWidget.setFillColor(Color.WHITE);
+        listBoxWidget.setBorderColor(Color.BLACK);
+        listBoxWidget.setBorderWidth(2);
         CPDFWidgetItem[] listBoxItems = new CPDFWidgetItem[]{
                 new CPDFWidgetItem("List Box No.1", "List Box No.1"),
                 new CPDFWidgetItem("List Box No.2", "List Box No.2"),
@@ -112,7 +115,7 @@ public class InteractiveFormsTest extends PDFSamples {
         listBoxWidget.updateAp();
 
         //Insert a ComboBox Widget.
-        RectF comboBoxRect = new RectF(267, 143, 567, 189);
+        RectF comboBoxRect = new RectF(267F, 143F, 567F, 189F);
         comboBoxRect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), comboBoxRect);
         CPDFComboboxWidget comboBoxWidget = (CPDFComboboxWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_ComboBox);
         comboBoxWidget.setRect(comboBoxRect);
@@ -126,15 +129,18 @@ public class InteractiveFormsTest extends PDFSamples {
         comboBoxWidget.updateAp();
 
         //Insert a Form Signature Widget (unsigned)
-        RectF signatureRect = new RectF(28, 206, 237, 301);
+        RectF signatureRect = new RectF(28F, 206F, 237F, 301F);
         signatureRect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), signatureRect);
         CPDFSignatureWidget signatureWidget = (CPDFSignatureWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_SignatureFields);
         signatureWidget.setFieldName("Signature1");
+        signatureWidget.setFillColor(Color.WHITE);
+        signatureWidget.setBorderColor(Color.BLACK);
+        signatureWidget.setBorderWidth(2F);
         signatureWidget.setRect(signatureRect);
         signatureWidget.updateAp();
 
         //Insert a PushButton to jump to a page.
-        RectF pushButton1Rect = new RectF(267, 203, 401, 235);
+        RectF pushButton1Rect = new RectF(267F, 203F, 401F, 235F);
         pushButton1Rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), pushButton1Rect);
         CPDFPushbuttonWidget pushButtonWidget1 = (CPDFPushbuttonWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_PushButton);
         pushButtonWidget1.setRect(pushButton1Rect);
@@ -150,7 +156,7 @@ public class InteractiveFormsTest extends PDFSamples {
         pushButtonWidget1.updateAp();
 
         //Insert a PushButton to jump to a website.
-        RectF pushButton2Rect = new RectF(433, 203, 567, 235);
+        RectF pushButton2Rect = new RectF(433F, 203F, 567F, 235F);
         pushButton2Rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), pushButton2Rect);
         CPDFPushbuttonWidget pushButtonWidget2 = (CPDFPushbuttonWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_PushButton);
         pushButtonWidget2.setRect(pushButton2Rect);
@@ -165,7 +171,7 @@ public class InteractiveFormsTest extends PDFSamples {
         pushButtonWidget2.updateAp();
 
         //Insert CheckBox Widget
-        RectF checkBox1 = new RectF(267, 251, 299, 283);
+        RectF checkBox1 = new RectF(267F, 251F, 299F, 283F);
         checkBox1 = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), checkBox1);
         CPDFCheckboxWidget checkboxWidget = (CPDFCheckboxWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_CheckBox);
         checkboxWidget.setRect(checkBox1);
@@ -176,7 +182,7 @@ public class InteractiveFormsTest extends PDFSamples {
         checkboxWidget.setChecked(false);
         checkboxWidget.updateAp();
 
-        RectF checkBox2 = new RectF(326, 251, 358, 283);
+        RectF checkBox2 = new RectF(326F, 251F, 358F, 283F);
         checkBox2 = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), checkBox2);
         CPDFCheckboxWidget checkboxWidget2 = (CPDFCheckboxWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_CheckBox);
         checkboxWidget2.setRect(checkBox2);
@@ -188,7 +194,7 @@ public class InteractiveFormsTest extends PDFSamples {
         checkboxWidget2.updateAp();
 
         //Insert RadioButton Widget
-        RectF radioButton1 = new RectF(385, 251, 424, 290);
+        RectF radioButton1 = new RectF(385F, 251F, 424F, 290F);
         radioButton1 = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), radioButton1);
         CPDFRadiobuttonWidget radiobuttonWidget1 = (CPDFRadiobuttonWidget) cpdfPage.addFormWidget(CPDFWidget.WidgetType.Widget_RadioButton);
         radiobuttonWidget1.setRect(radioButton1);

@@ -9,7 +9,6 @@
 
 package com.compdfkit.tools.viewer.pdfthumbnail.adpater;
 
-import android.content.res.ColorStateList;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -17,7 +16,6 @@ import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,7 +29,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.compdfkit.core.document.CPDFDocument;
-import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
@@ -67,7 +64,6 @@ public class CPDFEditThumbnailListAdapter extends RecyclerView.Adapter<CPDFEditT
 
     @Override
     public void onBindViewHolder(@NonNull CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder holder, int position) {
-        CPDFPage tpdfPage = cPdfDocument.pageAtIndex(position);
         Glide.with(holder.itemView.getContext())
                 .load(CPDFWrapper.fromDocument(cPdfDocument, position))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -104,20 +100,18 @@ public class CPDFEditThumbnailListAdapter extends RecyclerView.Adapter<CPDFEditT
     private void updateSelectStatus(CPDFThumbnailItemViewHolder holder) {
         if (isEdit) {
             if (selectArr.get(holder.getAdapterPosition()) == 1) {
-                holder.cbSelect.setChecked(true);
-                holder.cbSelect.setButtonTintList(ColorStateList.valueOf(holder.itemView.getContext().getResources().getColor(R.color.tools_editpage_checkbox_select)));
+                holder.ivSelect.setSelected(true);
                 holder.tvPageIndex.setSelected(true);
                 holder.clThumbnail.setSelected(true);
             } else {
-                holder.cbSelect.setChecked(false);
-                holder.cbSelect.setButtonTintList(ColorStateList.valueOf(holder.itemView.getContext().getResources().getColor(R.color.tools_editpage_checkbox_normal)));
+                holder.ivSelect.setSelected(false);
                 holder.tvPageIndex.setSelected(false);
                 holder.clThumbnail.setSelected(false);
             }
-            holder.cbSelect.setVisibility(View.VISIBLE);
+            holder.ivSelect.setVisibility(View.VISIBLE);
         } else {
-            holder.cbSelect.setChecked(false);
-            holder.cbSelect.setVisibility(View.GONE);
+            holder.ivSelect.setSelected(false);
+            holder.ivSelect.setVisibility(View.GONE);
             holder.tvPageIndex.setSelected(holder.getAdapterPosition() == currentPageIndex);
             holder.clThumbnail.setSelected(holder.getAdapterPosition() == currentPageIndex);
         }
@@ -335,7 +329,7 @@ public class CPDFEditThumbnailListAdapter extends RecyclerView.Adapter<CPDFEditT
         private AppCompatImageView ivThumbnailImage;
         private AppCompatTextView tvPageIndex;
         private ConstraintLayout clThumbnail;
-        private CheckBox cbSelect;
+        private AppCompatImageView ivSelect;
 
         private ConstraintLayout clItem;
         public CPDFThumbnailItemViewHolder(@NonNull View itemView) {
@@ -343,7 +337,7 @@ public class CPDFEditThumbnailListAdapter extends RecyclerView.Adapter<CPDFEditT
             ivThumbnailImage = itemView.findViewById(R.id.iv_thumbnail);
             tvPageIndex = itemView.findViewById(R.id.tv_thumbnail_page_index);
             clThumbnail = itemView.findViewById(R.id.cl_thumbnail);
-            cbSelect = itemView.findViewById(R.id.ic_check);
+            ivSelect = itemView.findViewById(R.id.iv_check_box);
             clItem = itemView.findViewById(R.id.cl_item);
         }
     }

@@ -17,6 +17,7 @@ import android.text.TextUtils;
 
 import androidx.core.content.ContextCompat;
 
+import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFLinkAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAnnotation;
@@ -34,6 +35,7 @@ import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CPDFtextAnnotImpl;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.impl.CEditImageContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CEditTextContextMenuView;
+import com.compdfkit.tools.common.contextmenu.impl.CSearchReplaceContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSignatureContextMenuView;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
@@ -73,6 +75,7 @@ public class CBasicPDFActivity extends CPermissionActivity {
                         new CPDFContextMenuHelper.Builder()
                                 .setEditTextContentMenu(new CEditTextContextMenuView())
                                 .setEditImageContentMenu(new CEditImageContextMenuView())
+                                .setSearchReplaceContextMenu(new CSearchReplaceContextMenuView())
                                 .create(pdfView));
                 break;
             case Form:
@@ -103,7 +106,8 @@ public class CBasicPDFActivity extends CPermissionActivity {
                 .setShape(CStyleType.ANNOT_SQUARE, defaultColor, 255, Color.TRANSPARENT, 0, 10, null)
                 .setShape(CStyleType.ANNOT_CIRCLE, defaultColor, 255, Color.TRANSPARENT, 0, 5, null)
                 .setShape(CStyleType.ANNOT_LINE, defaultColor, 255, defaultColor, 255, 5, null)
-                .setShapeArrow(defaultColor, 255, defaultColor, 255, 5, CPDFLineAnnotation.LineType.LINETYPE_NONE, CPDFLineAnnotation.LineType.LINETYPE_ARROW)
+                .setShapeArrow(defaultColor, 255, defaultColor, 255, 5, CPDFLineAnnotation.LineType.LINETYPE_NONE, CPDFLineAnnotation.LineType.LINETYPE_ARROW,
+                         new CPDFBorderStyle(CPDFBorderStyle.Style.Border_Solid,5,new float[]{8.0F, 0F}))
                 .setInkAttribute(defaultColor, 255, 10, 10)
                 .setFreeText(defaultColor, 255, 50)
                 .init(pdfView, true);
@@ -113,8 +117,8 @@ public class CBasicPDFActivity extends CPermissionActivity {
         int bgColor = ContextCompat.getColor(this, R.color.tools_form_default_bg_color);
         new CStyleManager.Builder()
                 .setTextField(Color.TRANSPARENT, bgColor, Color.BLACK, 25, 2, false)
-                .setCheckBox(Color.BLACK, bgColor, Color.BLACK, 2, CPDFWidget.CheckStyle.CK_Check)
-                .setRadioButton(Color.BLACK, bgColor, Color.BLACK, 2, CPDFWidget.CheckStyle.CK_Circle)
+                .setCheckBox(Color.BLACK, bgColor, Color.BLACK, 2, CPDFWidget.CheckStyle.CK_Check, false)
+                .setRadioButton(Color.BLACK, bgColor, Color.BLACK, 2, CPDFWidget.CheckStyle.CK_Circle, false)
                 .setListBox(Color.TRANSPARENT, bgColor, Color.BLACK, 20, 2)
                 .setComboBox(Color.TRANSPARENT, bgColor, Color.BLACK, 20, 2)
                 .setPushButton(Color.BLACK, Color.WHITE, Color.BLACK, 20, 2, "Push Button")

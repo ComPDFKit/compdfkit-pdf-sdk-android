@@ -3,6 +3,7 @@
     <string name="tools_view_setting">View Setting</string>
     <string name="tools_share">Share</string>
     <string name="tools_open_document">Open…</string>
+    <string name="tools_flattened">Save as Flattened PDF</string>
 
     <string name="tools_display_mode">Display Mode</string>
     <string name="tools_scroll">Scroll</string>
@@ -474,4 +475,16 @@
     <string name="tools_signatures">Signatures</string>
     <string name="tools_name">Name</string>
     <string name="tools_enter_permission_password">Enter Permission Passwords</string>
+
+    <!--    v1.12.0 -->
+    <string name="tools_save_failed">Save failed</string>
+    <string name="tools_replace">Replace</string>
+    <string name="tools_find">Find</string>
+    <string name="tools_replace_with">Replace with</string>
+    <string name="tools_replace_all">Replace All</string>
+    <string name="tools_ignore_case">Ignore Case</string>
+    <string name="tools_whole_words_only">Whole Words only</string>
+    <string name="tools_setting">Setting</string>
+    <string name="tools_effective_immediately_after_setting">Effective immediately after setting</string>
+    <string name="tools_loading">Loading…</string>
 </resources>

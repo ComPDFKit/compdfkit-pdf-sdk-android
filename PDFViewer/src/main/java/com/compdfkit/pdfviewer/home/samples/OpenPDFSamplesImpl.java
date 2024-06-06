@@ -10,24 +10,15 @@
 package com.compdfkit.pdfviewer.home.samples;
 
 
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import androidx.fragment.app.Fragment;
 
-import com.compdfkit.pdfviewer.CPDFConfiguration;
-import com.compdfkit.pdfviewer.CPDFConfigurationUtils;
-import com.compdfkit.pdfviewer.MainActivity;
 import com.compdfkit.pdfviewer.home.HomeFunBean;
 import com.compdfkit.pdfviewer.home.datas.FunDatas;
-import com.compdfkit.pdfviewer.home.datas.SettingDatas;
-import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.pdf.CPDFDocumentActivity;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
-
-import java.io.File;
-import java.util.Arrays;
 
 public class OpenPDFSamplesImpl extends BasicFeaturesSamples {
 
@@ -54,14 +45,14 @@ public class OpenPDFSamplesImpl extends BasicFeaturesSamples {
     }
 
     protected void startPDFActivity(String filePath, Uri uri, String password) {
-        Intent intent = new Intent(fragment.getContext(), MainActivity.class);
-        intent.putExtra(MainActivity.EXTRA_FILE_PATH, filePath);
-        intent.setData(uri);
-        intent.putExtra(MainActivity.EXTRA_FILE_PASSWORD, password);
-        intent.putExtra(MainActivity.EXTRA_CONFIGURATION, FunDatas.getConfiguration(fragment.getContext(), getPreviewMode()));
-        fragment.startActivity(intent);
+        if (!TextUtils.isEmpty(filePath)) {
+            CPDFDocumentActivity.startActivity(fragment.getContext(), filePath, password,
+                    FunDatas.getConfiguration(fragment.getContext(), getPreviewMode()));
+        } else {
+            CPDFDocumentActivity.startActivity(fragment.getContext(), uri, password,
+                    FunDatas.getConfiguration(fragment.getContext(), getPreviewMode()));
+        }
     }
-
 
     protected CPreviewMode getPreviewMode() {
         switch (funType) {

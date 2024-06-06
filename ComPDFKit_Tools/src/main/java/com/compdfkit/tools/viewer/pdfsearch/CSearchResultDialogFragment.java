@@ -67,7 +67,13 @@ public class CSearchResultDialogFragment extends CBasicBottomSheetDialogFragment
         clSearchResultEmpty = mContentView.findViewById(R.id.cl_search_result_empty_view);
         AppCompatTextView tvResultInfo = mContentView.findViewById(R.id.tv_search_result);
         if (searchTextInfos != null) {
-            tvResultInfo.setText(getContext().getString(R.string.tools_search_result_found, searchTextInfos.size()));
+            int count = 0;
+            for (CSearchTextInfo searchTextInfo : searchTextInfos) {
+                if (!searchTextInfo.isHeader) {
+                    count++;
+                }
+            }
+            tvResultInfo.setText(getContext().getString(R.string.tools_search_result_found, count));
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
         recyclerView.setLayoutManager(layoutManager);

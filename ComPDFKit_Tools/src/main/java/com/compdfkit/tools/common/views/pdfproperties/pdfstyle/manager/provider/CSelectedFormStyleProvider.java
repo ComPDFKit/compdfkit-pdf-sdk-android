@@ -130,9 +130,11 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
                 }
                 listBoxWidget.setBorderColor(style.getLineColor());
                 String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(style.getFontType(), style.isFontBold(), style.isFontItalic());
+
                 listBoxWidget.setFontName(fontName);
                 listBoxWidget.updateAp();
                 baseAnnotImpl.onAnnotAttrChange();
+                ((CPDFListboxWidgetImpl) baseAnnotImpl).refresh();
                 if (pageView != null) {
                     pageView.invalidate();
                 }

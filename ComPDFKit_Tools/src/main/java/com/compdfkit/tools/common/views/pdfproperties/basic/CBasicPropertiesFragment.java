@@ -228,6 +228,11 @@ public abstract class CBasicPropertiesFragment extends Fragment implements CAnno
 
     }
 
+    @Override
+    public void onChangeSignFieldsBorderStyle(CPDFWidget.BorderStyle borderStyle) {
+
+    }
+
     public void setSwitchFragmentListener(OnSwitchFragmentListener switchFragmentListener) {
         this.switchFragmentListener = switchFragmentListener;
     }

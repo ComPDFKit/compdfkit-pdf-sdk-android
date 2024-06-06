@@ -88,7 +88,7 @@ public class CPDFBookmarkFragment extends Fragment {
         });
         bookmarkListAdapter.setEditBookmarkClickListener((bookmark, index) -> {
             CEditDialog editBookmarkDialog = CEditDialog.newInstance(getString(R.string.tools_edit_bookmark_title), bookmark.getTitle());
-            editBookmarkDialog.setHint(R.string.tools_bookmark_et_hint);
+            editBookmarkDialog.setHint(getString(R.string.tools_bookmark_et_hint));
             editBookmarkDialog.setEditListener(title -> {
                 if (pdfView != null) {
                     pdfView.getCPdfReaderView().getPDFDocument().getBookmarks()
@@ -108,7 +108,7 @@ public class CPDFBookmarkFragment extends Fragment {
                 return;
             }
             CEditDialog editBookmarkDialog = CEditDialog.newInstance(getString(R.string.tools_add_bookmarks), "");
-            editBookmarkDialog.setHint(R.string.tools_bookmark_et_hint);
+            editBookmarkDialog.setHint(getString(R.string.tools_bookmark_et_hint));
             editBookmarkDialog.setEditListener(title -> {
                 if (pdfView != null) {
                     int pageIndex = pdfView.currentPageIndex;

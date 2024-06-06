@@ -8,7 +8,7 @@
     <com.compdfkit.tools.common.views.CToolBar
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="56dp"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

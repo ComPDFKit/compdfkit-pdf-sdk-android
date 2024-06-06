@@ -12,11 +12,11 @@ package com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider
 
 import android.text.TextUtils;
 
+import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFFreetextAnnotation;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAlignment;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
-import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CBasicOnStyleChangeListener;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -126,6 +126,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     inkAttr.setAlpha(params.getOpacity());
                     inkAttr.setBorderWidth(params.getBorderWidth());
                     inkAttr.setEraseWidth(params.getEraserWidth());
+                    callback = inkAttr;
                     if (!onStore) {
                         readerView.invalidateAllChildren();
                     }
@@ -138,6 +139,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     squareAttr.setBorderAlpha(params.getLineColorOpacity());
                     squareAttr.setBorderWidth(params.getBorderWidth());
                     squareAttr.setBorderStyle(params.getBorderStyle());
+                    callback = squareAttr;
                     break;
                 case ANNOT_CIRCLE:
                     CPDFCircleAttr circleAttr = attribute.getCircleAttr();
@@ -147,9 +149,9 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     circleAttr.setBorderAlpha(params.getLineColorOpacity());
                     circleAttr.setBorderWidth(params.getBorderWidth());
                     circleAttr.setBorderStyle(params.getBorderStyle());
+                    callback = circleAttr;
                     break;
                 case ANNOT_LINE:
-                case ANNOT_ARROW:
                     CPDFLineAttr lineAttr = attribute.getLineAttr();
                     lineAttr.setBorderColor(params.getLineColor());
                     lineAttr.setBorderAlpha(params.getLineColorOpacity());
@@ -158,10 +160,64 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     lineAttr.setBorderWidth(params.getBorderWidth());
                     lineAttr.setBorderStyle(params.getBorderStyle());
                     lineAttr.setLineType(params.getStartLineType(), params.getTailLineType());
-                    if (params.getType() == CStyleType.ANNOT_ARROW) {
-                        CPDFAttributeDataFether dataFether = new CPDFAttributeDataFether(readerView.getContext());
-                        dataFether.setIntValue("custom_line_type", "custom_head_type", params.getStartLineType().id);
-                        dataFether.setIntValue("custom_line_type", "custom_tail_type", params.getTailLineType().id);
+                    callback = lineAttr;
+
+                    CPDFAttributeDataFether dataFether1 = new CPDFAttributeDataFether(readerView.getContext());
+                    dataFether1.setIntValue("custom_line_attr", "custom_line_head_type", params.getStartLineType().id);
+                    dataFether1.setIntValue("custom_line_attr", "custom_line_tail_type", params.getTailLineType().id);
+                    dataFether1.setIntValue("custom_line_attr", "custom_line_border_color", params.getLineColor());
+                    dataFether1.setIntValue("custom_line_attr", "custom_line_border_color_alpha", params.getLineColorOpacity());
+                    dataFether1.setIntValue("custom_line_attr", "custom_line_fill_color", params.getFillColor());
+                    dataFether1.setIntValue("custom_line_attr", "custom_line_fill_color_alpha", params.getFillColorOpacity());
+                    dataFether1.setFloatValue("custom_line_attr", "custom_line_border_width", params.getBorderWidth());
+                    if (params.getBorderStyle() != null) {
+                        dataFether1.setIntValue("custom_line_attr", "custom_line_bs_id", params.getBorderStyle().getStyle().id);
+                        dataFether1.setFloatValue("custom_line_attr", "custom_line_bs_borderWidth", params.getBorderStyle().getBorderWidth());
+                        float dashs[] = params.getBorderStyle().getDashArr();
+                        StringBuilder stringBuilder = new StringBuilder();
+                        int len = dashs.length;
+                        for (int i = 0; i < len; i++) {
+                            if (i != 0) {
+                                stringBuilder.append(",");
+                            }
+                            stringBuilder.append(dashs[i]);
+                        }
+                        dataFether1.setString("custom_line_attr", "custom_line_bs_dash", stringBuilder.toString());
+                    }
+                    break;
+                case ANNOT_ARROW:
+
+                    CPDFLineAttr lineAttr1 = attribute.getLineAttr();
+                    lineAttr1.setBorderColor(params.getLineColor());
+                    lineAttr1.setBorderAlpha(params.getLineColorOpacity());
+                    lineAttr1.setFillColor(params.getFillColor());
+                    lineAttr1.setFillAlpha(params.getFillColorOpacity());
+                    lineAttr1.setBorderWidth(params.getBorderWidth());
+                    lineAttr1.setBorderStyle(params.getBorderStyle());
+                    lineAttr1.setLineType(params.getStartLineType(), params.getTailLineType());
+                    callback = lineAttr1;
+
+                    CPDFAttributeDataFether dataFether = new CPDFAttributeDataFether(readerView.getContext());
+                    dataFether.setIntValue("custom_arrow_attr", "custom_arrow_head_type", params.getStartLineType().id);
+                    dataFether.setIntValue("custom_arrow_attr", "custom_arrow_tail_type", params.getTailLineType().id);
+                    dataFether.setIntValue("custom_arrow_attr", "custom_arrow_border_color", params.getLineColor());
+                    dataFether.setIntValue("custom_arrow_attr", "custom_arrow_border_color_alpha", params.getLineColorOpacity());
+                    dataFether.setIntValue("custom_arrow_attr", "custom_arrow_fill_color", params.getFillColor());
+                    dataFether.setIntValue("custom_arrow_attr", "custom_arrow_fill_color_alpha", params.getFillColorOpacity());
+                    dataFether.setFloatValue("custom_arrow_attr", "custom_arrow_border_width", params.getBorderWidth());
+                    if (params.getBorderStyle() != null) {
+                        dataFether.setIntValue("custom_arrow_attr", "custom_arrow_bs_id", params.getBorderStyle().getStyle().id);
+                        dataFether.setFloatValue("custom_arrow_attr", "custom_arrow_bs_borderWidth", params.getBorderStyle().getBorderWidth());
+                        float dashs[] = params.getBorderStyle().getDashArr();
+                        StringBuilder stringBuilder = new StringBuilder();
+                        int len = dashs.length;
+                        for (int i = 0; i < len; i++) {
+                            if (i != 0) {
+                                stringBuilder.append(",");
+                            }
+                            stringBuilder.append(dashs[i]);
+                        }
+                        dataFether.setString("custom_arrow_attr", "custom_arrow_bs_dash", stringBuilder.toString());
                     }
                     break;
                 case ANNOT_FREETEXT:
@@ -183,6 +239,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     freetextAttr.setAlpha(params.getTextColorOpacity());
                     String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(params.getFontType(), params.isFontBold(), params.isFontItalic());
                     freetextAttr.setTextAttribute(new CPDFTextAttribute(fontName, params.getFontSize(), params.getTextColor()));
+                    callback = freetextAttr;
                     break;
                 case ANNOT_SIGNATURE:
                     CPDFStampAttr stampAttr = attribute.getStampAttr();
@@ -222,6 +279,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                             textFieldAttr.setTextAlignment(CPDFTextAlignment.ALIGNMENT_UNKNOWN);
                             break;
                     }
+                    callback = textFieldAttr;
                     break;
                 case FORM_CHECK_BOX:
                     CPDFCheckboxAttr checkboxAttr = attribute.getCheckboxAttr();
@@ -232,6 +290,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     checkboxAttr.setFillColor(params.getFillColor());
                     checkboxAttr.setChecked(params.isChecked());
                     checkboxAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Check Button_"));
+                    callback = checkboxAttr;
                     break;
                 case FORM_RADIO_BUTTON:
                     CPDFRadiobuttonAttr radiobuttonAttr = attribute.getRadiobuttonAttr();
@@ -242,6 +301,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     radiobuttonAttr.setFillColor(params.getFillColor());
                     radiobuttonAttr.setChecked(params.isChecked());
                     radiobuttonAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Radio Button_"));
+                    callback = radiobuttonAttr;
                     break;
                 case FORM_LIST_BOX:
                     CPDFListboxAttr listBoxAttr = attribute.getListboxAttr();
@@ -250,7 +310,10 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     listBoxAttr.setFillColor(params.getFillColor());
                     listBoxAttr.setBorderWidth(params.getBorderWidth());
                     listBoxAttr.setBorderColor(params.getLineColor());
+                    String listBoxFontName = CPDFTextAttribute.FontNameHelper.obtainFontName(params.getFontType(), params.isFontBold(), params.isFontItalic());
+                    listBoxAttr.setFontName(listBoxFontName);
                     listBoxAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("List Choice_"));
+                    callback = listBoxAttr;
                     break;
                 case FORM_COMBO_BOX:
                     CPDFComboboxAttr comboBoxAttr = attribute.getComboboxAttr();
@@ -259,7 +322,10 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     comboBoxAttr.setFontColor(params.getTextColor());
                     comboBoxAttr.setBorderWidth(params.getBorderWidth());
                     comboBoxAttr.setBorderColor(params.getLineColor());
+                    String comboBoxFontName = CPDFTextAttribute.FontNameHelper.obtainFontName(params.getFontType(), params.isFontBold(), params.isFontItalic());
+                    comboBoxAttr.setFontName(comboBoxFontName);
                     comboBoxAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Combox Choice_"));
+                    callback = comboBoxAttr;
                     break;
                 case FORM_PUSH_BUTTON:
                     CPDFPushButtonAttr pushButtonAttr = attribute.getPushButtonAttr();
@@ -269,15 +335,19 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     pushButtonAttr.setFontColor(params.getTextColor());
                     pushButtonAttr.setFontSize(params.getFontSize());
                     pushButtonAttr.setButtonTitle(params.getFormDefaultValue());
+                    String pushButtonFontName = CPDFTextAttribute.FontNameHelper.obtainFontName(params.getFontType(), params.isFontBold(), params.isFontItalic());
+                    pushButtonAttr.setFontName(pushButtonFontName);
                     pushButtonAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Push Button_"));
+                    callback = pushButtonAttr;
                     break;
                 case FORM_SIGNATURE_FIELDS:
                     CPDFSignatureWidgetAttr signatureWidgetAttr = attribute.getSignatureWidgetAttr();
                     signatureWidgetAttr.setBorderWidth(params.getBorderWidth());
                     signatureWidgetAttr.setBorderColor(params.getLineColor());
-                    signatureWidgetAttr.setBorderStyle(CPDFWidget.BorderStyle.BS_Solid);
+                    signatureWidgetAttr.setBorderStyle(params.getSignFieldsBorderStyle());
                     signatureWidgetAttr.setFillColor(params.getFillColor());
                     signatureWidgetAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Signature__"));
+                    callback = signatureWidgetAttr;
                     break;
                 default:
                     break;
@@ -345,25 +415,77 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 style.setBorderStyle(circleAttr.getBorderStyle());
                 break;
             case ANNOT_LINE:
-            case ANNOT_ARROW:
-                CPDFLineAttr lineAttr = attribute.getLineAttr();
-                style.setBorderColor(lineAttr.getBorderColor());
-                style.setLineColorOpacity(lineAttr.getBorderAlpha());
-                style.setFillColor(lineAttr.getFillColor());
-                style.setFillColorOpacity(lineAttr.getFillAlpha());
-                style.setBorderStyle(lineAttr.getBorderStyle());
-                style.setBorderWidth(lineAttr.getBorderWidth());
-                if (type == CStyleType.ANNOT_LINE) {
-                    style.setStartLineType(CPDFLineAnnotation.LineType.LINETYPE_NONE);
-                    style.setTailLineType(CPDFLineAnnotation.LineType.LINETYPE_NONE);
-                } else {
-                    CPDFAttributeDataFether dataFether = new CPDFAttributeDataFether(readerView.getContext());
-                    CPDFLineAnnotation.LineType headType = CPDFLineAnnotation.LineType.valueOf(dataFether.getIntValue("custom_line_type", "custom_head_type", CPDFLineAnnotation.LineType.LINETYPE_NONE.id));
-                    CPDFLineAnnotation.LineType tailType = CPDFLineAnnotation.LineType.valueOf(dataFether.getIntValue("custom_line_type", "custom_tail_type", CPDFLineAnnotation.LineType.LINETYPE_ARROW.id));
-                    style.setStartLineType(headType);
-                    style.setTailLineType(tailType);
+
+                CPDFAttributeDataFether dataFether1 = new CPDFAttributeDataFether(readerView.getContext());
+                CPDFLineAnnotation.LineType headType1 = CPDFLineAnnotation.LineType.valueOf(dataFether1.getIntValue("custom_line_attr", "custom_line_head_type", CPDFLineAnnotation.LineType.LINETYPE_NONE.id));
+                CPDFLineAnnotation.LineType tailType1 = CPDFLineAnnotation.LineType.valueOf(dataFether1.getIntValue("custom_line_attr", "custom_line_tail_type", CPDFLineAnnotation.LineType.LINETYPE_NONE.id));
+                style.setStartLineType(headType1);
+                style.setTailLineType(tailType1);
+
+                style.setBorderColor(dataFether1.getIntValue("custom_line_attr", "custom_line_border_color", 0xDD2C00));
+                style.setLineColorOpacity(dataFether1.getIntValue("custom_line_attr", "custom_line_border_color_alpha", 255));
+                style.setFillColor(dataFether1.getIntValue("custom_line_attr", "custom_line_fill_color", 0xFFFFFF));
+                style.setFillColorOpacity(dataFether1.getIntValue("custom_line_attr", "custom_line_fill_color_alpha", 0));
+                style.setBorderWidth(dataFether1.getFloatValue("custom_line_attr", "custom_line_border_width", 2));
+
+
+                int bsId1 = dataFether1.getIntValue("custom_line_attr", "custom_line_bs_id", 0);
+                float bsBorderWidth1 = dataFether1.getFloatValue("custom_line_attr", "custom_line_bs_borderWidth", 2);
+                CPDFBorderStyle borderStyle1 = new CPDFBorderStyle();
+                borderStyle1.setStyle(CPDFBorderStyle.Style.valueOf(bsId1));
+                borderStyle1.setBorderWidth(bsBorderWidth1);
+                String bs_dash_str1 = dataFether1.getString("custom_line_attr", "custom_line_bs_dash", "12,12");
+                try {
+                    if (!TextUtils.isEmpty(bs_dash_str1)) {
+                        String dash_strs[] = bs_dash_str1.split(",");
+                        int len = dash_strs.length;
+                        float dash[] = new float[len];
+                        for (int i = 0; i < len; i++) {
+                            dash[i] = Float.valueOf(dash_strs[i]);
+                        }
+                        borderStyle1.setDashArr(dash);
+                        style.setBorderStyle(borderStyle1);
+                    }
+                } catch (NumberFormatException e) {
+
                 }
 
+
+                break;
+            case ANNOT_ARROW:
+                CPDFAttributeDataFether dataFether = new CPDFAttributeDataFether(readerView.getContext());
+                CPDFLineAnnotation.LineType headType = CPDFLineAnnotation.LineType.valueOf(dataFether.getIntValue("custom_arrow_attr", "custom_arrow_head_type", CPDFLineAnnotation.LineType.LINETYPE_NONE.id));
+                CPDFLineAnnotation.LineType tailType = CPDFLineAnnotation.LineType.valueOf(dataFether.getIntValue("custom_arrow_attr", "custom_arrow_tail_type", CPDFLineAnnotation.LineType.LINETYPE_ARROW.id));
+                style.setStartLineType(headType);
+                style.setTailLineType(tailType);
+
+                style.setBorderColor(dataFether.getIntValue("custom_arrow_attr", "custom_arrow_border_color", 0xDD2C00));
+                style.setLineColorOpacity(dataFether.getIntValue("custom_arrow_attr", "custom_arrow_border_color_alpha", 255));
+                style.setFillColor(dataFether.getIntValue("custom_arrow_attr", "custom_arrow_fill_color", 0xFFFFFF));
+                style.setFillColorOpacity(dataFether.getIntValue("custom_arrow_attr", "custom_arrow_fill_color_alpha", 0));
+                style.setBorderWidth(dataFether.getFloatValue("custom_arrow_attr", "custom_arrow_border_width", 2));
+
+
+                int bsId = dataFether.getIntValue("custom_arrow_attr", "custom_arrow_bs_id", 0);
+                float bsBorderWidth = dataFether.getFloatValue("custom_arrow_attr", "custom_arrow_bs_borderWidth", 2);
+                CPDFBorderStyle borderStyle = new CPDFBorderStyle();
+                borderStyle.setStyle(CPDFBorderStyle.Style.valueOf(bsId));
+                borderStyle.setBorderWidth(bsBorderWidth);
+                String bs_dash_str = dataFether.getString("custom_arrow_attr", "custom_arrow_bs_dash", "12,12");
+                try {
+                    if (!TextUtils.isEmpty(bs_dash_str)) {
+                        String dash_strs[] = bs_dash_str.split(",");
+                        int len = dash_strs.length;
+                        float dash[] = new float[len];
+                        for (int i = 0; i < len; i++) {
+                            dash[i] = Float.valueOf(dash_strs[i]);
+                        }
+                        borderStyle.setDashArr(dash);
+                        style.setBorderStyle(borderStyle);
+                    }
+                } catch (NumberFormatException e) {
+
+                }
                 break;
             case ANNOT_FREETEXT:
                 CPDFFreetextAttr freetextAttr = attribute.getFreetextAttr();

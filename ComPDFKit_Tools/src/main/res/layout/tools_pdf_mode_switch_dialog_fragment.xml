@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/tools_annot_style_dialog_window_bg"
     android:layout_height="wrap_content">
 
@@ -22,55 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_tool_bar">
 
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/r_btn_viewer_mode"
-            style="@style/tools_pdf_reader_mode_radio_button_style"
-            android:layout_height="60dp"
-            android:drawableStart="@drawable/tools_ic_preview_settings"
-            android:text="@string/tools_pdf_viewer_mode" />
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/r_btn_annotation_mode"
-            style="@style/tools_pdf_reader_mode_radio_button_style"
-            android:layout_height="60dp"
-            android:drawableStart="@drawable/tools_annotation"
-            android:text="@string/tools_pdf_annotation_mode" />
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/r_btn_pdf_edit_mode"
-            style="@style/tools_pdf_reader_mode_radio_button_style"
-            android:layout_height="60dp"
-            android:drawableStart="@drawable/tools_edit"
-            android:text="@string/tools_pdf_edit_mode" />
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/r_btn_form_mode"
-            style="@style/tools_pdf_reader_mode_radio_button_style"
-            android:layout_height="60dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:drawableStart="@drawable/tools_form"
-            android:text="@string/tools_form_mode" />
-
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/r_btn_page_edit_mode"
-            style="@style/tools_pdf_reader_mode_radio_button_style"
-            android:layout_height="60dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:drawableStart="@drawable/tools_page_edit"
-            android:text="@string/tools_page_edit_mode" />
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/r_btn_signature_mode"
-            style="@style/tools_pdf_reader_mode_radio_button_style"
-            android:layout_height="60dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:drawableStart="@drawable/tools_mode_switch_digital_signature"
-            android:text="@string/tools_signatures" />
 
 
     </RadioGroup>

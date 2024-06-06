@@ -19,6 +19,7 @@ import com.compdfkit.core.edit.CPDFEditArea;
 import com.compdfkit.core.edit.CPDFEditImageArea;
 import com.compdfkit.core.edit.CPDFEditTextArea;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -77,7 +78,9 @@ public class CEditSelectionsProvider implements CStyleProvider {
                 } else if (type == CAnnotStyle.EditUpdatePropertyType.FontType) {
                     CPDFTextAttribute.FontNameHelper.FontType font = style.getFontType();
                     if (font == CPDFTextAttribute.FontNameHelper.FontType.Courier) {
+                        CLog.e("数据", "isBold:"+textSelections.isBold() +", isItalic:" + textSelections.isItalic());
                         textSelections.setFontName(CPDFEditTextArea.FontCourier);
+
                     } else if (font == CPDFTextAttribute.FontNameHelper.FontType.Helvetica) {
                         textSelections.setFontName(CPDFEditTextArea.FontHelvtics);
                     } else if (font == CPDFTextAttribute.FontNameHelper.FontType.Times_Roman) {

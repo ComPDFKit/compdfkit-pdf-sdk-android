@@ -57,6 +57,8 @@ import java.util.UUID;
  */
 public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
 
+    public static CPreviewMode previewMode = CPreviewMode.Viewer;
+
     private boolean requesting = false;
 
     @Override
@@ -222,7 +224,7 @@ public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
     }
 
     protected CPreviewMode getCurrentMode(){
-        return CPreviewMode.Viewer;
+        return previewMode;
     }
 
 }

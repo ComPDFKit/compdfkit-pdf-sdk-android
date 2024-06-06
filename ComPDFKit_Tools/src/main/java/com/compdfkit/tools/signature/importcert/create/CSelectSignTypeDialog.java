@@ -10,13 +10,6 @@
 package com.compdfkit.tools.signature.importcert.create;
 
 
-import static com.compdfkit.tools.common.utils.CFileUtils.CERTIFICATE_DIGITAL_TYPE;
-
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,18 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.annotation.pdfproperties.pdfsignature.CAddSignatureActivity;
-import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CPermissionUtil;
-import com.compdfkit.tools.signature.interfaces.COnSelectCertFileListener;
 
 public class CSelectSignTypeDialog extends DialogFragment implements View.OnClickListener {
 

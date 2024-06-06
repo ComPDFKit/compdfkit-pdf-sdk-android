@@ -176,4 +176,9 @@ public class CBasicOnStyleChangeListener  implements CAnnotStyle.OnAnnotStyleCha
     public void onChangeExtraMap(Map<String, Object> extraMap) {
 
     }
+
+    @Override
+    public void onChangeSignFieldsBorderStyle(CPDFWidget.BorderStyle borderStyle) {
+
+    }
 }

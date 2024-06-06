@@ -27,6 +27,10 @@ public class CPermissionActivity extends AppCompatActivity {
         CPermissionUtil.showPermissionsRequiredDialog(getSupportFragmentManager(), this);
     }
 
+    protected void toSelfSetting(){
+        CPermissionUtil.toSelfSetting(this);
+    }
+
 }
 
 

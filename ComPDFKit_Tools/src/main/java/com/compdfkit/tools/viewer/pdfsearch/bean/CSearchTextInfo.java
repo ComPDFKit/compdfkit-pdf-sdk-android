@@ -61,8 +61,9 @@ public class CSearchTextInfo {
         }
         CPDFTextRange targetTextRange = new CPDFTextRange(targetStart, length);
         String target = textPage.getText(targetTextRange);
+        target = target.replaceAll("(\\r\\n)+ ", "");
 
-        this.stringBuilder = highlight(context, target.toLowerCase(), keyword.toLowerCase());
+        this.stringBuilder = highlight(context, target, keyword);
 
     }
 
@@ -73,10 +74,10 @@ public class CSearchTextInfo {
      * @param target The keyword to be highlighted
      * @return spannable The processed result, remember not to use toString(), otherwise it won't work
      */
-    private SpannableStringBuilder highlight(Context context, String text, String target) {
+    protected SpannableStringBuilder highlight(Context context, String text, String target) {
         SpannableStringBuilder spannable = new SpannableStringBuilder(text);
         CharacterStyle span;
-        Pattern p = Pattern.compile(target);
+        Pattern p = Pattern.compile(target, Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(text);
         int backGroundColor = ContextCompat.getColor(context, R.color.tools_search_result_text_highlight);
         while (m.find()) {

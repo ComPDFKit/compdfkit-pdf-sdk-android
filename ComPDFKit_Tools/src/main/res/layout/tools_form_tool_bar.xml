@@ -31,7 +31,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/rv_form"
-        android:paddingHorizontal="4dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="8dp"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintTop_toTopOf="parent">
 
         <View
@@ -40,26 +43,6 @@
             android:layout_marginStart="4dp"
             android:background="@color/tools_control_line_color"
             />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_form_attr_undo"
-            style="@style/tools_annotation_tool_bar_item_iv_style"
-            app:srcCompat="@drawable/tools_ic_annotation_undo"
-            android:layout_marginStart="12dp"
-            android:padding="3dp"
-            app:tint="@color/tools_annotation_iv_status_color"
-            android:background="@drawable/tools_common_btn_corner_ripple"
-            />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_form_attr_redo"
-            style="@style/tools_annotation_tool_bar_item_iv_style"
-            android:background="@drawable/tools_common_btn_corner_ripple"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="4dp"
-            android:padding="3dp"
-            app:tint="@color/tools_annotation_iv_status_color"
-            app:srcCompat="@drawable/tools_ic_annotation_redo" />
 
     </LinearLayout>
 

@@ -15,7 +15,6 @@ import static java.lang.Math.acos;
 import static java.lang.Math.asin;
 import static java.lang.Math.cos;
 import static java.lang.Math.max;
-import static java.lang.Math.min;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 

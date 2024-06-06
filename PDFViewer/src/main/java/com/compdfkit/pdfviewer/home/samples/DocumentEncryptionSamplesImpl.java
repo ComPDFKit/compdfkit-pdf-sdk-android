@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.home.HomeFunBean;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;

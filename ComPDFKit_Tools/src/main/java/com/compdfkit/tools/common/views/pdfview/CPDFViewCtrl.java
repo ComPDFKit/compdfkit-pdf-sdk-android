@@ -25,6 +25,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 
@@ -251,11 +253,15 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
 
     public void openPDF(String pdfFilePath, String password) {
+        openPDF(pdfFilePath, password, null);
+    }
+
+    public void openPDF(String pdfFilePath, String password, COnOpenPdfFinishCallback openPdfFinishCallback) {
         // Create a new instance of the CPDFDocument class, passing in the current context.
         CPDFDocument cpdfDocument = new CPDFDocument(getContext());
         // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
         CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfFilePath, password);
-        setPDFDocument(cpdfDocument, pdfFilePath, pdfDocumentError, null);
+        setPDFDocument(cpdfDocument, pdfFilePath, pdfDocumentError, openPdfFinishCallback);
     }
 
     public void openPDF(Uri pdfUri) {
@@ -334,6 +340,12 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
 
     public void showWritePermissionsDialog(CPDFDocument document) {
+        if (getContext() instanceof FragmentActivity) {
+            Fragment rwPermissionDialog = ((FragmentActivity) getContext()).getSupportFragmentManager().findFragmentByTag("rwPermissionDialog");
+            if (rwPermissionDialog != null && rwPermissionDialog instanceof DialogFragment){
+                ((DialogFragment) rwPermissionDialog).dismiss();
+            }
+        }
         CAlertDialog alertDialog = CAlertDialog.newInstance(
                 getContext().getString(R.string.tools_warning),
                 getContext().getString(R.string.tools_repair_pdf_file_mes)
@@ -355,13 +367,17 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
             alertDialog.dismiss();
         });
         if (getContext() instanceof FragmentActivity) {
-            alertDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "alertDialog");
+            alertDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "rwPermissionDialog");
         }
     }
 
     public void savePDF(COnSaveCallback callback, COnSaveError error) {
         CThreadPoolUtils.getInstance().executeMain(() -> {
             cPdfReaderView.pauseAllRenderProcess();
+            cPdfReaderView.removeAllAnnotFocus();
+            if (cPdfReaderView.getContextMenuShowListener() != null) {
+                cPdfReaderView.getContextMenuShowListener().dismissContextMenu();
+            }
             CPDFDocument document = cPdfReaderView.getPDFDocument();
             if (document == null) {
                 if (error != null) {
@@ -381,6 +397,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                     }
                 } catch (CPDFDocumentException e) {
                     e.printStackTrace();
+                    CLog.e("ComPDFKit", "save fail:" + e.getMessage());
                     if (error != null) {
                         error.error(e);
                     }
@@ -482,6 +499,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
     private void initCPDFSliderBar() {
         if (!enableSliderBar) {
+            if (slideBar.getParent() != null) {
+                ViewGroup viewGroup = (ViewGroup) slideBar.getParent();
+                viewGroup.removeAllViews();
+            }
             return;
         }
         CPDFSliderBarView cpdfSliderBarView = (CPDFSliderBarView) slideBar;
@@ -520,6 +541,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
      */
     private void addPageIndicator() {
         if (!enablePageIndicator) {
+            removeView(indicatorView);
             return;
         }
         removeView(indicatorView);
@@ -532,20 +554,24 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         indicatorView.setLayoutParams(layoutParams);
         indicatorView.setAlpha(0F);
         addView(indicatorView);
-
+        CPDFDocument document = cPdfReaderView.getPDFDocument();
+        if (document == null){
+            return;
+        }
         int totalPageCount = cPdfReaderView.getPDFDocument().getPageCount();
         indicatorView.setTotalPage(totalPageCount);
         indicatorView.setCurrentPageIndex(0);
         indicatorView.setPageIndicatorClickListener(pageIndex -> {
-            CGotoPageDialog dialog = new CGotoPageDialog(getContext());
-            dialog.setHintInputText(getContext().getString(R.string.tools_page) + String.format(" (%d/%d)", 1, totalPageCount));
+            CGotoPageDialog dialog = CGotoPageDialog.newInstance((getContext().getString(R.string.tools_page) + String.format(" (%d/%d)", 1, totalPageCount)));
             dialog.setPageCount(totalPageCount);
             dialog.setOnPDFDisplayPageIndexListener(page -> {
                 if (page <= totalPageCount && page > 0) {
                     cPdfReaderView.setDisplayPageIndex(page - 1, true);
                 }
             });
-            dialog.show();
+            if (getContext() instanceof FragmentActivity) {
+                dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "gotoPageDialog");
+            }
         });
         pageIndicatorAnimator = ObjectAnimator.ofFloat(indicatorView, "alpha", 0F, 1F);
         pageIndicatorAnimator.setDuration(100);

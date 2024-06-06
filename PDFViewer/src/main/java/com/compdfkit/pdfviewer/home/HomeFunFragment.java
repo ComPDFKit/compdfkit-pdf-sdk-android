@@ -9,7 +9,6 @@
 
 package com.compdfkit.pdfviewer.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,19 +19,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.compdfkit.pdfviewer.CPDFConfiguration;
-import com.compdfkit.pdfviewer.CPDFConfigurationUtils;
-import com.compdfkit.pdfviewer.MainActivity;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.databinding.FragmentHomeBinding;
 import com.compdfkit.pdfviewer.home.datas.FunDatas;
-import com.compdfkit.pdfviewer.home.samples.OpenPDFSamplesImpl;
-import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.pdf.CPDFDocumentActivity;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.ui.utils.CPDFCommomUtils;
-
-import java.io.File;
 
 
 public class HomeFunFragment extends Fragment {
@@ -40,7 +32,6 @@ public class HomeFunFragment extends Fragment {
     private CHomeFunListAdapter funListAdapter;
 
     private FragmentHomeBinding binding;
-
 
     @Nullable
     @Override
@@ -67,10 +58,8 @@ public class HomeFunFragment extends Fragment {
             }
             switch (homeFunBean.getType()) {
                 case SamplePDF:
-                    Intent intent = new Intent(getContext(), MainActivity.class);
-                    intent.putExtra(MainActivity.EXTRA_FILE_PATH, homeFunBean.getFilePath());
-                    intent.putExtra(MainActivity.EXTRA_CONFIGURATION, FunDatas.getConfiguration(getContext(), CPreviewMode.Viewer));
-                    startActivity(intent);
+                    CPDFDocumentActivity.startActivity(getContext(), homeFunBean.getFilePath(),
+                            "", FunDatas.getConfiguration(getContext(), CPreviewMode.Viewer));
                     break;
                 case Viewer:
                 case Annotations:
@@ -112,5 +101,4 @@ public class HomeFunFragment extends Fragment {
                 .replace(R.id.fragment_content, DocumentListFragment.newInstance(funType), funType.name() + "_DocumentListFragment")
                 .commit();
     }
-
 }

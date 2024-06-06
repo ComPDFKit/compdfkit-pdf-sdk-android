@@ -28,6 +28,10 @@ import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 
 public class CPermissionUtil {
 
+    public static final int VERSION_TIRAMISU = 33;
+    public static final int VERSION_S_V2 = 32;
+    public static final int VERSION_R = 30;
+
     public final static String[] STORAGE_PERMISSIONS = new String[]{
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -37,8 +41,19 @@ public class CPermissionUtil {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= VERSION_TIRAMISU) {
             return Environment.isExternalStorageManager();
+        }
+        if (Build.VERSION.SDK_INT >= VERSION_R) {
+            boolean hasPermission = true;
+            for (String perm : STORAGE_PERMISSIONS) {
+                if (ContextCompat.checkSelfPermission(context, perm)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    hasPermission = false;
+                    break;
+                }
+            }
+            return Environment.isExternalStorageManager() && hasPermission;
         }
         for (String perm : STORAGE_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(context, perm)

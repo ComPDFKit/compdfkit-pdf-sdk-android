@@ -34,7 +34,6 @@ import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.utils.window.CModeSwitchDialogFragment;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -107,7 +106,6 @@ public class CPDFToolBar extends FrameLayout {
                 }
             }
         });
-        addMode(CPreviewMode.Viewer);
         initAttributes(context, attrs);
     }
 
@@ -138,6 +136,12 @@ public class CPDFToolBar extends FrameLayout {
             }
         }else {
             tvToolBarTitle.setCompoundDrawables(null,null,null,null);
+        }
+    }
+
+    public void addModes(List<CPreviewMode> modes){
+        for (CPreviewMode mode : modes) {
+            addMode(mode);
         }
     }
 

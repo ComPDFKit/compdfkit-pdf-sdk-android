@@ -97,11 +97,11 @@ class InteractiveFormsTest : PDFSamples() {
         //Insert a ListBox widget.
         val listBoxWidget = cpdfPage.addFormWidget(WidgetType.Widget_ListBox) as CPDFListboxWidget
         listBoxWidget.apply {
-            rect = kotlin.run {
-                val listBoxRect: RectF? = RectF(267F, 32F, 567F, 138F)
-                cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), listBoxRect)
-            }
+            rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(267F, 32F, 567F, 138F))
             fieldName = "ListBox1"
+            fillColor = Color.WHITE
+            borderColor = Color.BLACK
+            borderWidth = 2F
             val listBoxItems = arrayOf(
                     CPDFWidgetItem("List Box No.1", "List Box No.1"),
                     CPDFWidgetItem("List Box No.2", "List Box No.2"),
@@ -114,10 +114,7 @@ class InteractiveFormsTest : PDFSamples() {
         //Insert a ComboBox Widget.
         val comboBoxWidget = cpdfPage.addFormWidget(WidgetType.Widget_ComboBox) as CPDFComboboxWidget
         comboBoxWidget.apply {
-            rect = kotlin.run {
-                val comboBoxRect: RectF? = RectF(267F, 143F, 567F, 189F)
-                cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), comboBoxRect)
-            }
+            rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(267F, 143F, 567F, 189F))
             fieldName = "ComboBox1"
             val comboBoxItems = arrayOf(
                     CPDFWidgetItem("Combo Box No.1", "Combo Box No.1"),
@@ -127,23 +124,21 @@ class InteractiveFormsTest : PDFSamples() {
             updateAp()
         }
 
-
         //Insert a Form Signature Widget (unsigned)
         val signatureWidget = cpdfPage.addFormWidget(WidgetType.Widget_SignatureFields) as CPDFSignatureWidget
-        signatureWidget.fieldName = "Signature1"
-        signatureWidget.rect = kotlin.run {
-            val signatureRect: RectF? = RectF(28F, 206F, 237F, 301F)
-            cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), signatureRect)
+        signatureWidget.apply {
+            rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(28F, 206F, 237F, 301F))
+            fieldName = "Signature1"
+            fillColor = Color.WHITE
+            borderColor = Color.BLACK
+            borderWidth = 2F
+            updateAp()
         }
-        signatureWidget.updateAp()
 
         //Insert a PushButton to jump to a page.
         val pushButtonWidget1 = cpdfPage.addFormWidget(WidgetType.Widget_PushButton) as CPDFPushbuttonWidget
         pushButtonWidget1.apply {
-            rect = kotlin.run {
-                val pushButton1Rect: RectF? = RectF(267F, 203F, 401F, 235F)
-                cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), pushButton1Rect)
-            }
+            rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(267F, 203F, 401F, 235F))
             fieldName = "PushButton1"
             fontColor = Color.BLACK
             fontSize = 15F
@@ -155,91 +150,85 @@ class InteractiveFormsTest : PDFSamples() {
             updateAp()
         }
 
-
         //Insert a PushButton to jump to a website.
-        var pushButton2Rect: RectF? = RectF(433F, 203F, 567F, 235F)
-        pushButton2Rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), pushButton2Rect)
         val pushButtonWidget2 = cpdfPage.addFormWidget(WidgetType.Widget_PushButton) as CPDFPushbuttonWidget
-        pushButtonWidget2.rect = pushButton2Rect
-        pushButtonWidget2.fieldName = "PushButton2"
-        pushButtonWidget2.fontColor = Color.BLACK
-        pushButtonWidget2.fontSize = 15f
-        pushButtonWidget2.buttonTitle = "PushButton"
-        //set PushButton jump to a website
-        pushButtonWidget2.buttonAction = CPDFUriAction().apply {
-            uri = "https://www.compdf.com/"
+        pushButtonWidget2.apply {
+            rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(433F, 203F, 567F, 235F))
+            fieldName = "PushButton2"
+            fontColor = Color.BLACK
+            fontSize = 15F
+            buttonTitle = "PushButton"
+            //set PushButton jump to a website
+            buttonAction = CPDFUriAction().apply {
+                uri = "https://www.compdf.com/"
+            }
+            updateAp()
         }
-        pushButtonWidget2.updateAp()
 
         //Insert CheckBox Widget
         val checkboxWidget = cpdfPage.addFormWidget(WidgetType.Widget_CheckBox) as CPDFCheckboxWidget
-        checkboxWidget.rect = kotlin.run {
-            val checkBox1: RectF? = RectF(267F, 251F, 299F, 283F)
-            cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), checkBox1)
+        checkboxWidget.apply {
+            rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(267F, 251F, 299F, 283F))
+            fieldName = "CheckBox1"
+            fillColor = Color.parseColor("#CCE5E5FF")
+            borderColor = Color.BLACK
+            borderWidth = 2F
+            isChecked = false
+            updateAp()
         }
-        checkboxWidget.fieldName = "CheckBox1"
-        checkboxWidget.fillColor = Color.parseColor("#CCE5E5FF")
-        checkboxWidget.borderColor = Color.BLACK
-        checkboxWidget.borderWidth = 2F
-        checkboxWidget.isChecked = false
-        checkboxWidget.updateAp()
 
         val checkboxWidget2 = cpdfPage.addFormWidget(WidgetType.Widget_CheckBox) as CPDFCheckboxWidget
-        checkboxWidget2.rect = kotlin.run {
-            val checkBox2: RectF? = RectF(326F, 251F, 358F, 283F)
-            cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), checkBox2)
+        checkboxWidget2.apply {
+            rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(326F, 251F, 358F, 283F))
+            fieldName = "CheckBox1"
+            fillColor = Color.parseColor("#CCE5E5FF")
+            borderColor = Color.BLACK
+            borderWidth = 2F
+            isChecked = true
+            updateAp()
         }
-        checkboxWidget2.fieldName = "CheckBox1"
-        checkboxWidget2.fillColor = Color.parseColor("#CCE5E5FF")
-        checkboxWidget2.borderColor = Color.BLACK
-        checkboxWidget2.borderWidth = 2F
-        checkboxWidget2.isChecked = true
-        checkboxWidget2.updateAp()
 
         //Insert RadioButton Widget
         val radiobuttonWidget1 = cpdfPage.addFormWidget(WidgetType.Widget_RadioButton) as CPDFRadiobuttonWidget
-        radiobuttonWidget1.rect = kotlin.run {
-            val radioButton1: RectF? = RectF(385F, 251F, 424f, 290f)
-            cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), radioButton1)
+        radiobuttonWidget1.apply {
+            rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(385F, 251F, 424f, 290f))
+            fieldName = "RadioButton"
+            checkStyle = CPDFWidget.CheckStyle.CK_Circle
+            fillColor = Color.parseColor("#CCE5E5FF")
+            borderColor = Color.BLACK
+            borderWidth = 2F
+            isChecked = false
+            fieldName = "RadioButton1"
+            updateAp()
         }
-        radiobuttonWidget1.fieldName = "RadioButton"
-        radiobuttonWidget1.checkStyle = CPDFWidget.CheckStyle.CK_Circle
-        radiobuttonWidget1.fillColor = Color.parseColor("#CCE5E5FF")
-        radiobuttonWidget1.borderColor = Color.BLACK
-        radiobuttonWidget1.borderWidth = 2F
-        radiobuttonWidget1.isChecked = false
-        radiobuttonWidget1.fieldName = "RadioButton1"
-        radiobuttonWidget1.updateAp()
+
 
         val radiobuttonWidget2 = cpdfPage.addFormWidget(WidgetType.Widget_RadioButton) as CPDFRadiobuttonWidget
-        radiobuttonWidget2.rect = kotlin.run {
-            val radioButton2: RectF? = RectF(450F, 251F, 489F, 290F)
-             cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), radioButton2)
+        radiobuttonWidget2.apply {
+            rect = cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(450F, 251F, 489F, 290F))
+            fieldName = "RadioButton"
+            checkStyle = CPDFWidget.CheckStyle.CK_Circle
+            fillColor = Color.parseColor("#CCE5E5FF")
+            borderColor = Color.BLACK
+            borderWidth = 2F
+            // Check the widget (by default it is unchecked).
+            isChecked = true
+            fieldName = "RadioButton1"
+            updateAp()
         }
-        radiobuttonWidget2.fieldName = "RadioButton"
-        radiobuttonWidget2.checkStyle = CPDFWidget.CheckStyle.CK_Circle
-        radiobuttonWidget2.fillColor = Color.parseColor("#CCE5E5FF")
-        radiobuttonWidget2.borderColor = Color.BLACK
-        radiobuttonWidget2.borderWidth = 2F
-        // Check the widget (by default it is unchecked).
-        radiobuttonWidget2.isChecked = true
-        radiobuttonWidget2.fieldName = "RadioButton1"
-        radiobuttonWidget2.updateAp()
-
 
         val radiobuttonWidget3 = cpdfPage.addFormWidget(WidgetType.Widget_RadioButton) as CPDFRadiobuttonWidget
-        radiobuttonWidget3.rect = kotlin.run {
-            val radioButton3: RectF? = RectF(515F, 251F, 554F, 290F)
-            cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), radioButton3)
+        radiobuttonWidget3.apply {
+            rect =  cpdfPage.convertRectToPage(false, pageSize.width(), pageSize.height(), RectF(515F, 251F, 554F, 290F))
+            fieldName = "RadioButton"
+            checkStyle = CPDFWidget.CheckStyle.CK_Circle
+            fillColor = Color.parseColor("#CCE5E5FF")
+            borderColor = Color.BLACK
+            borderWidth = 2F
+            isChecked = false
+            fieldName = "RadioButton1"
+            updateAp()
         }
-        radiobuttonWidget3.fieldName = "RadioButton"
-        radiobuttonWidget3.checkStyle = CPDFWidget.CheckStyle.CK_Circle
-        radiobuttonWidget3.fillColor = Color.parseColor("#CCE5E5FF")
-        radiobuttonWidget3.borderColor = Color.BLACK
-        radiobuttonWidget3.borderWidth = 2F
-        radiobuttonWidget3.isChecked = false
-        radiobuttonWidget3.fieldName = "RadioButton1"
-        radiobuttonWidget3.updateAp()
         outputListener?.println("Done.")
         outputListener?.println("Done. Result saved in Create_Form_Test.pdf")
         printDividingLine()

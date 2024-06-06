@@ -257,6 +257,11 @@ public class CStyleManager implements CAnnotStyle.OnAnnotStyleChangeListener {
         updateAnnot();
     }
 
+    @Override
+    public void onChangeSignFieldsBorderStyle(CPDFWidget.BorderStyle borderStyle) {
+        updateAnnot();
+    }
+
     private void updateAnnot() {
         if (styleDialogFragment != null) {
             CAnnotStyle style = styleDialogFragment.getAnnotStyle();
@@ -328,16 +333,14 @@ public class CStyleManager implements CAnnotStyle.OnAnnotStyleChangeListener {
                                      @IntRange(from = 0, to = 255) int fillColorAlpha,
                                      float borderWidth,
                                      CPDFLineAnnotation.LineType startLineType,
-                                     CPDFLineAnnotation.LineType tailLineType) {
+                                     CPDFLineAnnotation.LineType tailLineType,
+                                     CPDFBorderStyle borderStyle) {
             CAnnotStyle style = new CAnnotStyle(CStyleType.ANNOT_ARROW);
             style.setBorderColor(lineColor);
             style.setLineColorOpacity(lineColorOpacity);
             style.setFillColor(fillColor);
             style.setFillColorOpacity(fillColorAlpha);
             style.setBorderWidth(borderWidth);
-            CPDFBorderStyle borderStyle = new CPDFBorderStyle();
-            borderStyle.setBorderWidth(borderWidth);
-            borderStyle.setDashArr(new float[]{8.0F, 0F});
             if (startLineType != null) {
                 style.setStartLineType(startLineType);
             }
@@ -381,13 +384,15 @@ public class CStyleManager implements CAnnotStyle.OnAnnotStyleChangeListener {
                                    @ColorInt int fillColor,
                                    @ColorInt int checkBoxColor,
                                    int borderWidth,
-                                   CPDFWidget.CheckStyle checkStyle) {
+                                   CPDFWidget.CheckStyle checkStyle,
+                                   boolean isChecked) {
             CAnnotStyle style = new CAnnotStyle(CStyleType.FORM_CHECK_BOX);
             style.setBorderColor(borderColor);
             style.setFillColor(fillColor);
             style.setColor(checkBoxColor);
             style.setBorderWidth(borderWidth);
             style.setCheckStyle(checkStyle);
+            style.setChecked(isChecked);
             attrSet.add(style);
             return this;
         }
@@ -396,13 +401,15 @@ public class CStyleManager implements CAnnotStyle.OnAnnotStyleChangeListener {
                                       @ColorInt int fillColor,
                                       @ColorInt int checkBoxColor,
                                       int borderWidth,
-                                      CPDFWidget.CheckStyle checkStyle) {
+                                      CPDFWidget.CheckStyle checkStyle,
+                                      boolean isChecked) {
             CAnnotStyle style = new CAnnotStyle(CStyleType.FORM_RADIO_BUTTON);
             style.setBorderColor(borderColor);
             style.setFillColor(fillColor);
             style.setColor(checkBoxColor);
             style.setBorderWidth(borderWidth);
             style.setCheckStyle(checkStyle);
+            style.setChecked(isChecked);
             attrSet.add(style);
             return this;
         }

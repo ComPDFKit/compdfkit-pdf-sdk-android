@@ -80,6 +80,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/tools_text_color_disable" />
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

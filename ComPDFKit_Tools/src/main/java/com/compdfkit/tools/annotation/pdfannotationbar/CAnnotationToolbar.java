@@ -15,7 +15,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -32,7 +34,10 @@ import com.compdfkit.tools.annotation.pdfannotationbar.adapter.CPDFAnnotationToo
 import com.compdfkit.tools.annotation.pdfannotationbar.bean.CAnnotToolBean;
 import com.compdfkit.tools.annotation.pdfannotationbar.data.CAnnotationToolDatas;
 import com.compdfkit.tools.common.interfaces.COnAnnotationChangeListener;
+import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
+import com.compdfkit.tools.common.utils.CListUtil;
 import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
@@ -45,6 +50,7 @@ import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.ui.proxy.attach.IInkDrawCallback;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CAnnotationToolbar extends FrameLayout {
@@ -65,6 +71,8 @@ public class CAnnotationToolbar extends FrameLayout {
 
     private COnAnnotationChangeListener annotationChangeListener;
 
+    private LinearLayout llAnnotTools;
+
     public CAnnotationToolbar(@NonNull Context context) {
         this(context, null);
     }
@@ -81,27 +89,17 @@ public class CAnnotationToolbar extends FrameLayout {
     private void initView(Context context) {
         inflate(context, R.layout.tools_annot_tool_bar, this);
         rvAnnotationList = findViewById(R.id.rv_annotation);
-        ivSetting = findViewById(R.id.iv_annotation_attr_settings);
-        ivUndo = findViewById(R.id.iv_annotation_attr_undo);
-        ivRedo = findViewById(R.id.iv_annotation_attr_redo);
+        llAnnotTools = findViewById(R.id.ll_annotation_attr);
         toolListAdapter = new CPDFAnnotationToolListAdapter();
         rvAnnotationList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvAnnotationList.setAdapter(toolListAdapter);
+        if (isInEditMode()) {
+            setTools(Arrays.asList(AnnotationsConfig.AnnotationTools.Setting, AnnotationsConfig.AnnotationTools.Undo, AnnotationsConfig.AnnotationTools.Redo));
+        }
         initListener();
     }
 
     private void initListener() {
-        ivSetting.setEnabled(false);
-        ivSetting.setOnClickListener(v -> {
-            showAnnotStyleDialog();
-        });
-
-        ivUndo.setOnClickListener(v -> {
-            undo();
-        });
-        ivRedo.setOnClickListener(v -> {
-            redo();
-        });
         toolListAdapter.setOnItemClickListener((adapter, view, position) -> {
             CAnnotToolBean bean = adapter.list.get(position);
             toolListAdapter.selectItem(position);
@@ -116,7 +114,9 @@ public class CAnnotationToolbar extends FrameLayout {
             if (type == CPDFAnnotation.Type.UNKNOWN) {
                 if (toolListAdapter.hasSelectAnnotType()) {
                     toolListAdapter.selectByType(CAnnotationType.UNKNOWN);
-                    ivSetting.setEnabled(toolListAdapter.annotEnableSetting());
+                    if (ivSetting != null) {
+                        ivSetting.setEnabled(toolListAdapter.annotEnableSetting());
+                    }
                 }
             }
         });
@@ -164,7 +164,9 @@ public class CAnnotationToolbar extends FrameLayout {
     }
 
     private void switchAnnotationType(CAnnotToolBean bean) {
-        ivSetting.setEnabled(toolListAdapter.annotEnableSetting());
+        if (ivSetting != null) {
+            ivSetting.setEnabled(toolListAdapter.annotEnableSetting());
+        }
         if (!bean.isSelect()) {
             pdfView.resetAnnotationType();
             pdfView.getCPdfReaderView().getInkDrawHelper().onClean();
@@ -218,15 +220,23 @@ public class CAnnotationToolbar extends FrameLayout {
 
     private void redoUndoManager() {
         CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
-        ivRedo.setEnabled(undoManager.canRedo());
-        ivUndo.setEnabled(undoManager.canRedo());
+        if (ivRedo != null) {
+            ivRedo.setEnabled(undoManager.canRedo());
+        }
+        if (ivUndo != null) {
+            ivUndo.setEnabled(undoManager.canRedo());
+        }
         pdfView.getCPdfReaderView().getUndoManager().enable(true);
         pdfView.getCPdfReaderView().getUndoManager().addOnUndoHistoryChangeListener((cpdfUndoManager, operation, type) -> {
             boolean canUndo = cpdfUndoManager.canUndo();
             boolean canRedo = cpdfUndoManager.canRedo();
             handler.post(() -> {
-                ivUndo.setEnabled(canUndo);
-                ivRedo.setEnabled(canRedo);
+                if (ivUndo != null) {
+                    ivUndo.setEnabled(canUndo);
+                }
+                if (ivRedo != null) {
+                    ivRedo.setEnabled(canRedo);
+                }
             });
         });
     }
@@ -278,6 +288,51 @@ public class CAnnotationToolbar extends FrameLayout {
         this.annotationChangeListener = annotationChangeListener;
     }
 
+    public void setTools(List<AnnotationsConfig.AnnotationTools> tools) {
+        llAnnotTools.setVisibility(tools != null && tools.size() > 0 ? VISIBLE : GONE);
+        if(tools != null && tools.size() > 0){
+            tools = CListUtil.distinct(tools);
+        }
+        for (AnnotationsConfig.AnnotationTools tool : tools) {
+            AppCompatImageView toolView = (AppCompatImageView) LayoutInflater.from(getContext())
+                    .inflate(R.layout.tools_annot_tool_bar_tools_item, null);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    CDimensUtils.dp2px(getContext(), 30),CDimensUtils.dp2px(getContext(), 30)
+            );
+            layoutParams.setMarginStart(CDimensUtils.dp2px(getContext(), 12));
+            toolView.setLayoutParams(layoutParams);
+            switch (tool) {
+                case Setting:
+                    toolView.setEnabled(false);
+                    toolView.setImageResource(R.drawable.tools_ic_annotation_setting);
+                    toolView.setOnClickListener(v -> {
+                        showAnnotStyleDialog();
+                    });
+                    ivSetting = toolView;
+                    break;
+                case Undo:
+                    toolView.setImageResource(R.drawable.tools_ic_annotation_undo);
+                    toolView.setOnClickListener(v -> {
+                        undo();
+                    });
+                    ivUndo = toolView;
+                    break;
+                case Redo:
+                    toolView.setImageResource(R.drawable.tools_ic_annotation_redo);
+                    toolView.setOnClickListener(v -> {
+                        redo();
+                    });
+                    ivRedo = toolView;
+                    break;
+                default:
+                    break;
+            }
+            llAnnotTools.addView(toolView);
+        }
+        redoUndoManager();
+    }
+
+
     public AppCompatImageView getSettingButton() {
         return ivSetting;
     }
@@ -290,31 +345,37 @@ public class CAnnotationToolbar extends FrameLayout {
         return ivUndo;
     }
 
-    public void setSettingImageResource(@DrawableRes int drawableRes){
-        ivSetting.setImageResource(drawableRes);
-        ivSetting.setImageTintList(null);
+    public void setSettingImageResource(@DrawableRes int drawableRes) {
+        if (ivSetting != null) {
+            ivSetting.setImageResource(drawableRes);
+            ivSetting.setImageTintList(null);
+        }
     }
 
-    public void setRedoImageResource(@DrawableRes int drawableRes){
-        ivRedo.setImageResource(drawableRes);
-        ivRedo.setImageTintList(null);
+    public void setRedoImageResource(@DrawableRes int drawableRes) {
+        if (ivRedo != null) {
+            ivRedo.setImageResource(drawableRes);
+            ivRedo.setImageTintList(null);
+        }
     }
 
-    public void setUndoImageResource(@DrawableRes int drawableRes){
-        ivUndo.setImageResource(drawableRes);
-        ivUndo.setImageTintList(null);
+    public void setUndoImageResource(@DrawableRes int drawableRes) {
+        if (ivUndo != null) {
+            ivUndo.setImageResource(drawableRes);
+            ivUndo.setImageTintList(null);
+        }
     }
 
-    public void setAnnotationList(List<CAnnotToolBean> list){
+    public void setAnnotationList(List<CAnnotToolBean> list) {
         toolListAdapter.setList(list);
     }
 
-    public void setAnnotationList(CAnnotationType... types){
-        if (pdfView == null){
+    public void setAnnotationList(CAnnotationType... types) {
+        if (pdfView == null) {
             CLog.e("ComPDFKit_Tools", "CAnnotationToolbar.setAnnotationList(), pdfView cannot be null");
             return;
         }
-        if (toolListAdapter == null){
+        if (toolListAdapter == null) {
             CLog.e("ComPDFKit_Tools", "CAnnotationToolbar.toolListAdapter, toolListAdapter cannot be null");
             return;
         }
@@ -325,6 +386,23 @@ public class CAnnotationToolbar extends FrameLayout {
             if (!typeList.contains(bean.getType())) {
                 list.remove(i);
             }
+        }
+        if (list.size() > 0) {
+            Collections.sort(list, (o1, o2) -> {
+                int index1 = typeList.indexOf(o1.getType());
+                int index2 = typeList.indexOf(o2.getType());
+
+                // 处理不在categorys中的元素
+                if (index1 == -1 && index2 == -1) {
+                    return 0; // 两个元素都不在categorys中，保持原有顺序
+                } else if (index1 == -1) {
+                    return 1; // item1不在categorys中，将item1排到后面
+                } else if (index2 == -1) {
+                    return -1; // item2不在categorys中，将item2排到后面
+                }
+
+                return Integer.compare(index1, index2);
+            });
         }
         toolListAdapter.setList(list);
     }

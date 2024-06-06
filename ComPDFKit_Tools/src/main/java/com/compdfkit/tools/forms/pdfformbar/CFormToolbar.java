@@ -14,6 +14,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -29,7 +30,10 @@ import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.undo.CPDFUndoManager;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnFormChangeListener;
+import com.compdfkit.tools.common.pdf.config.FormsConfig;
+import com.compdfkit.tools.common.utils.CListUtil;
 import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.forms.pdfformbar.adapter.CPDFFormToolListAdapter;
 import com.compdfkit.tools.forms.pdfformbar.bean.CFormToolBean;
@@ -37,6 +41,7 @@ import com.compdfkit.tools.forms.pdfformbar.data.CFormToolDatas;
 import com.compdfkit.ui.contextmenu.IContextMenuShowListener;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CFormToolbar extends FrameLayout {
@@ -75,8 +80,6 @@ public class CFormToolbar extends FrameLayout {
     private void initView(Context context) {
         inflate(context, R.layout.tools_form_tool_bar, this);
         rvFormList = findViewById(R.id.rv_form);
-        ivUndo = findViewById(R.id.iv_form_attr_undo);
-        ivRedo = findViewById(R.id.iv_form_attr_redo);
         llFormTool = findViewById(R.id.ll_form_attr);
         toolListAdapter = new CPDFFormToolListAdapter();
         rvFormList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -85,8 +88,6 @@ public class CFormToolbar extends FrameLayout {
     }
 
     private void initListener() {
-        ivUndo.setOnClickListener(v -> undo());
-        ivRedo.setOnClickListener(v -> redo());
         toolListAdapter.setOnItemClickListener((adapter, view, position) -> {
             CFormToolBean bean = adapter.list.get(position);
             toolListAdapter.selectItem(position);
@@ -96,7 +97,7 @@ public class CFormToolbar extends FrameLayout {
 
     public void initWithPDFView(CPDFViewCtrl pdfView) {
         this.pdfView = pdfView;
-        toolListAdapter.setList(CFormToolDatas.getFormList(pdfView));
+        toolListAdapter.setList(CFormToolDatas.getFormList());
         pdfView.getCPdfReaderView().setSelectEditAreaChangeListener(type -> {
             CLog.e("SelectEdit", "type:"+ type);
         });
@@ -134,15 +135,23 @@ public class CFormToolbar extends FrameLayout {
 
     private void redoUndoManager() {
         CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
-        ivRedo.setEnabled(undoManager.canRedo());
-        ivUndo.setEnabled(undoManager.canRedo());
+        if (ivRedo != null) {
+            ivRedo.setEnabled(undoManager.canRedo());
+        }
+        if (ivUndo != null) {
+            ivUndo.setEnabled(undoManager.canRedo());
+        }
         pdfView.getCPdfReaderView().getUndoManager().enable(true);
         pdfView.getCPdfReaderView().getUndoManager().addOnUndoHistoryChangeListener((cpdfUndoManager, operation, type) -> {
             boolean canUndo = cpdfUndoManager.canUndo();
             boolean canRedo = cpdfUndoManager.canRedo();
             handler.post(() -> {
-                ivUndo.setEnabled(canUndo);
-                ivRedo.setEnabled(canRedo);
+                if (ivUndo != null) {
+                    ivUndo.setEnabled(canUndo);
+                }
+                if (ivRedo != null) {
+                    ivRedo.setEnabled(canRedo);
+                }
             });
         });
     }
@@ -188,11 +197,15 @@ public class CFormToolbar extends FrameLayout {
     }
 
     public void setRedoImageResource(@DrawableRes int drawableRes){
-        ivRedo.setImageResource(drawableRes);
+        if (ivRedo != null) {
+            ivRedo.setImageResource(drawableRes);
+        }
     }
 
     public void setUndoImageResource(@DrawableRes int drawableRes){
-        ivRedo.setImageResource(drawableRes);
+        if (ivUndo != null) {
+            ivUndo.setImageResource(drawableRes);
+        }
     }
 
     public void setFormList(List<CFormToolBean> list){
@@ -209,14 +222,65 @@ public class CFormToolbar extends FrameLayout {
             return;
         }
         List<CPDFWidget.WidgetType> typeList = Arrays.asList(types);
-        List<CFormToolBean> list = CFormToolDatas.getFormList(pdfView);
+        List<CFormToolBean> list = CFormToolDatas.getFormList();
         for (int i = list.size() - 1; i >= 0; i--) {
             CFormToolBean bean = list.get(i);
             if (!typeList.contains(bean.getType())) {
                 list.remove(i);
             }
         }
+        if (list.size() > 0) {
+            Collections.sort(list, (o1, o2) -> {
+                int index1 = typeList.indexOf(o1.getType());
+                int index2 = typeList.indexOf(o2.getType());
+                // 处理不在categorys中的元素
+                if (index1 == -1 && index2 == -1) {
+                    return 0; // 两个元素都不在categorys中，保持原有顺序
+                } else if (index1 == -1) {
+                    return 1; // item1不在categorys中，将item1排到后面
+                } else if (index2 == -1) {
+                    return -1; // item2不在categorys中，将item2排到后面
+                }
+                return Integer.compare(index1, index2);
+            });
+        }
         toolListAdapter.setList(list);
+    }
+
+    public void setTools(List<FormsConfig.FormsTools> tools) {
+        llFormTool.setVisibility(tools != null && tools.size() > 0 ? VISIBLE : GONE);
+        if (tools != null && tools.size() > 0){
+            tools = CListUtil.distinct(tools);
+        }
+        for (FormsConfig.FormsTools tool : tools) {
+            AppCompatImageView toolView = (AppCompatImageView) LayoutInflater.from(getContext())
+                    .inflate(R.layout.tools_annot_tool_bar_tools_item, null);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    CDimensUtils.dp2px(getContext(), 30),CDimensUtils.dp2px(getContext(), 30)
+            );
+            layoutParams.setMarginStart(CDimensUtils.dp2px(getContext(), 12));
+            toolView.setLayoutParams(layoutParams);
+            switch (tool) {
+                case Undo:
+                    toolView.setImageResource(R.drawable.tools_ic_annotation_undo);
+                    toolView.setOnClickListener(v -> {
+                        undo();
+                    });
+                    ivUndo = toolView;
+                    break;
+                case Redo:
+                    toolView.setImageResource(R.drawable.tools_ic_annotation_redo);
+                    toolView.setOnClickListener(v -> {
+                        redo();
+                    });
+                    ivRedo = toolView;
+                    break;
+                default:
+                    break;
+            }
+            llFormTool.addView(toolView);
+        }
+        redoUndoManager();
     }
 
     public void showUndoRedo(boolean show){

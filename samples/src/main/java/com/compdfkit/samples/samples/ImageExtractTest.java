@@ -16,8 +16,6 @@ import com.compdfkit.samples.util.FileUtils;
 import com.compdfkit.samples.util.OutputListener;
 
 import java.io.File;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
 public class ImageExtractTest extends PDFSamples {

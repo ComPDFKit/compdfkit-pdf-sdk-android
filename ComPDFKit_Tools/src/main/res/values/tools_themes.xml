@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-
     <style name="Tools_Base_Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/tools_color_primary</item>
         <item name="android:colorAccent">@color/tools_color_accent</item>

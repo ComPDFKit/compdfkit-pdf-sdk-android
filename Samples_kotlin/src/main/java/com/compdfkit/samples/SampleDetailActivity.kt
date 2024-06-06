@@ -17,12 +17,9 @@ import android.widget.ScrollView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.lifecycle.lifecycleScope
 import com.compdfkit.samples.util.FileUtils
 import com.compdfkit.samples.util.LoggingOutputListener
 import com.google.android.material.button.MaterialButton
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.File
 
 open class SampleDetailActivity : AppCompatActivity() {

@@ -10,23 +10,27 @@
 package com.compdfkit.tools.common.contextmenu.impl;
 
 
-import static com.compdfkit.ui.contextmenu.CPDFContextMenuShowHelper.AddEditImageArea;
-
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PointF;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
+import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditTextProvider;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuMultipleLineView;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
+import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
+import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts;
+import com.compdfkit.tools.common.utils.dialog.CImportImageDialogFragment;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -69,7 +73,7 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
             if (helper.isAllowsCopying()) {
                 pageView.operateEditTextArea(CPDFPageView.EditTextAreaFuncType.COPY);
                 helper.dismissContextMenu();
-            }else {
+            } else {
                 helper.showInputOwnerPasswordDialog(ownerPassword -> {
                     pageView.operateEditTextArea(CPDFPageView.EditTextAreaFuncType.COPY);
                     helper.dismissContextMenu();
@@ -97,18 +101,39 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
 
         if (type == CPDFEditPage.LoadText) {
             menuView.addItem(R.string.tools_context_menu_add_text, 0, v -> {
-                pageView.addEditTextArea(point);
+                CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
+                if (configuration != null) {
+                    ContentEditorConfig.TextAttr textAttr = configuration.contentEditorConfig.initAttribute.text;
+                    String comboBoxFontName = CPDFTextAttribute.FontNameHelper.obtainFontName(
+                            textAttr.getTypeface(), textAttr.isBold(), textAttr.isItalic());
+                    pageView.addEditTextArea(point,
+                            comboBoxFontName,
+                            textAttr.getFontSize(),
+                            textAttr.getFontColor(),
+                            textAttr.getFontColorAlpha(),
+                            textAttr.isBold(),
+                            textAttr.isItalic(),
+                            textAttr.getAlignment()
+                    );
+                } else {
+                    pageView.addEditTextArea(point);
+                }
             });
         }
         if (type == CPDFEditPage.LoadImage) {
             menuView.addItem(R.string.tools_context_menu_add_image, 0, v -> {
                 helper.getReaderView().setAddImagePoint(point);
                 helper.getReaderView().setAddImagePage(pageView.getPageNum());
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                if (helper.getReaderView().getContext() instanceof FragmentActivity) {
-                    ((FragmentActivity) helper.getReaderView().getContext()).startActivityForResult(intent, AddEditImageArea);
+                CImportImageDialogFragment fragment = CImportImageDialogFragment.quickStart(CImageResultContracts.RequestType.PHOTO_ALBUM);
+                fragment.setImportImageListener(imageUri -> {
+                    fragment.dismiss();
+                    if (imageUri != null) {
+                        pageView.addEditImageArea(point, imageUri);
+                    }
+                });
+                FragmentManager fragmentManager = helper.getFragmentManager();
+                if (fragmentManager != null) {
+                    fragment.show(fragmentManager, "importImage");
                     helper.dismissContextMenu();
                 }
             });
@@ -138,7 +163,7 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                     helper.dismissContextMenu();
                 });
             }
-        } else if(type == 4){
+        } else if (type == 4) {
             if (!TextUtils.isEmpty(text)) {
                 menuView.addItem(R.string.tools_context_menu_paste, 0, v -> {
                     pageView.pasteEditTextArea(point, pageView.getCopyTextAreaWidth(), pageView.getCopyTextAreaHeight(), false);
@@ -211,9 +236,9 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
             pageView.operateEditTextSelect(CPDFPageView.EditTextSelectFuncType.CUT);
         });
         menuView.addItem(R.string.tools_copy, 0, v -> {
-            if (helper.isAllowsCopying()){
+            if (helper.isAllowsCopying()) {
                 pageView.operateEditTextSelect(CPDFPageView.EditTextSelectFuncType.COPY);
-            }else {
+            } else {
                 helper.showInputOwnerPasswordDialog(ownerPassword -> {
                     pageView.operateEditTextSelect(CPDFPageView.EditTextSelectFuncType.COPY);
                 });

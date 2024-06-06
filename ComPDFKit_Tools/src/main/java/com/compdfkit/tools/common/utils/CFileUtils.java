@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -285,6 +286,7 @@ public class CFileUtils {
         intent.setType("application/pdf");
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         return intent;
     }
 
@@ -307,6 +309,8 @@ public class CFileUtils {
     public static void takeUriPermission(Context context, Uri uri){
         try{
             context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            context.grantUriPermission(context.getPackageName(), uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
         }catch (Exception e){
 
         }
@@ -445,5 +449,47 @@ public class CFileUtils {
             unit = " B";
         }
         return String.format("%.2f", size) + unit;
+    }
+
+    public static String readStringFromAssets(Context context, String fileName) {
+        AssetManager assetManager = context.getAssets();
+
+        InputStream inputStream = null;
+        InputStreamReader isr = null;
+        BufferedReader br = null;
+
+        StringBuffer sb =  new StringBuffer();
+        try{
+            inputStream = assetManager.open(fileName);
+            isr = new InputStreamReader(inputStream);
+            br = new BufferedReader(isr);
+
+            sb.append(br.readLine());
+            String line = null;
+            while((line = br.readLine()) != null){
+                sb.append("\n" + line);
+            }
+
+            br.close();
+            isr.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+                if (isr != null) {
+                    isr.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
     }
 }

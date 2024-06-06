@@ -126,7 +126,7 @@ public class CSearchToolbar extends RelativeLayout implements View.OnClickListen
 
             @Override
             protected List<CSearchTextInfo> doInBackground(Void... voids) {
-                return CPDFSearchKeywordsDatas.startSearch(pdfView, keywords, searchCount);
+                return CPDFSearchKeywordsDatas.startSearch(pdfView.getCPdfReaderView(), keywords, searchCount);
             }
 
             @Override

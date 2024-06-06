@@ -3,7 +3,6 @@ package com.compdfkit.tools.forms.pdfformbar.data;
 
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.forms.pdfformbar.bean.CFormToolBean;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.List;
 
 public class CFormToolDatas {
 
-    public static List<CFormToolBean> getFormList(CPDFViewCtrl pdfView) {
+    public static List<CFormToolBean> getFormList() {
         List<CFormToolBean> list = new ArrayList<>();
         list.add(new CFormToolBean(CPDFWidget.WidgetType.Widget_TextField, R.drawable.tools_ic_form_textfield));
         list.add(new CFormToolBean(CPDFWidget.WidgetType.Widget_CheckBox, R.drawable.tools_ic_form_checkbox));

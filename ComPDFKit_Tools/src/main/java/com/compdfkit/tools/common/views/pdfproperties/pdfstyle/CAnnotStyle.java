@@ -72,7 +72,7 @@ public class CAnnotStyle implements Serializable {
 
     private int fontSize;
 
-    private CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.FontType.Unknown;
+    private CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.FontType.Helvetica;
     private String externFontName = "";
     private Alignment alignment = Alignment.UNKNOWN;
 
@@ -101,6 +101,8 @@ public class CAnnotStyle implements Serializable {
     private Map<String, Object> customExtraMap = new HashMap<>();
 
     private CPDFWidget.CheckStyle checkStyle = CPDFWidget.CheckStyle.CK_Check;
+
+    private CPDFWidget.BorderStyle signFieldsBorderStyle = CPDFWidget.BorderStyle.BS_Solid;
 
     private List<OnAnnotStyleChangeListener> styleChangeListenerList = new ArrayList<>();
 
@@ -467,6 +469,16 @@ public class CAnnotStyle implements Serializable {
         return isChecked;
     }
 
+    public void setSignFieldsBorderStyle(CPDFWidget.BorderStyle signFieldsBorderStyle) {
+        this.signFieldsBorderStyle = signFieldsBorderStyle;
+        CLog.e("CAnnotStyle", "setSignFieldsBorderStyle(" + signFieldsBorderStyle + ", update:" + true + ")");
+        updateSignFieldsBorderStyle(signFieldsBorderStyle);
+    }
+
+    public CPDFWidget.BorderStyle getSignFieldsBorderStyle() {
+        return signFieldsBorderStyle;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -498,7 +510,8 @@ public class CAnnotStyle implements Serializable {
                 "formDefaultValue" + formDefaultValue + "," +
                 "hideForm" + hideForm + "," +
                 "formMultiLine" + formMultiLine + "," +
-                "customExtraMap" + customExtraMap.toString();
+                "customExtraMap" + customExtraMap.toString() +
+                "signFieldsBorderStyle" + (signFieldsBorderStyle != null ? signFieldsBorderStyle.name() : "empty");
     }
 
     @Override
@@ -527,6 +540,7 @@ public class CAnnotStyle implements Serializable {
         result = 31 * result + (this.formFieldName != null ? this.formFieldName.hashCode() : 0);
         result = 31 * result + (this.formDefaultValue != null ? this.formDefaultValue.hashCode() : 0);
         result = 31 * result + (this.customExtraMap != null ? this.customExtraMap.hashCode() : 0);
+        result = 31 * result + (this.signFieldsBorderStyle != null ? this.signFieldsBorderStyle.hashCode() : 0);
         return result;
     }
 
@@ -878,6 +892,14 @@ public class CAnnotStyle implements Serializable {
         }
     }
 
+    private void updateSignFieldsBorderStyle(CPDFWidget.BorderStyle borderStyle){
+        if (styleChangeListenerList != null) {
+            for (OnAnnotStyleChangeListener onAnnotStyleChangeListener : styleChangeListenerList) {
+                onAnnotStyleChangeListener.onChangeSignFieldsBorderStyle(borderStyle);
+            }
+        }
+    }
+
     public void addStyleChangeListener(OnAnnotStyleChangeListener styleChangeListener) {
         this.styleChangeListenerList.add(styleChangeListener);
     }
@@ -954,6 +976,8 @@ public class CAnnotStyle implements Serializable {
         void onChangeIsChecked(boolean isChecked);
 
         void onChangeExtraMap(Map<String, Object> extraMap);
+
+        void onChangeSignFieldsBorderStyle(CPDFWidget.BorderStyle borderStyle);
     }
 
     public void setUpdatePropertyType(EditUpdatePropertyType type) {

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <application android:supportsRtl="true" >
+    <application android:supportsRtl="true">
 
         <provider
-            android:name="androidx.core.content.FileProvider"
+            android:name=".common.provider.ComPDFKitToolsFileProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -18,18 +19,34 @@
 
         <activity
             android:name=".annotation.pdfproperties.pdfsignature.CAddSignatureActivity"
-            android:theme="@style/Tools_Base_Theme"
-            android:exported="false"/>
+            android:exported="false"
+            android:theme="@style/Tools_Base_Theme" />
 
         <activity
             android:name=".annotation.pdfproperties.pdfstamp.CAddCustomStampActivity"
-            android:theme="@style/Tools_Base_Theme"
-            android:exported="false"/>
+            android:exported="false"
+            android:theme="@style/Tools_Base_Theme" />
 
         <service
             android:name=".common.utils.voice.CMediaPlayService"
             android:enabled="true"
             android:exported="false" />
+
+        <activity
+            android:name=".common.pdf.CPDFDocumentActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@style/Tools_Base_Theme"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter tools:ignore="AppLinkUrlError"
+                android:scheme="http">
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/pdf" />
+            </intent-filter>
+        </activity>
 
     </application>
 </manifest>

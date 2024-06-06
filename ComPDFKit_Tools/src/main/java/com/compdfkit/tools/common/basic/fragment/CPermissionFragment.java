@@ -14,11 +14,9 @@ import android.content.pm.PackageManager;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.activitycontracts.CPermissionResultLauncher;
-import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 
 
 public class CPermissionFragment extends Fragment {
@@ -34,14 +32,7 @@ public class CPermissionFragment extends Fragment {
     }
 
     protected void showPermissionsRequiredDialog(){
-        CAlertDialog alertDialog = CAlertDialog.newInstance(getString(R.string.tools_permission_tips_title), getString(R.string.tools_permission_tips_msg));
-        alertDialog.setCancelable(false);
-        alertDialog.setConfirmClickListener(v -> {
-            toSelfSetting();
-            alertDialog.dismiss();
-        });
-        alertDialog.setCancelClickListener(v -> alertDialog.dismiss());
-        alertDialog.show(getChildFragmentManager(), "permissionRequiredDialog");
+        CPermissionUtil.showPermissionsRequiredDialog(getParentFragmentManager(), getContext());
     }
 
     protected void toSelfSetting(){

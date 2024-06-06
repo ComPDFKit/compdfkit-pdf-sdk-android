@@ -13,6 +13,15 @@ android {
         targetSdk rootProject.ext.android.TARGETSDK
         versionCode rootProject.ext.android.VERSIONCODE as int
         versionName rootProject.ext.sdk.CONVERSION_SDK_VERSION
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        rxhttp_rxjava: '3.1.6',
+                        rxhttp_package: 'rxhttp.xxx'
+                ]
+            }
+        }
     }
 
     buildTypes {

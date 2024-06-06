@@ -87,8 +87,8 @@ Edit it and add the complete `ComPDFKit SDK` dependency:
 
 ```groovy
 dependencies {
-  implementation 'com.compdf:compdfkit:1.11.0'
-  implementation 'com.compdf:compdfkit-ui:1.11.0'
+  implementation 'com.compdf:compdfkit:1.12.0'
+  implementation 'com.compdf:compdfkit-ui:1.12.0'
 }
 ```
 

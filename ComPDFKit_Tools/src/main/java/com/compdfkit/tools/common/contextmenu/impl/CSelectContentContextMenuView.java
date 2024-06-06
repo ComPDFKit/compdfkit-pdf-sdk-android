@@ -13,7 +13,6 @@ package com.compdfkit.tools.common.contextmenu.impl;
 import android.view.View;
 
 import com.compdfkit.core.document.CPDFDocumentPermissionInfo;
-import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSelectContentProvider;

@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/layout_undo"
+        app:layout_constraintEnd_toStartOf="@id/ll_tools"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         >
@@ -23,7 +23,8 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_edit_text"
             style="@style/tools_annotation_tool_bar_item_iv_style"
-            android:layout_marginStart="12dp"
+            android:layout_marginHorizontal="12dp"
+
             android:background="@drawable/tools_edit_properties_icon_btn_corner_status_bg"
             android:padding="3dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -38,13 +39,14 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_edit_image"
             style="@style/tools_annotation_tool_bar_item_iv_style"
-            android:layout_marginStart="24dp"
+            android:layout_marginHorizontal="12dp"
             android:background="@drawable/tools_edit_properties_icon_btn_corner_status_bg"
             android:padding="3dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_edit_text"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:tint="@color/tools_annotation_iv_status_color"
             app:srcCompat="@drawable/tools_ic_edit_image" />
 
@@ -53,7 +55,7 @@
 
 
     <LinearLayout
-        android:id="@+id/layout_undo"
+        android:id="@+id/ll_tools"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/tools_color_primary"
@@ -62,7 +64,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/cl_edit"
-        android:paddingHorizontal="4dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="8dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintTop_toTopOf="parent">
 
         <View
@@ -72,35 +78,6 @@
             android:background="@color/tools_control_line_color"
             />
 
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_proper"
-            style="@style/tools_annotation_tool_bar_item_iv_style"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/tools_common_btn_corner_ripple"
-            android:padding="3dp"
-            app:tint="@color/tools_annotation_iv_status_color"
-            app:srcCompat="@drawable/tools_ic_annotation_setting" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_undo"
-            style="@style/tools_annotation_tool_bar_item_iv_style"
-            app:srcCompat="@drawable/tools_ic_annotation_undo"
-            android:layout_marginStart="12dp"
-            android:padding="3dp"
-            app:tint="@color/tools_annotation_iv_status_color"
-            android:background="@drawable/tools_common_btn_corner_ripple"
-            />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_redo"
-            style="@style/tools_annotation_tool_bar_item_iv_style"
-            android:background="@drawable/tools_common_btn_corner_ripple"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="4dp"
-            android:padding="3dp"
-            app:tint="@color/tools_annotation_iv_status_color"
-            app:srcCompat="@drawable/tools_ic_annotation_redo" />
 
     </LinearLayout>
 

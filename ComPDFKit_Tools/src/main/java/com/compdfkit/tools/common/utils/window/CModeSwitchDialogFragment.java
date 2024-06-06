@@ -1,18 +1,25 @@
 package com.compdfkit.tools.common.utils.window;
 
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RadioButton;
+import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -29,17 +36,17 @@ public class CModeSwitchDialogFragment extends CBasicBottomSheetDialogFragment
 
     private RadioGroup radioGroup;
 
-    private RadioButton rbViewer;
+    private AppCompatRadioButton rbViewer;
 
-    private RadioButton rbAnnotation;
+    private AppCompatRadioButton rbAnnotation;
 
-    private RadioButton rbPDFEdit;
+    private AppCompatRadioButton rbPDFEdit;
 
-    private RadioButton rbForm;
+    private AppCompatRadioButton rbForm;
 
-    private RadioButton rbPageEdit;
+    private AppCompatRadioButton rbPageEdit;
 
-    private RadioButton rbSignature;
+    private AppCompatRadioButton rbSignature;
 
     private LinkedHashSet<CPreviewMode> previewModes = new LinkedHashSet<>();
 
@@ -86,12 +93,7 @@ public class CModeSwitchDialogFragment extends CBasicBottomSheetDialogFragment
         ivClose = rootView.findViewById(R.id.iv_tool_bar_close);
         tvTitle = rootView.findViewById(R.id.tv_tool_bar_title);
         radioGroup = rootView.findViewById(R.id.radio_group_mode);
-        rbViewer = rootView.findViewById(R.id.r_btn_viewer_mode);
-        rbAnnotation = rootView.findViewById(R.id.r_btn_annotation_mode);
-        rbPDFEdit = rootView.findViewById(R.id.r_btn_pdf_edit_mode);
-        rbForm = rootView.findViewById(R.id.r_btn_form_mode);
-        rbPageEdit = rootView.findViewById(R.id.r_btn_page_edit_mode);
-        rbSignature = rootView.findViewById(R.id.r_btn_signature_mode);
+
     }
 
     @Override
@@ -118,54 +120,54 @@ public class CModeSwitchDialogFragment extends CBasicBottomSheetDialogFragment
         ivClose.setOnClickListener(v -> {
             dismiss();
         });
+        modifyPopupMenuStatus();
         switch (selectMode){
             case Viewer:
-                rbViewer.setChecked(true);
+                setChecked(rbViewer, true);
                 break;
             case Annotation:
-                rbAnnotation.setChecked(true);
+                setChecked(rbAnnotation, true);
                 break;
             case Edit:
-                rbPDFEdit.setChecked(true);
+                setChecked(rbPDFEdit, true);
                 break;
             case Form:
-                rbForm.setChecked(true);
+                setChecked(rbForm, true);
                 break;
             case PageEdit:
-                rbPageEdit.setChecked(true);
+                setChecked(rbPageEdit, true);
                 break;
             case Signature:
-                rbSignature.setChecked(true);
+                setChecked(rbSignature, true);
                 break;
             default:break;
         }
-        modifyPopupMenuStatus();
-        rbViewer.setOnClickListener(this);
-        rbAnnotation.setOnClickListener(this);
-        rbPDFEdit.setOnClickListener(this);
-        rbForm.setOnClickListener(this);
-        rbPageEdit.setOnClickListener(this);
-        rbSignature.setOnClickListener(this);
+        setOnClickListener(rbViewer);
+        setOnClickListener(rbAnnotation);
+        setOnClickListener(rbPDFEdit);
+        setOnClickListener(rbForm);
+        setOnClickListener(rbPageEdit);
+        setOnClickListener(rbSignature);
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.r_btn_viewer_mode) {
+        if (rbViewer != null && v.getId() == rbViewer.getId()) {
             rbViewer.setChecked(true);
             changeMode(CPreviewMode.Viewer);
-        } else if (v.getId() == R.id.r_btn_annotation_mode) {
+        } else if (rbAnnotation != null && v.getId() == rbAnnotation.getId()) {
             rbAnnotation.setChecked(true);
             changeMode(CPreviewMode.Annotation);
-        } else if (v.getId() == R.id.r_btn_pdf_edit_mode) {
+        } else if (rbPDFEdit != null && v.getId() == rbPDFEdit.getId()) {
             rbPDFEdit.setChecked(true);
             changeMode(CPreviewMode.Edit);
-        } else if (v.getId() == R.id.r_btn_page_edit_mode) {
+        } else if (rbPageEdit != null && v.getId() == rbPageEdit.getId()) {
             rbPageEdit.setChecked(true);
             changeMode(CPreviewMode.PageEdit);
-        } else if (v.getId() == R.id.r_btn_form_mode) {
+        } else if (rbForm != null && v.getId() == rbForm.getId()) {
             rbForm.setChecked(true);
             changeMode(CPreviewMode.Form);
-        } else if (v.getId() == R.id.r_btn_signature_mode){
+        } else if (rbSignature != null && v.getId() == rbSignature.getId()){
             rbSignature.setChecked(true);
             changeMode(CPreviewMode.Signature);
         }
@@ -174,23 +176,61 @@ public class CModeSwitchDialogFragment extends CBasicBottomSheetDialogFragment
 
 
     private void modifyPopupMenuStatus() {
-        if (rbViewer != null) {
-            rbViewer.setVisibility(previewModes.contains(CPreviewMode.Viewer) ? View.VISIBLE : View.GONE);
+        radioGroup.removeAllViews();
+        for (CPreviewMode previewMode : previewModes) {
+            View item = LayoutInflater.from(getContext()).inflate(R.layout.tools_pdf_mode_radio_button_item, null);
+            item.setId(View.generateViewId());
+            RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CDimensUtils.dp2px(getContext(), 60));
+            item.setLayoutParams(layoutParams);
+            AppCompatRadioButton button = (AppCompatRadioButton) item;
+            switch (previewMode) {
+                case Viewer:
+                    rbViewer = button;
+                    setRadioButtonInfo(rbViewer, R.string.tools_pdf_viewer_mode, R.drawable.tools_ic_preview_settings);
+                    break;
+                case Annotation:
+                    rbAnnotation = button;
+                    setRadioButtonInfo(rbAnnotation, R.string.tools_pdf_annotation_mode, R.drawable.tools_annotation);
+                    break;
+                case Edit:
+                    rbPDFEdit = button;
+                    setRadioButtonInfo(rbPDFEdit, R.string.tools_pdf_edit_mode, R.drawable.tools_edit);
+                    break;
+                case Form:
+                    rbForm = button;
+                    setRadioButtonInfo(rbForm, R.string.tools_form_mode, R.drawable.tools_form);
+                    break;
+                case Signature:
+                    rbSignature = button;
+                    setRadioButtonInfo(rbSignature, R.string.tools_signatures, R.drawable.tools_mode_switch_digital_signature);
+                    break;
+                case PageEdit:
+                    rbPageEdit = button;
+                    setRadioButtonInfo(rbPageEdit, R.string.tools_page_edit_mode, R.drawable.tools_page_edit);
+                    break;
+                default:
+                    break;
+            }
+            radioGroup.addView(button);
         }
-        if (rbAnnotation != null) {
-            rbAnnotation.setVisibility(previewModes.contains(CPreviewMode.Annotation) ? View.VISIBLE : View.GONE);
+    }
+
+    private void setRadioButtonInfo(AppCompatRadioButton item, @StringRes int titleResId, @DrawableRes int startDrawableResId){
+        item.setText(titleResId);
+        Drawable startDrawable = ContextCompat.getDrawable(getContext(), startDrawableResId);
+        Drawable endDrawable = ContextCompat.getDrawable(getContext(), R.drawable.tools_reader_settings_page_mode_radio_button);
+        item.setCompoundDrawablesWithIntrinsicBounds(startDrawable, null,endDrawable,null);
+    }
+
+    private void setChecked(AppCompatRadioButton item, boolean checked){
+        if (item != null) {
+            item.setChecked(checked);
         }
-        if (rbPDFEdit != null) {
-            rbPDFEdit.setVisibility(previewModes.contains(CPreviewMode.Edit) ? View.VISIBLE : View.GONE);
-        }
-        if (rbForm != null) {
-            rbForm.setVisibility(previewModes.contains(CPreviewMode.Form) ? View.VISIBLE : View.GONE);
-        }
-        if (rbPageEdit != null) {
-            rbPageEdit.setVisibility(previewModes.contains(CPreviewMode.PageEdit) ? View.VISIBLE : View.GONE);
-        }
-        if (rbSignature != null) {
-            rbSignature.setVisibility(previewModes.contains(CPreviewMode.Signature) ? View.VISIBLE : View.GONE);
+    }
+
+    private void setOnClickListener(AppCompatRadioButton item){
+        if (item != null) {
+            item.setOnClickListener(this);
         }
     }
 

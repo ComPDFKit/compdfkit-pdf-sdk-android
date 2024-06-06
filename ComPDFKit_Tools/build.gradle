@@ -21,7 +21,9 @@ android {
         buildConfigField("String", "COMPDFKit_SDK_VERSION", "\"${versionName}\"")
         buildConfigField("String", "COMPDFKit_SDK_BUILD_TAG", "\"${versionName}_${versionCode}_${releaseTime()}\"")
 
-        consumerProguardFiles "consumer-rules.pro"
+        consumerProguardFiles "proguard-rules.pro"
+        setProperty("archivesBaseName", "ComPDFKit_Tools")
+
     }
 
     buildTypes {
@@ -29,6 +31,13 @@ android {
             minifyEnabled true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            libraryVariants.all { variant ->
+                variant.outputs.all { output ->
+                    if (outputFile != null && outputFileName.endsWith('.aar')) {
+                        outputFileName = "ComPDFKit_Tools.aar"
+                    }
+                }
+            }
         }
     }
 

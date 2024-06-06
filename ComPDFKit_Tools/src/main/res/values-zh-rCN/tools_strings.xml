@@ -3,6 +3,7 @@
     <string name="tools_view_setting">预览设置</string>
     <string name="tools_share">分享</string>
     <string name="tools_open_document">打开文档</string>
+    <string name="tools_flattened">另存为扁平化副本</string>
 
     <string name="tools_display_mode">显示模式</string>
     <string name="tools_scroll">翻页</string>
@@ -470,5 +471,15 @@
     <string name="tools_name">姓名</string>
     <string name="tools_enter_permission_password">输入权限密码</string>
 
+    <string name="tools_save_failed">保存失败</string>
+    <string name="tools_replace">替换</string>
+    <string name="tools_find">查找</string>
+    <string name="tools_replace_with">替换为</string>
+    <string name="tools_replace_all">全部替换</string>
+    <string name="tools_ignore_case">忽略大小写</string>
+    <string name="tools_whole_words_only">全词匹配</string>
+    <string name="tools_setting">设置</string>
+    <string name="tools_effective_immediately_after_setting">设置后立即生效</string>
+    <string name="tools_loading">加载中…</string>
 
 </resources>

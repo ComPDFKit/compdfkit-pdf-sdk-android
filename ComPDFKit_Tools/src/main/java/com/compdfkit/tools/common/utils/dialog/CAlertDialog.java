@@ -14,10 +14,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.DialogFragment;
 
@@ -36,9 +36,9 @@ public class CAlertDialog extends DialogFragment {
 
     private AppCompatTextView tvMessage;
 
-    private AppCompatButton btnCancel;
+    private Button btnCancel;
 
-    private AppCompatButton btnConfirm;
+    private Button btnConfirm;
 
     private View.OnClickListener cancelListener;
 

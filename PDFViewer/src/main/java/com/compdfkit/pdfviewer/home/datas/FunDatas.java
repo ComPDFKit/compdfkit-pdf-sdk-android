@@ -12,9 +12,11 @@ package com.compdfkit.pdfviewer.home.datas;
 
 import android.content.Context;
 
-import com.compdfkit.pdfviewer.CPDFConfiguration;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.home.HomeFunBean;
+import com.compdfkit.tools.common.pdf.CPDFConfigurationUtils;
+import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.pdf.config.ReaderViewConfig;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 
 import java.util.ArrayList;
@@ -47,9 +49,9 @@ public class FunDatas {
     }
 
 
-    public static List<HomeFunBean> getDocumentListByFunType(Context context, HomeFunBean.FunType funType){
+    public static List<HomeFunBean> getDocumentListByFunType(Context context, HomeFunBean.FunType funType) {
         List<HomeFunBean> list = new ArrayList<>();
-        list.add( HomeFunBean.head(context, R.string.tools_click_to_open_process));
+        list.add(HomeFunBean.head(context, R.string.tools_click_to_open_process));
         switch (funType) {
             case Viewer:
                 list.add(HomeFunBean.assetsFile(context, "ComPDFKit_Sample_File_Android.pdf", context.getString(R.string.tools_compdfkit_sample_file_viewer)));
@@ -84,34 +86,16 @@ public class FunDatas {
 
     /**
      * Enter the additional configuration information of pdf Activity
+     *
      * @return
      */
     public static CPDFConfiguration getConfiguration(Context context, CPreviewMode cPreviewMode) {
-        CPDFConfiguration.Builder builder = new CPDFConfiguration.Builder()
-                .setModeConfig(new CPDFConfiguration.ModeConfig(cPreviewMode));
-
-        CPDFConfiguration.ReaderViewConfig readerViewConfig = new CPDFConfiguration.ReaderViewConfig();
+        CPDFConfiguration configuration = CPDFConfigurationUtils.
+                normalConfig(context, "tools_default_configuration.json");
+        configuration.modeConfig.initialViewMode = cPreviewMode;
+        ReaderViewConfig readerViewConfig = configuration.readerViewConfig;
         readerViewConfig.linkHighlight = SettingDatas.isHighlightLink(context);
         readerViewConfig.formFieldHighlight = SettingDatas.isHighlightForm(context);
-        builder.setReaderViewConfig(readerViewConfig);
-
-        CPDFConfiguration.ToolbarConfig toolbarConfig = new CPDFConfiguration.ToolbarConfig();
-        toolbarConfig.androidAvailableActions = Arrays.asList(
-                CPDFConfiguration.ToolbarConfig.ToolbarAction.Thumbnail,
-                CPDFConfiguration.ToolbarConfig.ToolbarAction.Search,
-                CPDFConfiguration.ToolbarConfig.ToolbarAction.Bota,
-                CPDFConfiguration.ToolbarConfig.ToolbarAction.Menu
-        );
-        toolbarConfig.availableMenus = Arrays.asList(
-                CPDFConfiguration.ToolbarConfig.MenuAction.ViewSettings,
-                CPDFConfiguration.ToolbarConfig.MenuAction.DocumentEditor,
-                CPDFConfiguration.ToolbarConfig.MenuAction.DocumentInfo,
-                CPDFConfiguration.ToolbarConfig.MenuAction.Save,
-                CPDFConfiguration.ToolbarConfig.MenuAction.Share,
-                CPDFConfiguration.ToolbarConfig.MenuAction.OpenDocument
-        );
-        builder.setToolbarConfig(toolbarConfig);
-        return builder.create();
-
+        return configuration;
     }
 }

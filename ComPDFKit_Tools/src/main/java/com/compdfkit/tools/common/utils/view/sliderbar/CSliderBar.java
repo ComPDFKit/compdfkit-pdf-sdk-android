@@ -13,7 +13,6 @@ package com.compdfkit.tools.common.utils.view.sliderbar;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;

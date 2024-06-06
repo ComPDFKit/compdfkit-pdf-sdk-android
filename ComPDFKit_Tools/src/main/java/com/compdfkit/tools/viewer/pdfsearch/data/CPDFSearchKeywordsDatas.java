@@ -17,8 +17,8 @@ import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.core.page.CPDFTextPage;
 import com.compdfkit.core.page.CPDFTextRange;
 import com.compdfkit.core.page.CPDFTextSearcher;
-import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.viewer.pdfsearch.bean.CSearchTextInfo;
+import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.textsearch.ITextSearcher;
 
 import java.util.ArrayList;
@@ -27,16 +27,20 @@ import java.util.List;
 
 public class CPDFSearchKeywordsDatas {
 
-    public static List<CSearchTextInfo> startSearch(CPDFViewCtrl cpdfViewCtrl, String keywords, int searchCount) {
-        ITextSearcher textSearcher = cpdfViewCtrl.getCPdfReaderView().getTextSearcher();
+    public static List<CSearchTextInfo> startSearch(CPDFReaderView readerView, String keywords, int searchCount) {
+        return startSearch(readerView, keywords, searchCount, CPDFTextSearcher.PDFSearchOptions.PDFSearchCaseInsensitive);
+    }
+
+    public static List<CSearchTextInfo> startSearch(CPDFReaderView readerView, String keywords, int searchCount, int searchOptions) {
+        ITextSearcher textSearcher = readerView.getTextSearcher();
         if (null == textSearcher) {
             return new ArrayList<>();
         }
-        CPDFDocument document = cpdfViewCtrl.getCPdfReaderView().getPDFDocument();
+        CPDFDocument document = readerView.getPDFDocument();
         if (null == document) {
             return new ArrayList<>();
         }
-        textSearcher.setSearchConfig(keywords, CPDFTextSearcher.PDFSearchOptions.PDFSearchCaseInsensitive);
+        textSearcher.setSearchConfig(keywords, searchOptions);
         List<CSearchTextInfo> searchTextInfoList = new ArrayList<>();
         for (int i = 0; i < document.getPageCount(); i++) {
             CPDFPage page = document.pageAtIndex(i);
@@ -44,10 +48,10 @@ public class CPDFSearchKeywordsDatas {
             if ((null == textPage) || !textPage.isValid()) {
                 continue;
             }
-            final List<CSearchTextInfo> searchPageContent = findSearchText(cpdfViewCtrl.getContext(), textSearcher, textPage, keywords, i);
+            final List<CSearchTextInfo> searchPageContent = findSearchText(readerView.getContext(), textSearcher, textPage, keywords, i);
             if (searchPageContent.size() > 0) {
-                final CSearchTextInfo pageTextInfo = new CSearchTextInfo(cpdfViewCtrl.getContext(), i, keywords, 0, true);
-                pageTextInfo.initHighLightTextData(cpdfViewCtrl.getContext(), null, null);
+                final CSearchTextInfo pageTextInfo = new CSearchTextInfo(readerView.getContext(), i, keywords, 0, true);
+                pageTextInfo.initHighLightTextData(readerView.getContext(), null, null);
                 searchTextInfoList.add(pageTextInfo);
                 searchTextInfoList.addAll(searchPageContent);
             }

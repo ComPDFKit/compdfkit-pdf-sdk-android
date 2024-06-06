@@ -21,7 +21,6 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.DialogFragment;
@@ -32,9 +31,9 @@ import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 public class CEditDialog extends DialogFragment {
 
-    private static final String EXTRA_EDIT_TEXT_INFO = "extra_edit_text_info";
+    public static final String EXTRA_EDIT_TEXT_INFO = "extra_edit_text_info";
 
-    private static final String EXTRA_TITLE = "extra_dialog_title";
+    public static final String EXTRA_TITLE = "extra_dialog_title";
 
     private AppCompatTextView tvTitle;
 
@@ -46,7 +45,7 @@ public class CEditDialog extends DialogFragment {
 
     private OnEditBookmarkListener editListener;
 
-    private int hintResId;
+    private String hintText;
 
     public static CEditDialog newInstance(String title, String editTextInfo) {
         CEditDialog dialog = new CEditDialog();
@@ -92,8 +91,8 @@ public class CEditDialog extends DialogFragment {
             editText.setSelection(defaultTitle.length());
             tvTitle.setText(title);
         }
-        if (hintResId != 0) {
-            editText.setHint(hintResId);
+        if (!TextUtils.isEmpty(hintText)) {
+            editText.setHint(hintText);
         }
         CViewUtils.showKeyboard(editText);
         btnCancel.setOnClickListener(v -> dismiss());
@@ -107,9 +106,9 @@ public class CEditDialog extends DialogFragment {
         });
     }
 
-    public void setHint(@StringRes int hint){
-        this.hintResId = hint;
-        if (editText != null) {
+    public void setHint(String hint){
+        this.hintText = hint;
+        if (editText != null){
             editText.setHint(hint);
         }
     }

@@ -13,7 +13,7 @@ public enum CPreviewMode {
 
     PageEdit("pageEdit"),
 
-    Signature("digitalSignatures");
+    Signature("signatures");
 
     public String alias;
 

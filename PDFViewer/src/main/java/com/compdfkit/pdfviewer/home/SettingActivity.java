@@ -23,6 +23,7 @@ import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.ui.utils.CPDFCommomUtils;
 
 
+
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ActivitySettingBinding binding;
@@ -75,3 +76,5 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 }
+
+

@@ -162,6 +162,7 @@
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp"
+                    app:drawableTint="@color/tools_text_color_primary"
                     android:text="@string/tools_compdf_website"
                     android:textColor="@color/tools_text_color_primary" />
 
@@ -175,6 +176,7 @@
                     android:id="@+id/tv_about_us"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    app:drawableTint="@color/tools_text_color_primary"
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:gravity="center_vertical"
@@ -191,6 +193,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_technical_support"
                     android:layout_width="match_parent"
+                    app:drawableTint="@color/tools_text_color_primary"
                     android:layout_height="48dp"
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
@@ -209,6 +212,7 @@
                     android:id="@+id/tv_contact_sales"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    app:drawableTint="@color/tools_text_color_primary"
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:gravity="center_vertical"
@@ -226,6 +230,7 @@
                     android:id="@+id/tv_support_email"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    app:drawableTint="@color/tools_text_color_primary"
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:gravity="center_vertical"

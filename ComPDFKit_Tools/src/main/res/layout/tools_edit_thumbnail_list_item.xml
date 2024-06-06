@@ -19,15 +19,14 @@
             android:id="@+id/cl_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/tools_thumbnail_item_bg"
             android:foreground="@drawable/tools_common_btn_rectangle_ripple"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
-            android:background="@drawable/tools_thumbnail_item_bg"
-            >
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_thumbnail"
@@ -37,13 +36,16 @@
                 android:scaleType="fitCenter"
                 tools:src="@tools:sample/avatars" />
 
-            <CheckBox
-                android:id="@+id/ic_check"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_check_box"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="4dp"
+                android:src="@drawable/tools_ic_checkbox"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone"
-                android:layout_width="24dp"
-                android:layout_height="24dp"/>
+                tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -53,8 +55,8 @@
         android:id="@+id/tv_thumbnail_page_index"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/tools_thumbnail_item_page_tv_bg"
         android:paddingHorizontal="12dp"
         android:paddingVertical="2dp"

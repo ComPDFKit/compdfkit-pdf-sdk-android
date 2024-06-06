@@ -11,29 +11,46 @@ package com.compdfkit.tools.contenteditor;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.compdfkit.core.edit.CPDFEditManager;
 import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.core.edit.OnEditStatusChangeListener;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
+import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
+import com.compdfkit.tools.common.utils.CListUtil;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
+import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.ui.contextmenu.IContextMenuShowListener;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class CEditToolbar extends RelativeLayout implements View.OnClickListener {
     public static final int SELECT_AREA_NONE = 0;
     public static final int SELECT_AREA_TEXT = 1;
     public static final int SELECT_AREA_IMAGE = 2;
 
+    private ConstraintLayout clEdit;
+    private LinearLayout llTools;
     private CPDFViewCtrl pdfView;
     private androidx.appcompat.widget.AppCompatImageView ivEditText;
     private androidx.appcompat.widget.AppCompatImageView ivEditImage;
     private androidx.appcompat.widget.AppCompatImageView ivProper;
     private androidx.appcompat.widget.AppCompatImageView ivUndo;
     private androidx.appcompat.widget.AppCompatImageView ivRedo;
+
+    private View.OnClickListener proPerClickListener;
 
     public CEditToolbar(Context context) {
         super(context);
@@ -58,20 +75,20 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
     private void init(Context context) {
         inflate(context, R.layout.tools_edit_toolbar, this);
         CViewUtils.applyViewBackground(this);
+        clEdit = findViewById(R.id.cl_edit);
         ivEditText = findViewById(R.id.iv_edit_text);
         ivEditImage = findViewById(R.id.iv_edit_image);
-        ivProper = findViewById(R.id.iv_proper);
-        ivUndo = findViewById(R.id.iv_undo);
-        ivRedo = findViewById(R.id.iv_redo);
+        llTools = findViewById(R.id.ll_tools);
         ivEditText.setOnClickListener(this);
         ivEditImage.setOnClickListener(this);
         ivEditText.setSelected(false);
         ivEditImage.setSelected(false);
-        ivUndo.setOnClickListener(this);
-        ivRedo.setOnClickListener(this);
-        ivProper.setEnabled(false);
         updateUndo(false);
         updateRedo(false);
+
+        if (isInEditMode()){
+            setTools(Arrays.asList(AnnotationsConfig.AnnotationTools.Setting, AnnotationsConfig.AnnotationTools.Undo, AnnotationsConfig.AnnotationTools.Redo));
+        }
     }
 
     public void initWithPDFView(CPDFViewCtrl pdfView) {
@@ -79,11 +96,15 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
     }
 
     public void updateUndo(boolean canUndo) {
-        ivUndo.setEnabled(canUndo);
+        if (ivUndo != null) {
+            ivUndo.setEnabled(canUndo);
+        }
     }
 
     public void updateRedo(boolean canRedo) {
-        ivRedo.setEnabled(canRedo);
+        if (ivRedo != null) {
+            ivRedo.setEnabled(canRedo);
+        }
     }
 
     public void updateUndoRedo() {
@@ -135,15 +156,11 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
                 ivEditText.setSelected(false);
             }
             changeEditType();
-        } else if (view.getId() == R.id.iv_undo) {
-            pdfView.getCPdfReaderView().onEditUndo();
-        } else if (view.getId() == R.id.iv_redo) {
-            pdfView.getCPdfReaderView().onEditRedo();
         }
     }
 
     public void setEditPropertyBtnClickListener(View.OnClickListener listener) {
-        ivProper.setOnClickListener(listener);
+        proPerClickListener = listener;
     }
 
     public void setEditMode(boolean beginedit) {
@@ -156,10 +173,12 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
         }
         editManager.enable();
         pdfView.getCPdfReaderView().setSelectEditAreaChangeListener(type -> {
-            if (type == SELECT_AREA_NONE) {
-                ivProper.setEnabled(false);
-            } else {
-                ivProper.setEnabled(true);
+            if (ivProper != null) {
+                if (type == SELECT_AREA_NONE) {
+                    ivProper.setEnabled(false);
+                } else {
+                    ivProper.setEnabled(true);
+                }
             }
         });
 
@@ -207,6 +226,78 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
         }
     }
 
+    public void setEditType(ContentEditorConfig.ContentEditorType... types){
+        if (types == null || types.length == 0){
+            ivEditImage.setVisibility(View.GONE);
+            ivEditText.setVisibility(View.GONE);
+            return;
+        }
+
+        if (types.length == 1){
+            ContentEditorConfig.ContentEditorType type = types[0];
+            if (type == ContentEditorConfig.ContentEditorType.EditorText){
+                ivEditImage.setVisibility(View.GONE);
+            }else {
+                ivEditText.setVisibility(View.GONE);
+            }
+        }else {
+            ContentEditorConfig.ContentEditorType type = types[0];
+            if (type == ContentEditorConfig.ContentEditorType.EditorImage){
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(clEdit);
+                constraintSet.connect(ivEditImage.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                constraintSet.connect(ivEditImage.getId(), ConstraintSet.END, ivEditText.getId(), ConstraintSet.START);
+                constraintSet.connect(ivEditText.getId(), ConstraintSet.START, ivEditImage.getId(), ConstraintSet.END);
+                constraintSet.connect(ivEditText.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+                constraintSet.applyTo(clEdit);
+            }
+        }
+    }
+
+    public void setTools(List<AnnotationsConfig.AnnotationTools> tools) {
+        llTools.setVisibility(tools != null && tools.size() > 0 ? VISIBLE : GONE);
+        if (tools != null && tools.size() >0) {
+            tools = CListUtil.distinct(tools);
+        }
+        for (AnnotationsConfig.AnnotationTools tool : tools) {
+            AppCompatImageView toolView = (AppCompatImageView) LayoutInflater.from(getContext())
+                    .inflate(R.layout.tools_annot_tool_bar_tools_item, null);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    CDimensUtils.dp2px(getContext(), 30),CDimensUtils.dp2px(getContext(), 30)
+            );
+            layoutParams.setMarginStart(CDimensUtils.dp2px(getContext(), 12));
+            toolView.setLayoutParams(layoutParams);
+            switch (tool) {
+                case Setting:
+                    toolView.setEnabled(false);
+                    toolView.setImageResource(R.drawable.tools_ic_annotation_setting);
+                    toolView.setOnClickListener(proPerClickListener);
+                    ivProper = toolView;
+                    break;
+                case Undo:
+                    toolView.setImageResource(R.drawable.tools_ic_annotation_undo);
+                    toolView.setOnClickListener(v -> {
+                        pdfView.getCPdfReaderView().onEditUndo();
+                    });
+                    ivUndo = toolView;
+                    updateUndo(false);
+                    break;
+                case Redo:
+                    toolView.setImageResource(R.drawable.tools_ic_annotation_redo);
+                    toolView.setOnClickListener(v -> {
+                        pdfView.getCPdfReaderView().onEditRedo();
+                    });
+                    ivRedo = toolView;
+                    updateRedo(false);
+                    break;
+                default:
+                    break;
+            }
+            llTools.addView(toolView);
+        }
+    }
+
+
     public void resetStatus() {
         if (pdfView != null) {
             pdfView.getCPdfReaderView().removeAllAnnotFocus();
@@ -215,6 +306,8 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
         }
         ivEditImage.setSelected(false);
         ivEditText.setSelected(false);
-        ivProper.setEnabled(false);
+        if (ivProper != null) {
+            ivProper.setEnabled(false);
+        }
     }
 }

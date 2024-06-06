@@ -155,7 +155,7 @@ public class CWatermarkPageView extends FrameLayout {
                 return;
             }
             CEditDialog editDialog = CEditDialog.newInstance(getContext().getString(R.string.tools_text_watermark), watermarkView.getText());
-            editDialog.setHint(R.string.tools_type_your_watermark_text_here);
+            editDialog.setHint(getContext().getString(R.string.tools_type_your_watermark_text_here));
             editDialog.setEditListener(text -> {
                 watermarkView.setText(text);
                 editDialog.dismiss();

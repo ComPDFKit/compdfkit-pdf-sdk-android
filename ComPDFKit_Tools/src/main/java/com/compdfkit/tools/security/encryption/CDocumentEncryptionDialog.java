@@ -36,7 +36,6 @@ import com.compdfkit.core.document.CPDFDocumentPermissionInfo;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;

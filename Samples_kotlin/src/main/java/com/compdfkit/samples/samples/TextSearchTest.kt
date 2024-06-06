@@ -23,7 +23,6 @@ import com.compdfkit.samples.PDFSamples
 import com.compdfkit.samples.R
 import com.compdfkit.samples.util.FileUtils.getAssetsTempFile
 import com.compdfkit.samples.util.OutputListener
-import com.compdfkit.ui.reader.CPDFReaderView
 import java.io.File
 
 class TextSearchTest : PDFSamples() {
