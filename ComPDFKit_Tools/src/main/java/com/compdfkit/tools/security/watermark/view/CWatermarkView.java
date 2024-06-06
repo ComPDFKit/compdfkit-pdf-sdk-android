@@ -310,11 +310,8 @@ public class CWatermarkView extends View {
 
     private Typeface typeface = Typeface.DEFAULT;
 
-    private CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.FontType.Helvetica;
 
-    private boolean isBold = false;
-
-    private boolean isItalic = false;
+    private String fontPsName = CPDFTextAttribute.FontNameHelper.FontType.Helvetica.name();
 
     private int textColor = Color.BLACK;
 
@@ -371,6 +368,10 @@ public class CWatermarkView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
 
         mDrawPaint.setAntiAlias(true);
+
+        fontPsName = CPDFTextAttribute.FontNameHelper.obtainFontName(
+                CPDFTextAttribute.FontNameHelper.FontType.Helvetica, false, false
+        );
 
     }
 
@@ -464,16 +465,16 @@ public class CWatermarkView extends View {
         transformDraw();
     }
 
-    public void resetLocation(PointF center){
+    public void resetLocation(PointF center) {
         offsetX = 0;
         offsetY = 0;
-        if (editType == EditType.Image){
-            if (mBitmap != null){
+        if (editType == EditType.Image) {
+            if (mBitmap != null) {
                 setCenter(center);
                 calculateDrawToCenterDistance();
                 transformDraw();
             }
-        }else {
+        } else {
             setCenter(center);
             calculateBaseLine();
             calculateDrawToCenterDistance();
@@ -509,67 +510,18 @@ public class CWatermarkView extends View {
         return watermarkAlpha;
     }
 
-    /**
-     * Get text watermark font is bold
-     *
-     * @return
-     */
-    public boolean isBold() {
-        return isBold;
-    }
-
-    /**
-     * get text watermark font is italic
-     *
-     * @return
-     */
-    public boolean isItalic() {
-        return isItalic;
-    }
-
-    /**
-     * set text watermark font is bold
-     *
-     * @param bold
-     */
-    public void setBold(boolean bold) {
-        setTypeface(getFontType(), bold, isItalic());
-    }
-
-    /**
-     * set text watermark font is italic
-     *
-     * @param italic
-     */
-    public void setItalic(boolean italic) {
-        setTypeface(getFontType(), isBold(), italic);
-    }
-
-    /**
-     * Set text watermark font typeface
-     *
-     * @param fontType font type
-     * @param isBold   set font is bold
-     * @param isItalic set font is italic
-     * @see com.compdfkit.core.annotation.CPDFTextAttribute.FontNameHelper.FontType#Helvetica
-     * @see com.compdfkit.core.annotation.CPDFTextAttribute.FontNameHelper.FontType#Times_Roman
-     * @see com.compdfkit.core.annotation.CPDFTextAttribute.FontNameHelper.FontType#Courier
-     */
-    public void setTypeface(CPDFTextAttribute.FontNameHelper.FontType fontType, boolean isBold, boolean isItalic) {
-        String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(fontType, isBold, isItalic);
-        Typeface typeface = CPDFTextAttribute.FontNameHelper.getInnerTypeface(getContext(), fontName);
+    public void setTypeface(String fontPsName) {
+        Typeface typeface = CPDFTextAttribute.FontNameHelper.getTypeface(getContext(), fontPsName);
         this.typeface = typeface;
-        this.fontType = fontType;
-        this.isBold = isBold;
-        this.isItalic = isItalic;
+        this.fontPsName = fontPsName;
         txtPaint.setTypeface(this.typeface);
         calculateBaseLine();
         calculateDrawToCenterDistance();
         transformDraw();
     }
 
-    public CPDFTextAttribute.FontNameHelper.FontType getFontType() {
-        return fontType;
+    public String getFontPsName() {
+        return fontPsName;
     }
 
     /**
@@ -695,7 +647,7 @@ public class CWatermarkView extends View {
         return isEditable;
     }
 
-    public Bitmap getBitmap(){
+    public Bitmap getBitmap() {
         boolean isEdit = isEditable;
         setEditable(false);
         buildDrawingCache();
@@ -729,7 +681,7 @@ public class CWatermarkView extends View {
         return editType;
     }
 
-    public void setWatermarkType(EditType editType){
+    public void setWatermarkType(EditType editType) {
         this.editType = editType;
     }
 
@@ -741,7 +693,7 @@ public class CWatermarkView extends View {
         this.enableDrag = enableDrag;
     }
 
-    public int getControlDrawableWidth(){
+    public int getControlDrawableWidth() {
         return mControlDrawableWidth;
     }
 
@@ -749,8 +701,8 @@ public class CWatermarkView extends View {
         return framePadding;
     }
 
-    public int getWatermarkPadding(){
-        return (int) ((mControlDrawableWidth / 2F) + framePadding + (frameWidth  /2));
+    public int getWatermarkPadding() {
+        return (int) ((mControlDrawableWidth / 2F) + framePadding + (frameWidth / 2));
     }
 
     /**

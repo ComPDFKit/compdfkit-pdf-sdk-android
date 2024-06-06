@@ -74,17 +74,21 @@ public class CImportImageDialogFragment extends CBasicBottomSheetDialogFragment 
             imageLauncher.launch(CImageResultContracts.RequestType.PHOTO_ALBUM);
         });
         clFromCamera.setOnClickListener(v -> {
-            permissionResultLauncher.launch(Manifest.permission.CAMERA, granted -> {
-                if (granted) {
-                    imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
-                } else {
-                    if (getActivity() != null) {
-                        if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
-                            CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getActivity());
+            if (!CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.CAMERA)){
+                imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
+            }else {
+                permissionResultLauncher.launch(Manifest.permission.CAMERA, granted -> {
+                    if (granted) {
+                        imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
+                    } else {
+                        if (getActivity() != null) {
+                            if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
+                                CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getActivity());
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         });
     }
 

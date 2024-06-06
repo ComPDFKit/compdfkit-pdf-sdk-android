@@ -12,11 +12,9 @@ package com.compdfkit.tools.signature.importcert.create;
 
 import static com.compdfkit.tools.common.utils.CFileUtils.CERTIFICATE_DIGITAL_TYPE;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +32,6 @@ import androidx.fragment.app.Fragment;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdfsignature.CAddSignatureActivity;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.signature.interfaces.COnSelectCertFileListener;
 
 public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements View.OnClickListener {
@@ -47,10 +44,6 @@ public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements 
 
     private COnCertDigitalSignListener certDigitalSignListener;
 
-    private ActivityResultLauncher<String> requestStorageLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
-
-    });
-
     private ActivityResultLauncher<Intent> addSignatureLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         Fragment fragment = getChildFragmentManager().findFragmentByTag("certDialog");
         if (fragment != null) {
@@ -61,13 +54,12 @@ public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements 
             if (result.getData().getStringExtra("file_path") != null){
                 signImagePath = result.getData().getStringExtra("file_path");
                 if (certDigitalSignListener != null) {
-                    certDigitalSignListener.sign(certFilePath,certPassword, signImagePath);
+                    certDigitalSignListener.sign(certFilePath, certPassword, signImagePath);
                 }
-            }else if (result.getData().getBooleanExtra(CAddSignatureActivity.RESULT_NONE, false)){
-                //none
+            } else if (result.getData().getBooleanExtra(CAddSignatureActivity.RESULT_NONE, false)){
                 signImagePath = "";
                 if (certDigitalSignListener != null) {
-                    certDigitalSignListener.sign(certFilePath,certPassword, signImagePath);
+                    certDigitalSignListener.sign(certFilePath, certPassword, signImagePath);
                 }
             }
         }
@@ -84,6 +76,7 @@ public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements 
         intent.putExtra(CAddSignatureActivity.EXTRA_SHOW_NONE_TYPE, true);
         intent.putExtra(CAddSignatureActivity.EXTRA_TITLE, getString(R.string.tools_customize_the_signature_appearance));
         intent.putExtra(CAddSignatureActivity.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        intent.putExtra(CAddSignatureActivity.EXTRA_HIDE_TYPEFACE, true);
         addSignatureLauncher.launch(intent);
     }
 
@@ -129,15 +122,6 @@ public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements 
         if (v.getId() == R.id.btn_cancel) {
             dismiss();
         } else if (v.getId() == R.id.btn_confirm) {
-            if (!CPermissionUtil.hasStoragePermissions(getContext())){
-                if (Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_R &&
-                CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE)) {
-                    CPermissionUtil.openManageAllFileAppSettings(getContext());
-                }else {
-                    requestStorageLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                }
-                return;
-            }
             if (rgType.getCheckedRadioButtonId() == R.id.rb_import_digital_sign){
                 selectCertificateLauncher.launch(CFileUtils.getIntent(CERTIFICATE_DIGITAL_TYPE));
             }else {
@@ -152,7 +136,7 @@ public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements 
         this.certDigitalSignListener = certDigitalSignListener;
     }
 
-    public interface COnCertDigitalSignListener{
+    public interface COnCertDigitalSignListener {
         void sign(String certFilePath, String certPassword, String signImagePath);
     }
 }

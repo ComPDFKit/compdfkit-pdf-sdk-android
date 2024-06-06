@@ -38,6 +38,7 @@ import com.compdfkit.tools.common.pdf.config.forms.FormsPushButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsRadioButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsTextFieldAttr;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 
@@ -370,10 +371,12 @@ public class CPDFConfigurationUtils {
                 freetextAttr.setFontColor(annotJsonObject.optString("fontColor", "#000000"));
                 freetextAttr.setFontColorAlpha(annotJsonObject.optInt("fontColorAlpha", 255));
                 freetextAttr.setFontSize(annotJsonObject.optInt("fontSize", 20));
-                freetextAttr.setBold(annotJsonObject.optBoolean("isBold", false));
-                freetextAttr.setItalic(annotJsonObject.optBoolean("isItalic", false));
+                String familyName = annotJsonObject.optString("typeface", "Helvetica");
+                boolean bold = annotJsonObject.optBoolean("isBold", false);
+                boolean italic = annotJsonObject.optBoolean("isItalic", false);
+
                 freetextAttr.setAlignment(AnnotFreetextAttr.Alignment.fromString(annotJsonObject.optString("alignment", AnnotFreetextAttr.Alignment.LEFT.name())));
-                freetextAttr.setTypeface(getFontType(annotJsonObject.optString("typeface", "helvetica").toLowerCase()));
+                freetextAttr.setPsName(getFontPsName(familyName, bold, italic));
                 annotAttr = freetextAttr;
                 break;
             default:
@@ -545,11 +548,12 @@ public class CPDFConfigurationUtils {
                 textFieldAttr.setBorderWidth((float) jsonObject.optDouble("borderWidth", 5));
                 textFieldAttr.setFontColor(jsonObject.optString("fontColor", "#000000"));
                 textFieldAttr.setFontSize(jsonObject.optInt("fontSize", 20));
-                textFieldAttr.setBold(jsonObject.optBoolean("isBold", false));
-                textFieldAttr.setItalic(jsonObject.optBoolean("isItalic", false));
+                boolean isBold = jsonObject.optBoolean("isBold", false);
+                boolean isItalic = jsonObject.optBoolean("isItalic", false);
+                String familyName = jsonObject.optString("typeface", "Helvetica");
+                textFieldAttr.setPsName(getFontPsName(familyName, isBold, isItalic));
                 textFieldAttr.setAlignment(AnnotFreetextAttr.Alignment.fromString(jsonObject.optString("alignment", AnnotFreetextAttr.Alignment.LEFT.name())));
                 textFieldAttr.setMultiline(jsonObject.optBoolean("multiline", true));
-                textFieldAttr.setTypeface(getFontType(jsonObject.optString("typeface", "helvetica")));
                 formsAttr = textFieldAttr;
                 break;
             case Widget_CheckBox:
@@ -579,9 +583,10 @@ public class CPDFConfigurationUtils {
                 formsListBoxAttr.setBorderWidth((float) jsonObject.optDouble("borderWidth", 5));
                 formsListBoxAttr.setFontColor(jsonObject.optString("fontColor", "#000000"));
                 formsListBoxAttr.setFontSize(jsonObject.optInt("fontSize", 20));
-                formsListBoxAttr.setTypeface(getFontType(jsonObject.optString("typeface", "helvetica")));
-                formsListBoxAttr.setBold(jsonObject.optBoolean("isBold", false));
-                formsListBoxAttr.setItalic(jsonObject.optBoolean("isItalic", false));
+                boolean listBoxAttrIsBold = jsonObject.optBoolean("isBold", false);
+                boolean listBoxAttrIsItalic = jsonObject.optBoolean("isItalic", false);
+                String listBoxAttrFamilyName = jsonObject.optString("typeface", "Helvetica");
+                formsListBoxAttr.setPsName(getFontPsName(listBoxAttrFamilyName, listBoxAttrIsBold, listBoxAttrIsItalic));
                 formsAttr = formsListBoxAttr;
                 break;
             case Widget_ComboBox:
@@ -591,9 +596,10 @@ public class CPDFConfigurationUtils {
                 comboBoxAttr.setBorderWidth((float) jsonObject.optDouble("borderWidth", 5));
                 comboBoxAttr.setFontColor(jsonObject.optString("fontColor", "#000000"));
                 comboBoxAttr.setFontSize(jsonObject.optInt("fontSize", 20));
-                comboBoxAttr.setTypeface(getFontType(jsonObject.optString("typeface", "helvetica")));
-                comboBoxAttr.setBold(jsonObject.optBoolean("isBold", false));
-                comboBoxAttr.setItalic(jsonObject.optBoolean("isItalic", false));
+                boolean comboBoxAttrIsBold = jsonObject.optBoolean("isBold", false);
+                boolean comboBoxAttrIsItalic = jsonObject.optBoolean("isItalic", false);
+                String comboBoxAttrFamilyName = jsonObject.optString("typeface", "Helvetica");
+                comboBoxAttr.setPsName(getFontPsName(comboBoxAttrFamilyName, comboBoxAttrIsBold, comboBoxAttrIsItalic));
                 formsAttr = comboBoxAttr;
                 break;
             case Widget_PushButton:
@@ -604,9 +610,10 @@ public class CPDFConfigurationUtils {
                 pushButtonAttr.setFontColor(jsonObject.optString("fontColor", "#000000"));
                 pushButtonAttr.setFontSize(jsonObject.optInt("fontSize", 20));
                 pushButtonAttr.setTitle(jsonObject.optString("title", ""));
-                pushButtonAttr.setTypeface(getFontType(jsonObject.optString("typeface", "helvetica")));
-                pushButtonAttr.setBold(jsonObject.optBoolean("isBold", false));
-                pushButtonAttr.setItalic(jsonObject.optBoolean("isItalic", false));
+                boolean pushButtonAttrIsBold = jsonObject.optBoolean("isBold", false);
+                boolean pushButtonAttrIsItalic = jsonObject.optBoolean("isItalic", false);
+                String pushButtonAttrFamilyName = jsonObject.optString("typeface", "Helvetica");
+                pushButtonAttr.setPsName(getFontPsName(pushButtonAttrFamilyName, pushButtonAttrIsBold, pushButtonAttrIsItalic));
                 formsAttr = pushButtonAttr;
                 break;
             case Widget_SignatureFields:
@@ -632,6 +639,41 @@ public class CPDFConfigurationUtils {
                 return CPDFTextAttribute.FontNameHelper.FontType.Helvetica;
         }
     }
+
+    private static String getFontPsName(String familyName, boolean bold, boolean italic){
+        switch (familyName){
+            case "Helvetica":
+            case "Courier":
+                String styleName = "";
+                if (bold && !italic){
+                    styleName = "Bold";
+                } else if (!bold && italic) {
+                    styleName = "Oblique";
+                } else if (bold && italic) {
+                    styleName = "BoldOblique";
+                }
+                String psName = familyName +"-"+styleName;
+                if (TextUtils.isEmpty(styleName)){
+                    psName = familyName;
+                }
+                CLog.e("CPDFConfig", "psName：" + psName);
+                return psName;
+            case "Times-Roman":
+                String styleName1 = "Roman";
+                if (bold && !italic){
+                    styleName1 = "Bold";
+                } else if (!bold && italic) {
+                    styleName1 = "Italic";
+                } else if (bold && italic) {
+                    styleName1 = "BoldItalic";
+                }
+                String psName1 = "Times-"+styleName1;
+                CLog.e("CPDFConfig", "psName：" + psName1);
+                return psName1;
+        }
+        return "Helvetica";
+    }
+
 
     private static CPDFWidget.CheckStyle getCheckStyle(String key){
         switch(key.toLowerCase()){

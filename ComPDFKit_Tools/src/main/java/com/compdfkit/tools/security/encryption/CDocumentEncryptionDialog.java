@@ -232,6 +232,7 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
         if (v.getId() == toolBar.getIvToolBarBackBtn().getId()) {
             dismiss();
         } else if (v.getId() == R.id.btn_done) {
+            CViewUtils.hideKeyboard(getDialog());
             Editable userPassword = etUserPassword.getText();
             Editable ownerPassword = etOwnerPassword.getText();
             if (swUserPassword.isChecked() && TextUtils.isEmpty(userPassword)){
@@ -247,24 +248,18 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
                 CToastUtil.showLongToast(getContext(), R.string.tools_password_must_be_different);
                 return;
             }
-            // Check the storage permissions to ensure that
-            // you can select the directory and save to the corresponding directory normally.
-            if (CPermissionUtil.hasStoragePermissions(getContext())) {
-                showSelectDirDialog();
-            }else {
-                if (CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE) && Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_R) {
-                    CPermissionUtil.openManageAllFileAppSettings(getContext());
-                } else {
-                    multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
-                        if (CPermissionUtil.hasStoragePermissions(getContext())) {
-                            showSelectDirDialog();
-                        } else {
-                            if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
-                            }
+            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+                multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
+                    if (CPermissionUtil.hasStoragePermissions(getContext())) {
+                        showSelectDirDialog();
+                    } else {
+                        if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
                         }
-                    });
-                }
+                    }
+                });
+            }else {
+                showSelectDirDialog();
             }
         } else if (v.getId() == R.id.iv_user_pwd_show) {
             ivUserPwdVisible.setSelected(!ivUserPwdVisible.isSelected());

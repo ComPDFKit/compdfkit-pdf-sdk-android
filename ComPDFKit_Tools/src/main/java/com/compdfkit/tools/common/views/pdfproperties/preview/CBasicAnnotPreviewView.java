@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 
 abstract class CBasicAnnotPreviewView extends FrameLayout {
@@ -74,15 +73,9 @@ abstract class CBasicAnnotPreviewView extends FrameLayout {
 
     public void setTextColorOpacity(int textColorOpacity){}
 
-    public void setFontBold(boolean bold){}
-
-    public void setFontItalic(boolean italic){}
-
     public void setTextAlignment(CAnnotStyle.Alignment alignment){}
 
     public void setFontSize(int fontSize){}
-
-    public void setFontType(CPDFTextAttribute.FontNameHelper.FontType fontType){}
 
     public void setMirror(CAnnotStyle.Mirror mirror){
 
@@ -92,5 +85,5 @@ abstract class CBasicAnnotPreviewView extends FrameLayout {
 
     }
 
-    public void setExternFontType(String fontName){}
+    public void setFontPsName(String fontPsName){}
 }

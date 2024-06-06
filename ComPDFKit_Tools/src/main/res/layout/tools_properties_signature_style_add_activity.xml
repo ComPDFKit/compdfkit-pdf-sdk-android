@@ -149,12 +149,29 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.compdfkit.tools.common.views.pdfproperties.font.CPDFFontView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/cl_menu"
+        android:background="@color/tools_reader_setting_head_bg_color"
+        android:visibility="gone"
+        android:id="@+id/font_view"
+        />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="font_view,cl_thickness"
+        android:id="@+id/barrier"
+        />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_content_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_thickness">
+        app:layout_constraintTop_toBottomOf="@id/barrier">
 
 
         <com.compdfkit.tools.common.views.pdfproperties.writing.CPDFSignatureEditView
@@ -172,8 +189,9 @@
             android:hint="@string/tools_enter_your_signature"
             android:textColor="@android:color/black"
             android:textColorHint="@color/tools_text_color_hint"
-            android:textSize="20sp"
-            android:visibility="gone" />
+            android:textSize="35sp"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_import_image"

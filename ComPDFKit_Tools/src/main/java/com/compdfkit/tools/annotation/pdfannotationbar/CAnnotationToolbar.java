@@ -93,9 +93,6 @@ public class CAnnotationToolbar extends FrameLayout {
         toolListAdapter = new CPDFAnnotationToolListAdapter();
         rvAnnotationList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvAnnotationList.setAdapter(toolListAdapter);
-        if (isInEditMode()) {
-            setTools(Arrays.asList(AnnotationsConfig.AnnotationTools.Setting, AnnotationsConfig.AnnotationTools.Undo, AnnotationsConfig.AnnotationTools.Redo));
-        }
         initListener();
     }
 
@@ -120,7 +117,7 @@ public class CAnnotationToolbar extends FrameLayout {
                 }
             }
         });
-        redoUndoManager();
+//        redoUndoManager();
     }
 
     public void setFragmentManager(FragmentManager fragmentManager) {
@@ -219,6 +216,7 @@ public class CAnnotationToolbar extends FrameLayout {
     private Handler handler = new Handler(Looper.getMainLooper());
 
     private void redoUndoManager() {
+        pdfView.getCPdfReaderView().getUndoManager().enable(true);
         CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
         if (ivRedo != null) {
             ivRedo.setEnabled(undoManager.canRedo());
@@ -226,25 +224,23 @@ public class CAnnotationToolbar extends FrameLayout {
         if (ivUndo != null) {
             ivUndo.setEnabled(undoManager.canRedo());
         }
-        pdfView.getCPdfReaderView().getUndoManager().enable(true);
         pdfView.getCPdfReaderView().getUndoManager().addOnUndoHistoryChangeListener((cpdfUndoManager, operation, type) -> {
             boolean canUndo = cpdfUndoManager.canUndo();
             boolean canRedo = cpdfUndoManager.canRedo();
-            handler.post(() -> {
-                if (ivUndo != null) {
-                    ivUndo.setEnabled(canUndo);
-                }
-                if (ivRedo != null) {
-                    ivRedo.setEnabled(canRedo);
-                }
-            });
+            if (ivUndo != null) {
+                ivUndo.setEnabled(canUndo);
+            }
+            if (ivRedo != null) {
+                ivRedo.setEnabled(canRedo);
+            }
         });
     }
 
     private void undo() {
         try {
-            if (pdfView != null) {
-                pdfView.getCPdfReaderView().getUndoManager().undo();
+            CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
+            if (undoManager.canUndo()) {
+                undoManager.undo();
             }
         } catch (Exception e) {
         }
@@ -252,8 +248,9 @@ public class CAnnotationToolbar extends FrameLayout {
 
     private void redo() {
         try {
-            if (pdfView != null) {
-                pdfView.getCPdfReaderView().getUndoManager().redo();
+            CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
+            if (undoManager.canRedo()) {
+                undoManager.redo();
             }
         } catch (Exception e) {
 
@@ -290,14 +287,14 @@ public class CAnnotationToolbar extends FrameLayout {
 
     public void setTools(List<AnnotationsConfig.AnnotationTools> tools) {
         llAnnotTools.setVisibility(tools != null && tools.size() > 0 ? VISIBLE : GONE);
-        if(tools != null && tools.size() > 0){
+        if (tools != null && tools.size() > 0) {
             tools = CListUtil.distinct(tools);
         }
         for (AnnotationsConfig.AnnotationTools tool : tools) {
             AppCompatImageView toolView = (AppCompatImageView) LayoutInflater.from(getContext())
                     .inflate(R.layout.tools_annot_tool_bar_tools_item, null);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    CDimensUtils.dp2px(getContext(), 30),CDimensUtils.dp2px(getContext(), 30)
+                    CDimensUtils.dp2px(getContext(), 30), CDimensUtils.dp2px(getContext(), 30)
             );
             layoutParams.setMarginStart(CDimensUtils.dp2px(getContext(), 12));
             toolView.setLayoutParams(layoutParams);

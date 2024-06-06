@@ -30,6 +30,8 @@
       "documentEditor",
       "documentInfo",
       "save",
+      "watermark",
+      "security",
       "flattened",
       "share",
       "openDocument"
@@ -153,7 +155,7 @@
         "fontSize": 30,
         "isBold": false,
         "isItalic": false,
-        "typeface": "Times-Roman",
+        "typeface": "Helvetica",
         "alignment": "left"
       }
     }

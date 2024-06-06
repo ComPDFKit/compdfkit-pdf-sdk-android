@@ -12,7 +12,6 @@ package com.compdfkit.tools.common.views.pdfproperties.preview;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -30,17 +29,11 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 
 public class CAnnotFreeTextPreviewView extends CBasicAnnotPreviewView {
 
-    private boolean isItalic;
-
-    private boolean isBold;
-
     private int textColorOpacity = 255;
 
     private AppCompatTextView textView;
 
-    private CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.FontType.Helvetica;
-
-    private String externFontPath = "";
+    private String fontPsName;
 
     public CAnnotFreeTextPreviewView(@NonNull Context context) {
         this(context, null);
@@ -56,7 +49,7 @@ public class CAnnotFreeTextPreviewView extends CBasicAnnotPreviewView {
 
     @Override
     protected void bindView() {
-        fontType = CPDFTextAttribute.FontNameHelper.FontType.Helvetica;
+        fontPsName = CPDFTextAttribute.FontNameHelper.FontType.Helvetica.name();
         textView = new AppCompatTextView(getContext());
         textView.setTextSize(24);
         textView.setText(R.string.tools_sample);
@@ -84,28 +77,7 @@ public class CAnnotFreeTextPreviewView extends CBasicAnnotPreviewView {
     }
 
     private Typeface getTypeFace(){
-        Typeface typeface = null;
-        if (TextUtils.isEmpty(externFontPath)) {
-            String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(fontType, isBold, isItalic);
-             typeface = CPDFTextAttribute.FontNameHelper.getInnerTypeface(getContext(), fontName);
-        } else {
-            typeface = Typeface.createFromFile(externFontPath);
-        }
-        return typeface;
-    }
-
-    @Override
-    public void setFontBold(boolean bold) {
-        super.setFontBold(bold);
-        this.isBold = bold;
-        textView.setTypeface(getTypeFace());
-    }
-
-    @Override
-    public void setFontItalic(boolean italic) {
-        super.setFontItalic(italic);
-        this.isItalic = italic;
-        textView.setTypeface(getTypeFace());
+        return CPDFTextAttribute.FontNameHelper.getTypeface(getContext(), fontPsName);
     }
 
     @Override
@@ -135,16 +107,8 @@ public class CAnnotFreeTextPreviewView extends CBasicAnnotPreviewView {
     }
 
     @Override
-    public void setFontType(CPDFTextAttribute.FontNameHelper.FontType fontType) {
-        super.setFontType(fontType);
-        this.fontType = fontType;
-        externFontPath = "";
-        textView.setTypeface(getTypeFace());
-    }
-
-    @Override
-    public void setExternFontType(String fontPath){
-        externFontPath = fontPath;
+    public void setFontPsName(String fontPsName) {
+        this.fontPsName = fontPsName;
         textView.setTypeface(getTypeFace());
     }
 }

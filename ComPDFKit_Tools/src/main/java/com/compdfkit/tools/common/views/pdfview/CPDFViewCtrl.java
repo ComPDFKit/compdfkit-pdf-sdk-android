@@ -35,6 +35,7 @@ import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditManager;
+import com.compdfkit.tools.BuildConfig;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
@@ -342,7 +343,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     public void showWritePermissionsDialog(CPDFDocument document) {
         if (getContext() instanceof FragmentActivity) {
             Fragment rwPermissionDialog = ((FragmentActivity) getContext()).getSupportFragmentManager().findFragmentByTag("rwPermissionDialog");
-            if (rwPermissionDialog != null && rwPermissionDialog instanceof DialogFragment){
+            if (rwPermissionDialog != null && rwPermissionDialog instanceof DialogFragment) {
                 ((DialogFragment) rwPermissionDialog).dismiss();
             }
         }
@@ -397,6 +398,9 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                     }
                 } catch (CPDFDocumentException e) {
                     e.printStackTrace();
+                    if (BuildConfig.DEBUG) {
+                        CToastUtil.showLongToast(getContext(), "保存异常");
+                    }
                     CLog.e("ComPDFKit", "save fail:" + e.getMessage());
                     if (error != null) {
                         error.error(e);
@@ -555,17 +559,17 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         indicatorView.setAlpha(0F);
         addView(indicatorView);
         CPDFDocument document = cPdfReaderView.getPDFDocument();
-        if (document == null){
+        if (document == null) {
             return;
         }
         int totalPageCount = cPdfReaderView.getPDFDocument().getPageCount();
         indicatorView.setTotalPage(totalPageCount);
         indicatorView.setCurrentPageIndex(0);
         indicatorView.setPageIndicatorClickListener(pageIndex -> {
-            CGotoPageDialog dialog = CGotoPageDialog.newInstance((getContext().getString(R.string.tools_page) + String.format(" (%d/%d)", 1, totalPageCount)));
-            dialog.setPageCount(totalPageCount);
+            CGotoPageDialog dialog = CGotoPageDialog.newInstance((getContext().getString(R.string.tools_page) + String.format(" (%d/%d)", 1, cPdfReaderView.getPDFDocument().getPageCount())));
+            dialog.setPageCount(cPdfReaderView.getPDFDocument().getPageCount());
             dialog.setOnPDFDisplayPageIndexListener(page -> {
-                if (page <= totalPageCount && page > 0) {
+                if (page <= cPdfReaderView.getPDFDocument().getPageCount() && page > 0) {
                     cPdfReaderView.setDisplayPageIndex(page - 1, true);
                 }
             });

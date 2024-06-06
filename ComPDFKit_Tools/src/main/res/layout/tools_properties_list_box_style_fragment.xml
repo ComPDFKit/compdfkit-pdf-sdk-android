@@ -47,76 +47,25 @@
             app:layout_constraintTop_toBottomOf="@id/background_color_list_view"
             android:title="@string/tools_text_color" />
 
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_font_type"
-            style="@style/tools_style_fragment_sub_title_style"
-            android:layout_width="wrap_content"
+        <com.compdfkit.tools.common.views.pdfproperties.font.CPDFFontView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/tools_annot_font"
+            app:layout_constraintTop_toBottomOf="@id/text_color_list_view"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_color_list_view" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner_font"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="16dp"
-            android:dropDownSelector="@color/tools_color_primary"
-            android:popupBackground="@drawable/tools_common_window_bg"
-            app:layout_constraintBottom_toBottomOf="@id/tv_font_type"
-            app:layout_constraintEnd_toStartOf="@id/iv_font_bold"
-            app:layout_constraintStart_toEndOf="@id/tv_font_type"
-            app:layout_constraintTop_toTopOf="@id/tv_font_type" />
-
-        <View
-            android:id="@+id/font_line"
-            style="@style/tools_style_fragment_line"
-            android:layout_width="0dp"
-            android:layout_marginHorizontal="12dp"
-            app:layout_constraintEnd_toEndOf="@id/spinner_font"
-            app:layout_constraintStart_toStartOf="@id/spinner_font"
-            app:layout_constraintTop_toBottomOf="@id/spinner_font" />
-
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_font_italic"
-            android:layout_width="40dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/tools_annotation_font_italic_bg"
-            android:gravity="center"
-            android:padding="5dp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_font_type"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_font_type"
-            app:srcCompat="@drawable/tools_ic_font_italic"
-            app:tint="@color/tools_font_style_iv_color" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_font_bold"
-            android:layout_width="40dp"
-            android:layout_height="32dp"
-            android:background="@drawable/tools_annotation_font_bold_bg"
-            android:gravity="center"
-            android:padding="5dp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_font_type"
-            app:layout_constraintEnd_toStartOf="@id/iv_font_italic"
-            app:layout_constraintTop_toTopOf="@id/tv_font_type"
-            app:srcCompat="@drawable/tools_ic_font_bold"
-            app:tint="@color/tools_font_style_iv_color" />
+            android:id="@+id/font_view"
+            android:layout_marginTop="4dp"
+            />
 
         <com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar
             android:id="@+id/font_size_slider_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:max="100"
             app:tools_value_unit="pt"
             android:progress="1"
-            app:layout_constraintTop_toBottomOf="@id/iv_font_bold"
+            app:layout_constraintTop_toBottomOf="@id/font_view"
             app:tools_slider_bar_value_show_type="source"
             android:title="@string/tools_annot_font_size" />
 

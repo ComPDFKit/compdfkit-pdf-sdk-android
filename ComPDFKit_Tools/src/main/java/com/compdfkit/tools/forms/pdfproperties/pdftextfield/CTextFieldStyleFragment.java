@@ -16,23 +16,20 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.view.colorpicker.CColorPickerFragment;
 import com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar;
 import com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView;
 import com.compdfkit.tools.common.views.pdfproperties.basic.CBasicPropertiesFragment;
 import com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView;
-import com.compdfkit.tools.common.views.pdfproperties.font.CFontSpinnerAdapter;
+import com.compdfkit.tools.common.views.pdfproperties.font.CPDFFontView;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleFragmentDatas;
 import com.compdfkit.tools.common.views.pdfproperties.textfields.CTextFieldsView;
@@ -57,10 +54,6 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
 
     private ColorListView textColorListView;
 
-    private AppCompatImageView ivFontItalic;
-
-    private AppCompatImageView ivFontBold;
-
     private LinearLayout llAlignment;
 
     private AppCompatImageView ivAlignmentLeft;
@@ -75,7 +68,7 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
 
     private CSliderBar fontSizeSliderBar;
 
-    private Spinner fontSpinner;
+    private CPDFFontView fontView;
 
     private List<View> alignmentViews = new ArrayList<>();
 
@@ -87,19 +80,15 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
         borderColorListView = rootView.findViewById(R.id.border_color_list_view);
         backgroundColorListView = rootView.findViewById(R.id.background_color_list_view);
         textColorListView = rootView.findViewById(R.id.text_color_list_view);
-        ivFontItalic = rootView.findViewById(R.id.iv_font_italic);
-        ivFontBold = rootView.findViewById(R.id.iv_font_bold);
         llAlignment = rootView.findViewById(R.id.ll_alignment_type);
         ivAlignmentLeft = rootView.findViewById(R.id.iv_alignment_left);
         ivAlignmentCenter = rootView.findViewById(R.id.iv_alignment_center);
         ivAlignmentRight = rootView.findViewById(R.id.iv_alignment_right);
         fontSizeSliderBar = rootView.findViewById(R.id.font_size_slider_bar);
-        fontSpinner = rootView.findViewById(R.id.spinner_font);
         etDefaultValue = rootView.findViewById(R.id.et_default_value);
         hideFormSwitch = rootView.findViewById(R.id.switch_hide_form);
         multiLineSwitch = rootView.findViewById(R.id.switch_multi_line);
-        ivFontItalic.setOnClickListener(this);
-        ivFontBold.setOnClickListener(this);
+        fontView = rootView.findViewById(R.id.font_view);
         ivAlignmentLeft.setOnClickListener(this);
         ivAlignmentCenter.setOnClickListener(this);
         ivAlignmentRight.setOnClickListener(this);
@@ -114,29 +103,11 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
         super.onViewCreated(view, savedInstanceState);
         CAnnotStyle annotStyle = viewModel.getStyle();
         if (annotStyle != null) {
-            List<CPDFTextAttribute.FontNameHelper.FontType> fontTypes = new ArrayList<>();
-            fontTypes.add(CPDFTextAttribute.FontNameHelper.FontType.Helvetica);
-            fontTypes.add(CPDFTextAttribute.FontNameHelper.FontType.Courier);
-            fontTypes.add(CPDFTextAttribute.FontNameHelper.FontType.Times_Roman);
-            CFontSpinnerAdapter fontSpinnerAdapter = new CFontSpinnerAdapter(getContext(), fontTypes);
-            fontSpinner.setAdapter(fontSpinnerAdapter);
-            switch (annotStyle.getFontType()) {
-                case Courier:
-                    fontSpinner.setSelection(1);
-                    break;
-                case Times_Roman:
-                    fontSpinner.setSelection(2);
-                    break;
-                default:
-                    fontSpinner.setSelection(0);
-                    break;
-            }
+            fontView.initFont(annotStyle.getExternFontName());
             textFieldsView.setText(annotStyle.getFormFieldName());
             borderColorListView.setSelectColor(annotStyle.getLineColor());
             backgroundColorListView.setSelectColor(annotStyle.getFillColor());
             textColorListView.setSelectColor(annotStyle.getTextColor());
-            ivFontBold.setSelected(annotStyle.isFontBold());
-            ivFontItalic.setSelected(annotStyle.isFontItalic());
             hideFormSwitch.setChecked(annotStyle.isHideForm());
             multiLineSwitch.setChecked(annotStyle.isFormMultiLine());
             etDefaultValue.setText(annotStyle.getFormDefaultValue());
@@ -215,18 +186,12 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
                 }
             }
         });
-        fontSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        fontView.setFontChangeListener(new CPDFFontView.CFontChangeListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void font(String psName) {
                 if (viewModel != null) {
-                    CPDFTextAttribute.FontNameHelper.FontType fontType = (CPDFTextAttribute.FontNameHelper.FontType) fontSpinner.getItemAtPosition(position);
-                    viewModel.getStyle().setFontType(fontType);
+                    viewModel.getStyle().setExternFontName(psName);
                 }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
         textFieldsView.setTextChangedListener((s, start, before, count) -> {
@@ -274,17 +239,7 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_font_bold) {
-            ivFontBold.setSelected(!ivFontBold.isSelected());
-            if (viewModel != null) {
-                viewModel.getStyle().setFontBold(ivFontBold.isSelected());
-            }
-        } else if (v.getId() == R.id.iv_font_italic) {
-            ivFontItalic.setSelected(!ivFontItalic.isSelected());
-            if (viewModel != null) {
-                viewModel.getStyle().setFontItalic(ivFontItalic.isSelected());
-            }
-        } else if (v.getId() == R.id.iv_alignment_left) {
+        if (v.getId() == R.id.iv_alignment_left) {
             selectAlignmentView(ivAlignmentLeft);
             setAlignment(CAnnotStyle.Alignment.LEFT);
         } else if (v.getId() == R.id.iv_alignment_center) {

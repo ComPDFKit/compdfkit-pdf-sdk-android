@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,6 @@ import android.widget.FrameLayout;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -177,12 +175,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         }
     });
 
-    private ActivityResultLauncher<Intent> requestManageStoragePermission = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (CPermissionUtil.hasStoragePermissions(getContext())) {
-            initDocument(null);
-        }
-    });
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -253,10 +245,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             String password = getArguments().getString(EXTRA_FILE_PASSWORD);
             if (!TextUtils.isEmpty(getArguments().getString(EXTRA_FILE_PATH))) {
                 String path = getArguments().getString(EXTRA_FILE_PATH);
+                documentPath = path;
                 pdfView.openPDF(path, password, callback);
             } else if (getArguments().getParcelable(EXTRA_FILE_URI) != null) {
                 Uri uri = getArguments().getParcelable(EXTRA_FILE_URI);
                 CFileUtils.takeUriPermission(getContext(), uri);
+                documentUri = uri;
                 pdfView.openPDF(uri, password, callback);
             }
         }
@@ -278,7 +272,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             }
         });
         pdfView.setOnTapMainDocAreaCallback(() -> {
-            if (pdfSearchToolBarView.getVisibility() == VISIBLE){
+            if (pdfSearchToolBarView.getVisibility() == VISIBLE) {
                 pdfSearchToolBarView.showSearchReplaceContextMenu();
                 return;
             }
@@ -325,9 +319,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             if (editManager != null && !editManager.isEditMode()) {
                 editManager.enable();
                 editManager.beginEdit(CPDFEditPage.LoadTextImage);
-            }
-            if (!CPermissionUtil.hasStoragePermissions(getContext())) {
-                requestStoragePermissions(this::selectDocument);
             }
         } else {
             if (editManager != null && editManager.isEditMode()) {
@@ -614,19 +605,23 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                         break;
                     case OpenDocument:
                         menuWindow.addItem(R.drawable.tools_ic_new_file, R.string.tools_open_document, v1 -> {
-                            if (CPermissionUtil.hasStoragePermissions(getContext())) {
                                 selectDocument();
-                            } else {
-                                requestStoragePermissions(this::selectDocument);
-                            }
                         });
                         break;
                     case Flattened:
                         menuWindow.addItem(R.drawable.tools_ic_flattened, R.string.tools_flattened, v1 -> {
-                            if (CPermissionUtil.hasStoragePermissions(getContext())) {
+                            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+                                multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
+                                    if (CPermissionUtil.hasStoragePermissions(getContext())) {
+                                        pdfView.savePDF((filePath, pdfUri) -> flattenedPdf(), e -> flattenedPdf());
+                                    } else {
+                                        if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                                            CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
+                                        }
+                                    }
+                                });
+                            }else {
                                 pdfView.savePDF((filePath, pdfUri) -> flattenedPdf(), e -> flattenedPdf());
-                            } else {
-                                requestStoragePermissions(() -> pdfView.savePDF((filePath, pdfUri) -> flattenedPdf(), e -> flattenedPdf()));
                             }
                         });
                         break;
@@ -655,12 +650,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             File file = new File(dir, CFileUtils.getFileNameNoExtension(document.getFileName()) + getString(R.string.tools_flattened_suffix));
             file = CFileUtils.renameNameSuffix(file);
             File finalFile = file;
-            CThreadPoolUtils.getInstance().executeIO(() ->{
+            CThreadPoolUtils.getInstance().executeIO(() -> {
                 boolean result = document.flattenAllPages(CPDFPage.PDFFlattenOption.FLAT_NORMALDISPLAY);
                 if (result) {
                     try {
                         boolean saveResult = document.saveAs(finalFile.getAbsolutePath(), false);
-                        CThreadPoolUtils.getInstance().executeMain(()->{
+                        CThreadPoolUtils.getInstance().executeMain(() -> {
                             dismissLoadingDialog();
                             if (saveResult) {
                                 CToastUtil.showLongToast(getContext(), R.string.tools_save_success);
@@ -678,7 +673,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else {
+                } else {
                     dismissLoadingDialog();
                 }
             });
@@ -726,7 +721,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         }
         CAlertDialog alertDialog = CAlertDialog.newInstance(getString(R.string.tools_save_title), getString(R.string.tools_save_message));
         alertDialog.setConfirmClickListener(v -> {
-            //save pdf document
+            // save pdf document
             pdfView.savePDF((filePath, pdfUri) -> {
                 alertDialog.dismiss();
                 selectDocumentLauncher.launch(null);
@@ -743,34 +738,9 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     }
 
     private void onDoNext() {
-        if (CPermissionUtil.hasStoragePermissions(getContext())) {
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_TIRAMISU) {
-            if (CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE)){
-                requestManageStoragePermission.launch(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION));
-            }
-        } else if (Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_R) {
-            multiplePermissionResultLauncher.launch(STORAGE_PERMISSIONS, result -> {
-                if (CPermissionUtil.hasStoragePermissions(getContext())) {
-                    initDocument(null);
-                } else {
-                    if (!Environment.isExternalStorageManager() && CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE)) {
-                        requestManageStoragePermission.launch(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION));
-                    }
-                }
-            });
-        } else {
-            multiplePermissionResultLauncher.launch(STORAGE_PERMISSIONS, result -> {
-                if (CPermissionUtil.hasStoragePermissions(getContext())) {
-                    initDocument(null);
-                } else {
-                    if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        showPermissionsRequiredDialog();
-                    }
-                }
-            });
-        }
+        multiplePermissionResultLauncher.launch(STORAGE_PERMISSIONS, result -> {
+
+        });
     }
 
     private void showSettingEncryptionDialog() {

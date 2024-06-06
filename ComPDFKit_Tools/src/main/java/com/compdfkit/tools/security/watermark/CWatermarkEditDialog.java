@@ -28,6 +28,7 @@ import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
@@ -162,25 +163,18 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
                     return;
                 }
             }
-
-            // Check the storage permissions to ensure that
-            // you can select the directory and save to the corresponding directory normally.
-            if (CPermissionUtil.hasStoragePermissions(getContext())) {
-                save();
-            } else {
-                if (CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE) && Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_R) {
-                    CPermissionUtil.openManageAllFileAppSettings(getContext());
-                } else {
-                    multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
-                        if (CPermissionUtil.hasStoragePermissions(getContext())) {
-                            save();
-                        } else {
-                            if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
-                            }
+            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+                multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
+                    if (CPermissionUtil.hasStoragePermissions(getContext())) {
+                        save();
+                    } else {
+                        if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
                         }
-                    });
-                }
+                    }
+                });
+            }else {
+                save();
             }
         } else if (v.getId() == R.id.iv_watermark_setting) {
             Fragment fragment = getChildFragmentManager().findFragmentByTag("f" + tabLayout.getSelectedTabPosition());
@@ -237,11 +231,15 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
                     @Override
                     protected String onRun() {
                         try {
+                            long time = System.currentTimeMillis();
                             boolean success = ((CWatermarkPageFragment) fragment).applyWatermark();
-                            if (!success){
+                            CLog.e("水印", "生成水印耗时:" +(System.currentTimeMillis() - time));
+                            long time2 =System.currentTimeMillis();
+                            if (!success) {
                                 return null;
                             }
                             boolean result = document.saveAs(pdfFile.getAbsolutePath(), false);
+                            CLog.e("水印", "水印文件保存耗时:" +(System.currentTimeMillis() - time2));
                             return result ? pdfFile.getAbsolutePath() : null;
                         } catch (Exception e) {
 

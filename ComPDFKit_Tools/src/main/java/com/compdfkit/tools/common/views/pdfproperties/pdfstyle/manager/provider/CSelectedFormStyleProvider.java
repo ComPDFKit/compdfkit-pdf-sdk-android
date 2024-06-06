@@ -67,8 +67,8 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
                 textWidget.setBorderWidth(style.getBorderWidth());
                 textWidget.setMultiLine(style.isFormMultiLine());
                 textWidget.setHidden(style.isHideForm());
-                String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(style.getFontType(), style.isFontBold(), style.isFontItalic());
-                textWidget.setFontName(fontName);
+                textWidget.setFontName(getAnnotStyleFontName(style));
+
                 textWidget.setText(style.getFormDefaultValue());
                 switch (style.getAlignment()) {
                     case LEFT:
@@ -129,9 +129,7 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
                     listBoxWidget.setBorderWidth(0);
                 }
                 listBoxWidget.setBorderColor(style.getLineColor());
-                String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(style.getFontType(), style.isFontBold(), style.isFontItalic());
-
-                listBoxWidget.setFontName(fontName);
+                listBoxWidget.setFontName(getAnnotStyleFontName(style));
                 listBoxWidget.updateAp();
                 baseAnnotImpl.onAnnotAttrChange();
                 ((CPDFListboxWidgetImpl) baseAnnotImpl).refresh();
@@ -150,8 +148,7 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
                     comboBoxWidget.setBorderWidth(0);
                 }
                 comboBoxWidget.setBorderColor(style.getLineColor());
-                String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(style.getFontType(), style.isFontBold(), style.isFontItalic());
-                comboBoxWidget.setFontName(fontName);
+                comboBoxWidget.setFontName(getAnnotStyleFontName(style));
                 comboBoxWidget.updateAp();
                 baseAnnotImpl.onAnnotAttrChange();
                 if (pageView != null) {
@@ -166,8 +163,7 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
                 pushButtonWidget.setFontColor(style.getTextColor());
                 pushButtonWidget.setFillColor(style.getFillColor());
                 pushButtonWidget.setBorderColor(style.getLineColor());
-                String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(style.getFontType(), style.isFontBold(), style.isFontItalic());
-                pushButtonWidget.setFontName(fontName);
+                pushButtonWidget.setFontName(getAnnotStyleFontName(style));
                 pushButtonWidget.setButtonTitle(style.getFormDefaultValue());
                 pushButtonWidget.updateAp();
                 baseAnnotImpl.onAnnotAttrChange();
@@ -191,8 +187,7 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
             style.setFontColor(textWidget.getFontColor());
             style.setBorderColor(textWidget.getBorderColor());
             style.setFillColor(textWidget.getFillColor());
-            CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.getFontType(textWidget.getFontName());
-            style.setFontType(fontType);
+            updateAnnotStyleFont(style, textWidget.getFontName());
             style.setBorderWidth(textWidget.getBorderWidth());
             style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(textWidget.getFontName()));
             style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(textWidget.getFontName()));
@@ -239,8 +234,7 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
             style.setFontSize((int) listBoxWidget.getFontSize());
             style.setFormFieldName(listBoxWidget.getFieldName());
             style.setHideForm(listBoxWidget.isHidden());
-            CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.getFontType(listBoxWidget.getFontName());
-            style.setFontType(fontType);
+            updateAnnotStyleFont(style, listBoxWidget.getFontName());
             style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(listBoxWidget.getFontName()));
             style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(listBoxWidget.getFontName()));
         } else if (baseAnnotImpl instanceof CPDFComboboxWidgetImpl){
@@ -252,8 +246,7 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
             style.setFontSize((int) comboBoxWidget.getFontSize());
             style.setFormFieldName(comboBoxWidget.getFieldName());
             style.setHideForm(comboBoxWidget.isHidden());
-            CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.getFontType(comboBoxWidget.getFontName());
-            style.setFontType(fontType);
+            updateAnnotStyleFont(style, comboBoxWidget.getFontName());
             style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(comboBoxWidget.getFontName()));
             style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(comboBoxWidget.getFontName()));
         } else if (baseAnnotImpl instanceof CPDFPushbuttonWidgetImpl){
@@ -265,8 +258,7 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
             style.setFontSize((int) pushButtonWidget.getFontSize());
             style.setFormFieldName(pushButtonWidget.getFieldName());
             style.setHideForm(pushButtonWidget.isHidden());
-            CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.getFontType(pushButtonWidget.getFontName());
-            style.setFontType(fontType);
+            updateAnnotStyleFont(style, pushButtonWidget.getFontName());
             style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(pushButtonWidget.getFontName()));
             style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(pushButtonWidget.getFontName()));
             style.setFormDefaultValue(pushButtonWidget.getButtonTitle());

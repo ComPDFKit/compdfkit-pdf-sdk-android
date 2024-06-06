@@ -9,8 +9,6 @@
 
 package com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider;
 
-import android.util.Log;
-
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFCircleAnnotation;
 import com.compdfkit.core.annotation.CPDFFreetextAnnotation;
@@ -19,6 +17,7 @@ import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFMarkupAnnotation;
 import com.compdfkit.core.annotation.CPDFSquareAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.views.pdfproperties.CTypeUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -66,6 +65,7 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
             } else if (annotImpl instanceof CPDFInkAnnotImpl) {
                 CPDFInkAnnotImpl inkAnnot = (CPDFInkAnnotImpl) annotImpl;
                 CPDFInkAnnotation inkAnnotation = (CPDFInkAnnotation) inkAnnot.onGetAnnotation();
+                CLog.e("注释Ink", "color: " + style.getColor() +  " alpha: " + style.getOpacity());
                 inkAnnotation.setColor(style.getColor());
                 inkAnnotation.setAlpha(style.getOpacity());
                 inkAnnotation.setBorderWidth(style.getBorderWidth());
@@ -85,7 +85,6 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 annotImpl.onAnnotAttrChange();
                 pageView.invalidate();
             } else if (annotImpl instanceof CPDFCircleAnnotImpl) {
-                Log.e("TEST","修改虚线");
                 CPDFCircleAnnotImpl circleAnnot = (CPDFCircleAnnotImpl) annotImpl;
                 CPDFCircleAnnotation circleAnnotation = circleAnnot.onGetAnnotation();
                 circleAnnotation.setBorderColor(style.getLineColor());
@@ -113,7 +112,6 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
             } else if (annotImpl instanceof CPDFFreetextAnnotImpl) {
                 CPDFFreetextAnnotImpl freetextAnnot = (CPDFFreetextAnnotImpl) annotImpl;
                 CPDFFreetextAnnotation freetextAnnotation = freetextAnnot.onGetAnnotation();
-                Log.e("Test", "getAlignment:"+ style.getAlignment().name());
                 switch (style.getAlignment()) {
                     case LEFT:
                         freetextAnnotation.setFreetextAlignment(CPDFFreetextAnnotation.Alignment.ALIGNMENT_LEFT);
@@ -129,8 +127,7 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                         break;
                 }
                 freetextAnnotation.setAlpha(style.getTextColorOpacity());
-                String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(style.getFontType(), style.isFontBold(), style.isFontItalic());
-                freetextAnnotation.setFreetextDa(new CPDFTextAttribute(fontName, style.getFontSize(), style.getTextColor()));
+                freetextAnnotation.setFreetextDa(new CPDFTextAttribute(getAnnotStyleFontName(style), style.getFontSize(), style.getTextColor()));
                 freetextAnnotation.updateAp();
                 annotImpl.onAnnotAttrChange();
                 pageView.invalidate();
@@ -222,9 +219,9 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 CPDFTextAttribute textAttribute = freetextAnnotation.getFreetextDa();
                 style.setFontColor(textAttribute.getColor());
                 style.setTextColorOpacity(freetextAnnotation.getAlpha());
-                style.setFontType(CPDFTextAttribute.FontNameHelper.getFontType(textAttribute.getFontName()));
                 style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(textAttribute.getFontName()));
                 style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(textAttribute.getFontName()));
+                updateAnnotStyleFont(style, textAttribute.getFontName());
                 style.setFontSize((int) textAttribute.getFontSize());
                 switch (freetextAnnotation.getFreetextAlignment()){
                     case ALIGNMENT_LEFT:
@@ -250,4 +247,5 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
     public CAnnotStyle getStyle() {
         return getStyle(CTypeUtil.getStyleType(annotImpl.getAnnotType()));
     }
+
 }

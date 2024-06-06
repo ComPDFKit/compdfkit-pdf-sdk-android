@@ -170,9 +170,7 @@ public class CPDFApplyConfigUtil {
         style.setFontColor(freetextAttr.getFontColor());
         style.setTextColorOpacity(freetextAttr.getFontColorAlpha());
         style.setFontSize(freetextAttr.getFontSize());
-        style.setFontType(freetextAttr.getTypeface());
-        style.setFontBold(freetextAttr.isBold());
-        style.setFontItalic(freetextAttr.isItalic());
+        style.setExternFontName(freetextAttr.getPsName());
         style.setAlignment(freetextAttr.getAnnotStyleAlignment());
         builder.setAnnotStyle(style);
 
@@ -236,7 +234,6 @@ public class CPDFApplyConfigUtil {
         ContentEditorConfig editorConfig = configuration.contentEditorConfig;
         fragment.editToolBar.setTools(editorConfig.availableTools);
         fragment.editToolBar.setEditType(editorConfig.availableTypes.toArray(new ContentEditorConfig.ContentEditorType[0]));
-
     }
 
     private void applyFormsConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
@@ -255,11 +252,9 @@ public class CPDFApplyConfigUtil {
         textFieldStyle.setBorderWidth(textField.getBorderWidth());
         textFieldStyle.setFontColor(textField.getFontColor());
         textFieldStyle.setFontSize((int) textField.getFontSize());
-        textFieldStyle.setFontBold(textField.isBold());
-        textFieldStyle.setFontItalic(textField.isItalic());
         textFieldStyle.setAlignment(textField.getAnnotStyleAlignment());
         textFieldStyle.setFormMultiLine(textField.isMultiline());
-        textFieldStyle.setFontType(textField.getTypeface());
+        textFieldStyle.setExternFontName(textField.getPsName());
         builder.setAnnotStyle(textFieldStyle);
 
         FormsCheckBoxAttr checkBox = initAttribute.checkBox;
@@ -279,9 +274,8 @@ public class CPDFApplyConfigUtil {
         listBoxStyle.setFontColor(listBoxAttr.getFontColor());
         listBoxStyle.setFontSize((int) listBoxAttr.getFontSize());
         listBoxStyle.setBorderWidth(listBoxAttr.getBorderWidth());
-        listBoxStyle.setFontType(listBoxAttr.getTypeface());
-        listBoxStyle.setFontBold(listBoxAttr.isBold());
-        listBoxStyle.setFontItalic(listBoxAttr.isItalic());
+        listBoxStyle.setExternFontName(listBoxAttr.getPsName());
+
         builder.setAnnotStyle(listBoxStyle);
 
         FormsComboBoxAttr comboBoxAttr = initAttribute.comboBox;
@@ -291,9 +285,8 @@ public class CPDFApplyConfigUtil {
         comboBoxStyle.setFontColor(comboBoxAttr.getFontColor());
         comboBoxStyle.setFontSize((int) comboBoxAttr.getFontSize());
         comboBoxStyle.setBorderWidth(comboBoxAttr.getBorderWidth());
-        comboBoxStyle.setFontType(comboBoxAttr.getTypeface());
-        comboBoxStyle.setFontBold(comboBoxAttr.isBold());
-        comboBoxStyle.setFontItalic(comboBoxAttr.isItalic());
+        comboBoxStyle.setExternFontName(comboBoxAttr.getPsName());
+
         builder.setAnnotStyle(comboBoxStyle);
 
         FormsPushButtonAttr pushButtonAttr = initAttribute.pushButton;
@@ -304,9 +297,8 @@ public class CPDFApplyConfigUtil {
         pushButtonStyle.setBorderColor(pushButtonAttr.getBorderColor());
         pushButtonStyle.setBorderWidth(pushButtonAttr.getBorderWidth());
         pushButtonStyle.setFormDefaultValue(pushButtonAttr.getTitle());
-        pushButtonStyle.setFontType(pushButtonAttr.getTypeface());
-        pushButtonStyle.setFontBold(pushButtonAttr.isBold());
-        pushButtonStyle.setFontItalic(pushButtonAttr.isItalic());
+        pushButtonStyle.setExternFontName(pushButtonAttr.getPsName());
+
         builder.setAnnotStyle(pushButtonStyle);
 
         FormsAttr signFieldAttr = initAttribute.signatureFields;

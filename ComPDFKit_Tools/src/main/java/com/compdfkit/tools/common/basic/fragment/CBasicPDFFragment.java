@@ -10,11 +10,8 @@
 package com.compdfkit.tools.common.basic.fragment;
 
 
-import android.Manifest;
 import android.graphics.Color;
-import android.os.Build;
-import android.os.Environment;
-import android.text.TextUtils;
+import android.net.Uri;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -27,8 +24,6 @@ import com.compdfkit.core.annotation.form.CPDFComboboxWidget;
 import com.compdfkit.core.annotation.form.CPDFListboxWidget;
 import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
 import com.compdfkit.core.annotation.form.CPDFWidget;
-import com.compdfkit.core.common.CPDFDocumentException;
-import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdflink.CLinkAnnotAttachHelper;
@@ -40,7 +35,6 @@ import com.compdfkit.tools.common.contextmenu.impl.CEditTextContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSearchReplaceContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSignatureContextMenuView;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
@@ -59,6 +53,11 @@ import java.io.File;
 public class CBasicPDFFragment extends CPermissionFragment {
 
     public int curEditMode = CPDFEditPage.LoadNone;
+
+    protected Uri documentUri;
+
+    protected String documentPath;
+
 
     protected void resetContextMenu(CPDFViewCtrl pdfView, CPreviewMode mode) {
         switch (mode) {
@@ -161,30 +160,17 @@ public class CBasicPDFFragment extends CPermissionFragment {
     }
 
     protected void sharePDF(CPDFViewCtrl pdfView) {
-        pdfView.exitEditMode();
-        CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-        if (document == null) {
-            return;
-        }
-        boolean isExternalFile = !TextUtils.isEmpty(document.getAbsolutePath()) &&
-                document.getAbsolutePath().startsWith("/storage/emulated/0");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && isExternalFile) {
-            if (CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE) && !Environment.isExternalStorageManager()) {
-                CPermissionUtil.openManageAllFileAppSettings(getContext());
-                return;
-            }
-        }
         pdfView.savePDF((filePath, pdfUri) -> {
-            if (!TextUtils.isEmpty(filePath)) {
-                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", new File(filePath));
+            if (null != documentUri) {
+                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", documentUri);
             } else {
-                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", pdfUri);
+                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", new File(documentPath));
             }
         }, e -> {
-            if (e instanceof CPDFDocumentException) {
-                if (!document.isCanWrite() && document.hasRepaired()) {
-                    pdfView.showWritePermissionsDialog(document);
-                }
+            if (null != documentUri) {
+                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", documentUri);
+            } else {
+                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", new File(documentPath));
             }
         });
     }

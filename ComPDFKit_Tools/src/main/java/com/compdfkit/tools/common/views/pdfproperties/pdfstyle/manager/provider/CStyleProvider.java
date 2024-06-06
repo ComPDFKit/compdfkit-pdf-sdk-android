@@ -10,6 +10,7 @@
 package com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider;
 
 
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 
@@ -23,4 +24,16 @@ public interface CStyleProvider {
 
     public CAnnotStyle getStyle(CStyleType type);
 
+
+
+
+    default public String getAnnotStyleFontName(CAnnotStyle annotStyle){
+        CLog.e("字体", "类型：" + annotStyle.getType().name() +"更新字体：" + annotStyle.getExternFontName());
+        return annotStyle.getExternFontName();
+    }
+
+    default public void updateAnnotStyleFont(CAnnotStyle annotStyle, String attrFontName){
+        CLog.e("字体", "类型：" + annotStyle.getType().name() +"获取到字体：" + attrFontName);
+        annotStyle.setExternFontName(attrFontName);
+    }
 }

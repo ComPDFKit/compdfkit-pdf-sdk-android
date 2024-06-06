@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
@@ -122,18 +121,6 @@ public class CStylePreviewView extends FrameLayout {
         }
     }
 
-    public void setFontBold(boolean bold){
-        if (previewView != null) {
-            previewView.setFontBold(bold);
-        }
-    }
-
-    public void setFontItalic(boolean italic){
-        if (previewView != null) {
-            previewView.setFontItalic(italic);
-        }
-    }
-
     public void setTextAlignment(CAnnotStyle.Alignment alignment){
         if (previewView != null) {
             previewView.setTextAlignment(alignment);
@@ -143,12 +130,6 @@ public class CStylePreviewView extends FrameLayout {
     public void setFontSize(int fontSize){
         if (previewView != null) {
             previewView.setFontSize(fontSize);
-        }
-    }
-
-    public void setFontType(CPDFTextAttribute.FontNameHelper.FontType fontType){
-        if (previewView != null) {
-            previewView.setFontType(fontType);
         }
     }
 
@@ -164,9 +145,9 @@ public class CStylePreviewView extends FrameLayout {
         }
     }
 
-    public void setExternFontType(String name) {
+    public void setFontPsName(String fontPsName) {
         if (previewView != null) {
-            previewView.setExternFontType(name);
+            previewView.setFontPsName(fontPsName);
         }
     }
 
@@ -273,5 +254,4 @@ public class CStylePreviewView extends FrameLayout {
                 return CStyleType.UNKNOWN;
         }
     }
-
 }

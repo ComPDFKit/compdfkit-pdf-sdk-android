@@ -6,15 +6,22 @@
     android:background="@drawable/tools_common_btn_rectangle_ripple"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_standard_stamp"
+    <com.compdfkit.tools.common.utils.view.CNestedScrollableHost
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        tools:itemCount="20"
-        android:paddingHorizontal="8dp"
-        tools:listitem="@layout/tools_properties_stamp_standard_list_item" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_standard_stamp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:itemCount="20"
+            android:paddingHorizontal="8dp"
+            tools:listitem="@layout/tools_properties_stamp_standard_list_item" />
+
+    </com.compdfkit.tools.common.utils.view.CNestedScrollableHost>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

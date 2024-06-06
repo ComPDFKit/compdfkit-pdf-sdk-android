@@ -22,18 +22,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.SwitchCompat;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.view.colorpicker.CColorPickerFragment;
 import com.compdfkit.tools.common.utils.view.colorpicker.widget.ColorPickerView;
 import com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar;
 import com.compdfkit.tools.common.views.pdfproperties.basic.CBasicPropertiesFragment;
 import com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView;
-import com.compdfkit.tools.common.views.pdfproperties.font.CFontSpinnerAdapter;
+import com.compdfkit.tools.common.views.pdfproperties.font.CPDFFontView;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleFragmentDatas;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -45,13 +43,9 @@ public class CWatermarkTextStyleFragment extends CBasicPropertiesFragment implem
 
     private CSliderBar opacitySliderBar;
 
-    private AppCompatImageView ivFontItalic;
-
-    private AppCompatImageView ivFontBold;
-
     private CSliderBar fontSizeSliderBar;
 
-    private Spinner fontSpinner;
+    private CPDFFontView fontView;
 
     private Spinner pageRangeSpinner;
 
@@ -67,16 +61,12 @@ public class CWatermarkTextStyleFragment extends CBasicPropertiesFragment implem
         View rootView = inflater.inflate(R.layout.tools_cpdf_security_watermark_text_style_fragment, container, false);
         colorListView = rootView.findViewById(R.id.border_color_list_view);
         opacitySliderBar = rootView.findViewById(R.id.slider_bar);
-        ivFontItalic = rootView.findViewById(R.id.iv_font_italic);
-        ivFontBold = rootView.findViewById(R.id.iv_font_bold);
         fontSizeSliderBar = rootView.findViewById(R.id.font_size_slider_bar);
-        fontSpinner = rootView.findViewById(R.id.spinner_font);
+        fontView = rootView.findViewById(R.id.font_view);
         swTile = rootView.findViewById(R.id.sw_tile);
         pageRangeSpinner = rootView.findViewById(R.id.spinner_page_range);
         ivLocationTop = rootView.findViewById(R.id.iv_location_top);
         ivLocationBottom = rootView.findViewById(R.id.iv_location_bottom);
-        ivFontItalic.setOnClickListener(this);
-        ivFontBold.setOnClickListener(this);
         ivLocationTop.setOnClickListener(this);
         ivLocationBottom.setOnClickListener(this);
         return rootView;
@@ -87,23 +77,7 @@ public class CWatermarkTextStyleFragment extends CBasicPropertiesFragment implem
         super.onViewCreated(view, savedInstanceState);
         CAnnotStyle annotStyle = viewModel.getStyle();
         if (annotStyle != null) {
-            List<CPDFTextAttribute.FontNameHelper.FontType> fontTypes = new ArrayList<>();
-            fontTypes.add(CPDFTextAttribute.FontNameHelper.FontType.Helvetica);
-            fontTypes.add(CPDFTextAttribute.FontNameHelper.FontType.Courier);
-            fontTypes.add(CPDFTextAttribute.FontNameHelper.FontType.Times_Roman);
-            CFontSpinnerAdapter fontSpinnerAdapter = new CFontSpinnerAdapter(getContext(), fontTypes);
-            fontSpinner.setAdapter(fontSpinnerAdapter);
-            switch (annotStyle.getFontType()) {
-                case Courier:
-                    fontSpinner.setSelection(1);
-                    break;
-                case Times_Roman:
-                    fontSpinner.setSelection(2);
-                    break;
-                default:
-                    fontSpinner.setSelection(0);
-                    break;
-            }
+            fontView.initFont(annotStyle.getExternFontName());
             Map<String, Object> extraMap = annotStyle.getCustomExtraMap();
             CPageRange pageRange = CPageRange.AllPages;
             if (extraMap.containsKey("pageRange")){
@@ -134,8 +108,6 @@ public class CWatermarkTextStyleFragment extends CBasicPropertiesFragment implem
 
             colorListView.setSelectColor(annotStyle.getTextColor());
             opacitySliderBar.setProgress(annotStyle.getTextColorOpacity());
-            ivFontBold.setSelected(annotStyle.isFontBold());
-            ivFontItalic.setSelected(annotStyle.isFontItalic());
             fontSizeSliderBar.setProgress(annotStyle.getFontSize());
             fontSizeSliderBar.setSliderBarMinValue(10);
             swTile.setChecked(annotStyle.isChecked());
@@ -162,20 +134,13 @@ public class CWatermarkTextStyleFragment extends CBasicPropertiesFragment implem
             }
         });
         viewModel.addStyleChangeListener(this);
-        fontSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (viewModel != null) {
-                    CPDFTextAttribute.FontNameHelper.FontType fontType = (CPDFTextAttribute.FontNameHelper.FontType) fontSpinner.getItemAtPosition(position);
-                    viewModel.getStyle().setFontType(fontType);
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+        fontView.setFontChangeListener(psName -> {
+            if (viewModel != null) {
+                viewModel.getStyle().setExternFontName(psName);
             }
         });
+
         swTile.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (viewModel != null && viewModel.getStyle() != null) {
                 viewModel.getStyle().setChecked(isChecked);
@@ -199,17 +164,7 @@ public class CWatermarkTextStyleFragment extends CBasicPropertiesFragment implem
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_font_bold) {
-            ivFontBold.setSelected(!ivFontBold.isSelected());
-            if (viewModel != null) {
-                viewModel.getStyle().setFontBold(ivFontBold.isSelected());
-            }
-        } else if (v.getId() == R.id.iv_font_italic) {
-            ivFontItalic.setSelected(!ivFontItalic.isSelected());
-            if (viewModel != null) {
-                viewModel.getStyle().setFontItalic(ivFontItalic.isSelected());
-            }
-        } else if (v.getId() == R.id.iv_location_top) {
+        if (v.getId() == R.id.iv_location_top) {
             ivLocationTop.setSelected(true);
             ivLocationBottom.setSelected(false);
             if (viewModel != null && viewModel.getStyle() != null) {

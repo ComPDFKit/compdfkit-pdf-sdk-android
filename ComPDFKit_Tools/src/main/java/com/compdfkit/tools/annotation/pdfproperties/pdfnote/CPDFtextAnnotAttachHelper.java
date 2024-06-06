@@ -23,23 +23,18 @@ public class CPDFtextAnnotAttachHelper extends CPDFTextAnnotAttachHelper {
     protected void onAddTextAnnot(CPDFTextAnnotImpl cpdfTextAnnot) {
         cpdfTextAnnot.setFocused(true);
         CNoteEditDialog editDialog = CNoteEditDialog.newInstance("");
-        editDialog.setDismissListener(new CNoteEditDialog.DialogDismiss() {
-            @Override
-            public void onDialogDismiss() {
-                String content = editDialog.getContent();
-                cpdfTextAnnot.onGetAnnotation().setContent(content);
-            }
-        });
-        editDialog.setSaveListener(v -> {
-            readerView.setTouchMode(CPDFReaderView.TouchMode.BROWSE);
-            readerView.setCurrentFocusedType(CPDFAnnotation.Type.UNKNOWN);
-            pageView.setFocusAnnot(cpdfTextAnnot);
-
+        editDialog.setDismissListener(() -> {
             String content = editDialog.getContent();
             cpdfTextAnnot.onGetAnnotation().setContent(content);
-            cpdfTextAnnot.onGetAnnotation().updateAp();
-            pageView.invalidate();
+        });
+        editDialog.setSaveListener(v -> {
+            String content = editDialog.getContent();
+            cpdfTextAnnot.onGetAnnotation().setContent(content);
             editDialog.dismiss();
+
+            readerView.setCurrentFocusedType(CPDFAnnotation.Type.UNKNOWN);
+            readerView.setTouchMode(CPDFReaderView.TouchMode.BROWSE);
+            pageView.setFocusAnnot(cpdfTextAnnot);
         });
         editDialog.setDeleteListener(v -> {
             pageView.deleteAnnotation(cpdfTextAnnot);

@@ -14,7 +14,6 @@ import android.graphics.Color;
 
 import androidx.annotation.FloatRange;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.tools.common.pdf.config.annot.AnnotFreetextAttr;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 
@@ -25,15 +24,11 @@ public class FormsTextFieldAttr extends FormsAttr {
 
     private float fontSize;
 
-    private boolean isBold;
-
-    private boolean isItalic;
-
     private boolean multiline = true;
 
-    private AnnotFreetextAttr.Alignment alignment = AnnotFreetextAttr.Alignment.LEFT;
+    private String psName;
 
-    private CPDFTextAttribute.FontNameHelper.FontType typeface;
+    private AnnotFreetextAttr.Alignment alignment = AnnotFreetextAttr.Alignment.LEFT;
 
     public String getFontColorHex() {
         return fontColor;
@@ -65,20 +60,12 @@ public class FormsTextFieldAttr extends FormsAttr {
         this.fontSize = fontSize;
     }
 
-    public boolean isBold() {
-        return isBold;
+    public String getPsName() {
+        return psName;
     }
 
-    public void setBold(boolean bold) {
-        isBold = bold;
-    }
-
-    public boolean isItalic() {
-        return isItalic;
-    }
-
-    public void setItalic(boolean italic) {
-        isItalic = italic;
+    public void setPsName(String psName) {
+        this.psName = psName;
     }
 
     public AnnotFreetextAttr.Alignment getAlignment() {
@@ -138,14 +125,6 @@ public class FormsTextFieldAttr extends FormsAttr {
     @Override
     public void setBorderWidth(float borderWidth) {
         super.setBorderWidth(borderWidth);
-    }
-
-    public void setTypeface(CPDFTextAttribute.FontNameHelper.FontType typeface) {
-        this.typeface = typeface;
-    }
-
-    public CPDFTextAttribute.FontNameHelper.FontType getTypeface() {
-        return typeface;
     }
 
     public void setMultiline(boolean multiline) {

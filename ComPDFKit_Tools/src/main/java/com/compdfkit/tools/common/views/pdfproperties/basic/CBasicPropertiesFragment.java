@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CPropertiesFragmentBean;
@@ -145,11 +144,6 @@ public abstract class CBasicPropertiesFragment extends Fragment implements CAnno
 
     @Override
     public void onChangeFontSize(int fontSize) {
-
-    }
-
-    @Override
-    public void onChangeFontType(CPDFTextAttribute.FontNameHelper.FontType fontType) {
 
     }
 

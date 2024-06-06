@@ -101,20 +101,30 @@
 
         <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
             android:id="@+id/color_list_view"
-            android:layout_width="200dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="20dp"
             app:tools_color_list="@array/tools_annot_signature_colors"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cl_thickness"
+            app:layout_constraintEnd_toStartOf="@id/barrier"
             app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toEndOf="@id/iv_add_pic_signature"
+           app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/iv_none"
             app:layout_constraintTop_toTopOf="parent"
             app:tools_show_title="false" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="cl_thickness,font_view"
+            />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_thickness"
             android:layout_width="wrap_content"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -145,6 +155,16 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <com.compdfkit.tools.common.views.pdfproperties.font.CPDFFontView
+            android:layout_width="380dp"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:id="@+id/font_view"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -171,7 +191,8 @@
             android:hint="@string/tools_enter_your_signature"
             android:textColor="@android:color/black"
             android:textColorHint="@color/tools_text_color_hint"
-            android:textSize="20sp"
+            android:textSize="35sp"
+            tools:visibility="visible"
             android:visibility="gone" />
 
         <androidx.cardview.widget.CardView

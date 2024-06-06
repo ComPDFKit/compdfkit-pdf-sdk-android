@@ -163,7 +163,7 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                     helper.dismissContextMenu();
                 });
             }
-        } else if (type == 4) {
+        } else if (type == CPDFEditPage.LoadTextImage) {
             if (!TextUtils.isEmpty(text)) {
                 menuView.addItem(R.string.tools_context_menu_paste, 0, v -> {
                     pageView.pasteEditTextArea(point, pageView.getCopyTextAreaWidth(), pageView.getCopyTextAreaHeight(), false);

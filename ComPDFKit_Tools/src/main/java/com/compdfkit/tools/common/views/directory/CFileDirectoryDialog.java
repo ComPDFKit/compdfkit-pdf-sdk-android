@@ -91,19 +91,23 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
             callback = new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {
-                    String dir = titleAdapter.getLastFolder();
-                    if (!TextUtils.isEmpty(dir) && titleAdapter.list.size() != 1) {
-                        titleAdapter.toupperLevel();
-                        String upperLevelDir = titleAdapter.getLastFolder();
-                        refreshDirectories(upperLevelDir);
-                    } else {
-                        dismiss();
-                    }
+                   back();
                 }
             };
             componentDialog.getOnBackPressedDispatcher().addCallback(callback);
         }
         return dialog;
+    }
+
+    private void back(){
+        String dir = titleAdapter.getLastFolder();
+        if (!TextUtils.isEmpty(dir) && titleAdapter.list.size() != 1) {
+            titleAdapter.toupperLevel();
+            String upperLevelDir = titleAdapter.getLastFolder();
+            refreshDirectories(upperLevelDir);
+        } else {
+            dismiss();
+        }
     }
 
     @Override
@@ -125,7 +129,6 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
             if (selectFolderListener != null) {
                 if (!TextUtils.isEmpty(dir)){
                     selectFolderListener.folder(dir);
-
                 }else {
                     selectFolderListener.folder(getNormalFolder());
                 }
@@ -136,9 +139,7 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
 
     @Override
     protected void onViewCreate() {
-        toolBar.setBackBtnClickListener(v -> {
-            dismiss();
-        });
+        toolBar.setBackBtnClickListener(v -> back());
         if (getArguments() != null) {
             String title = getArguments().getString(EXTRA_TITLE);
             if (!TextUtils.isEmpty(title)){
@@ -149,7 +150,6 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
                 btnConfirm.setText(confirmButtonTitle);
             }
         }
-
         initFolderTitleList();
         initDirectoriesList();
     }
@@ -201,6 +201,7 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
 
 
     private void refreshDirectories(String rootDir){
+        refreshConfirmBtn();
         new SimpleBackgroundTask<List<File>>(getContext()){
 
             @Override
@@ -217,6 +218,15 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
 
     private String getNormalFolder(){
         return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+    }
+
+    private void refreshConfirmBtn(){
+        String dir = titleAdapter.getLastFolder();
+        if (!TextUtils.isEmpty(dir) && titleAdapter.list.size() != 1) {
+            btnConfirm.setEnabled(true);
+        } else {
+            btnConfirm.setEnabled(false);
+        }
     }
 
     public void setSelectFolderListener(COnSelectFolderListener selectFolderListener) {

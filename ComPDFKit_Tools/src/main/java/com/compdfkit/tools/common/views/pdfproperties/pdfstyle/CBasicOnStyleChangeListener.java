@@ -15,7 +15,6 @@ import android.net.Uri;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 
 import java.util.Map;
@@ -94,11 +93,6 @@ public class CBasicOnStyleChangeListener  implements CAnnotStyle.OnAnnotStyleCha
 
     @Override
     public void onChangeFontSize(int fontSize) {
-
-    }
-
-    @Override
-    public void onChangeFontType(CPDFTextAttribute.FontNameHelper.FontType fontType) {
 
     }
 

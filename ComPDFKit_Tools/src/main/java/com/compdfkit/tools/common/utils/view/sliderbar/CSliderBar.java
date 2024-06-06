@@ -156,6 +156,9 @@ public class CSliderBar extends FrameLayout implements SeekBar.OnSeekBarChangeLi
 
     private void updateSeekBarValue(int value, boolean stop) {
         int v = value + sliderBarMinValue;
+        if (v > sliderBarMaxValue){
+            v = sliderBarMaxValue;
+        }
         int currentPercentage = Math.round((float) v / (float) sliderBarMaxValue * 100F);
         sliderBarValueView.setShowType(showType);
         sliderBarValueView.setValue(v);

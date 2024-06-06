@@ -1,6 +1,6 @@
 /**
  * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
- *
+ * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
  * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
@@ -29,7 +29,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.tools.R;
@@ -308,10 +307,10 @@ public class CWatermarkPageView extends FrameLayout {
         watermarkView.setDegree(0F);
     }
 
-    public void updateCenterPoint(){
+    public void updateCenterPoint() {
         PointF centerPointF = new PointF(currentPageWidth / 2, currentPageHeight / 2);
         watermarkView.resetLocation(centerPointF);
-        watermarkView.postDelayed(()->{
+        watermarkView.postDelayed(() -> {
             updateTileWatermark();
             invalidate();
         }, 100);
@@ -336,11 +335,7 @@ public class CWatermarkPageView extends FrameLayout {
         }
         if (watermark.getType() == CPDFWatermark.Type.WATERMARK_TYPE_TEXT) {
             watermarkView.initTextWaterMark(watermark.getText(), watermark.getTextRGBColor(), watermark.getFontSize(), (int) (watermark.getOpacity() * 255F));
-
-            CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.getFontType(watermark.getFontName());
-            boolean isBold = CPDFTextAttribute.FontNameHelper.isBold(watermark.getFontName());
-            boolean isItalic = CPDFTextAttribute.FontNameHelper.isItalic(watermark.getFontName());
-            watermarkView.setTypeface(fontType, isBold, isItalic);
+            watermarkView.setTypeface(watermark.getFontName());
         } else {
             watermarkView.setImageBitmap(watermark.getImage());
             watermarkView.setWatermarkAlpha((int) (watermark.getOpacity() * 255F));
@@ -370,7 +365,7 @@ public class CWatermarkPageView extends FrameLayout {
         } else {
             watermark = document.createWatermark(CPDFWatermark.Type.WATERMARK_TYPE_IMG);
         }
-        if (watermark == null){
+        if (watermark == null) {
             return false;
         }
         return modifyWatermark(watermark);
@@ -387,9 +382,8 @@ public class CWatermarkPageView extends FrameLayout {
             }
             watermark.setScale(watermarkView.getScale() * whScale);
         }
-        watermark.setFontName(CPDFTextAttribute.FontNameHelper.obtainFontName(
-                watermarkView.getFontType(), watermarkView.isBold(), watermarkView.isItalic()
-        ));
+        watermark.setFontName(watermarkView.getFontPsName());
+
         watermark.setText(watermarkView.getText());
         watermark.setTextRGBColor(watermarkView.getTextColor());
         watermark.setFontSize(watermarkView.getTextSize() * whScale);

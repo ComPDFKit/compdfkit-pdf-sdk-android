@@ -20,19 +20,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.compdfkit.core.annotation.CPDFTextAttribute;
+import com.compdfkit.core.font.CPDFFont;
+import com.compdfkit.core.font.CPDFFontName;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.views.pdfproperties.font.bean.CFontStyleItemBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class CFontSpinnerAdapter extends BaseAdapter {
 
-    private List<CPDFTextAttribute.FontNameHelper.FontType> list;
+    private List<CPDFFontName> list;
 
     private Context mContext;
 
-    public CFontSpinnerAdapter(@NonNull Context context, List<CPDFTextAttribute.FontNameHelper.FontType> fontTypes) {
-        this.list = fontTypes;
+    public CFontSpinnerAdapter(@NonNull Context context) {
+        list = CPDFFont.getFontName();
         mContext = context;
     }
 
@@ -42,7 +46,7 @@ public class CFontSpinnerAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public CPDFFontName getItem(int position) {
         return list.get(position);
     }
 
@@ -55,19 +59,39 @@ public class CFontSpinnerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(R.layout.tools_spinner_list_item, null);
-        if (convertView != null){
+        if (convertView != null) {
             AppCompatTextView textView = convertView.findViewById(R.id.tv_menu_title);
-            CPDFTextAttribute.FontNameHelper.FontType fontType = (CPDFTextAttribute.FontNameHelper.FontType) getItem(position);
-            String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(fontType, false, false);
-            Typeface typeface = CPDFTextAttribute.FontNameHelper.getInnerTypeface(textView.getContext(), fontName);
-            if (fontType == CPDFTextAttribute.FontNameHelper.FontType.Unknown){
-                textView.setTypeface(Typeface.DEFAULT);
-                textView.setText(CPDFTextAttribute.FontNameHelper.FontType.Unknown.name());
-            } else {
-                textView.setTypeface(typeface);
-                textView.setText(fontName);
-            }
+            CPDFFontName cpdfFontName = list.get(position);
+            String familyName = cpdfFontName.getFamilyName();
+            String outFont = CPDFTextAttribute.FontNameHelper.obtainFontName(familyName, false, false);
+            Typeface typeface = CPDFTextAttribute.FontNameHelper.getTypeface(mContext, outFont);
+            textView.setTypeface(typeface);
+            textView.setText(familyName);
+
         }
         return convertView;
+    }
+
+    public int getPosition(String familyName) {
+        for (int i = 0; i < list.size(); i++) {
+            CPDFFontName fontName = list.get(i);
+            if (fontName.getFamilyName().equals(familyName)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public List<CFontStyleItemBean> getFontStyleList(CPDFFontName cpdfFontName) {
+        List<CFontStyleItemBean> styleItemBeans = new ArrayList<>();
+        for (String styleName : cpdfFontName.getStyleName()) {
+            String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(cpdfFontName.getFamilyName(), styleName);
+            if (styleName.equals("Regular")) {
+                styleItemBeans.add(0, new CFontStyleItemBean(styleName, psName));
+            } else {
+                styleItemBeans.add(new CFontStyleItemBean(styleName, psName));
+            }
+        }
+        return styleItemBeans;
     }
 }

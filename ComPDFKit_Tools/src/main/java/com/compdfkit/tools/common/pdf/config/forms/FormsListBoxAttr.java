@@ -13,19 +13,13 @@ import android.graphics.Color;
 
 import androidx.annotation.FloatRange;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
-
 public class FormsListBoxAttr extends FormsAttr {
 
     private String fontColor;
 
     private float fontSize = 20;
 
-    private CPDFTextAttribute.FontNameHelper.FontType typeface;
-
-    private boolean isBold;
-
-    private boolean isItalic;
+    private String psName;
 
     public String getFontColorHex() {
         return fontColor;
@@ -54,27 +48,11 @@ public class FormsListBoxAttr extends FormsAttr {
         this.fontSize = fontSize;
     }
 
-    public CPDFTextAttribute.FontNameHelper.FontType getTypeface() {
-        return typeface;
+    public String getPsName() {
+        return psName;
     }
 
-    public void setTypeface(CPDFTextAttribute.FontNameHelper.FontType typeface) {
-        this.typeface = typeface;
-    }
-
-    public boolean isBold() {
-        return isBold;
-    }
-
-    public void setBold(boolean bold) {
-        isBold = bold;
-    }
-
-    public boolean isItalic() {
-        return isItalic;
-    }
-
-    public void setItalic(boolean italic) {
-        isItalic = italic;
+    public void setPsName(String psName) {
+        this.psName = psName;
     }
 }

@@ -14,7 +14,6 @@ import android.graphics.Color;
 
 import androidx.annotation.IntRange;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 
 public class AnnotFreetextAttr extends AnnotAttr {
@@ -25,13 +24,9 @@ public class AnnotFreetextAttr extends AnnotAttr {
 
     private int fontSize = 20;
 
-    private boolean isBold;
-
-    private boolean isItalic;
-
     private Alignment alignment = Alignment.LEFT;
 
-    private CPDFTextAttribute.FontNameHelper.FontType typeface = CPDFTextAttribute.FontNameHelper.FontType.Unknown;
+    private String psName;
 
     public String getFontColorHex() {
         return fontColor;
@@ -71,22 +66,6 @@ public class AnnotFreetextAttr extends AnnotAttr {
         this.fontSize = fontSize;
     }
 
-    public boolean isBold() {
-        return isBold;
-    }
-
-    public void setBold(boolean bold) {
-        isBold = bold;
-    }
-
-    public boolean isItalic() {
-        return isItalic;
-    }
-
-    public void setItalic(boolean italic) {
-        isItalic = italic;
-    }
-
     public Alignment getAlignment() {
         return alignment;
     }
@@ -106,12 +85,12 @@ public class AnnotFreetextAttr extends AnnotAttr {
         this.alignment = alignment;
     }
 
-    public CPDFTextAttribute.FontNameHelper.FontType getTypeface() {
-        return typeface;
+    public void setPsName(String psName) {
+        this.psName = psName;
     }
 
-    public void setTypeface(CPDFTextAttribute.FontNameHelper.FontType typeface) {
-        this.typeface = typeface;
+    public String getPsName() {
+        return psName;
     }
 
     public enum Alignment {

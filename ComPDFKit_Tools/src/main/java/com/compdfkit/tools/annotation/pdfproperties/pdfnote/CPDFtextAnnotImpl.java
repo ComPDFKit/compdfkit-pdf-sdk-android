@@ -29,7 +29,8 @@ public class CPDFtextAnnotImpl extends CPDFTextAnnotImpl {
         });
         editDialog.setDeleteListener(v -> {
             CPDFPageView cpdfPageView = (CPDFPageView) pageView;
-            cpdfPageView.deleteAnnotation(cpdfTextAnnotation);
+            cpdfPageView.deleteAnnotation(this);
+            cpdfTextAnnotation.removeFromPage();
             editDialog.dismiss();
         });
         if (readerView.getContext() instanceof FragmentActivity) {

@@ -488,4 +488,11 @@
     <string name="tools_effective_immediately_after_setting">Effective immediately after setting</string>
     <string name="tools_loading">Loading…</string>
     <string name="tools_flattened_suffix">_Flattened.pdf</string>
+
+<!--    v2.0.0 -->
+    <string name="tools_font_style_normal">Normal</string>
+    <string name="tools_font_style_bold">Bold</string>
+    <string name="tools_font_style_italic">Italic</string>
+    <string name="tools_font_style_bold_italic">Bold&amp;Italic</string>
+
 </resources>

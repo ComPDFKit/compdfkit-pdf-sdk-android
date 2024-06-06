@@ -22,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.tools.R;
@@ -154,9 +153,7 @@ public class CWatermarkPageFragment extends Fragment {
         annotStyle.setFontColor(watermarkPageView.watermarkView.getTextColor());
         annotStyle.setFontSize(watermarkPageView.watermarkView.getTextSize());
         annotStyle.setTextColorOpacity(watermarkPageView.watermarkView.getWatermarkAlpha());
-        annotStyle.setFontType(watermarkPageView.watermarkView.getFontType());
-        annotStyle.setFontBold(watermarkPageView.watermarkView.isBold());
-        annotStyle.setFontItalic(watermarkPageView.watermarkView.isItalic());
+        annotStyle.setExternFontName(watermarkPageView.watermarkView.getFontPsName());
         annotStyle.setChecked(watermarkPageView.isTile());
         Map<String, Object> extraMap = new HashMap<>();
         extraMap.put("pageRange", watermarkPageView.getPageRange().name());
@@ -179,26 +176,9 @@ public class CWatermarkPageFragment extends Fragment {
             }
 
             @Override
-            public void onChangeFontType(CPDFTextAttribute.FontNameHelper.FontType fontType) {
-                super.onChangeFontType(fontType);
-                watermarkPageView.watermarkView.setTypeface(
-                        fontType,
-                        watermarkPageView.watermarkView.isBold(),
-                        watermarkPageView.watermarkView.isItalic());
-                watermarkPageView.updateTileWatermark();
-            }
-
-            @Override
-            public void onChangeFontBold(boolean bold) {
-                super.onChangeFontBold(bold);
-                watermarkPageView.watermarkView.setBold(bold);
-                watermarkPageView.updateTileWatermark();
-            }
-
-            @Override
-            public void onChangeFontItalic(boolean italic) {
-                super.onChangeFontItalic(italic);
-                watermarkPageView.watermarkView.setItalic(italic);
+            public void onChangeAnnotExternFontType(String fontPsName) {
+                super.onChangeAnnotExternFontType(fontPsName);
+                watermarkPageView.watermarkView.setTypeface(fontPsName);
                 watermarkPageView.updateTileWatermark();
             }
 

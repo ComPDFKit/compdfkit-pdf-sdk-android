@@ -9,7 +9,9 @@
 
 package com.compdfkit.tools.signature.importcert.create;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -33,7 +35,9 @@ import com.compdfkit.core.signature.CPDFSignature;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
+import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.view.CEditText;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
@@ -94,6 +98,8 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
     private PurposeSpinnerAdapter purposeSpinnerAdapter;
 
     private String fileName = "";
+
+    protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
 
     public static CreateCertificateDigitalDialog newInstance() {
         Bundle args = new Bundle();
@@ -206,16 +212,20 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
         } else if (v.getId() == R.id.iv_tool_bar_close) {
             dismiss();
         } else if (v.getId() == R.id.tv_save_address) {
-            CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(
-                    Environment.getExternalStorageDirectory().getAbsolutePath(),
-                    getContext().getString(R.string.tools_select_folder),
-                    getContext().getString(R.string.tools_save_to_this_directory)
-            );
-            directoryDialog.setSelectFolderListener(dir -> {
-                customSavePath = dir;
-                tvSaveAddress.setText(getSaveAddress() + File.separator + fileName);
-            });
-            directoryDialog.show(getChildFragmentManager(), "directoryDialog");
+            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+                multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
+                    if (CPermissionUtil.hasStoragePermissions(getContext())) {
+                        showDirectoryDialog();
+                    } else {
+                        if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
+                        }
+                    }
+                });
+            }else {
+                showDirectoryDialog();
+            }
+
         } else if (v.getId() == R.id.btn_save) {
             String name = etName.getText();
             String grantor = etOrganizationUnit.getText();
@@ -316,6 +326,19 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
 
             }
         });
+    }
+
+    private void showDirectoryDialog(){
+        CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(
+                Environment.getExternalStorageDirectory().getAbsolutePath(),
+                getContext().getString(R.string.tools_select_folder),
+                getContext().getString(R.string.tools_save_to_this_directory)
+        );
+        directoryDialog.setSelectFolderListener(dir -> {
+            customSavePath = dir;
+            tvSaveAddress.setText(getSaveAddress() + File.separator + fileName);
+        });
+        directoryDialog.show(getChildFragmentManager(), "directoryDialog");
     }
 
     private void enableConfirmButton() {

@@ -237,8 +237,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                             break;
                     }
                     freetextAttr.setAlpha(params.getTextColorOpacity());
-                    String fontName = CPDFTextAttribute.FontNameHelper.obtainFontName(params.getFontType(), params.isFontBold(), params.isFontItalic());
-                    freetextAttr.setTextAttribute(new CPDFTextAttribute(fontName, params.getFontSize(), params.getTextColor()));
+                    freetextAttr.setTextAttribute(new CPDFTextAttribute(getAnnotStyleFontName(params), params.getFontSize(), params.getTextColor()));
                     callback = freetextAttr;
                     break;
                 case ANNOT_SIGNATURE:
@@ -262,8 +261,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     textFieldAttr.setBorderColor(params.getLineColor());
                     textFieldAttr.setFillColor(params.getFillColor());
                     textFieldAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Text Field_"));
-                    String textFieldFontName = CPDFTextAttribute.FontNameHelper.obtainFontName(params.getFontType(), params.isFontBold(), params.isFontItalic());
-                    textFieldAttr.setTextAttribute(new CPDFTextAttribute(textFieldFontName, params.getFontSize(), params.getTextColor()));
+                    textFieldAttr.setTextAttribute(new CPDFTextAttribute(getAnnotStyleFontName(params), params.getFontSize(), params.getTextColor()));
                     textFieldAttr.setMultiline(params.isFormMultiLine());
                     switch (params.getAlignment()) {
                         case LEFT:
@@ -310,8 +308,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     listBoxAttr.setFillColor(params.getFillColor());
                     listBoxAttr.setBorderWidth(params.getBorderWidth());
                     listBoxAttr.setBorderColor(params.getLineColor());
-                    String listBoxFontName = CPDFTextAttribute.FontNameHelper.obtainFontName(params.getFontType(), params.isFontBold(), params.isFontItalic());
-                    listBoxAttr.setFontName(listBoxFontName);
+                    listBoxAttr.setFontName(getAnnotStyleFontName(params));
                     listBoxAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("List Choice_"));
                     callback = listBoxAttr;
                     break;
@@ -322,8 +319,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     comboBoxAttr.setFontColor(params.getTextColor());
                     comboBoxAttr.setBorderWidth(params.getBorderWidth());
                     comboBoxAttr.setBorderColor(params.getLineColor());
-                    String comboBoxFontName = CPDFTextAttribute.FontNameHelper.obtainFontName(params.getFontType(), params.isFontBold(), params.isFontItalic());
-                    comboBoxAttr.setFontName(comboBoxFontName);
+                    comboBoxAttr.setFontName(getAnnotStyleFontName(params));
                     comboBoxAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Combox Choice_"));
                     callback = comboBoxAttr;
                     break;
@@ -335,8 +331,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     pushButtonAttr.setFontColor(params.getTextColor());
                     pushButtonAttr.setFontSize(params.getFontSize());
                     pushButtonAttr.setButtonTitle(params.getFormDefaultValue());
-                    String pushButtonFontName = CPDFTextAttribute.FontNameHelper.obtainFontName(params.getFontType(), params.isFontBold(), params.isFontItalic());
-                    pushButtonAttr.setFontName(pushButtonFontName);
+                    pushButtonAttr.setFontName(getAnnotStyleFontName(params));
                     pushButtonAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Push Button_"));
                     callback = pushButtonAttr;
                     break;
@@ -506,10 +501,8 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 style.setTextColorOpacity(freetextAttr.getAlpha());
                 CPDFTextAttribute textAttribute = freetextAttr.getTextAttribute();
                 style.setFontColor(textAttribute.getColor());
-                style.setFontType(CPDFTextAttribute.FontNameHelper.getFontType(textAttribute.getFontName()));
-                style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(textAttribute.getFontName()));
-                style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(textAttribute.getFontName()));
                 style.setFontSize((int) textAttribute.getFontSize());
+                updateAnnotStyleFont(style, textAttribute.getFontName());
                 break;
             case FORM_TEXT_FIELD:
                 CPDFTextfieldAttr textFieldAttr = attribute.getTextfieldAttr();
@@ -519,8 +512,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 style.setFontColor(textFieldAttr.getFontColor());
                 style.setBorderColor(textFieldAttr.getBorderColor());
                 style.setFillColor(textFieldAttr.getFillColor());
-                CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.getFontType(textFieldAttr.getFontName());
-                style.setFontType(fontType);
+                updateAnnotStyleFont(style, textFieldAttr.getFontName());
                 style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(textFieldAttr.getFontName()));
                 style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(textFieldAttr.getFontName()));
                 style.setFontSize((int) textFieldAttr.getFontSize());
@@ -547,8 +539,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 style.setFillColor(listboxAttr.getFillColor());
                 style.setBorderColor(listboxAttr.getBorderColor());
                 style.setBorderWidth(listboxAttr.getBorderWidth());
-                CPDFTextAttribute.FontNameHelper.FontType listBoxFontType = CPDFTextAttribute.FontNameHelper.getFontType(listboxAttr.getFontName());
-                style.setFontType(listBoxFontType);
+                updateAnnotStyleFont(style, listboxAttr.getFontName());
                 style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(listboxAttr.getFontName()));
                 style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(listboxAttr.getFontName()));
                 break;
@@ -559,8 +550,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 style.setFillColor(comboBoxAttr.getFillColor());
                 style.setBorderColor(comboBoxAttr.getBorderColor());
                 style.setBorderWidth(comboBoxAttr.getBorderWidth());
-                CPDFTextAttribute.FontNameHelper.FontType comBoBoxFontType = CPDFTextAttribute.FontNameHelper.getFontType(comboBoxAttr.getFontName());
-                style.setFontType(comBoBoxFontType);
+                updateAnnotStyleFont(style, comboBoxAttr.getFontName());
                 style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(comboBoxAttr.getFontName()));
                 style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(comboBoxAttr.getFontName()));
                 break;
@@ -571,8 +561,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 style.setFontColor(pushButtonAttr.getFontColor());
                 style.setBorderColor(pushButtonAttr.getBorderColor());
                 style.setFillColor(pushButtonAttr.getFillColor());
-                CPDFTextAttribute.FontNameHelper.FontType pushButtonFontType = CPDFTextAttribute.FontNameHelper.getFontType(pushButtonAttr.getFontName());
-                style.setFontType(pushButtonFontType);
+                updateAnnotStyleFont(style, pushButtonAttr.getFontName());
                 style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(pushButtonAttr.getFontName()));
                 style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(pushButtonAttr.getFontName()));
                 style.setFontSize((int) pushButtonAttr.getFontSize());

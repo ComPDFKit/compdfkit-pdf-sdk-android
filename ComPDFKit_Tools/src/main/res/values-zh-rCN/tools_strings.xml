@@ -484,4 +484,10 @@
     <string name="tools_flattened_suffix">_扁平化文档.pdf</string>
 
 
+    <string name="tools_font_style_normal">常规</string>
+    <string name="tools_font_style_bold">加粗</string>
+    <string name="tools_font_style_italic">斜体</string>
+    <string name="tools_font_style_bold_italic">加粗&amp;斜体</string>
+
+
 </resources>

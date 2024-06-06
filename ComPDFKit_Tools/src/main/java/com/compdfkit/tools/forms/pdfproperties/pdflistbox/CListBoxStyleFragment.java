@@ -14,27 +14,20 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.view.colorpicker.CColorPickerFragment;
 import com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar;
 import com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView;
 import com.compdfkit.tools.common.views.pdfproperties.basic.CBasicPropertiesFragment;
 import com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView;
-import com.compdfkit.tools.common.views.pdfproperties.font.CFontSpinnerAdapter;
+import com.compdfkit.tools.common.views.pdfproperties.font.CPDFFontView;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleFragmentDatas;
 import com.compdfkit.tools.common.views.pdfproperties.textfields.CTextFieldsView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class CListBoxStyleFragment extends CBasicPropertiesFragment implements View.OnClickListener{
@@ -51,15 +44,11 @@ public class CListBoxStyleFragment extends CBasicPropertiesFragment implements V
 
     private ColorListView textColorListView;
 
-    private AppCompatImageView ivFontItalic;
-
-    private AppCompatImageView ivFontBold;
-
     private CPropertiesSwitchView hideFormSwitch;
 
     private CSliderBar fontSizeSliderBar;
 
-    private Spinner fontSpinner;
+    private CPDFFontView fontView;
 
     @Nullable
     @Override
@@ -69,13 +58,9 @@ public class CListBoxStyleFragment extends CBasicPropertiesFragment implements V
         borderColorListView = rootView.findViewById(R.id.border_color_list_view);
         backgroundColorListView = rootView.findViewById(R.id.background_color_list_view);
         textColorListView = rootView.findViewById(R.id.text_color_list_view);
-        ivFontItalic = rootView.findViewById(R.id.iv_font_italic);
-        ivFontBold = rootView.findViewById(R.id.iv_font_bold);
+        fontView = rootView.findViewById(R.id.font_view);
         fontSizeSliderBar = rootView.findViewById(R.id.font_size_slider_bar);
-        fontSpinner = rootView.findViewById(R.id.spinner_font);
         hideFormSwitch = rootView.findViewById(R.id.switch_hide_form);
-        ivFontItalic.setOnClickListener(this);
-        ivFontBold.setOnClickListener(this);
         return rootView;
     }
 
@@ -84,29 +69,11 @@ public class CListBoxStyleFragment extends CBasicPropertiesFragment implements V
         super.onViewCreated(view, savedInstanceState);
         CAnnotStyle annotStyle = viewModel.getStyle();
         if (annotStyle != null) {
-            List<CPDFTextAttribute.FontNameHelper.FontType> fontTypes = new ArrayList<>();
-            fontTypes.add(CPDFTextAttribute.FontNameHelper.FontType.Helvetica);
-            fontTypes.add(CPDFTextAttribute.FontNameHelper.FontType.Courier);
-            fontTypes.add(CPDFTextAttribute.FontNameHelper.FontType.Times_Roman);
-            CFontSpinnerAdapter fontSpinnerAdapter = new CFontSpinnerAdapter(getContext(), fontTypes);
-            fontSpinner.setAdapter(fontSpinnerAdapter);
-            switch (annotStyle.getFontType()) {
-                case Courier:
-                    fontSpinner.setSelection(1);
-                    break;
-                case Times_Roman:
-                    fontSpinner.setSelection(2);
-                    break;
-                default:
-                    fontSpinner.setSelection(0);
-                    break;
-            }
+            fontView.initFont(annotStyle.getExternFontName());
             textFieldsView.setText(annotStyle.getFormFieldName());
             borderColorListView.setSelectColor(annotStyle.getLineColor());
             backgroundColorListView.setSelectColor(annotStyle.getFillColor());
             textColorListView.setSelectColor(annotStyle.getTextColor());
-            ivFontBold.setSelected(annotStyle.isFontBold());
-            ivFontItalic.setSelected(annotStyle.isFontItalic());
             hideFormSwitch.setChecked(annotStyle.isHideForm());
             fontSizeSliderBar.setProgress(annotStyle.getFontSize());
         }
@@ -169,18 +136,9 @@ public class CListBoxStyleFragment extends CBasicPropertiesFragment implements V
                 }
             }
         });
-        fontSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (viewModel != null) {
-                    CPDFTextAttribute.FontNameHelper.FontType fontType = (CPDFTextAttribute.FontNameHelper.FontType) fontSpinner.getItemAtPosition(position);
-                    viewModel.getStyle().setFontType(fontType);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+        fontView.setFontChangeListener(psName -> {
+            if (viewModel != null) {
+                viewModel.getStyle().setExternFontName(psName);
             }
         });
         textFieldsView.setTextChangedListener((s, start, before, count) -> {
@@ -201,17 +159,7 @@ public class CListBoxStyleFragment extends CBasicPropertiesFragment implements V
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_font_bold) {
-            ivFontBold.setSelected(!ivFontBold.isSelected());
-            if (viewModel != null) {
-                viewModel.getStyle().setFontBold(ivFontBold.isSelected());
-            }
-        } else if (v.getId() == R.id.iv_font_italic) {
-            ivFontItalic.setSelected(!ivFontItalic.isSelected());
-            if (viewModel != null) {
-                viewModel.getStyle().setFontItalic(ivFontItalic.isSelected());
-            }
-        } else {}
+
     }
 
     @Override

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginTop="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
     android:background="@drawable/tools_style_signature_list_item_bg"
     android:foreground="@drawable/tools_common_btn_rectangle_ripple">
 

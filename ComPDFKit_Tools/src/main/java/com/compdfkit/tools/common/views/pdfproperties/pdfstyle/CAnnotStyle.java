@@ -23,7 +23,6 @@ import androidx.annotation.Nullable;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CLog;
@@ -71,8 +70,6 @@ public class CAnnotStyle implements Serializable {
     private int textColorOpacity = 255;
 
     private int fontSize;
-
-    private CPDFTextAttribute.FontNameHelper.FontType fontType = CPDFTextAttribute.FontNameHelper.FontType.Helvetica;
     private String externFontName = "";
     private Alignment alignment = Alignment.UNKNOWN;
 
@@ -250,6 +247,14 @@ public class CAnnotStyle implements Serializable {
         updateFontBold(this.fontBold, update);
     }
 
+    public void setBold(boolean isBold){
+        this.fontBold = isBold;
+    }
+
+    public void setItalic(boolean isItalic){
+        this.fontItalic = isItalic;
+    }
+
     public boolean isFontItalic() {
         return fontItalic;
     }
@@ -294,20 +299,9 @@ public class CAnnotStyle implements Serializable {
         updateFontSize(fontSize, update);
     }
 
-    public CPDFTextAttribute.FontNameHelper.FontType getFontType() {
-        return fontType;
-    }
 
     public String getExternFontName() {
         return externFontName;
-    }
-
-    public void setFontType(CPDFTextAttribute.FontNameHelper.FontType fontType) {
-        boolean update = fontType != this.fontType;
-        this.fontType = fontType;
-        externFontName = "";
-        CLog.e("CAnnotStyle", "setFontType(" + fontType + ", update:" + update + ")");
-        updateFontType(fontType, update);
     }
 
     public void setExternFontName(String name) {
@@ -316,7 +310,6 @@ public class CAnnotStyle implements Serializable {
         if (TextUtils.isEmpty(externFontName)) {
             externFontName = "";
         } else {
-            this.fontType = CPDFTextAttribute.FontNameHelper.FontType.Unknown;
             updateExternFontType(externFontName, update);
         }
     }
@@ -499,7 +492,6 @@ public class CAnnotStyle implements Serializable {
                 "textColor" + textColor + "," +
                 "textColorOpacity" + textColorOpacity + "," +
                 "fontSize" + fontSize + "," +
-                "fontType" + (fontType != null ? fontType.name() : "empty") + "," +
                 "imagePath" + imagePath + "," +
                 "imageUri" + (imageUri != null ? imageUri.toString() : "empty")+ "," +
                 "standardStamp" + (standardStamp != null ? standardStamp.name() : "empty") + "," +
@@ -529,7 +521,6 @@ public class CAnnotStyle implements Serializable {
         result = 31 * result + this.textColor;
         result = 31 * result + (this.textColorOpacity != 0.0F ? Float.floatToIntBits(this.textColorOpacity) : 0);
         result = 31 * result + (this.fontSize != 0.0F ? Float.floatToIntBits(this.fontSize) : 0);
-        result = 31 * result + (this.fontType != null ? this.fontType.hashCode() : 0);
         result = 31 * result + (this.imagePath != null ? this.imagePath.hashCode() : 0);
         result = 31 * result + (this.imageUri != null ? this.imageUri.hashCode() : 0);
         result = 31 * result + (this.type != null ? type.hashCode() : 0);
@@ -764,14 +755,6 @@ public class CAnnotStyle implements Serializable {
         }
     }
 
-    private void updateFontType(CPDFTextAttribute.FontNameHelper.FontType fontType, boolean update) {
-        if (styleChangeListenerList != null && update) {
-            for (OnAnnotStyleChangeListener onAnnotStyleChangeListener : styleChangeListenerList) {
-                onAnnotStyleChangeListener.onChangeFontType(fontType);
-            }
-        }
-    }
-
     private void updateExternFontType(String fontName, boolean update) {
         if (styleChangeListenerList != null && update) {
             for (OnAnnotStyleChangeListener onAnnotStyleChangeListener : styleChangeListenerList) {
@@ -944,8 +927,6 @@ public class CAnnotStyle implements Serializable {
         void onChangeTextColorOpacity(int textColorOpacity);
 
         void onChangeFontSize(int fontSize);
-
-        void onChangeFontType(CPDFTextAttribute.FontNameHelper.FontType fontType);
 
         void onChangeTextAlignment(CAnnotStyle.Alignment alignment);
 

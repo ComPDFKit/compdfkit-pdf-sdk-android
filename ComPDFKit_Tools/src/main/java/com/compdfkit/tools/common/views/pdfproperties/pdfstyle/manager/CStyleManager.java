@@ -19,7 +19,6 @@ import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -174,11 +173,6 @@ public class CStyleManager implements CAnnotStyle.OnAnnotStyleChangeListener {
 
     @Override
     public void onChangeFontSize(int fontSize) {
-        updateAnnot();
-    }
-
-    @Override
-    public void onChangeFontType(CPDFTextAttribute.FontNameHelper.FontType fontType) {
         updateAnnot();
     }
 

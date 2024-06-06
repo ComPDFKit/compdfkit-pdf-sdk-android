@@ -39,6 +39,7 @@ import com.compdfkit.tools.common.utils.view.colorpicker.ColorPickerDialogFragme
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView;
+import com.compdfkit.tools.common.views.pdfproperties.font.CPDFFontView;
 import com.compdfkit.tools.common.views.pdfproperties.writing.CPDFSignatureEditView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -50,6 +51,8 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
     public static final String EXTRA_SHOW_NONE_TYPE = "extra_show_none_type";
 
     public static final String EXTRA_SCREEN_ORIENTATION = "extra_screen_orientation";
+
+    public static final String EXTRA_HIDE_TYPEFACE = "extra_hide_typeface";
 
     public static final String RESULT_NONE = "result_none";
 
@@ -81,9 +84,13 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
 
     private ConstraintLayout clThickness;
 
+    private CPDFFontView fontView;
+
     private SeekBar sbThickness;
 
     private Uri imageUri;
+
+    private boolean hideTypeface;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +113,7 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
         btnClean = findViewById(R.id.btn_clean);
         clThickness = findViewById(R.id.cl_thickness);
         sbThickness = findViewById(R.id.seek_bar_thickness);
+        fontView = findViewById(R.id.font_view);
         initView();
         initListener();
         switchTab(0);
@@ -177,6 +185,10 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
 
             }
         });
+        fontView.setTypefaceListener(typeface -> {
+            editText.setTypeface(typeface);
+        });
+
     }
 
     private void initView() {
@@ -189,6 +201,8 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
             boolean showNoneType = getIntent().getBooleanExtra(EXTRA_SHOW_NONE_TYPE, false);
             ivNone.setVisibility(showNoneType ? View.VISIBLE : View.GONE);
         }
+        hideTypeface = getIntent().getBooleanExtra(EXTRA_HIDE_TYPEFACE, false);
+        fontView.initFont("Nimbus Sans");
     }
 
     private void switchTab(int selectPosition) {
@@ -206,6 +220,7 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
                 colorListView.setSelectColor(getSignatureColor());
                 fabAddPic.setVisibility(View.GONE);
                 btnClean.setVisibility(View.VISIBLE);
+                fontView.setVisibility(View.GONE);
                 break;
             case 1:
                 CViewUtils.showKeyboard(editText);
@@ -220,6 +235,9 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
                 colorListView.setSelectColor(getSignatureColor());
                 fabAddPic.setVisibility(View.GONE);
                 btnClean.setVisibility(View.VISIBLE);
+                if (!hideTypeface) {
+                    fontView.setVisibility(View.VISIBLE);
+                }
                 break;
             default:
                 CViewUtils.hideKeyboard(editText);
@@ -229,6 +247,7 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
                 writingView.setVisibility(View.GONE);
                 editText.setVisibility(View.GONE);
                 clThickness.setVisibility(View.GONE);
+                fontView.setVisibility(View.GONE);
                 cardViewImport.setVisibility(View.VISIBLE);
                 colorListView.setVisibility(View.INVISIBLE);
                 fabAddPic.setVisibility(View.VISIBLE);
@@ -280,6 +299,7 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
                 savePath = CSignatureDatas.saveSignatureBitmap(this, resultBitmap);
             } else if (ivAddTextSignature.isSelected()) {
                 if (editText.getText() != null && editText.getText().length() > 0) {
+                    editText.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
                     editText.buildDrawingCache();
                     Bitmap bitmap = Bitmap.createBitmap(editText.getDrawingCache());
                     Bitmap resultBitmap = CBitmapUtil.cropTransparent(bitmap);

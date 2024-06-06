@@ -107,6 +107,13 @@ public class CFormToolbar extends FrameLayout {
     public void reset(){
         toolListAdapter.selectByType(CPDFWidget.WidgetType.Widget_Unknown);
         rvFormList.scrollToPosition(0);
+        CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
+        if (ivRedo != null) {
+            ivRedo.setEnabled(undoManager.canRedo());
+        }
+        if (ivUndo != null) {
+            ivUndo.setEnabled(undoManager.canRedo());
+        }
     }
 
     public void setFragmentManager(FragmentManager fragmentManager) {

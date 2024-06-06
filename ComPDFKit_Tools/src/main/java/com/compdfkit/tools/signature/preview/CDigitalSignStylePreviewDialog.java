@@ -9,8 +9,10 @@
 
 package com.compdfkit.tools.signature.preview;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -31,6 +33,8 @@ import com.compdfkit.core.signature.CPDFDigitalSigConfig;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdfsignature.data.CSignatureDatas;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.utils.CPermissionUtil;
+import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.signature.pdfproperties.pdfsign.CDigitalSignStylePreviewView;
@@ -87,6 +91,8 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
     private AppCompatImageView ivAlignmentRight;
 
     private COnResultDigitalSignListener resultDigitalSignListener;
+
+    protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
 
     public static CDigitalSignStylePreviewDialog newInstance(String signImagePath, String commonName, String dn) {
         Bundle args = new Bundle();
@@ -274,23 +280,40 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
             previewView.setContentAlignLeft(true);
         } else if (v.getId() == R.id.btn_save){
             CViewUtils.hideKeyboard(getDialog());
-            if (positionView.getVisibility() == View.VISIBLE){
-                positionView.setVisibility(View.GONE);
-                slMain.setVisibility(View.VISIBLE);
-                return;
+            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+                multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
+                    if (CPermissionUtil.hasStoragePermissions(getContext())) {
+                        save();
+                    } else {
+                        if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
+                        }
+                    }
+                });
+            }else {
+                save();
             }
-            if (reasonView.getVisibility() == View.VISIBLE){
-                reasonView.setVisibility(View.GONE);
-                slMain.setVisibility(View.VISIBLE);
-                return;
-            }
-            Bitmap bitmap = previewView.getBitmap();
-            String imagePath = CSignatureDatas.saveDigitalSignatureBitmap(getContext(), bitmap);
-            if (resultDigitalSignListener != null) {
-                resultDigitalSignListener.sign(imagePath, previewView.getConfig(), previewView.getLocation(), previewView.getReason());
-            }
-            dismiss();
+
         }
+    }
+
+    private void save(){
+        if (positionView.getVisibility() == View.VISIBLE){
+            positionView.setVisibility(View.GONE);
+            slMain.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (reasonView.getVisibility() == View.VISIBLE){
+            reasonView.setVisibility(View.GONE);
+            slMain.setVisibility(View.VISIBLE);
+            return;
+        }
+        Bitmap bitmap = previewView.getBitmap();
+        String imagePath = CSignatureDatas.saveDigitalSignatureBitmap(getContext(), bitmap);
+        if (resultDigitalSignListener != null) {
+            resultDigitalSignListener.sign(imagePath, previewView.getConfig(), previewView.getLocation(), previewView.getReason());
+        }
+        dismiss();
     }
 
     public void setResultDigitalSignListener(COnResultDigitalSignListener resultDigitalSignListener) {

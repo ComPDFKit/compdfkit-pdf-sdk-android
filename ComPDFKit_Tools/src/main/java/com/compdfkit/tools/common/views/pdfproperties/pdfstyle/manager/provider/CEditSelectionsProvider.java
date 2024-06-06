@@ -14,7 +14,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.edit.CPDFEditArea;
 import com.compdfkit.core.edit.CPDFEditImageArea;
 import com.compdfkit.core.edit.CPDFEditTextArea;
@@ -61,7 +60,6 @@ public class CEditSelectionsProvider implements CStyleProvider {
                     textSelections.setColor(style.getTextColor());
                 } else if (type == CAnnotStyle.EditUpdatePropertyType.TextColorOpacity) {
                     textSelections.setTransparancy(style.getTextColorOpacity());
-
                 } else if (type == CAnnotStyle.EditUpdatePropertyType.Italic) {
                     textSelections.setItalic(style.isFontItalic());
                 } else if (type == CAnnotStyle.EditUpdatePropertyType.Bold) {
@@ -76,18 +74,10 @@ public class CEditSelectionsProvider implements CStyleProvider {
                         textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignRight);
                     }
                 } else if (type == CAnnotStyle.EditUpdatePropertyType.FontType) {
-                    CPDFTextAttribute.FontNameHelper.FontType font = style.getFontType();
-                    if (font == CPDFTextAttribute.FontNameHelper.FontType.Courier) {
-                        CLog.e("数据", "isBold:"+textSelections.isBold() +", isItalic:" + textSelections.isItalic());
-                        textSelections.setFontName(CPDFEditTextArea.FontCourier);
+                    textSelections.setFontName(getAnnotStyleFontName(style));
+                    textSelections.setBold(style.isFontBold());
+                    textSelections.setItalic(style.isFontItalic());
 
-                    } else if (font == CPDFTextAttribute.FontNameHelper.FontType.Helvetica) {
-                        textSelections.setFontName(CPDFEditTextArea.FontHelvtics);
-                    } else if (font == CPDFTextAttribute.FontNameHelper.FontType.Times_Roman) {
-                        textSelections.setFontName(CPDFEditTextArea.FontTimesRoman);
-                    } else {
-                        textSelections.setFontName(style.getExternFontName());
-                    }
                 } else {
                     textSelections.setColor(style.getTextColor());
                     textSelections.setTransparancy(style.getTextColorOpacity());
@@ -102,16 +92,7 @@ public class CEditSelectionsProvider implements CStyleProvider {
                     } else if (align == CAnnotStyle.Alignment.RIGHT) {
                         textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignRight);
                     }
-                    CPDFTextAttribute.FontNameHelper.FontType font = style.getFontType();
-                    if (font == CPDFTextAttribute.FontNameHelper.FontType.Courier) {
-                        textSelections.setFontName(CPDFEditTextArea.FontCourier);
-                    } else if (font == CPDFTextAttribute.FontNameHelper.FontType.Helvetica) {
-                        textSelections.setFontName(CPDFEditTextArea.FontHelvtics);
-                    } else if (font == CPDFTextAttribute.FontNameHelper.FontType.Times_Roman) {
-                        textSelections.setFontName(CPDFEditTextArea.FontTimesRoman);
-                    } else {
-                        textSelections.setFontName(style.getExternFontName());
-                    }
+                    textSelections.setFontName(getAnnotStyleFontName(style));
                 }
             } else if (style.getType() == CStyleType.EDIT_IMAGE) {
                 CAnnotStyle.EditUpdatePropertyType updatePropertyType = style.getUpdatePropertyType();
@@ -190,20 +171,7 @@ public class CEditSelectionsProvider implements CStyleProvider {
             style.setFontColor(textSelections.getColor());
             int fontsize = (int) textSelections.getFontSize();
             style.setFontSize(fontsize > 0 ? fontsize : 25);
-            String fontname = textSelections.getFontName();
-            if (fontname != null) {
-                if (fontname.contains("Courier")) {
-                    style.setFontType(CPDFTextAttribute.FontNameHelper.FontType.Courier);
-                } else if (fontname.contains("Helvetica")) {
-                    style.setFontType(CPDFTextAttribute.FontNameHelper.FontType.Helvetica);
-                } else if (fontname.contains("Times")) {
-                    style.setFontType(CPDFTextAttribute.FontNameHelper.FontType.Times_Roman);
-                } else {
-                    style.setExternFontName(fontname);
-                }
-            } else {
-                style.setFontType(CPDFTextAttribute.FontNameHelper.FontType.Unknown);
-            }
+            updateAnnotStyleFont(style, textSelections.getFontName());
         } else if (style.getType() == CStyleType.EDIT_IMAGE) {
             CPDFEditArea editArea = pageView.getCurrentEditArea();
             if (editArea != null && editArea instanceof CPDFEditImageArea) {

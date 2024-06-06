@@ -172,17 +172,21 @@ public class CWatermarkImageStyleFragment extends CBasicPropertiesFragment imple
         } else if (v.getId() == R.id.iv_from_album) {
              imageLauncher.launch(CImageResultContracts.RequestType.PHOTO_ALBUM);
          } else if (v.getId() == R.id.iv_from_camera) {
-             permissionResultLauncher.launch(Manifest.permission.CAMERA, granted -> {
-                 if (granted){
-                     imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
-                 } else {
-                     if (getActivity() != null) {
-                         if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
-                             CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getActivity());
+             if (!CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.CAMERA)){
+                 imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
+             }else {
+                 permissionResultLauncher.launch(Manifest.permission.CAMERA, granted -> {
+                     if (granted) {
+                         imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
+                     } else {
+                         if (getActivity() != null) {
+                             if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
+                                 CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getActivity());
+                             }
                          }
                      }
-                 }
-             });
+                 });
+             }
          }
     }
 }
