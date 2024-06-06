@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tools_color_background">
+
+    <com.compdfkit.tools.common.views.CToolBar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tools_toolbar_back_icon="@drawable/tools_ic_back"
+        android:title="@string/tools_annot_add_stamp">
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:enabled="true"
+            android:background="@drawable/tools_properties_signature_add_sign"
+            android:minWidth="70dp"
+            android:text="@string/tools_save"
+            android:textColor="@color/tools_normal_btn_text_color"
+            android:textSize="16sp" />
+
+    </com.compdfkit.tools.common.views.CToolBar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true">
+
+            <FrameLayout
+                android:id="@+id/fl_stamp_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_margin="16dp"
+                android:background="@drawable/tools_style_signature_list_item_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.compdfkit.tools.common.views.pdfproperties.stamp.CPDFStampTextView
+                    android:id="@+id/stamp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="40dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cl_menu"
+                    app:max_TextSize="35"
+                    app:max_Width="240" />
+
+            </FrameLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_text_stamp_config"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fl_stamp_text_view">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/tools_style_text_stamp_edit_text_bg"
+                    android:hint="@string/tools_custom_stamp_text"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="6dp"
+                    android:textColor="@color/tools_text_color_primary"
+                    android:textColorHint="@color/tools_text_color_hint"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_shape"
+                    style="@style/tools_style_fragment_sub_title_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/tools_style"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_text" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_shape"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="32dp"
+                    android:paddingVertical="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_shape">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_shape_rectangle"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/tools_annot_properties_icon_btn_corner_status_bg"
+                        android:padding="4dp"
+                        app:tint="@color/tools_icon_status_color"
+                        app:layout_constraintEnd_toStartOf="@id/iv_shape_left_triangle"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/tools_ic_text_stamp_shape_rectangle" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_shape_left_triangle"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/tools_annot_properties_icon_btn_corner_status_bg"
+                        android:padding="4dp"
+                        app:tint="@color/tools_icon_status_color"
+                        app:layout_constraintEnd_toStartOf="@id/iv_shape_right_triangle"
+                        app:layout_constraintStart_toEndOf="@id/iv_shape_rectangle"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/tools_ic_text_stamp_shape_left_triangle" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_shape_right_triangle"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/tools_annot_properties_icon_btn_corner_status_bg"
+                        android:padding="4dp"
+                        app:tint="@color/tools_icon_status_color"
+                        app:layout_constraintEnd_toStartOf="@id/iv_shape_none"
+                        app:layout_constraintStart_toEndOf="@id/iv_shape_left_triangle"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/tools_ic_text_stamp_shape_right_triangle" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_shape_none"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/tools_annot_properties_icon_btn_corner_status_bg"
+                        android:padding="4dp"
+                        app:tint="@color/tools_icon_status_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/iv_shape_right_triangle"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/tools_ic_text_stamp_shape_none" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
+                    android:id="@+id/color_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/cl_shape"
+                    app:tools_color_list="@array/tools_text_stamp_colors"
+                    app:tools_show_color_picker="false" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_date"
+                    style="@style/tools_style_fragment_sub_title_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/tools_date_format_sample"
+                    app:layout_constraintStart_toStartOf="@id/color_list_view"
+                    app:layout_constraintTop_toBottomOf="@id/color_list_view" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_date" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@color/tools_control_line_color"
+                    app:layout_constraintTop_toBottomOf="@id/sw_date" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_time"
+                    style="@style/tools_style_fragment_sub_title_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/tools_time_format_sample"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sw_date" />
+
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_time"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_time" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@color/tools_control_line_color"
+                    app:layout_constraintTop_toBottomOf="@id/sw_time" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

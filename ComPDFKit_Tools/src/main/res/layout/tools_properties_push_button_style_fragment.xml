@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_rootView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
+
+        <com.compdfkit.tools.common.views.pdfproperties.textfields.CTextFieldsView
+            android:id="@+id/text_field_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_btn_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/tools_style_fragment_sub_title_style"
+            android:text="@string/tools_text_on_button"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_field_view"
+            />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_btn_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/tools_style_text_stamp_edit_text_bg"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp"
+            android:hint="@string/tools_push_button"
+            android:imeOptions="actionDone"
+            android:textColor="@color/tools_text_color_primary"
+            android:textColorHint="@color/tools_text_color_hint"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_btn_text" />
+
+
+        <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
+            android:id="@+id/border_color_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_btn_text"
+            android:title="@string/tools_line_color" />
+
+
+        <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
+            android:id="@+id/background_color_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/border_color_list_view"
+            android:title="@string/tools_background_color" />
+
+        <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
+            android:id="@+id/text_color_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/background_color_list_view"
+            android:title="@string/tools_text_color" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_font_type"
+            style="@style/tools_style_fragment_sub_title_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/tools_annot_font"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_color_list_view" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner_font"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="16dp"
+            android:dropDownSelector="@color/tools_color_primary"
+            android:popupBackground="@drawable/tools_common_window_bg"
+            app:layout_constraintBottom_toBottomOf="@id/tv_font_type"
+            app:layout_constraintEnd_toStartOf="@id/iv_font_bold"
+            app:layout_constraintStart_toEndOf="@id/tv_font_type"
+            app:layout_constraintTop_toTopOf="@id/tv_font_type" />
+
+        <View
+            android:id="@+id/font_line"
+            style="@style/tools_style_fragment_line"
+            android:layout_width="0dp"
+            android:layout_marginHorizontal="12dp"
+            app:layout_constraintEnd_toEndOf="@id/spinner_font"
+            app:layout_constraintStart_toStartOf="@id/spinner_font"
+            app:layout_constraintTop_toBottomOf="@id/spinner_font" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_font_italic"
+            android:layout_width="40dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/tools_annotation_font_italic_bg"
+            android:gravity="center"
+            android:padding="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_font_type"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_font_type"
+            app:srcCompat="@drawable/tools_ic_font_italic"
+            app:tint="@color/tools_font_style_iv_color" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_font_bold"
+            android:layout_width="40dp"
+            android:layout_height="32dp"
+            android:background="@drawable/tools_annotation_font_bold_bg"
+            android:gravity="center"
+            android:padding="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_font_type"
+            app:layout_constraintEnd_toStartOf="@id/iv_font_italic"
+            app:layout_constraintTop_toTopOf="@id/tv_font_type"
+            app:srcCompat="@drawable/tools_ic_font_bold"
+            app:tint="@color/tools_font_style_iv_color" />
+
+        <com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar
+            android:id="@+id/font_size_slider_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:max="100"
+            android:progress="1"
+            app:tools_value_unit="pt"
+            app:layout_constraintTop_toBottomOf="@id/iv_font_bold"
+            app:tools_slider_bar_value_show_type="source"
+           android:title="@string/tools_annot_font_size" />
+
+
+        <com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView
+            android:id="@+id/switch_hide_form"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:title="@string/tools_hide_form"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/font_size_slider_bar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
+

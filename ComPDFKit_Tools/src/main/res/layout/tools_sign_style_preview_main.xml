@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sl_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <com.compdfkit.tools.signature.pdfproperties.pdfsign.CDigitalSignStylePreviewView
+            android:id="@+id/digital_sign_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_text_signature"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/tools_reader_setting_head_bg_color"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/tools_text_properties"
+            android:textColor="@color/tools_text_color_primary"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/digital_sign_preview" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_alignment"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/tools_common_btn_rectangle_ripple"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/tools_annot_align_type"
+            android:textColor="@color/tools_text_color_primary"
+            app:layout_constraintTop_toBottomOf="@id/tv_text_signature" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_alignment_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/tools_annotation_font_alignment_root_bg"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/tv_alignment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_alignment">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_alignment_left"
+                android:layout_width="49dp"
+                android:layout_height="32dp"
+                android:background="@drawable/tools_annotation_font_alignment_bg"
+                android:button="@null"
+                android:padding="4dp"
+                android:textSize="0sp"
+                app:srcCompat="@drawable/tools_font_alignment_left"
+                app:tint="@color/tools_font_style_iv_color" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_alignment_right"
+                android:layout_width="49dp"
+                android:layout_height="32dp"
+                android:background="@drawable/tools_annotation_font_alignment_bg"
+                android:padding="4dp"
+                app:srcCompat="@drawable/tools_font_alignment_right"
+                app:tint="@color/tools_font_style_iv_color" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_position"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tools_common_btn_rectangle_ripple"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_alignment">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_position"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_location"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_position_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginEnd="16dp"
+                android:drawableEnd="@drawable/tools_ic_right_arrow"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical|end"
+                android:maxLines="2"
+                android:text="@string/tools_close"
+                android:textColor="@color/tools_text_color_primary"
+                app:drawableTint="@color/tools_text_color_primary"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toEndOf="@id/tv_position"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_reason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tools_common_btn_rectangle_ripple"
+            app:layout_constraintTop_toBottomOf="@id/cl_position">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_reason"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_reason_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginEnd="16dp"
+                android:drawableEnd="@drawable/tools_ic_right_arrow"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical|end"
+                android:text="@string/tools_close"
+                android:textColor="@color/tools_text_color_primary"
+                app:drawableTint="@color/tools_text_color_primary"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toEndOf="@id/tv_reason"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_optional_reasons"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:background="@color/tools_reader_setting_head_bg_color"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/tools_include_text"
+            android:textColor="@color/tools_text_color_primary"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/cl_reason" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="vertical"
+            app:constraint_referenced_ids="cb_name,cb_date,cb_logo,cb_distinguishable_name,cb_compdfkit_version,cb_tab"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_optional_reasons"
+
+            />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_name"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:button="@drawable/tools_ic_digital_sign_checkbox"
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:text="@string/tools_field_name"
+            android:textColor="@color/tools_text_color_primary" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_date"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:button="@drawable/tools_ic_digital_sign_checkbox"
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:text="@string/tools_date"
+            android:textColor="@color/tools_text_color_primary" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_logo"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:button="@drawable/tools_ic_digital_sign_checkbox"
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:text="@string/tools_logo"
+            android:textColor="@color/tools_text_color_primary" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_distinguishable_name"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:button="@drawable/tools_ic_digital_sign_checkbox"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:text="@string/tools_distinguishable_name"
+            android:textColor="@color/tools_text_color_primary" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_compdfkit_version"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:button="@drawable/tools_ic_digital_sign_checkbox"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:text="@string/tools_compdfkit_versions"
+            android:textColor="@color/tools_text_color_primary" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_tab"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:button="@drawable/tools_ic_digital_sign_checkbox"
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:text="@string/tools_tab"
+            android:textColor="@color/tools_text_color_primary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+

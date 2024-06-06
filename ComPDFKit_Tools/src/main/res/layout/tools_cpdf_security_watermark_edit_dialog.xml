@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/tools_style_content_bg">
+
+    <com.compdfkit.tools.common.views.CToolBar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:elevation="4dp"
+        android:title="@string/tools_watermark"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
+
+            >
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_done"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/tools_properties_signature_add_sign"
+                android:gravity="center"
+                android:minWidth="70dp"
+                android:text="@string/tools_page_edit_toolbar_done"
+                android:textColor="@color/tools_color_accent"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_watermark_setting"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/tools_common_btn_corner_ripple"
+                android:padding="4dp"
+                app:tint="@color/tools_text_color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_done"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/tools_ic_annotation_setting" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.compdfkit.tools.common.views.CToolBar>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/tools_color_primary"
+        android:elevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar"
+        app:tabIndicatorColor="@color/tools_color_accent"
+        app:tabSelectedTextColor="@color/tools_color_accent"
+        app:tabTextColor="@color/tools_text_color_primary" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+</LinearLayout>

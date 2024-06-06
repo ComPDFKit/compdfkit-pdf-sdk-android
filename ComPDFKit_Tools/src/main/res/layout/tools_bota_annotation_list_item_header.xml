@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="32dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingVertical="6dp"
+    android:background="@color/tools_reader_setting_head_bg_color">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tools_page"
+        android:layout_marginStart="16dp"
+        android:textSize="14sp"
+        android:id="@+id/tv_page"
+        android:textColor="@color/tools_text_color_primary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/id_item_annot_head_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/tools_text_color_primary"
+        app:layout_constraintStart_toEndOf="@id/tv_page"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_page"
+        android:layout_marginStart="8dp"
+        android:text="10"/>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/id_item_annot_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/tools_text_color_primary"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_page"
+        tools:text="12"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

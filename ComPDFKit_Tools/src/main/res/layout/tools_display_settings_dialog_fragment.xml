@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.compdfkit.tools.common.views.CToolBar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:elevation="4dp"
+        android:title="@string/tools_view_setting" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layoutDirection="ltr"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:background="@color/tools_reader_setting_head_bg_color"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_scroll"
+                android:textColor="@color/tools_text_color_primary"
+                android:textSize="12sp" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_scroll_direction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tools_color_background"
+                >
+
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/r_btn_vertical"
+                    style="@style/tools_pdf_reader_mode_radio_button_style"
+                    android:drawableStart="@drawable/tools_ic_vertical_scrolling"
+                    android:text="@string/tools_vertical_scrolling" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/r_btn_horizontal"
+                    style="@style/tools_pdf_reader_mode_radio_button_style"
+                    android:drawableStart="@drawable/tools_ic_horizontal_scrolling"
+                    android:text="@string/tools_horizontal_scrolling" />
+
+
+            </RadioGroup>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_reader_mode"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:background="@color/tools_reader_setting_head_bg_color"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_display_mode"
+                android:textColor="@color/tools_text_color_primary"
+                android:textSize="12sp" />
+
+
+            <RadioGroup
+                android:id="@+id/radio_group_reader_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tools_color_background"
+                >
+
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/r_btn_single_page"
+                    style="@style/tools_pdf_reader_mode_radio_button_style"
+                    android:drawableStart="@drawable/tools_ic_single_page"
+                    android:text="@string/tools_single_page" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/r_btn_double_page"
+                    style="@style/tools_pdf_reader_mode_radio_button_style"
+                    android:drawableStart="@drawable/tools_ic_double_page"
+                    android:text="@string/tools_two_page" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/r_btn_cover_double_page"
+                    style="@style/tools_pdf_reader_mode_radio_button_style"
+                    android:drawableStart="@drawable/tools_ic_page_cover"
+                    android:text="@string/tools_book_mode" />
+
+            </RadioGroup>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/tools_reader_setting_head_bg_color" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_pdf_reader_setting_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/tools_color_background"
+                >
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/tools_ic_continuous"
+                    android:drawablePadding="16dp"
+                    android:text="@string/tools_continuous_scroll"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/tools_text_color_primary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Switch
+                    android:id="@+id/sw_is_continue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_pdf_reader_setting_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/tools_color_background"
+                >
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/tools_ic_crop"
+                    android:drawablePadding="16dp"
+                    android:text="@string/tools_crop"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/tools_text_color_primary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Switch
+                    android:id="@+id/sw_is_crop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_reader_background_color"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:background="@color/tools_reader_setting_head_bg_color"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_themes"
+                android:textColor="@color/tools_text_color_primary"
+                android:textSize="12sp" />
+
+
+            <RadioGroup
+                android:id="@+id/radio_group_reader_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tools_color_background"
+                >
+
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/r_btn_light_mode"
+                    style="@style/tools_pdf_reader_mode_radio_button_style"
+                    android:drawableStart="@drawable/tools_ic_theme_light"
+                    android:text="@string/tools_light_mode" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/r_btn_dark_mode"
+                    style="@style/tools_pdf_reader_mode_radio_button_style"
+                    android:drawableStart="@drawable/tools_ic_theme_dark"
+                    android:text="@string/tools_dark_mode" />
+
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/r_btn_sepia_mode"
+                    style="@style/tools_pdf_reader_mode_radio_button_style"
+                    android:drawableStart="@drawable/tools_ic_theme_sepia"
+                    android:text="@string/tools_sepia_mode" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/r_btn_reseda_mode"
+                    style="@style/tools_pdf_reader_mode_radio_button_style"
+                    android:drawableStart="@drawable/tools_ic_theme_reseda"
+                    android:text="@string/tools_reseda_mode" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

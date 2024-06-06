@@ -1,0 +1,477 @@
+<resources>
+    <string name="tools_document_info">Document Info</string>
+    <string name="tools_view_setting">View Setting</string>
+    <string name="tools_share">Share</string>
+    <string name="tools_open_document">Open…</string>
+
+    <string name="tools_display_mode">Display Mode</string>
+    <string name="tools_scroll">Scroll</string>
+    <string name="tools_vertical_scrolling">Vertical Scrolling</string>
+    <string name="tools_horizontal_scrolling">Horizontal Scrolling</string>
+    <string name="tools_single_page">Single Page</string>
+    <string name="tools_two_page">Two Page</string>
+    <string name="tools_book_mode">Cover Mode</string>
+    <string name="tools_continuous_scroll">Continuous Scrolling</string>
+    <string name="tools_crop">Crop</string>
+    <string name="tools_themes">Themes</string>
+    <string name="tools_light_mode">Light</string>
+    <string name="tools_dark_mode">Dark</string>
+    <string name="tools_sepia_mode">Sepia</string>
+    <string name="tools_reseda_mode">Reseda</string>
+
+    <string name="tools_reader_pdf_info_abstract">Abstract</string>
+    <string name="tools_reader_pdf_info_fileName">File Name:</string>
+    <string name="tools_reader_pdf_info_size">File Size:</string>
+    <string name="tools_reader_pdf_info_title">Title:</string>
+    <string name="tools_reader_pdf_info_author">Author:</string>
+    <string name="tools_reader_pdf_info_subject">Subject:</string>
+    <string name="tools_reader_pdf_info_keywords">Keywords:</string>
+    <string name="tools_reader_pdf_info_createInfo">Create Information</string>
+    <string name="tools_reader_pdf_info_version">Version:</string>
+    <string name="tools_reader_pdf_info_pages">Pages:</string>
+    <string name="tools_reader_pdf_info_creator">Creator:</string>
+    <string name="tools_reader_pdf_info_creationDate">Creation Date:</string>
+    <string name="tools_reader_pdf_info_modification">Modification Date:</string>
+    <string name="tools_reader_pdf_info_accessPer">Access Permissions</string>
+    <string name="tools_reader_pdf_info_allowPrint">Printing:</string>
+    <string name="tools_reader_pdf_info_allowCopy">Content Copying:</string>
+    <string name="tools_reader_pdf_info_allows_document_changes">Document Change:</string>
+    <string name="tools_reader_pdf_info_allows_document_assembly">Document Assembly:</string>
+    <string name="tools_reader_pdf_info_allows_document_commenting">Commenting:</string>
+    <string name="tools_reader_pdf_info_allows_document_form_field_entry">Filling of Form Field:</string>
+    <string name="tools_allowed">Allowed</string>
+    <string name="tools_not_allowed">Not Allowed</string>
+
+    <string name="tools_thumbnails">Thumbnails</string>
+    <string name="tools_outlines">Outlines</string>
+    <string name="tools_no_outlines">No Outlines</string>
+    <string name="tools_bookmarks">Bookmarks</string>
+    <string name="tools_edit_bookmark_title">Edit Bookmark</string>
+    <string name="tools_no_bookmarks">No Bookmarks</string>
+    <string name="tools_add_bookmarks">Add Bookmarks</string>
+    <string name="tools_has_bookmark">You\'ve bookmarked about this</string>
+    <string name="tools_bookmark_et_hint">Bookmark Title</string>
+    <string name="tools_page">Page</string>
+    <string name="tools_edit">Edit</string>
+    <string name="tools_delete">Delete</string>
+    <string name="tools_create">Create</string>
+
+    <string name="tools_enter_a_page_number">Enter a page number</string>
+    <string name="tools_okay">OK</string>
+    <string name="tools_cancel">Cancel</string>
+
+    <string name="tools_search_hint">Search</string>
+    <string name="tools_sorry_no_contents">No Results</string>
+    <string name="tools_result">Results</string>
+    <string name="tools_search_result_found">%d Results</string>
+
+    <string name="tools_please_enter_the_password_below">Please Enter the Password Below.</string>
+    <string name="tools_please_enter_the_password">Please Enter The Password</string>
+    <string name="tools_password">Password</string>
+    <string name="tools_invalid_password">Invalid Password</string>
+    <string name="tools_unlock">Unlock</string>
+
+    <string name="tools_pdf_mode_title">Tools</string>
+    <string name="tools_pdf_viewer_mode">Viewer</string>
+    <string name="tools_pdf_annotation_mode">Annotations</string>
+    <string name="tools_no_annotation">No Annotations</string>
+    <string name="tools_pdf_edit_mode">Content Editor</string>
+    <string name="tools_form_mode">Forms</string>
+    <string name="tools_page_edit_mode">Document Editor</string>
+
+    <string name="tools_save_title">Save</string>
+    <string name="tools_save_message">Do you want to save the modifications?</string>
+
+    <string name="tools_annotations">Annotations</string>
+
+    <string name="tools_copy">Copy</string>
+    <string name="tools_annot_highlight">Highlight</string>
+    <string name="tools_annot_underline">Underline</string>
+    <string name="tools_context_menu_strikethrough">Strikethrough</string>
+    <string name="tools_annot_squiggly">Squiggly</string>
+    <string name="tools_annot_strikeout">StrikeOut</string>
+    <string name="tools_paste">Paste</string>
+    <string name="tools_annot_note">Note</string>
+    <string name="tools_context_menu_text">Text Box</string>
+    <string name="tools_annot_stamp">Stamp</string>
+    <string name="tools_image">Image</string>
+    <string name="tools_context_menu_properties">Properties</string>
+    <string name="tools_context_menu_sign_here">Sign Here</string>
+    <string name="tools_record">Record</string>
+    <string name="tools_play">Play</string>
+
+    <string name="tools_colors">Colors</string>
+    <string name="tools_color">Color</string>
+    <string name="tools_opacity">Opacity</string>
+    <string name="tools_thickness">Line Width</string>
+    <string name="tools_annot_ink">Ink</string>
+    <string name="tools_save">Save</string>
+    <string name="tools_clean">Clear</string>
+
+    <string name="tools_annot_rectangle">Rectangle</string>
+    <string name="tools_annot_circle">Circle</string>
+    <string name="tools_annot_line">Line</string>
+    <string name="tools_annot_arrow">Arrow</string>
+    <string name="tools_line_color">Line Color</string>
+    <string name="tools_fill_color">Fill Color</string>
+    <string name="tools_text_color">Font Color</string>
+    <string name="tools_dashed_setting">Line and Border Style</string>
+    <string name="tools_annot_start_line_style">Start</string>
+    <string name="tools_annot_tail_line_style">End</string>
+
+    <string name="tools_annot_freetext">Text Box</string>
+    <string name="tools_annot_font">Font</string>
+    <string name="tools_annot_font_italic"><i>I</i></string>
+    <string name="tools_annot_font_bold"><b>B</b></string>
+    <string name="tools_annot_align_type">Alignment</string>
+    <string name="tools_annot_font_size">Font Size</string>
+
+    <string name="tools_annot_signature">Signature</string>
+    <string name="tools_annot_no_signature">No Signatures</string>
+    <string name="tools_enter_your_signature">Enter your signature</string>
+    <string name="tools_annot_new_signature">New Signature</string>
+    <string name="tools_warning">Warning</string>
+    <string name="tools_are_you_sure_to_delete">Are you sure to delete？</string>
+    <string name="tools_choose_from_album">Choose from Album</string>
+    <string name="tools_camera">Camera</string>
+
+    <string name="tools_standard_stamp">Standard</string>
+    <string name="tools_annot_add_stamp">Add Stamp</string>
+    <string name="tools_custom_stamp">Custom</string>
+    <string name="tools_text_stamp">Text Stamp</string>
+    <string name="tools_image_stamp">Image Stamp</string>
+    <string name="tools_style">Style:</string>
+    <string name="tools_custom_stamp_text">Text</string>
+    <string name="tools_date_format_sample">Date</string>
+    <string name="tools_time_format_sample">Time</string>
+
+    <string name="tools_link_to">Link to</string>
+    <string name="tools_annot_link">Link</string>
+
+    <string name="tools_url">URL</string>
+    <string name="tools_email">Email</string>
+    <string name="tools_compdf_website" translatable="false">https://www.compdf.com</string>
+    <string name="tools_compdf_email" translatable="false">support@compdf.com</string>
+
+    <string name="tools_annot_please_enter_text">Please enter text</string>
+    <string name="tools_tip">Tip:</string>
+    <string name="tools_please_enter_page">Please enter page number</string>
+    <string name="tools_use_sound_annot">If you need to use voice annotations, you need to grant recording permission</string>
+
+    <string name="tools_context_menu_edit">Edit</string>
+    <string name="tools_context_menu_cut">Cut</string>
+    <string name="tools_context_menu_transparancy">Opacity</string>
+    <string name="tools_context_menu_delete">Delete</string>
+
+    <string name="tools_edit_image_property_title">Image Properties</string>
+    <string name="tools_edit_image_property_rotate">Rotate</string>
+    <string name="tools_edit_image_property_rotate_left">Rotate Left</string>
+    <string name="tools_edit_image_property_rotate_right">Rotate Right</string>
+    <string name="tools_edit_image_property_transform">Flip</string>
+    <string name="tools_edit_image_property_transparency">Opacity</string>
+    <string name="tools_edit_image_property_replace">Replace</string>
+    <string name="tools_edit_image_property_export">Export</string>
+    <string name="tools_edit_image_property_crop">Crop</string>
+
+    <string-array name="tools_edit_image_trancparancy">
+        <item> 0</item>
+        <item> 0.25</item>
+        <item> 0.5</item>
+        <item> 0.75</item>
+        <item> 1</item>
+    </string-array>
+
+    <string-array name="tools_edit_image_trancparancy_value">
+        <item>0</item>
+        <item>0.25</item>
+        <item>0.5</item>
+        <item>0.75</item>
+        <item>1</item>
+    </string-array>
+    <string name="tools_blank_page">Insert a Blank Page</string>
+    <string name="tools_pdf_page">PDF Page</string>
+    <string name="tools_edit_text_property_title">Text Properties</string>
+    <string name="tools_context_menu_add_text">Add Text</string>
+    <string name="tools_context_menu_add_image">Add Images</string>
+    <string name="tools_context_menu_paste">Paste</string>
+    <string name="tools_page_edit_insert_page_blank">Insert blank page</string>
+
+    <string name="tools_context_menu_select">Select</string>
+    <string name="tools_context_menu_select_all">Select All</string>
+    <string name="tools_context_menu_select_paste">Keep Text Only</string>
+    <string name="tools_context_menu_select_paste_with_style">Keep Source Formating Paste</string>
+    <string name="tools_context_menu_image_horizental_mirror">Flip horizontal</string>
+    <string name="tools_context_menu_image_vertical_mirror">Flip vertical</string>
+    <string name="tools_context_menu_image_replace">Replace</string>
+    <string name="tools_context_menu_image_extract">Export</string>
+    <string name="tools_context_menu_image_transparancy">Opacity</string>
+    <string name="tools_context_menu_image_copy">Copy</string>
+    <string name="tools_context_menu_image_cut">Cut</string>
+
+    <string name="tools_context_menu_image_crop_done">Done</string>
+    <string name="tools_context_menu_image_crop_cancel">Cancel</string>
+
+    <string name="tools_context_menu_transparacy_0">0</string>
+    <string name="tools_context_menu_transparacy_25">25%</string>
+    <string name="tools_context_menu_transparacy_50">50%</string>
+    <string name="tools_context_menu_transparacy_75">75%</string>
+    <string name="tools_context_menu_transparacy_100">100%</string>
+
+    <string name="tools_edit_image_property_rotate_tools">Tools</string>
+    <string name="tools_share_to">Share to</string>
+    <string name="tools_sample">Sample</string>
+    <string name="tools_export_success">Export Successfully!</string>
+
+    <!-- Form Start-->
+    <string name="tools_text_field">Text Field</string>
+    <string name="tools_field_name">Name</string>
+    <string name="tools_background_color">Background Color</string>
+    <string name="tools_default_value">Default Value</string>
+    <string name="tools_hide_form">Hide the Field</string>
+    <string name="tools_multi_line">Multi-line</string>
+
+    <string name="tools_preset_to_selected">Button is checked by default</string>
+    <string name="tools_button_style">Button Style</string>
+    <string name="tools_check_box">Check Box</string>
+    <string name="tools_check_color">Checkmark Color</string>
+    <string name="tools_check_box_check">Check</string>
+    <string name="tools_check_box_circle">Circle</string>
+    <string name="tools_check_box_cross">Cross</string>
+    <string name="tools_check_box_diamond">Diamond</string>
+    <string name="tools_check_box_square">Square</string>
+    <string name="tools_check_box_start">Star</string>
+    <string name="tools_check_radio_button">Radio Button</string>
+    <string name="tools_check_list_box">List Box</string>
+    <string name="tools_edit_list_box">Edit List Box</string>
+    <string name="tools_add_items">Add Items</string>
+    <string name="tools_combo_button">Combo Button</string>
+    <string name="tools_edit_combo_box">Edit Combo Button</string>
+    <string name="tools_please_select_option">Please select your option</string>
+    <string name="tools_text_on_button">Item</string>
+    <string name="tools_push_button">Button</string>
+    <string name="tools_options">Options</string>
+    <!-- Form End!!!-->
+
+    <string name="tools_page_edit_toolbar_title">Document Editor</string>
+    <string name="tools_page_edit_toolbar_done">Done</string>
+    <string name="toolsf_page_edit_insert_page_blank">Insert blank page</string>
+    <string name="tools_page_edit_insert_page_pdf">Insert PDF page</string>
+    <string name="tools_page_edit_insert_page_pagesize">Page Size</string>
+    <string name="tools_page_edit_insert_page_pagedirection">Page Direction</string>
+    <string name="tools_page_edit_insert_page_insert_to">Insert To</string>
+    <string name="tools_page_edit_insert_page_home_page">First Page</string>
+    <string name="tools_page_edit_insert_page_last_page">Last Page</string>
+    <string name="tools_page_edit_insert_page_enterpage_tint">Please Enter a Page</string>
+    <string name="tools_page_edit_insert_page_filename">File Name</string>
+    <string name="tools_page_edit_insert_page_range">Page Range</string>
+    <string name="tools_page_edit_insert_page_allpage">All Pages</string>
+    <string name="tools_page_edit_insert_page_oddpage">Odd Pages Only</string>
+    <string name="tools_page_edit_insert_page_evenpage">Even Pages Only</string>
+    <string name="tools_page_edit_insert_page_specifypage">Custom Range</string>
+    <string name="tools_page_edit_insert_page_before">Insert Before Specified Page</string>
+    <string name="tools_page_edit_insert_page_after">Insert After Specified Page</string>
+    <string name="tools_e_g_page">e.g. 1,3-5,10</string>
+    <string-array name="tools_page_edit_pagesize_name">
+        <item>A3 (297 * 420mm)</item>
+        <item>A4 (210 * 297mm)</item>
+        <item>A5 (148 * 210mm)</item>
+    </string-array>
+    <string-array name="tools_page_edit_pagesize_value">
+        <item>842*1190</item>
+        <item>595*842</item>
+        <item>421*595</item>
+    </string-array>
+    <string name="tools_page_edit_select_file_tips">Must select a pdf file first.</string>
+    <string name="tools_page_edit_toolbar_insert">Insert</string>
+    <string name="tools_page_edit_toolbar_replace">Replace</string>
+    <string name="tools_page_edit_toolbar_extract">Extract</string>
+    <string name="tools_page_edit_toolbar_copy">Copy</string>
+    <string name="tools_page_edit_toolbar_rotate">Rotate</string>
+    <string name="tools_page_edit_toolbar_delete">Delete</string>
+    <string name="tools_page_edit_alert_title">Warning</string>
+    <string name="tools_page_edit_alert_content_allpage">Can not delete all pages. Please keep at least one page.</string>
+    <string name="tools_page_edit_alert_content_nopage">No page is selected.</string>
+    <string name="tools_page_edit_extract_fail">Extract Failed</string>
+    <string name="tools_page_edit_extract_ok">Extract Successfully</string>
+    <string name="tools_page_edit_insert_page">Page Error</string>
+    <string name="tools_select_a_file">Select a File</string>
+    <string name="tools_page_choose_skip_input_error">The page range is invalid or out of range. Please enter the valid page.</string>
+    <string name="tools_scan_pdf_annot_warning">The current page is scanned images that do not support adding highlights, underlines, strikeouts, and squiggly lines.</string>
+    <string name="tools_repair_pdf_file_mes">The file can\'t be modified because of an internal error. If you need to edit, please save a copy to other folder.</string>
+
+    <string name="tools_can_not_edit">You have no permission to edit this document.</string>
+    <string name="tools_reader_view_error_no_email">There is no email app found.</string>
+    <string name="tools_reader_view_error_no_browser">There is no browser app found.</string>
+    <string name="tools_reader_view_error_invalid_link">Invalid link address.</string>
+
+    <!--    V2.0.0 Digital Signature-->
+    <string name="tools_digital_signature">Digital Signature</string>
+    <string name="tools_add_a_signature_field">Add a Signature Field</string>
+    <string name="tools_verify_signatures">Verify the Signature</string>
+    <string name="tools_select_a_digital_id">Select a Digital ID</string>
+    <string name="tools_use_a_digital_id_from_a_file">Use A Digital ID from A File</string>
+    <string name="tools_create_a_new_digital_id">Create A New Digital ID</string>
+    <string name="tools_continue">Continue</string>
+    <string name="tools_certificate_file">Certificate File</string>
+    <string name="tools_enter_the_password_of_the_cert_file">Enter the password of the certificate file</string>
+    <string name="tools_customize_the_signature_appearance">Customize the Signature</string>
+    <string name="tools_text_properties">Text Properties</string>
+    <string name="tools_location">Location</string>
+    <string name="tools_reason">Reason</string>
+    <string name="tools_i_am_the_owner_of_the_document">I am the owner of the document</string>
+    <string name="tools_i_am_approving_the_document">I am approving the document</string>
+    <string name="tools_i_have_reviewed_this_document">I have reviewed this document</string>
+    <string name="tools_none">None</string>
+    <string name="tools_include_text">Include Text</string>
+    <string name="tools_distinguishable_name">Distinguishable name</string>
+    <string name="tools_dn">DN</string>
+    <string name="tools_date">Date</string>
+    <string name="tools_logo">Logo</string>
+    <string name="tools_compdfkit_versions">ComPDFKit Version</string>
+    <string name="tools_tab">Tab</string>
+    <string name="tools_create_a_self_signed_digital_id">Create A Self-Signed Digital ID</string>
+    <string name="tools_save_a_self_signed_digital_id">Save the Self-Signed Digital ID to A File</string>
+    <string name="tools_create_certificate_digital_id_desc">Digital IDs that are self-signed by individuals do not provide the assurance that the identifying information is valid. For this reason, they may not be accepted in some cases.</string>
+    <string name="tools_please_enter_your_name">Please enter your name</string>
+    <string name="tools_organization_unit">Organization Unit</string>
+    <string name="tools_enter_the_name_of_the_organization_unit">Enter the name of the organization unit</string>
+    <string name="tools_organization_name">Organization Name</string>
+    <string name="tools_enter_the_name_of_the_organization">Enter the name of the organization</string>
+    <string name="tools_email_address">Email Address</string>
+    <string name="tools_email_address_hint">Please enter your email address</string>
+    <string name="tools_country_region">Country Region</string>
+    <string name="tools_country_region_hint">Please select your country/region</string>
+    <string name="tools_save_to_file">Save to File</string>
+    <string name="tools_certificate_digital_id_save_info">After you create and save this Digital ID, it can be used again. </string>
+    <string name="tools_save_location">Save Location</string>
+    <string name="tools_set_a_password">Set A Password</string>
+    <string name="tools_please_enter_your_password">Please enter your password</string>
+    <string name="tools_confirm_password">Confirm the Password</string>
+    <string name="tools_enter_the_password_again">Enter the password again</string>
+    <string name="tools_confirm_password_error">Password and confirm password does not match</string>
+    <string name="tools_signer">Signer</string>
+    <string name="tools_signing_time">Signing Time</string>
+    <string name="tools_cert_auth_statement">Certification Authority Statement</string>
+    <string name="tools_signer_identity_is_valid">The signer\'s identity is valid.</string>
+    <string name="tools_signer_identity_is_invalid">The signer\'s identity is invalid.</string>
+    <string name="tools_signer_cert_has_expired">The file was signed with a certificate that has expired. If you acquired this file recently, it may not be authentic.</string>
+    <string name="tools_sign_the_sign_is_valid">The signature is valid.</string>
+    <string name="tools_sign_the_sign_is_in_valid">The signature is invalid.</string>
+    <string name="tools_sign_document_has_not_been_modified">The document has not been modified since this signature was applied.</string>
+    <string name="tools_sign_document_has_been_modified">The document has been altered or corrupted since it was signed by the current user.</string>
+
+    <string name="tools_sign_validity_is_unknown_trusted_desc">Signature validity is unknown because it has not been included in your list of trusted certificates and none of its parent certificates are trusted certificates.</string>
+
+
+    <string name="tools_sign_validity_is_unknown">Signature validity is unknown.</string>
+    <string name="tools_sign_at_least_one_signature_is_invalid">At least one signature is invalid.</string>
+
+    <string name="tools_view_all_signatures">View All Signatures</string>
+    <string name="tools_signature_list">Signature List</string>
+    <string name="tools_view_cert">View Certificate</string>
+    <string name="tools_import_digital_desc">Browse a digital ID file. Digital ID cards are password-protected. If you do not know the password, you cannot obtain a digital ID card.</string>
+    <string name="tools_close">Close</string>
+
+    <string name="tools_permission_tips_title">Permissions Required</string>
+    <string name="tools_permission_tips_msg">This app may not work correctly without the requested permissions. Open the app settings screen to modify app permissions</string>
+
+    <string name="tools_certificate_viewer">Certificate Viewer</string>
+    <string name="tools_summary">Summary</string>
+    <string name="tools_issued_to">Issued to</string>
+    <string name="tools_issuer">Issuer</string>
+    <string name="tools_valid_from">Valid from</string>
+    <string name="tools_valid_to">Valid to</string>
+    <string name="tools_intended_usage">Intended Usage</string>
+    <string name="tools_details">Details</string>
+    <string name="tools_version">Version</string>
+    <string name="tools_algorithm">Algorithm</string>
+    <string name="tools_purpose">Use Digital ID for</string>
+    <string name="tools_subject">Subject</string>
+    <string name="tools_serial_number">Serial Number</string>
+    <string name="tools_certificate_policy">Certificate Policy</string>
+    <string name="tools_crl_distribution_point">CRL Distribution Points</string>
+    <string name="tools_issuer_info_access">Issuer Information Access</string>
+    <string name="tools_issuing_auth_key_identifier">Issuer‘s Key Identifier</string>
+    <string name="tools_subject_key_identifier">Subject‘s Key Identifier</string>
+    <string name="tools_basic_constraints">Basic Constraints</string>
+    <string name="tools_key_usage">Key Usage</string>
+    <string name="tools_public_key">Public Key</string>
+    <string name="tools_x_509_data">X.509 data</string>
+    <string name="tools_sha1_digest">SHA1 Digest</string>
+    <string name="tools_md5_digest">MD5 Digest</string>
+    <string name="tools_cert_details">Certificate Details</string>
+    <string name="tools_signed_by">Signed by:</string>
+    <string name="tools_date_">Date:</string>
+    <string name="tools_status">Status:</string>
+    <string name="tools_digital_signature_detail">Digital Signature Details</string>
+    <string name="tools_digital_create_error">Failures</string>
+    <string name="tools_digital_sign_success">Signature successful</string>
+    <string name="tools_cert_is_trusted_to">This Certificate Is Trusted to:</string>
+    <string name="tools_trusted_1">Sign document or data</string>
+    <string name="tools_trusted_2">Certify document</string>
+    <string name="tools_trust">Trust</string>
+    <string name="tools_add_to_trusted_cert">Add to Trusted Certificates</string>
+    <string name="tools_select_folder">Select folder</string>
+    <string name="tools_save_to_this_directory">Save to this directory</string>
+    <string name="tools_digital_signatures">Digital Signatures</string>
+    <string name="tools_data_encryption">Data Encryption</string>
+    <string name="tools_digital_signatures_and_data_encryption">Digital Signatures and Data Encryption</string>
+
+
+    <!--    Security Watermark Start! -->
+    <string name="tools_security">Security</string>
+    <string name="tools_watermark">Watermark</string>
+    <string name="tools_set_password_successfully">Set the Password for the File Successfully!</string>
+    <string name="tools_set_password_failures">Failed to Set Passwords for this Document.</string>
+    <string name="tools_password_remove_success">Password Removed Successfully!</string>
+    <string name="tools_password_remove_fail">Failed to Remove the Password.</string>
+
+    <string name="tools_watermark_removed_success">Watermarks Removed Successfully!</string>
+    <string name="tools_watermark_removed_failed">Failed to Remove the Watermarks.</string>
+    <string name="tools_watermark_add_success">Add Watermarks Successfully!</string>
+    <string name="tools_watermark_add_failed">Failed to Add the Watermarks.</string>
+
+    <string name="tools_type_your_watermark_text_here">Type your watermark text here.</string>
+    <string name="tools_default_watermark_text">Watermark</string>
+    <string name="tools_watermark_settings">Watermark Settings</string>
+    <string name="tools_layout_options">Layout Options</string>
+    <string name="tools_current_page">Current Page</string>
+    <string name="tools_all_page">All Pages</string>
+    <string name="tools_tile">Tile</string>
+    <string name="tools_choose_picture">Choose Picture</string>
+
+    <string name="tools_security_settings">Security Settings</string>
+    <string name="tools_set_password">Set Passwords</string>
+    <string name="tools_password_to_open_the_document">Password to Open the Document</string>
+    <string name="tools_enter_password">Enter the Password</string>
+    <string name="tools_owner_password">Owner Password</string>
+    <string name="tools_enter_password_can_not_be_empty">The password can\'t be empty.</string>
+    <string name="tools_please_enter_owner_password">Please enter the owner\'s password</string>
+    <string name="tools_restrict_document_printing">Restrict document printing</string>
+    <string name="tools_restrict_content_copying">Restrict content copying</string>
+    <string name="tools_encryption_level">Encryption Level</string>
+    <string name="tools_encryption_no_encryption">No Encryption</string>
+    <string name="tools_encryption_rc4" translatable="false">128-bit RC4</string>
+    <string name="tools_encryption_128_aes" translatable="false">128-bit AES</string>
+    <string name="tools_encryption_256_aes" translatable="false">256-bit AES</string>
+    <string name="tools_setting_permission_password">Setting Permission Password</string>
+    <string name="tools_saving_path">Saving Path</string>
+    <string name="tools_enter_owner_pwd_title">Enter Owner\'s Password to Change the Security</string>
+    <string name="tools_password_error">Password Error</string>
+    <string name="tools_text_watermark">Text Watermark</string>
+    <string name="tools_save_success">Saved successfully</string>
+    <string name="tools_password_must_be_different">Open password and permission password must be different</string>
+
+    <!--    Security Mode End-->
+    <string name="tools_signature_date_pattern">dd MMMM yyyy HH:mm:ss</string>
+    <string name="tools_select_sign_type">Select Signature Type</string>
+    <string name="tools_sign_with_electronic_signatures">Sign with Electronic Signatures</string>
+    <string name="tools_sign_with_digital_signatures">Sign with Digital Signatures</string>
+    <string name="tools_watermark_suffix">_Watermark.pdf</string>
+    <string name="tools_remove_watermark_suffix">_Watermark_Removed.pdf</string>
+    <string name="tools_document_encryption_suffix">_Encrypted.pdf</string>
+    <string name="tools_document_encryption_remove_suffix">_Password_Removed.pdf</string>
+    <string name="tools_signatures">Signatures</string>
+    <string name="tools_name">Name</string>
+    <string name="tools_enter_permission_password">Enter Permission Passwords</string>
+</resources>

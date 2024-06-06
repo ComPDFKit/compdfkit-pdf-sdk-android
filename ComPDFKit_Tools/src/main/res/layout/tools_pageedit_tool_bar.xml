@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="?android:attr/actionBarSize"
+    android:scrollbarThumbHorizontal="@drawable/tools_bg_scroll_bar_thumb"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="?android:attr/actionBarSize"
+        android:animateLayoutChanges="true"
+        android:background="@color/tools_color_primary"
+        android:clickable="true"
+        android:elevation="4dp"
+        android:focusable="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_insert"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/tools_common_btn_rectangle_ripple"
+            android:clickable="true"
+            android:focusable="true">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_insert"
+                android:layout_width="22dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tools_ic_pageedit_insert"
+                app:layout_constraintBottom_toTopOf="@+id/tv_insert"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/tools_text_color_primary" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_insert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tools_page_edit_toolbar_insert"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_insert" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_replace"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/tools_common_btn_rectangle_ripple"
+            android:clickable="true"
+            android:focusable="true">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_replace"
+                android:layout_width="22dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tools_ic_pageedit_replace"
+                app:layout_constraintBottom_toTopOf="@+id/tv_replace"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/tools_text_color_primary" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_replace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tools_page_edit_toolbar_replace"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_replace"
+                app:layout_constraintVertical_chainStyle="packed" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_extract"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_extract"
+                android:layout_width="22dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tools_ic_pageedit_extract"
+                app:layout_constraintBottom_toTopOf="@+id/tv_extract"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/tools_text_color_primary" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_extract"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tools_page_edit_toolbar_extract"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_extract" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_copy"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_copy"
+                android:layout_width="22dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tools_ic_pageedit_copy"
+                app:layout_constraintBottom_toTopOf="@+id/tv_copy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/tools_text_color_primary" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tools_page_edit_toolbar_copy"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_copy" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_rotate"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_rotate"
+                android:layout_width="22dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tools_ic_pageedit_rotate"
+                app:layout_constraintBottom_toTopOf="@+id/tv_rotate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/tools_text_color_primary" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_rotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tools_page_edit_toolbar_rotate"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_rotate" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_delete"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+            android:gravity="center_horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="22dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tools_ic_pageedit_delete"
+                app:layout_constraintBottom_toTopOf="@+id/tv_delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/tools_text_color_primary" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tools_page_edit_toolbar_delete"
+                android:textColor="@color/tools_text_color_primary"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_delete" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</HorizontalScrollView>

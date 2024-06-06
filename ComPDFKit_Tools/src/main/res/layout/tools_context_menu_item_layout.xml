@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/copy"
+    style="@style/tools_context_menu_item_style"
+    android:minWidth="50dp"
+    android:gravity="center"
+    android:textColor="@color/tools_text_color_primary"
+    android:text="@string/contextmenu_copy" />
+

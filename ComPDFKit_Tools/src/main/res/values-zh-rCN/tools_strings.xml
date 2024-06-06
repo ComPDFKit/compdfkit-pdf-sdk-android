@@ -1,0 +1,474 @@
+<resources>
+    <string name="tools_document_info">文档信息</string>
+    <string name="tools_view_setting">预览设置</string>
+    <string name="tools_share">分享</string>
+    <string name="tools_open_document">打开文档</string>
+
+    <string name="tools_display_mode">显示模式</string>
+    <string name="tools_scroll">翻页</string>
+    <string name="tools_vertical_scrolling">垂直</string>
+    <string name="tools_horizontal_scrolling">水平</string>
+    <string name="tools_single_page">单页</string>
+    <string name="tools_two_page">双页</string>
+    <string name="tools_book_mode">封面模式</string>
+    <string name="tools_continuous_scroll">连续滚动</string>
+    <string name="tools_crop">裁剪模式</string>
+    <string name="tools_themes">主题</string>
+    <string name="tools_light_mode">日间模式</string>
+    <string name="tools_dark_mode">夜间模式</string>
+    <string name="tools_sepia_mode">柔和模式</string>
+    <string name="tools_reseda_mode">护眼模式</string>
+
+    <string name="tools_reader_pdf_info_abstract">摘要</string>
+    <string name="tools_reader_pdf_info_fileName">文件:</string>
+    <string name="tools_reader_pdf_info_size">文件大小:</string>
+    <string name="tools_reader_pdf_info_title">标题:</string>
+    <string name="tools_reader_pdf_info_author">作者:</string>
+    <string name="tools_reader_pdf_info_subject">主题:</string>
+    <string name="tools_reader_pdf_info_keywords">关键字:</string>
+    <string name="tools_reader_pdf_info_createInfo">创建信息</string>
+    <string name="tools_reader_pdf_info_version">版本:</string>
+    <string name="tools_reader_pdf_info_pages">页数:</string>
+    <string name="tools_reader_pdf_info_creator">创建者:</string>
+    <string name="tools_reader_pdf_info_creationDate">创建日期:</string>
+    <string name="tools_reader_pdf_info_modification">修改日期:</string>
+    <string name="tools_reader_pdf_info_accessPer">权限</string>
+    <string name="tools_reader_pdf_info_allowPrint">打印:</string>
+    <string name="tools_reader_pdf_info_allowCopy">复制提取内容:</string>
+    <string name="tools_reader_pdf_info_allows_document_changes">编辑文档:</string>
+    <string name="tools_reader_pdf_info_allows_document_assembly">文档组合:</string>
+    <string name="tools_reader_pdf_info_allows_document_commenting">注释评论:</string>
+    <string name="tools_reader_pdf_info_allows_document_form_field_entry">填写表单:</string>
+    <string name="tools_allowed">允许</string>
+    <string name="tools_not_allowed">不允许</string>
+
+    <string name="tools_thumbnails">缩略图</string>
+    <string name="tools_outlines">大纲</string>
+    <string name="tools_no_outlines">无大纲</string>
+    <string name="tools_bookmarks">书签</string>
+    <string name="tools_edit_bookmark_title">编辑书签</string>
+    <string name="tools_no_bookmarks">无书签</string>
+    <string name="tools_add_bookmarks">添加书签</string>
+    <string name="tools_has_bookmark">You\'ve bookmarked about this</string>
+    <string name="tools_bookmark_et_hint">输入书签标题</string>
+    <string name="tools_page">页码</string>
+    <string name="tools_edit">编辑</string>
+    <string name="tools_delete">删除</string>
+    <string name="tools_create">确定</string>
+
+    <string name="tools_enter_a_page_number">跳转到指定页面</string>
+    <string name="tools_okay">确定</string>
+    <string name="tools_cancel">取消</string>
+
+    <string name="tools_search_hint">搜索</string>
+    <string name="tools_sorry_no_contents">无匹配的结果</string>
+    <string name="tools_result">搜索结果</string>
+    <string name="tools_search_result_found">%d 条搜索结果</string>
+
+    <string name="tools_please_enter_the_password_below">输入密码以查看文档</string>
+    <string name="tools_please_enter_the_password">请输入密码</string>
+    <string name="tools_password">密码</string>
+    <string name="tools_invalid_password">密码错误</string>
+    <string name="tools_unlock">打开</string>
+
+    <string name="tools_pdf_mode_title">功能选择</string>
+    <string name="tools_pdf_viewer_mode">查看器</string>
+    <string name="tools_pdf_annotation_mode">注释</string>
+    <string name="tools_no_annotation">无注释</string>
+    <string name="tools_pdf_edit_mode">内容编辑器</string>
+    <string name="tools_form_mode">表单</string>
+    <string name="tools_page_edit_mode">文档编辑器</string>
+
+    <string name="tools_save_title">保存</string>
+    <string name="tools_save_message">是否保存对文档进行的修改？</string>
+
+    <string name="tools_annotations">注释</string>
+
+    <string name="tools_copy">复制</string>
+    <string name="tools_annot_highlight">亮高</string>
+    <string name="tools_annot_underline">下划线</string>
+    <string name="tools_context_menu_strikethrough">删除线</string>
+    <string name="tools_annot_squiggly">波浪线</string>
+    <string name="tools_annot_strikeout">删除线</string>
+    <string name="tools_paste">粘贴</string>
+    <string name="tools_annot_note">便签</string>
+    <string name="tools_context_menu_text">文本</string>
+    <string name="tools_annot_stamp">图章</string>
+    <string name="tools_image">图片</string>
+    <string name="tools_context_menu_properties">属性</string>
+    <string name="tools_context_menu_sign_here">在此处签名</string>
+    <string name="tools_record">录音</string>
+    <string name="tools_play">播放</string>
+
+    <string name="tools_colors">颜色</string>
+    <string name="tools_color">颜色</string>
+    <string name="tools_opacity">不透明度</string>
+    <string name="tools_thickness">线宽</string>
+    <string name="tools_annot_ink">手绘</string>
+    <string name="tools_save">保存</string>
+    <string name="tools_clean">清除</string>
+
+    <string name="tools_annot_rectangle">矩形</string>
+    <string name="tools_annot_circle">圆</string>
+    <string name="tools_annot_line">线</string>
+    <string name="tools_annot_arrow">箭头</string>
+    <string name="tools_line_color">边框颜色</string>
+    <string name="tools_fill_color">填充颜色</string>
+    <string name="tools_text_color">文字颜色</string>
+    <string name="tools_dashed_setting">线型</string>
+    <string name="tools_annot_start_line_style">线头</string>
+    <string name="tools_annot_tail_line_style">线尾</string>
+
+    <string name="tools_annot_freetext">文本</string>
+    <string name="tools_annot_font">字体</string>
+    <string name="tools_annot_font_italic"><i>I</i></string>
+    <string name="tools_annot_font_bold"><b>B</b></string>
+    <string name="tools_annot_align_type">文本对齐</string>
+    <string name="tools_annot_font_size">字号</string>
+
+    <string name="tools_annot_signature">签名</string>
+    <string name="tools_annot_no_signature">无签名</string>
+    <string name="tools_enter_your_signature">输入签名</string>
+    <string name="tools_annot_new_signature">添加签名</string>
+    <string name="tools_warning">注意</string>
+    <string name="tools_are_you_sure_to_delete">确定删除该内容？</string>
+    <string name="tools_choose_from_album">从相册选择</string>
+    <string name="tools_camera">相机</string>
+
+    <string name="tools_standard_stamp">标准图章</string>
+    <string name="tools_annot_add_stamp">添加图章</string>
+    <string name="tools_custom_stamp">自定义图章</string>
+    <string name="tools_text_stamp">文字图章</string>
+    <string name="tools_image_stamp">图片图章</string>
+    <string name="tools_style">类型:</string>
+    <string name="tools_custom_stamp_text">文字</string>
+    <string name="tools_date_format_sample">日期</string>
+    <string name="tools_time_format_sample">时间</string>
+
+    <string name="tools_link_to">跳转到页面</string>
+    <string name="tools_annot_link">链接</string>
+
+    <string name="tools_url">超链接</string>
+    <string name="tools_email">电子邮箱</string>
+
+    <string name="tools_annot_please_enter_text">请输入文字</string>
+    <string name="tools_tip">提示:</string>
+    <string name="tools_please_enter_page">请输入页码</string>
+    <string name="tools_use_sound_annot">如果需要使用语音注释，需要授予录音权限</string>
+
+    <string name="tools_context_menu_edit">编辑</string>
+    <string name="tools_context_menu_cut">剪切</string>
+    <string name="tools_context_menu_transparancy">不透明度</string>
+    <string name="tools_context_menu_delete">删除</string>
+
+    <string name="tools_edit_image_property_title">图片属性</string>
+    <string name="tools_edit_image_property_rotate">旋转</string>
+    <string name="tools_edit_image_property_rotate_left">左旋转</string>
+    <string name="tools_edit_image_property_rotate_right">右旋转</string>
+    <string name="tools_edit_image_property_transform">翻转</string>
+    <string name="tools_edit_image_property_transparency">不透明度</string>
+    <string name="tools_edit_image_property_replace">替换</string>
+    <string name="tools_edit_image_property_export">导出</string>
+    <string name="tools_edit_image_property_crop">裁剪</string>
+
+    <string-array name="tools_edit_image_trancparancy">
+        <item> 0</item>
+        <item> 0.25</item>
+        <item> 0.5</item>
+        <item> 0.75</item>
+        <item> 1</item>
+    </string-array>
+
+    <string-array name="tools_edit_image_trancparancy_value">
+        <item>0</item>
+        <item>0.25</item>
+        <item>0.5</item>
+        <item>0.75</item>
+        <item>1</item>
+    </string-array>
+    <string name="tools_blank_page">插入空白页</string>
+    <string name="tools_pdf_page">从其他PDF</string>
+    <string name="tools_edit_text_property_title">文字属性</string>
+    <string name="tools_context_menu_add_text">添加文字</string>
+    <string name="tools_context_menu_add_image">添加图片</string>
+    <string name="tools_context_menu_paste">粘贴</string>
+    <string name="tools_page_edit_insert_page_blank">插入空白页</string>
+
+    <string name="tools_context_menu_select">选择</string>
+    <string name="tools_context_menu_select_all">全选</string>
+    <string name="tools_context_menu_select_paste">仅保留文本</string>
+    <string name="tools_context_menu_select_paste_with_style">保留源格式粘贴</string>
+    <string name="tools_context_menu_image_horizental_mirror">水平翻转</string>
+    <string name="tools_context_menu_image_vertical_mirror">垂直翻转</string>
+    <string name="tools_context_menu_image_replace">替换</string>
+    <string name="tools_context_menu_image_extract">导出</string>
+    <string name="tools_context_menu_image_transparancy">不透明度</string>
+    <string name="tools_context_menu_image_copy">复制</string>
+    <string name="tools_context_menu_image_cut">裁切</string>
+
+    <string name="tools_context_menu_image_crop_done">保存</string>
+    <string name="tools_context_menu_image_crop_cancel">取消</string>
+
+    <string name="tools_context_menu_transparacy_0">0</string>
+    <string name="tools_context_menu_transparacy_25">25%</string>
+    <string name="tools_context_menu_transparacy_50">50%</string>
+    <string name="tools_context_menu_transparacy_75">75%</string>
+    <string name="tools_context_menu_transparacy_100">100%</string>
+
+    <string name="tools_edit_image_property_rotate_tools">工具</string>
+    <string name="tools_share_to">分享到</string>
+    <string name="tools_sample">Sample</string>
+    <string name="tools_export_success">导出成功</string>
+
+    <!-- Form Start-->
+    <string name="tools_text_field">文本域</string>
+    <string name="tools_field_name">名称</string>
+    <string name="tools_background_color">背景色</string>
+    <string name="tools_default_value">预设值</string>
+    <string name="tools_hide_form">隐藏表单域</string>
+    <string name="tools_multi_line">多行</string>
+
+    <string name="tools_preset_to_selected">预设为已选取</string>
+    <string name="tools_button_style">按钮样式</string>
+    <string name="tools_check_box">复选框</string>
+    <string name="tools_check_color">勾选色</string>
+    <string name="tools_check_box_check">勾选</string>
+    <string name="tools_check_box_circle">圆形</string>
+    <string name="tools_check_box_cross">分叉</string>
+    <string name="tools_check_box_diamond">菱形</string>
+    <string name="tools_check_box_square">方形</string>
+    <string name="tools_check_box_start">星形</string>
+    <string name="tools_check_radio_button">单选按钮</string>
+    <string name="tools_check_list_box">列表框</string>
+    <string name="tools_edit_list_box">编辑列表框</string>
+    <string name="tools_add_items">添加选项</string>
+    <string name="tools_combo_button">下拉菜单</string>
+    <string name="tools_edit_combo_box">编辑下拉菜单</string>
+    <string name="tools_please_select_option">请选择您的选项</string>
+    <string name="tools_text_on_button">按钮文字</string>
+    <string name="tools_push_button">按钮</string>
+    <string name="tools_options">选项</string>
+    <!-- Form End!!!-->
+
+    <string name="tools_page_edit_toolbar_title">文档编辑器</string>
+    <string name="tools_page_edit_toolbar_done">保存</string>
+    <string name="toolsf_page_edit_insert_page_blank">插入空白页</string>
+    <string name="tools_page_edit_insert_page_pdf">从其他PDF</string>
+    <string name="tools_page_edit_insert_page_pagesize">页面大小</string>
+    <string name="tools_page_edit_insert_page_pagedirection">页面方向</string>
+    <string name="tools_page_edit_insert_page_insert_to">页面插入位置</string>
+    <string name="tools_page_edit_insert_page_home_page">首页</string>
+    <string name="tools_page_edit_insert_page_last_page">末页</string>
+    <string name="tools_page_edit_insert_page_enterpage_tint">请输入页码</string>
+    <string name="tools_page_edit_insert_page_filename">文件名</string>
+    <string name="tools_page_edit_insert_page_range">页面范围</string>
+    <string name="tools_page_edit_insert_page_allpage">所以页面</string>
+    <string name="tools_page_edit_insert_page_oddpage">奇数页</string>
+    <string name="tools_page_edit_insert_page_evenpage">偶数页</string>
+    <string name="tools_page_edit_insert_page_specifypage">自定义范围</string>
+    <string name="tools_page_edit_insert_page_before">插入到页前</string>
+    <string name="tools_page_edit_insert_page_after">插入到页后</string>
+    <string name="tools_e_g_page">例如 1,3-5,10</string>
+    <string-array name="tools_page_edit_pagesize_name">
+        <item>A3 (297 * 420mm)</item>
+        <item>A4 (210 * 297mm)</item>
+        <item>A5 (148 * 210mm)</item>
+    </string-array>
+    <string-array name="tools_page_edit_pagesize_value">
+        <item>842*1190</item>
+        <item>595*842</item>
+        <item>421*595</item>
+    </string-array>
+    <string name="tools_page_edit_select_file_tips">必须先选择一个pdf文件。</string>
+    <string name="tools_page_edit_toolbar_insert">插入</string>
+    <string name="tools_page_edit_toolbar_replace">替换</string>
+    <string name="tools_page_edit_toolbar_extract">提取</string>
+    <string name="tools_page_edit_toolbar_copy">复制</string>
+    <string name="tools_page_edit_toolbar_rotate">旋转</string>
+    <string name="tools_page_edit_toolbar_delete">删除</string>
+    <string name="tools_page_edit_alert_title">警告</string>
+    <string name="tools_page_edit_alert_content_allpage">不能删除所有页面。请至少保留一个页面。</string>
+    <string name="tools_page_edit_alert_content_nopage">未选择任何页面。</string>
+    <string name="tools_page_edit_extract_fail">提取失败</string>
+    <string name="tools_page_edit_extract_ok">提取成功！</string>
+    <string name="tools_page_edit_insert_page">页面错误</string>
+    <string name="tools_select_a_file">选择文件</string>
+    <string name="tools_page_choose_skip_input_error">无效的页码或页码超出范围。</string>
+    <string name="tools_scan_pdf_annot_warning">当前页面为图像。不支持添加高光、下划线、删除线和波浪线等注释。</string>
+    <string name="tools_repair_pdf_file_mes">由于内部错误，无法修改该文件。如果需要编辑，请将副本保存到其他文件夹。</string>
+
+    <string name="tools_can_not_edit">您暂无文档编辑权限！</string>
+    <string name="tools_reader_view_error_no_email">未发现应用程序！</string>
+    <string name="tools_reader_view_error_no_browser">未发现浏览器！</string>
+    <string name="tools_reader_view_error_invalid_link">链接无效!</string>
+
+    <!--    V2.0.0 Digital Signature-->
+    <string name="tools_digital_signature">数字签名</string>
+    <string name="tools_add_a_signature_field">添加签名域</string>
+    <string name="tools_verify_signatures">验证签名</string>
+    <string name="tools_select_a_digital_id">选择数字身份证类型：</string>
+    <string name="tools_use_a_digital_id_from_a_file">使用文件中的数字身份证</string>
+    <string name="tools_create_a_new_digital_id">创建新的数字身份证</string>
+    <string name="tools_continue">继续</string>
+    <string name="tools_certificate_file">使用文件中的证书</string>
+    <string name="tools_enter_the_password_of_the_cert_file">请输入证书密码</string>
+    <string name="tools_customize_the_signature_appearance">设置数字签名外观</string>
+    <string name="tools_text_properties">文字属性</string>
+    <string name="tools_location">位置</string>
+    <string name="tools_reason">原因</string>
+    <string name="tools_i_am_the_owner_of_the_document">我是该文档的作者</string>
+    <string name="tools_i_am_approving_the_document">我正在批准该文档</string>
+    <string name="tools_i_have_reviewed_this_document">我已审阅该文档</string>
+    <string name="tools_none">无</string>
+    <string name="tools_include_text">包含文本</string>
+    <string name="tools_distinguishable_name">辨别名</string>
+    <string name="tools_dn">DN</string>
+    <string name="tools_date">日期</string>
+    <string name="tools_logo">徽标</string>
+    <string name="tools_compdfkit_versions">ComPDFKit 版本</string>
+    <string name="tools_tab">标签</string>
+    <string name="tools_create_a_self_signed_digital_id">创建自签名数字身份证</string>
+    <string name="tools_save_a_self_signed_digital_id">保存自签名数字身份证到文件中</string>
+    <string name="tools_create_certificate_digital_id_desc">自签名数字身份证不会保证身份信息的有效性。出于这一原因，它们在某些用例中可能不被接受。</string>
+    <string name="tools_please_enter_your_name">请输入身份证名称</string>
+    <string name="tools_organization_unit">部门</string>
+    <string name="tools_enter_the_name_of_the_organization_unit">请输入部门</string>
+    <string name="tools_organization_name">单位名称</string>
+    <string name="tools_enter_the_name_of_the_organization">请输入单位名称</string>
+    <string name="tools_email_address">电子邮件地址</string>
+    <string name="tools_email_address_hint">请输入电子邮箱地址</string>
+    <string name="tools_country_region">国家/地区</string>
+    <string name="tools_country_region_hint">请选择国家/地区</string>
+    <string name="tools_save_to_file">保存到文件</string>
+    <string name="tools_certificate_digital_id_save_info">创建并保存此数字身份证后，可以再次使用它。</string>
+    <string name="tools_save_location">保存地址</string>
+    <string name="tools_set_a_password">输入密码</string>
+    <string name="tools_please_enter_your_password">请输入密码</string>
+    <string name="tools_confirm_password">重新输入密码</string>
+    <string name="tools_enter_the_password_again">请再次输入密码</string>
+    <string name="tools_confirm_password_error">密码不一致，请重新输入</string>
+    <string name="tools_signer">签署人</string>
+    <string name="tools_signing_time">签署时间</string>
+    <string name="tools_cert_auth_statement">有效性小结</string>
+    <string name="tools_signer_identity_is_valid">签名者的身份有效。</string>
+    <string name="tools_signer_identity_is_invalid">签名者的身份无效。</string>
+    <string name="tools_signer_cert_has_expired">该文件是用已过期的证书签名的。如果您最近获取了此文件，则该文件可能不真实。</string>
+    <string name="tools_sign_the_sign_is_valid">签名有效。</string>
+    <string name="tools_sign_the_sign_is_in_valid">签名无效。</string>
+    <string name="tools_sign_document_has_not_been_modified">自应用此签名以来，文档未被修改。</string>
+    <string name="tools_sign_document_has_been_modified">自当前用户签署文档以来，该文档已被更改或损坏。</string>
+
+    <string name="tools_sign_validity_is_unknown_trusted_desc">签名有效性未知，因为它未包含在您的受信任证书列表中，并且它的父证书都不是受信任证书。</string>
+
+
+
+    <string name="tools_sign_validity_is_unknown">签名有效性未知</string>
+    <string name="tools_sign_at_least_one_signature_is_invalid">至少一个签名无效，文档可能被篡改。</string>
+
+    <string name="tools_view_all_signatures">查看所有签名</string>
+    <string name="tools_signature_list">签名列表</string>
+    <string name="tools_view_cert">查看证书</string>
+    <string name="tools_import_digital_desc">浏览数字身份证文件。数字身份证受密码保护。如果你不知道密码，你就无法获取数字身份证。</string>
+    <string name="tools_close">关闭</string>
+
+    <string name="tools_permission_tips_title">所需权限</string>
+    <string name="tools_permission_tips_msg">如果没有请求的权限，此应用程序可能无法正常工作。打开应用程序设置屏幕以修改应用程序权限</string>
+
+    <string name="tools_certificate_viewer">证书查看程序</string>
+    <string name="tools_summary">小结</string>
+    <string name="tools_issued_to">颁发给</string>
+    <string name="tools_issuer">颁发者</string>
+    <string name="tools_valid_from">有效起始日期</string>
+    <string name="tools_valid_to">有效截止日期</string>
+    <string name="tools_intended_usage">预期用途</string>
+    <string name="tools_details">详细信息</string>
+    <string name="tools_version">版本</string>
+    <string name="tools_algorithm">签名算法</string>
+    <string name="tools_purpose">数字ID用于</string>
+    <string name="tools_subject">主题</string>
+    <string name="tools_serial_number">序列号</string>
+    <string name="tools_certificate_policy">证书策略</string>
+    <string name="tools_crl_distribution_point">CRL分发点</string>
+    <string name="tools_issuer_info_access">颁发机构信息访问</string>
+    <string name="tools_issuing_auth_key_identifier">颁发机构密钥标识符</string>
+    <string name="tools_subject_key_identifier">主体密钥标识符</string>
+    <string name="tools_basic_constraints">基本约束</string>
+    <string name="tools_key_usage">密钥用法</string>
+    <string name="tools_public_key">公钥</string>
+    <string name="tools_x_509_data">X.509</string>
+    <string name="tools_sha1_digest">SHA1</string>
+    <string name="tools_md5_digest">MD5</string>
+    <string name="tools_cert_details">证书详情</string>
+    <string name="tools_signed_by">签名为：</string>
+    <string name="tools_date_">日期：</string>
+    <string name="tools_status">状态：</string>
+    <string name="tools_digital_signature_detail">数字签名详细信息</string>
+    <string name="tools_digital_create_error">失败</string>
+    <string name="tools_digital_sign_success">签名成功</string>
+    <string name="tools_cert_is_trusted_to">本证书信任于：</string>
+    <string name="tools_trusted_1">签名文档或数据</string>
+    <string name="tools_trusted_2">验证文档</string>
+    <string name="tools_trust">信任</string>
+    <string name="tools_add_to_trusted_cert">添加到可信任证书</string>
+    <string name="tools_select_folder">选择文件夹</string>
+    <string name="tools_save_to_this_directory">保存到该目录</string>
+    <string name="tools_digital_signatures">数字签名</string>
+    <string name="tools_data_encryption">数据加密</string>
+    <string name="tools_digital_signatures_and_data_encryption">数字签名和数据加密</string>
+
+    <!--    Security Watermark Start! -->
+    <string name="tools_security">安全</string>
+    <string name="tools_watermark">水印</string>
+    <string name="tools_set_password_successfully">密码设置成功！</string>
+    <string name="tools_set_password_failures">密码设置失败！</string>
+    <string name="tools_password_remove_success">密码已移除！</string>
+    <string name="tools_password_remove_fail">密码移除失败！</string>
+    <string name="tools_encryption_no_encryption">无加密级别</string>
+
+    <string name="tools_watermark_removed_success">水印已移除！</string>
+    <string name="tools_watermark_removed_failed">水印移除失败！</string>
+    <string name="tools_watermark_add_success">水印添加成功！</string>
+    <string name="tools_watermark_add_failed">水印添加失败！</string>
+
+    <string name="tools_type_your_watermark_text_here">在此处输入水印文字</string>
+    <string name="tools_default_watermark_text">水印</string>
+    <string name="tools_watermark_settings">设置</string>
+    <string name="tools_layout_options">图层次序</string>
+    <string name="tools_current_page">当前页</string>
+    <string name="tools_all_page">所有页面</string>
+    <string name="tools_tile">水印平铺</string>
+    <string name="tools_choose_picture">选择图片</string>
+
+    <string name="tools_security_settings">安全设置</string>
+    <string name="tools_set_password">设置密码</string>
+    <string name="tools_password_to_open_the_document">文档开启密码</string>
+    <string name="tools_enter_password">请输入密码</string>
+    <string name="tools_owner_password">文档所有者密码</string>
+
+    <string name="tools_enter_password_can_not_be_empty">密码不能为空。</string>
+    <string name="tools_please_enter_owner_password">请输入权限密码</string>
+    <string name="tools_restrict_document_printing">禁止打印</string>
+    <string name="tools_restrict_content_copying">禁止复制</string>
+    <string name="tools_encryption_level">加密级别</string>
+    <string name="tools_setting_permission_password">设置权限密码</string>
+    <string name="tools_saving_path">文件保存路径</string>
+    <string name="tools_enter_owner_pwd_title">输入权限密码进行安全设置</string>
+    <string name="tools_password_error">密码错误，请重试</string>
+    <string name="tools_text_watermark">文字水印</string>
+    <string name="tools_save_success">保存成功</string>
+
+    <string name="tools_signature_date_pattern">yyyy-MM-dd HH:mm:ss</string>
+    <string name="tools_select_sign_type">请选择签名类型</string>
+    <string name="tools_sign_with_electronic_signatures">电子签名</string>
+    <string name="tools_sign_with_digital_signatures">数字签名（数字证书签署）</string>
+    <string name="tools_password_must_be_different">打开密码和权限密码必须不同</string>
+    <string name="tools_watermark_suffix">_水印.pdf</string>
+    <string name="tools_remove_watermark_suffix">_水印已移除.pdf</string>
+    <string name="tools_document_encryption_suffix">_已加密文档.pdf</string>
+    <string name="tools_document_encryption_remove_suffix">_密码已移除.pdf</string>
+    <string name="tools_signatures">签名</string>
+    <string name="tools_name">姓名</string>
+    <string name="tools_enter_permission_password">输入权限密码</string>
+
+
+</resources>

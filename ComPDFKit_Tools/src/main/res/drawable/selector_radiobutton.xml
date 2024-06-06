@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector>
+
+<!--    <item android:drawable="@drawable/ic_radio_btn_seleted" android:state_checked="true" android:state_enabled="true" />-->
+<!--    <item android:drawable="@drawable/ic_base_radio_unselected" />-->
+
+</selector>

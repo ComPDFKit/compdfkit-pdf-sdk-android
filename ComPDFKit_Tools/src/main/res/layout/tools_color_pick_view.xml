@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="4dp">
+
+
+    <com.compdfkit.tools.common.utils.view.colorpicker.widget.ColorRectShowView
+        android:id="@+id/id_bottom_customize_cv_indicator"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.compdfkit.tools.common.utils.view.colorpicker.widget.ColorRectShowView
+        android:id="@+id/id_bottom_customize_cv_last"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/id_bottom_customize_cv_indicator"
+        app:layout_constraintStart_toStartOf="@+id/id_bottom_customize_cv_indicator"
+        app:layout_constraintTop_toBottomOf="@+id/id_bottom_customize_cv_indicator" />
+
+    <com.compdfkit.tools.common.utils.view.colorpicker.widget.ColorRectView
+        android:id="@+id/id_bottom_customize_v_color_set"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/id_bottom_customize_cv_last"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/id_bottom_customize_cv_indicator"
+        app:layout_constraintTop_toTopOf="@+id/id_bottom_customize_cv_indicator" />
+
+    <com.compdfkit.tools.common.utils.view.colorpicker.widget.ColorAlphaSliderView
+        android:id="@+id/id_customize_color_alpha_slider"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@id/alpha_slider_value_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_bottom_customize_v_color_set" />
+
+    <com.compdfkit.tools.common.utils.view.sliderbar.CSliderBarValueView
+        android:id="@+id/alpha_slider_value_view"
+        android:layout_width="72dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@id/id_customize_color_alpha_slider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/id_customize_color_alpha_slider"
+        app:tools_show_type="percentage" />
+
+    <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
+        android:id="@+id/color_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:tools_show_color_picker="false"
+        app:layout_constraintTop_toBottomOf="@id/id_customize_color_alpha_slider" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

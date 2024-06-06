@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:id="@+id/id_stamp_activity_custom_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_custom_text_stamp_title"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:background="@color/tools_reader_setting_head_bg_color"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_text_stamp"
+                android:textColor="@color/tools_text_color_primary" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_custom_text_stamp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_custom_text_stamp_title"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="2"
+                tools:listitem="@layout/tools_properties_stamp_text_stamp_list_item" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_custom_image_stamp_title"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_below="@id/rv_custom_text_stamp"
+                android:layout_marginTop="16dp"
+                android:background="@color/tools_reader_setting_head_bg_color"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_image_stamp"
+                android:textColor="@color/tools_text_color_primary" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_custom_image_stamp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_custom_image_stamp_title"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:spanCount="1"
+                tools:itemCount="2"
+                tools:listitem="@layout/tools_properties_stamp_image_stamp_list_item" />
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_custom_stamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/tools_color_accent"
+        android:src="@drawable/tools_ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_height="?android:attr/actionBarSize">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_tool_bar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/tools_text_color_primary"
+        android:textSize="22sp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintEnd_toStartOf="@id/iv_tool_bar_select"
+        app:layout_constraintStart_toEndOf="@id/iv_tool_bar_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="22sp"
+        app:autoSizeMinTextSize="12sp"
+        android:maxLines="1"
+        android:gravity="center_vertical"
+        android:ellipsize="end"
+        tools:text="@string/tools_page_edit_toolbar_title" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_tool_bar_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:padding="6dp"
+        android:background="@drawable/tools_common_oval_ripple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tools_ic_back"
+        app:tint="@color/tools_on_primary" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_tool_bar_done"
+        android:layout_width="69dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:textColor="@color/tools_normal_btn_text_color"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/tools_style_editpage_bar_done_bg"
+        android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+        android:layout_marginEnd="16dp"
+        tools:visibility="visible"
+        android:text="@string/tools_page_edit_toolbar_done"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_tool_bar_select"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="25dp"
+        android:visibility="gone"
+        android:padding="4dp"
+        tools:visibility="visible"
+        android:background="@drawable/tools_common_oval_ripple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/tv_tool_bar_done"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tools_pageedit_bar_select"
+         />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_tool_bar_edit"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="16dp"
+        android:padding="4dp"
+        tools:visibility="gone"
+        android:background="@drawable/tools_common_oval_ripple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tools_ic_pageedit_bar_edit"
+        app:tint="@color/tools_text_color_primary"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

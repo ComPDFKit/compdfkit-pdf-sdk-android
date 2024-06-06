@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_rootView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
+
+        <com.compdfkit.tools.common.views.pdfproperties.textfields.CTextFieldsView
+            android:id="@+id/text_field_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
+            android:id="@+id/border_color_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_field_view"
+            android:title="@string/tools_line_color" />
+
+
+        <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
+            android:id="@+id/background_color_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/border_color_list_view"
+            android:title="@string/tools_background_color" />
+
+        <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
+            android:id="@+id/check_color_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/background_color_list_view"
+            android:title="@string/tools_check_color" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_check_box_type"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/tools_common_btn_rectangle_ripple"
+            app:layout_constraintTop_toBottomOf="@id/check_color_list_view">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/tools_style_fragment_sub_title_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="0dp"
+                android:text="@string/tools_button_style"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_check_box_type_item"
+                style="@style/tools_slider_bar_value_view_style"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/tools_style_preview_bg"
+                android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_check_box"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_check_style_arrow"
+                    app:layout_constraintEnd_toStartOf="@id/iv_check_style_arrow"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/iv_check_style_arrow"
+                    app:srcCompat="@drawable/tools_ic_check_box_check"
+                    app:tint="@color/tools_text_color_primary" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_check_style_arrow"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_check_box"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/tools_ic_grey_arrow"
+                    app:tint="@color/tools_text_color_primary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView
+            android:id="@+id/switch_preset_to_selected"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:title="@string/tools_preset_to_selected"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_check_box_type" />
+
+        <com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView
+            android:id="@+id/switch_hide_form"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:title="@string/tools_hide_form"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/switch_preset_to_selected"
+            app:layout_constraintVertical_bias="0" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
+

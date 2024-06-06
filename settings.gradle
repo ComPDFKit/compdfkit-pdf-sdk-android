@@ -1,0 +1,21 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "compdfkit-pdf-sdk-android"
+include ':PDFViewer'
+include ':ComPDFKit_Tools'
+include ':ComPDFKit_Repo:compdfkit'
+include ':ComPDFKit_Repo:compdfkit-ui'
+include ':Samples'
+include ':Samples_kotlin'

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layoutDirection="ltr">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginVertical="8dp"
+        android:background="@drawable/tools_annot_properties_ink_ctrl_bg"
+        android:elevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="288:40"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_ink_setting"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/tools_annot_properties_icon_btn_corner_status_bg"
+            android:foreground="@drawable/tools_common_btn_corner_ripple"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_ink_eraser"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/tools_ic_annotation_setting"
+            app:tint="@color/tools_annotation_iv_status_color" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_ink_eraser"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/tools_annot_properties_icon_btn_corner_status_bg"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_ink_undo"
+            app:layout_constraintStart_toEndOf="@id/iv_ink_setting"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/tools_ic_eraser"
+            app:tint="@color/tools_annotation_iv_status_color" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_ink_undo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/tools_annot_properties_icon_btn_corner_status_bg"
+            android:padding="4dp"
+            android:foreground="@drawable/tools_common_btn_corner_ripple"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_ink_redo"
+            app:layout_constraintStart_toEndOf="@id/iv_ink_eraser"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/tools_ic_annotation_undo"
+            app:tint="@color/tools_annotation_iv_status_color" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_ink_redo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/tools_annot_properties_icon_btn_corner_status_bg"
+            android:padding="4dp"
+            android:foreground="@drawable/tools_common_btn_corner_ripple"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/line"
+            app:layout_constraintStart_toEndOf="@id/iv_ink_undo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/tools_ic_annotation_redo"
+            app:tint="@color/tools_annotation_iv_status_color" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/tools_control_line_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_ink_clean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tools_common_btn_corner_ripple"
+            android:text="@string/tools_clean"
+            android:paddingVertical="2dp"
+            android:paddingHorizontal="6dp"
+            android:textColor="@color/tools_text_color_primary"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_ink_save"
+            app:layout_constraintStart_toEndOf="@id/line"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_ink_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tools_common_btn_corner_ripple"
+            android:paddingVertical="2dp"
+            android:paddingHorizontal="6dp"
+            android:text="@string/tools_save"
+            android:textColor="@color/tools_text_color_primary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_ink_clean"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

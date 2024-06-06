@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_height="?android:attr/actionBarSize">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_search_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:padding="6dp"
+        android:background="@drawable/tools_common_oval_ripple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tools_ic_back"
+        app:tint="@color/tools_on_primary" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_search_keywords"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:background="@null"
+        android:gravity="center_vertical"
+        android:hint="@string/tools_search_hint"
+        android:paddingHorizontal="10dp"
+        android:imeOptions="actionSearch"
+        android:singleLine="true"
+        android:textCursorDrawable="@drawable/tools_normal_et_cursor"
+        android:textColorHint="@color/tools_text_color_hint"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_search_previous"
+        app:layout_constraintStart_toEndOf="@id/iv_search_back"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_search_list"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/tools_common_oval_ripple"
+        android:padding="6dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tools_ic_search_list"
+        app:tint="@color/tools_on_primary" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_search_next"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/tools_common_oval_ripple"
+        android:padding="6dp"
+        tools:visibility="visible"
+        android:visibility="invisible"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_search_list"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tools_ic_right_arrow"
+        app:tint="@color/tools_on_primary" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_search_previous"
+        android:layout_width="40dp"
+        tools:visibility="visible"
+        android:visibility="invisible"
+        android:layout_height="40dp"
+        android:layout_marginEnd="4dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/tools_common_oval_ripple"
+        android:padding="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_search_next"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tools_ic_left_arrow"
+        app:tint="@color/tools_on_primary" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

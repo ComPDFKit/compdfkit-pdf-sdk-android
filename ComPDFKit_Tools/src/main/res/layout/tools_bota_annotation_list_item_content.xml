@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cl_root"
+    android:background="@drawable/tools_common_btn_rectangle_ripple"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp">
+
+    <FrameLayout
+        android:id="@+id/fl_annot_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/view_icon_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/tools_color_background" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_annot_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/tools_ic_annotation_highlight_normal" />
+
+    </FrameLayout>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_annot_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/tools_text_color_primary"
+        app:layout_constraintBottom_toBottomOf="@id/fl_annot_icon"
+        app:layout_constraintStart_toEndOf="@id/fl_annot_icon"
+        app:layout_constraintTop_toTopOf="@id/fl_annot_icon"
+        tools:text="@tools:sample/date/ddmmyy" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_annot_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/tools_text_color_secondary"
+        android:visibility="visible"
+        app:layout_constrainedWidth="true"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fl_annot_icon"
+        tools:text="@tools:sample/lorem/random" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

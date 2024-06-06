@@ -1,0 +1,180 @@
+<resources>
+
+    <style name="tools_dialog_button_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/tools_normal_btn_text_color</item>
+        <item name="android:background">@drawable/tools_common_btn_corner_ripple</item>
+    </style>
+
+    <style name="tools_popup_menu_style" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:popupBackground">@color/tools_color_background</item>
+        <item name="android:textColor">@color/tools_subtitle_1_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="tools_document_info_header">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:textColor">@color/tools_text_color_primary</item>
+        <item name="android:background">@color/tools_reader_setting_head_bg_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="tools_document_info_title">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintHorizontal_weight">1</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:textColor">@color/tools_text_color_primary</item>
+        <item name="android:gravity">start|center_vertical</item>
+
+    </style>
+
+    <style name="tools_document_info_subTitle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:gravity">end|center_vertical</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintHorizontal_weight">2</item>
+        <item name="android:textColor">@color/tools_color_accent</item>
+    </style>
+
+    <style name="tools_document_info_item_style">
+        <item name="android:background">?android:attr/colorBackground</item>
+    </style>
+
+    <style name="tools_document_info_dividing_line_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">@color/tools_item_dividing_line_color</item>
+    </style>
+
+    <style name="tools_pdf_reader_setting_item_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:textColor">@color/tools_text_color_primary</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="tools_pdf_reader_mode_radio_button_style" parent="tools_pdf_reader_setting_item_style">
+        <item name="android:button">@null</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:drawableEnd">@drawable/tools_reader_settings_page_mode_radio_button
+        </item>
+        <item name="android:background">@drawable/tools_reader_settings_radio_button_ripple</item>
+    </style>
+
+    <style name="tools_dialog_fragment_style" parent="Theme.MaterialComponents.DayNight.Dialog">
+        <item name="android:windowBackground">?android:attr/colorSecondary</item>
+    </style>
+
+    <style name="tools_annotation_tool_bar_item_iv_style">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+    </style>
+
+    <style name="tools_basic_bottom_sheet_style" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:background">@color/tools_color_background</item>
+        <item name="android:maxWidth">@dimen/material_bottom_sheet_max_width</item>
+    </style>
+
+
+    <style name="tools_transparent_bottom_sheet_style" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:maxWidth">@dimen/material_bottom_sheet_max_width</item>
+    </style>
+
+    <style name="tools_basic_bottom_sheet_style.fillscreen" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:background">@color/tools_color_background</item>
+    </style>
+
+    <style name="tools_popwindow_anim_style">
+        <item name="android:windowEnterAnimation">@anim/tools_pop_show</item>
+        <item name="android:windowExitAnimation">@anim/tools_pop_hide</item>
+    </style>
+
+    <style name="tools_tab_layout_text_style" parent="TextAppearance.AppCompat.Button">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="tools_style_fragment_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.8dp</item>
+        <item name="android:background">@color/tools_control_line_color</item>
+    </style>
+
+    <style name="tools_slider_bar_value_view_style">
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">28dp</item>
+    </style>
+
+    <style name="tools_seek_bar_style" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/tools_seek_bar_progress_drawable</item>
+        <item name="android:maxHeight">2dp</item>
+        <item name="android:minHeight">2dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:thumb">@drawable/tools_seek_bar_thumb_drawable</item>
+    </style>
+
+    <style name="tools_style_fragment_sub_title_style">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/tools_style_title_color</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+    </style>
+
+    <style name="tools_fade_anim_dialog_style">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="tools_context_menu_item_style" parent="ContextMenuItemTheme">
+        <item name="android:textColor">@color/tools_text_color_primary</item>
+        <item name="android:background">@drawable/tools_common_btn_corner_ripple</item>
+    </style>
+
+    <style name="tools_edit_page_insertpage_pagesize_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="layout_constraintHorizontal_weight">2</item>
+        <item name="android:textColor">@color/tools_themes_dark</item>
+    </style>
+
+
+    <style name="tools_edit_page_insertpage_cursize_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxWidth">200dp</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/tools_themes_dark</item>
+    </style>
+
+    <style name="tools_dialog_theme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:colorAccent">@color/tools_color_accent</item>
+        <item name="colorPrimary">@color/tools_color_primary</item>
+        <item name="colorPrimaryContainer">@color/tools_primary_container</item>
+        <item name="colorSecondary">@color/tools_secondary</item>
+        <item name="colorAccent">@color/tools_color_accent</item>
+    </style>
+</resources>

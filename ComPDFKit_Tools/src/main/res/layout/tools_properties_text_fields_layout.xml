@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_fields_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/tools_style_fragment_sub_title_style"
+        android:text="@string/tools_field_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/tools_style_text_stamp_edit_text_bg"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="6dp"
+        android:textColor="@color/tools_text_color_primary"
+        android:textColorHint="@color/tools_text_color_hint"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_fields_title" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

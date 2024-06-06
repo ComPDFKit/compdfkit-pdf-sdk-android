@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/cl_rootView">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_add_text_stamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/tools_common_oval_ripple"
+        android:src="@drawable/tools_ic_text_stamp"
+        app:layout_constraintBottom_toTopOf="@id/iv_add_image_stamp"
+        app:layout_constraintEnd_toEndOf="@id/fab_add_custom_stamp"
+        app:layout_constraintStart_toStartOf="@id/fab_add_custom_stamp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_add_text_stamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/tools_text_stamp"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_add_text_stamp"
+        app:layout_constraintEnd_toStartOf="@id/iv_add_text_stamp"
+        app:layout_constraintTop_toTopOf="@id/iv_add_text_stamp" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_add_image_stamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/tools_common_oval_ripple"
+        android:src="@drawable/tools_ic_image_stamp"
+        app:layout_constraintBottom_toTopOf="@id/fab_add_custom_stamp"
+        app:layout_constraintEnd_toEndOf="@id/fab_add_custom_stamp"
+        app:layout_constraintStart_toStartOf="@id/fab_add_custom_stamp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_add_image_stamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/tools_image_stamp"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_add_image_stamp"
+        app:layout_constraintEnd_toStartOf="@id/iv_add_image_stamp"
+        app:layout_constraintTop_toTopOf="@id/iv_add_image_stamp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_custom_stamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/tools_color_accent"
+        android:src="@drawable/tools_ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

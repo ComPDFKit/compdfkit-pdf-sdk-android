@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Tools_Base_Theme"
+    android:layout_width="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/ll_menu"
+    android:gravity="center_vertical"
+    android:layout_height="?android:attr/actionBarSize"
+    android:layout_gravity="center_vertical"
+    android:theme="@style/Tools_Base_Theme">
+
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/iv_tool_bar_thumbnail"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:background="@drawable/tools_common_oval_ripple"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:padding="8dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintDimensionRatio="1:1"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/iv_tool_bar_search"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/tools_ic_thumbnail"-->
+<!--        app:tint="@color/tools_icon_status_color" />-->
+
+
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/iv_tool_bar_search"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:background="@drawable/tools_common_oval_ripple"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:padding="8dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintDimensionRatio="1:1"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/iv_tool_bar_bota"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/tools_ic_search"-->
+<!--        app:tint="@color/tools_icon_status_color" />-->
+
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/iv_tool_bar_bota"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:background="@drawable/tools_common_oval_ripple"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:padding="8dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintDimensionRatio="1:1"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/iv_tool_bar_more"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/tools_ic_bookmark"-->
+<!--        app:tint="@color/tools_icon_status_color" />-->
+
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/iv_tool_bar_more"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:background="@drawable/tools_common_oval_ripple"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:padding="8dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintDimensionRatio="1:1"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/tools_ic_more"-->
+<!--        app:tint="@color/tools_icon_status_color" />-->
+
+
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tools_opacity"
+        style="@style/tools_style_fragment_sub_title_style"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/fl_seek_bar"
+        android:layout_width="0dp"
+        android:minHeight="30dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/value_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_message"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginHorizontal="4dp"
+        >
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/seek_bar"
+            style="@style/tools_seek_bar_style"
+            android:layout_width="match_parent"
+            android:max="100"
+            android:layout_gravity="center"
+            android:progress="50"
+            />
+
+    </FrameLayout>
+
+    <com.compdfkit.tools.common.utils.view.sliderbar.CSliderBarValueView
+        android:id="@+id/value_view"
+        style="@style/tools_slider_bar_value_view_style"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/fl_seek_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fl_seek_bar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

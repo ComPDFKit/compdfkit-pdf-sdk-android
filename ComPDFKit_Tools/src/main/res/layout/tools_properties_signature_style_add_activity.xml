@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <com.compdfkit.tools.common.views.CToolBar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tools_toolbar_back_icon="@drawable/tools_ic_back"
+        android:title="@string/tools_annot_new_signature"
+        >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/tools_properties_signature_add_sign"
+            android:minWidth="70dp"
+            android:text="@string/tools_save"
+            android:textColor="@color/tools_color_accent"
+            android:textSize="16sp" />
+
+    </com.compdfkit.tools.common.views.CToolBar>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tools_reader_setting_head_bg_color"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar">
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_add_draw_signature"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginVertical="7dp"
+            android:layout_marginStart="21dp"
+            android:background="@drawable/tools_annot_properties_signature_type_btn_bg"
+            android:foreground="@drawable/tools_common_btn_corner_ripple"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/tools_icon_status_color"
+            app:srcCompat="@drawable/tools_ic_sketch" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_add_text_signature"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/tools_annot_properties_signature_type_btn_bg"
+            android:foreground="@drawable/tools_common_btn_corner_ripple"
+            android:padding="4dp"
+            app:tint="@color/tools_icon_status_color"
+            app:layout_constraintBottom_toBottomOf="@id/iv_add_draw_signature"
+            app:layout_constraintStart_toEndOf="@id/iv_add_draw_signature"
+            app:layout_constraintTop_toTopOf="@id/iv_add_draw_signature"
+            app:srcCompat="@drawable/tools_ic_annotation_freetext" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_add_pic_signature"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/tools_annot_properties_signature_type_btn_bg"
+            android:foreground="@drawable/tools_common_btn_corner_ripple"
+            android:padding="4dp"
+            app:tint="@color/tools_icon_status_color"
+            app:layout_constraintBottom_toBottomOf="@id/iv_add_draw_signature"
+            app:layout_constraintStart_toEndOf="@id/iv_add_text_signature"
+            app:layout_constraintTop_toTopOf="@id/iv_add_draw_signature"
+            app:srcCompat="@drawable/tools_ic_annotation_pic" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_none"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/tools_annot_properties_signature_type_btn_bg"
+            android:foreground="@drawable/tools_common_btn_corner_ripple"
+            android:padding="4dp"
+            app:tint="@color/tools_icon_status_color"
+            app:layout_constraintBottom_toBottomOf="@id/iv_add_draw_signature"
+            app:layout_constraintStart_toEndOf="@id/iv_add_pic_signature"
+            app:layout_constraintTop_toTopOf="@id/iv_add_draw_signature"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:srcCompat="@drawable/tools_ic_sign_none" />
+
+
+        <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
+            android:id="@+id/color_list_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            app:tools_color_list="@array/tools_annot_signature_colors"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_add_pic_signature"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tools_show_title="false" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_thickness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tools_reader_setting_head_bg_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_menu">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_thickness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="6dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/tools_thickness"
+            android:textColor="@color/tools_style_title_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/seek_bar_thickness"
+            style="@style/tools_seek_bar_style"
+            android:layout_width="0dp"
+            android:max="100"
+            android:progress="20"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_thickness"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_content_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_thickness">
+
+
+        <com.compdfkit.tools.common.views.pdfproperties.writing.CPDFSignatureEditView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/writing_view"
+            />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center"
+            android:hint="@string/tools_enter_your_signature"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/tools_text_color_hint"
+            android:textSize="20sp"
+            android:visibility="gone" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_import_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="32dp"
+            android:visibility="gone"
+            app:cardElevation="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:src="@tools:sample/avatars" />
+
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_clean"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/tools_style_title_color"
+        android:src="@drawable/tools_ic_eraser"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="40dp"
+        android:contentDescription="add pic"
+        android:src="@drawable/tools_ic_add"
+        app:tint="@android:color/white"
+        android:visibility="gone"
+        android:backgroundTint="@color/tools_color_accent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

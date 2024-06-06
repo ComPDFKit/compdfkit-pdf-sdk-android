@@ -1,8 +1,72 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '7.3.1' apply false
-    id 'com.android.library' version '7.3.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
+    id 'com.android.application'
 }
 
-apply from: "config.gradle"
+android {
+    namespace 'com.compdfkit.samples'
+    compileSdk rootProject.ext.android.COMPILESDK
+
+    defaultConfig {
+        applicationId "com.compdfkit.samples"
+        minSdk 26
+        targetSdk rootProject.ext.android.TARGETSDK
+        versionCode rootProject.ext.android.VERSIONCODE as int
+        versionName rootProject.ext.sdk.COMPDFKit_SDK_VERSION
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    if (outputFileName.toLowerCase().endsWith('unsigned.apk')) {
+                        outputFileName = "Samples_ComPDFKit.apk"
+                    }
+                }
+            }
+        }
+        debug {
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    if (outputFileName.toLowerCase().endsWith('debug.apk')) {
+                        outputFileName = "Samples_ComPDFKit.apk"
+                    }
+                }
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        pickFirst 'META-INF/spring.factories'
+        pickFirst 'META-INF/license.txt'
+        pickFirst 'META-INF/DEPENDENCIES'
+        pickFirst 'META-INF/web-fragment.xml'
+        pickFirst 'META-INF/LICENSE.md'
+        pickFirst 'META-INF/NOTICE.md'
+        pickFirst 'META-INF/spring.schemas'
+        pickFirst 'META-INF/spring.tooling'
+        pickFirst 'META-INF/spring.handlers'
+        pickFirst 'META-INF/spring-configuration-metadata.json'
+        pickFirst 'META-INF/additional-spring-configuration-metadata.json'
+        pickFirst 'META-INF/notice.txt'
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    api project(path:':ComPDFKit_Repo:compdfkit')
+    api project(path:':ComPDFKit_Repo:compdfkit-ui')
+    api 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+
+    api 'androidx.documentfile:documentfile:1.0.1'
+}

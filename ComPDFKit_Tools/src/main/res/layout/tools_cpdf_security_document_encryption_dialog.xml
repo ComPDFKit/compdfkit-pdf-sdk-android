@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.compdfkit.tools.common.views.CToolBar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:elevation="4dp"
+        android:title="@string/tools_security_settings"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tools_toolbar_back_icon="@drawable/tools_ic_back">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_done"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/tools_properties_signature_add_sign"
+            android:minWidth="70dp"
+            android:text="@string/tools_page_edit_toolbar_done"
+            android:textColor="@color/tools_color_accent"
+            android:textSize="16sp" />
+
+    </com.compdfkit.tools.common.views.CToolBar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_setting_password_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/tools_password_to_open_the_document"
+                android:textColor="@color/tools_text_color_primary"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Switch
+                android:id="@+id/sw_setting_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:checked="false"
+                app:layout_constraintBottom_toBottomOf="@id/tv_setting_password_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_setting_password_title" />
+
+            <View
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/tools_item_dividing_line_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_setting_password_title" />
+
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_user_password"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@null"
+                android:enabled="false"
+                android:gravity="center_vertical"
+                android:hint="@string/tools_set_password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingStart="8dp"
+                android:textColorHint="@color/tools_text_color_hint"
+                android:textSize="13sp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/iv_user_pwd_show"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line1" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_user_pwd_show"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="24dp"
+                android:padding="2dp"
+                app:layout_constraintBottom_toBottomOf="@id/et_user_password"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/et_user_password"
+                app:srcCompat="@drawable/tools_btn_eyes_visible_selector" />
+
+            <View
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/tools_reader_setting_head_bg_color"
+                app:layout_constraintTop_toBottomOf="@id/et_user_password" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_permission_password_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/tools_owner_password"
+                android:textColor="@color/tools_text_color_primary"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line2" />
+
+            <Switch
+                android:id="@+id/sw_setting_permission_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:checked="false"
+                app:layout_constraintBottom_toBottomOf="@id/tv_permission_password_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_permission_password_title" />
+
+            <View
+                android:id="@+id/line3"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/tools_item_dividing_line_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sw_setting_permission_password" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_owner_password"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@null"
+                android:enabled="false"
+                android:gravity="center_vertical"
+                android:hint="@string/tools_set_password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingStart="8dp"
+                android:textColorHint="@color/tools_text_color_hint"
+                android:textSize="13sp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/iv_owner_pwd_show"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line3" />
+
+            <View
+                android:id="@+id/line4"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/tools_item_dividing_line_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_owner_password" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_owner_pwd_show"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="24dp"
+                android:padding="2dp"
+                app:layout_constraintBottom_toBottomOf="@id/et_owner_password"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/et_owner_password"
+                app:srcCompat="@drawable/tools_btn_eyes_visible_selector" />
+
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/cb_print"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:button="@drawable/tools_ic_digital_sign_checkbox"
+                android:enabled="false"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:text="@string/tools_restrict_document_printing"
+                android:textColor="@color/tools_text_color_disable"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_owner_password" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/cb_copy"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:button="@drawable/tools_ic_digital_sign_checkbox"
+                android:enabled="false"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:text="@string/tools_restrict_content_copying"
+                android:textColor="@color/tools_text_color_disable"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cb_print" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_owner_functions"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/tools_reader_setting_head_bg_color"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/tools_text_color_disable"
+                android:textSize="11sp"
+                app:layout_constraintTop_toBottomOf="@id/cb_copy" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_encryption_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/tools_encryption_level"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_owner_functions" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/tools_bg_import_certificate_digital_id_item"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="@id/tv_encryption_level"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toEndOf="@id/tv_encryption_level"
+                app:layout_constraintTop_toTopOf="@id/tv_encryption_level">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_cryptographic_level"
+                    android:layout_width="wrap_content"
+                    android:minWidth="170dp"
+                    android:layout_height="match_parent"
+                    android:dropDownSelector="@color/tools_color_primary"
+                    android:popupBackground="@drawable/tools_common_window_bg" />
+
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

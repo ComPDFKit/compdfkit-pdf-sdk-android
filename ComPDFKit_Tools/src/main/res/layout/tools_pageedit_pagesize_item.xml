@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:theme="@style/Tools_Base_Theme.BasicBottomSheetDialogStyle"
+    style="@style/Tools_Base_Theme.BasicBottomSheetDialogStyle"
+    android:layout_height="@dimen/tools_pageedit_line_height"
+    android:textColor="@color/tools_radio_btn_text_status_color"
+    android:text="@string/tools_page_edit_insert_page_allpage"/>
+

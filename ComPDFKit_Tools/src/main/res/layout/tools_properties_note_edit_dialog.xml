@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tools_properties_note_dialog_bg">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/id_note_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:background="@null"
+        android:gravity="start|top"
+        android:textCursorDrawable="@drawable/tools_normal_et_cursor"
+        android:textColor="@color/tools_annot_icon_select_color"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/id_note_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/id_note_delete"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/tools_common_oval_ripple"
+        android:padding="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:srcCompat="@drawable/tools_ic_delete" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/id_note_save"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/tools_common_oval_ripple"
+        android:padding="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/id_note_delete"
+        app:srcCompat="@drawable/tools_ic_save" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

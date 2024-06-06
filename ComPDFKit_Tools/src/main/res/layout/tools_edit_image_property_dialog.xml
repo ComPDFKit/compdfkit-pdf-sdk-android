@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_rootView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
+
+
+        <com.compdfkit.tools.common.views.pdfproperties.preview.CStylePreviewView
+            android:id="@+id/style_preview"
+            android:layout_width="228dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tools_annot_type="editImage" />
+
+        <View
+            android:id="@+id/line"
+            style="@style/tools_style_fragment_line"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/style_preview" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_rotate"
+            style="@style/tools_style_fragment_sub_title_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tools_edit_image_property_rotate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl_left_rotate"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="@dimen/tools_edit_image_property_left"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/tools_style_preview_bg"
+            android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+            app:layout_constraintEnd_toStartOf="@+id/rl_right_rotate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_rotate">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_left_rotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_left_rotate"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/tools_ic_edit_left_rotate"
+                app:tint="@color/tools_text_color_primary" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_left_rotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:gravity="center_vertical"
+                android:text="@string/tools_edit_image_property_rotate_left"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintBottom_toBottomOf="@id/iv_left_rotate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toEndOf="@id/iv_left_rotate"
+                app:layout_constraintTop_toTopOf="@id/iv_left_rotate" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl_right_rotate"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/tools_edit_image_property_left"
+            android:background="@drawable/tools_style_preview_bg"
+            android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rl_left_rotate"
+            app:layout_constraintTop_toBottomOf="@+id/tv_rotate">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_right_rotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_right_rotate"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/tools_ic_edit_right_rotate"
+                app:tint="@color/tools_text_color_primary" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_right_rotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:gravity="center_vertical"
+                android:text="@string/tools_edit_image_property_rotate_right"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintBottom_toBottomOf="@id/iv_right_rotate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toEndOf="@id/iv_right_rotate"
+                app:layout_constraintTop_toTopOf="@id/iv_right_rotate" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_mirror"
+            style="@style/tools_style_fragment_sub_title_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/tools_edit_image_property_transform"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rl_left_rotate" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_mirror"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/tools_annotation_font_alignment_root_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_mirror">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_horizontal_mirror"
+                android:layout_width="49dp"
+                android:layout_height="32dp"
+                android:background="@drawable/tools_common_btn_rectangle_ripple"
+                android:paddingStart="12dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/tools_ic_edit_hmirror"
+                app:tint="@color/tools_font_style_iv_color" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_verticle_mirror"
+                android:layout_width="49dp"
+                android:layout_height="32dp"
+                android:background="@drawable/tools_common_btn_rectangle_ripple"
+                android:paddingStart="12dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="4dp"
+                app:layout_constraintStart_toEndOf="@+id/iv_horizontal_mirror"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/tools_ic_edit_vmirror"
+                app:tint="@color/tools_font_style_iv_color" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar
+            android:id="@+id/opacity_slider_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="255"
+            android:progress="255"
+            app:layout_constraintTop_toBottomOf="@id/cl_mirror"
+            app:tools_slider_bar_value_show_type="percentage"
+            android:title="@string/tools_opacity" />
+
+        <TextView
+            android:id="@+id/tv_tools"
+            style="@style/tools_style_fragment_sub_title_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/tools_edit_image_property_left"
+            android:text="@string/tools_edit_image_property_rotate_tools"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/opacity_slider_bar" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl_replace"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="@dimen/tools_edit_image_property_left"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/tools_style_preview_bg"
+            android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rl_export"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tools"
+            app:layout_constraintVertical_bias="0">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_replace"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_replace"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/tools_ic_edit_replace"
+                app:tint="@color/tools_text_color_primary" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_replace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+                android:text="@string/tools_edit_image_property_replace"
+                android:textColor="@color/tools_text_color_primary"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toEndOf="@id/iv_replace"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl_export"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/tools_style_preview_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/rl_crop"
+            app:layout_constraintStart_toEndOf="@id/rl_replace"
+            app:layout_constraintTop_toTopOf="@id/rl_replace"
+            app:layout_constraintVertical_bias="0">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_export"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_export"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                app:srcCompat="@drawable/tools_ic_edit_export"
+                app:tint="@color/tools_text_color_primary" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_export"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/tools_edit_image_property_export"
+                android:textColor="@color/tools_text_color_primary"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_export"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl_crop"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="@dimen/tools_edit_image_property_left"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/tools_style_preview_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/rl_export"
+            app:layout_constraintTop_toTopOf="@id/rl_replace"
+            app:layout_constraintVertical_bias="0">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_crop"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_crop"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/tools_ic_edit_crop"
+                app:tint="@color/tools_text_color_primary" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_crop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_marginStart="4dp"
+                android:gravity="center_vertical"
+                android:text="@string/tools_edit_image_property_crop"
+                android:textColor="@color/tools_text_color_primary"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_crop"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

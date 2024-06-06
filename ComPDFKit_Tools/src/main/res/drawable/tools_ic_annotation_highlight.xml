@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true" android:drawable="@drawable/tools_ic_annotation_highlight_select"/>
+    <item android:drawable="@drawable/tools_ic_annotation_highlight_normal"/>
+</selector>

@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.compdfkit.tools.common.views.CToolBar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:title="@string/tools_document_info" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:layoutDirection="ltr"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/tools_document_info_header"
+                android:text="@string/tools_reader_pdf_info_abstract" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_document_info_name_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_fileName"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_fileName"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_fileName"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_document_info_name_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="PDF Guide PDF.pdf" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_document_size_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_size"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_size"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_size"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_document_size_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="13.23M" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_title"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_title"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_title"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Title_1" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_author_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_author"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_author"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_author"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_author_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Kdan Mobile" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_infp_subject_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_subject"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_subject"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_subject"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_infp_subject_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Subject" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_keywords_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_keywords"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_keywords"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_keywords"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_keywords_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="PDF、Word、Excel" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/tools_document_info_header"
+                android:text="@string/tools_reader_pdf_info_createInfo" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_version_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_version"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_version"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_version"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_version_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="1" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_pages_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_pages"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_pages"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_pages"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_pages_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="30" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_creator_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_creator"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_creator"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_creator"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_creator_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@tools:sample/first_names" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_creation_date_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_creationDate"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_creationDate"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_creationDate"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_creation_date_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@tools:sample/date/ddmmyy" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_modification_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_modification"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_modification"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_modification"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_modification_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@tools:sample/date/ddmmyy" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/tools_document_info_header"
+                android:text="@string/tools_reader_pdf_info_accessPer" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_allow_print_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_allowPrint"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_allowPrint"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_allowPrint"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_allow_print_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="YES" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_allow_copy_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_allowCopy"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_allowCopy"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_allowCopy"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_allow_copy_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="YES" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_chagne_1"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_allows_document_changes"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_document_changes"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_document_changes"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_chagne_1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="YES" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_allow_assembly_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_allows_document_assembly"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_document_assembly"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_document_assembly"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_allow_assembly_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="YES" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_allow_commenting_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_allows_document_commenting"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_document_commenting"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_document_commenting"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_allow_commenting_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="YES" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/tools_document_info_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pdf_info_allow_form_title"
+                    style="@style/tools_document_info_title"
+                    android:text="@string/tools_reader_pdf_info_allows_document_form_field_entry"
+                    app:layout_constraintEnd_toStartOf="@id/id_pdf_info_document_form_field_entry"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/id_pdf_info_document_form_field_entry"
+                    style="@style/tools_document_info_subTitle"
+                    app:layout_constraintStart_toEndOf="@id/tv_pdf_info_allow_form_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="YES" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

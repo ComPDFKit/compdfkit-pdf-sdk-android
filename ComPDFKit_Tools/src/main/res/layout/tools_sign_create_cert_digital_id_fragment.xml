@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tools_annot_style_dialog_window_bg">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tools_dialog_tool_bar" />
+
+
+    <ViewSwitcher
+        android:id="@+id/view_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:inAnimation="@anim/tools_slide_in_right"
+        android:outAnimation="@anim/tools_slide_out_left"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar">
+
+        <include
+            layout="@layout/tools_sign_create_cert_digital_id_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            layout="@layout/tools_sign_create_cert_digital_id_save_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ViewSwitcher>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

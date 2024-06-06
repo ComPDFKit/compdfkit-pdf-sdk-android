@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_save_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/tools_reader_setting_head_bg_color"
+            android:lineSpacingMultiplier="1.25"
+            android:padding="16dp"
+            android:text="@string/tools_certificate_digital_id_save_info"
+            android:textColor="@color/tools_text_color_primary"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:constraint_referenced_ids="ll_save_address,et_password,et_confirm_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_save_desc" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_save_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_save_address_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tools_save_location"
+                android:textColor="@color/tools_text_color_disable"
+                app:layout_constraintStart_toStartOf="@id/tv_save_desc" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_save_address"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/tools_bg_import_certificate_digital_id_item"
+                android:ellipsize="start"
+                android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:textColor="@color/tools_text_color_primary"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Document/compdfkit" />
+
+        </LinearLayout>
+
+
+        <com.compdfkit.tools.common.utils.view.CEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tools_please_enter_your_password"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:title="@string/tools_set_a_password" />
+
+        <com.compdfkit.tools.common.utils.view.CEditText
+            android:id="@+id/et_confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tools_enter_the_password_again"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:title="@string/tools_confirm_password" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_password_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/tools_confirm_password_error"
+            android:textColor="@color/tools_error"
+            android:visibility="gone"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/et_confirm_password"
+            app:layout_constraintTop_toBottomOf="@id/et_confirm_password"
+            tools:visibility="visible" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/tools_verify_pwd_confirm_btn_bg"
+            android:elevation="0dp"
+            android:text="@string/tools_okay"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_password_error"
+            app:layout_constraintVertical_bias="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+
+
+
+

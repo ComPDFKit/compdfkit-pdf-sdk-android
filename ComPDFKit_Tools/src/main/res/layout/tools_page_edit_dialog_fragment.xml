@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.compdfkit.tools.docseditor.CPageEditBar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tools_pageeditbar_back_icon="@drawable/tools_ic_back"
+        android:title="@string/tools_page_edit_toolbar_title" />
+
+    <fragment
+        android:id="@+id/id_edit_thumbnail_fragment"
+        android:name="com.compdfkit.tools.viewer.pdfthumbnail.CPDFEditThumbnailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tools:layout="@layout/tools_bota_thumbnail_list_fragment"
+        app:layout_constraintBottom_toTopOf="@+id/tool_page_edit_bar"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar"/>
+
+    <com.compdfkit.tools.docseditor.CPageEditToolBar
+        android:id="@+id/tool_page_edit_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

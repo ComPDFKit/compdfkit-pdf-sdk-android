@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_height="?android:attr/actionBarSize"
+    android:background="@color/tools_color_primary"
+    android:elevation="4dp">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_annotation"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ll_annotation_attr"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/tools_fun_tool_bar_list_item" />
+
+    <LinearLayout
+        android:id="@+id/ll_annotation_attr"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/tools_color_primary"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/rv_annotation"
+        android:paddingHorizontal="4dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="4dp"
+            android:background="@color/tools_control_line_color"
+            />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_annotation_attr_settings"
+            style="@style/tools_annotation_tool_bar_item_iv_style"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/tools_common_btn_corner_ripple"
+            android:padding="3dp"
+            app:tint="@color/tools_annotation_iv_status_color"
+            app:srcCompat="@drawable/tools_ic_annotation_setting" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_annotation_attr_undo"
+            style="@style/tools_annotation_tool_bar_item_iv_style"
+            app:srcCompat="@drawable/tools_ic_annotation_undo"
+            android:layout_marginStart="12dp"
+            android:padding="3dp"
+            app:tint="@color/tools_annotation_iv_status_color"
+            android:background="@drawable/tools_common_btn_corner_ripple"
+            />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_annotation_attr_redo"
+            style="@style/tools_annotation_tool_bar_item_iv_style"
+            android:background="@drawable/tools_common_btn_corner_ripple"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="4dp"
+            android:padding="3dp"
+            app:tint="@color/tools_annotation_iv_status_color"
+            app:srcCompat="@drawable/tools_ic_annotation_redo" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

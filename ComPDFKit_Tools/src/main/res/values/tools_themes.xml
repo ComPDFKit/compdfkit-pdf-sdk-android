@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+
+    <style name="Tools_Base_Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/tools_color_primary</item>
+        <item name="android:colorAccent">@color/tools_color_accent</item>
+        <item name="colorAccent">@color/tools_color_accent</item>
+        <item name="colorOnPrimary">@color/tools_on_primary</item>
+        <item name="colorPrimaryContainer">@color/tools_primary_container</item>
+        <item name="colorSecondary">@color/tools_secondary</item>
+        <item name="android:textColorPrimary">@color/tools_text_color_primary</item>
+        <item name="android:textColorSecondary">@color/tools_text_color_secondary</item>
+        <item name="android:textColorHint">@color/tools_text_color_hint</item>
+        <item name="colorError">@color/tools_error</item>
+        <item name="android:colorBackground">@color/tools_color_background</item>
+        <item name="android:statusBarColor">@color/tools_color_primary</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="textAppearanceSubtitle1">@style/ToolsTextAppearanceSubtitle1</item>
+        <item name="textAppearanceButton">@style/ToolsAppTextAppearance.Button</item>
+        <item name="colorControlActivated">@color/tools_color_accent</item>
+    </style>
+
+    <style name="ToolsTextAppearanceSubtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/tools_subtitle_1_color</item>
+        <item name="android:lineSpacingExtra">5sp</item>
+    </style>
+
+    <style name="ToolsAppTextAppearance.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textColor">@color/tools_color_accent</item>
+    </style>
+
+    <style name="Tools_Base_Theme.BasicBottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="colorPrimary">@color/tools_color_primary</item>
+        <item name="android:colorAccent">@color/tools_color_accent</item>
+        <item name="colorAccent">@color/tools_color_accent</item>
+        <item name="colorOnPrimary">@color/tools_on_primary</item>
+        <item name="colorPrimaryContainer">@color/tools_primary_container</item>
+        <item name="colorSecondary">@color/tools_secondary</item>
+        <item name="android:textColorPrimary">@color/tools_text_color_primary</item>
+        <item name="android:textColorSecondary">@color/tools_text_color_secondary</item>
+        <item name="colorError">@color/tools_error</item>
+        <item name="android:colorBackground">@color/tools_color_background</item>
+        <item name="android:statusBarColor">@color/tools_color_primary</item>
+        <item name="android:isLightTheme" tools:targetApi="q">true</item>
+        <item name="textAppearanceSubtitle1">@style/ToolsTextAppearanceSubtitle1</item>
+        <item name="textAppearanceButton">@style/ToolsAppTextAppearance.Button</item>
+        <item name="bottomSheetStyle">@style/tools_basic_bottom_sheet_style</item>
+        <item name="colorControlActivated">@color/tools_color_accent</item>
+        <item name="android:navigationBarColor">@color/tools_style_content_bg</item>
+        <item name="android:windowIsFloating">false</item>
+
+
+    </style>
+
+    <style name="Tools_MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/tools_color_accent</item>
+
+    </style>
+
+
+    <style name="Tools_Base_Theme.BasicBottomSheetDialogStyle.TopCorners">
+        <item name="bottomSheetStyle">@style/tools_transparent_bottom_sheet_style</item>
+    </style>
+
+    <style name="Tools_Base_Theme.BasicBottomSheetDialogStyle.FillScreen">
+        <item name="bottomSheetStyle">@style/tools_basic_bottom_sheet_style.fillscreen</item>
+    </style>
+</resources>

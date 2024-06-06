@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_root"
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:minWidth="150dp"
+    android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+    android:gravity="center_vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_menu_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="12dp"
+        app:tint="@color/tools_icon_status_color"
+        tools:srcCompat="@drawable/tools_ic_preview_settings" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_menu_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/tools_view_setting"
+        android:textColor="@color/tools_subtitle_1_color"
+        android:textSize="16sp" />
+
+</LinearLayout>
+

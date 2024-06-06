@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <array name="tools_annot_normal_colors">
+        <item>#E91B00</item>
+        <item>#000000</item>
+        <item>#004DA2</item>
+        <item>#3D8847</item>
+        <item>#5B16A2</item>
+        <item>#5CBBF7</item>
+        <item>#FFFFFF</item>
+    </array>
+
+    <array name="tools_text_stamp_colors">
+        <item>#000000</item>
+        <item>#ffCFE0C7</item>
+        <item>#ffFEC7C7</item>
+        <item>#ffCBCFE2</item>
+    </array>
+
+    <array name="tools_annot_signature_colors">
+        <item>#E91B00</item>
+        <item>#000000</item>
+        <item>#5B16A2</item>
+        <item>#12338C</item>
+        <item>#CB2B1E</item>
+        <item>#ED8537</item>
+        <item>#5CBBF7</item>
+    </array>
+
+</resources>

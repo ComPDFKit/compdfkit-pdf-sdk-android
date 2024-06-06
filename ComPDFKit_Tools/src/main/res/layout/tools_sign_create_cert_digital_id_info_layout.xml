@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_import_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/tools_reader_setting_head_bg_color"
+            android:lineSpacingMultiplier="1.25"
+            android:padding="16dp"
+            android:text="@string/tools_create_certificate_digital_id_desc"
+            android:textColor="@color/tools_text_color_primary"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_import_desc">
+
+
+            <com.compdfkit.tools.common.utils.view.CEditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tools_please_enter_your_name"
+                android:imeOptions="actionNext"
+                android:title="@string/tools_name"
+                app:showKeyTag="true" />
+
+            <com.compdfkit.tools.common.utils.view.CEditText
+                android:id="@+id/et_organization_unit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tools_enter_the_name_of_the_organization_unit"
+                android:imeOptions="actionNext"
+                android:title="@string/tools_organization_unit" />
+
+            <com.compdfkit.tools.common.utils.view.CEditText
+                android:id="@+id/et_organization_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tools_enter_the_name_of_the_organization"
+                android:imeOptions="actionNext"
+                android:title="@string/tools_organization_name" />
+
+            <com.compdfkit.tools.common.utils.view.CEditText
+                android:id="@+id/et_email_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tools_email_address_hint"
+                android:imeOptions="actionDone"
+                android:title="@string/tools_email_address"
+                app:showKeyTag="true" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_country_regin_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingTop="16dp"
+                android:text="@string/tools_country_region"
+                android:textColor="@color/tools_text_color_disable"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_country_regin"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/tools_bg_import_certificate_digital_id_item"
+                android:dropDownSelector="@color/tools_color_primary"
+                android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+                android:paddingHorizontal="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:popupBackground="@drawable/tools_common_window_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_country_regin_title" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_purpose_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingTop="16dp"
+                android:text="@string/tools_purpose"
+                android:textColor="@color/tools_text_color_disable"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_purpose"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/tools_bg_import_certificate_digital_id_item"
+                android:dropDownSelector="@color/tools_color_primary"
+                android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+                android:paddingHorizontal="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:popupBackground="@drawable/tools_common_window_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_purpose_title" />
+
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_save_to_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/tools_save_to_file"
+            android:textColor="@color/tools_text_color_disable"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_content" />
+
+        <Switch
+            android:id="@+id/sw_save_to_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:checked="true"
+            app:layout_constraintBottom_toBottomOf="@id/tv_save_to_file"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_save_to_file" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/tools_verify_pwd_confirm_btn_bg"
+            android:elevation="0dp"
+            android:text="@string/tools_okay"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_save_to_file"
+            app:layout_constraintVertical_bias="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+
+

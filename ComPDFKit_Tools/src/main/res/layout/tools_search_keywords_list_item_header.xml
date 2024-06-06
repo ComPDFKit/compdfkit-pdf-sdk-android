@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="6dp"
+    android:gravity="end"
+    android:background="@color/tools_text_color_primary_inverse"
+    >
+
+
+    <TextView
+        android:id="@+id/id_item_search_head_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="16dp"
+        android:gravity="end"
+        android:textColor="@color/tools_text_color_primary"
+        android:text="10"/>
+
+</LinearLayout>

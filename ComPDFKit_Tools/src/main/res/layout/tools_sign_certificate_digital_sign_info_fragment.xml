@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tools_annot_style_dialog_window_bg">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tools_dialog_tool_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:fillViewport="true"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_sign_message"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:background="@color/tools_reader_setting_head_bg_color"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_annot_signature"
+                android:textColor="@color/tools_text_color_primary"
+                android:textSize="12sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="end"
+                app:constraint_referenced_ids="tv_sign_founder_title,tv_date_of_sign_title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_sign_founder_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/tools_signer"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_sign_message" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_sign_founder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="end"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_sign_founder_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toEndOf="@id/barrier"
+                tools:text="ComPDFKitComPDFKitComPDFKitComPDFKitComPDFKitComPDFKit" />
+
+            <View
+                android:id="@+id/view_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/tools_item_dividing_line_color"
+                app:layout_constraintTop_toBottomOf="@id/tv_sign_founder" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_date_of_sign_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/tools_signing_time"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_line" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_date_of_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_date_of_sign_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toEndOf="@id/barrier"
+                tools:text="08/08/2023 15:12:04 " />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_cert_auth_statement"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/tools_reader_setting_head_bg_color"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_cert_auth_statement"
+                android:textColor="@color/tools_text_color_primary"
+                android:textSize="12sp"
+                app:layout_constraintTop_toBottomOf="@id/tv_date_of_sign_title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_sign_statement_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constrainedWidth="true"
+                android:textColor="@color/tools_text_color_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_cert_auth_statement"
+                 />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_cert_detail"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/tools_sign_cert_info_btn_bg"
+                android:foreground="@drawable/tools_common_btn_corner_ripple"
+                android:gravity="center"
+                android:text="@string/tools_view_cert"
+                android:textAllCaps="false"
+                android:textColor="@color/tools_color_accent"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_sign_statement_info"
+                app:layout_constraintVertical_bias="1" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

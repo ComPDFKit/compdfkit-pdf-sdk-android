@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.compdfkit.tools.docseditor.CPageEditBar
+        android:id="@+id/page_edit_tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tools_done_title="@string/tools_save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:title="@string/tools_document_info" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:layoutDirection="ltr"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/page_edit_tool_bar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tools_pageedit_line_height">
+                <TextView
+                    style="@style/tools_edit_page_insertpage_pagesize_style"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="@string/tools_page_edit_insert_page_pagesize"
+                    android:textColor="@color/tools_text_color_primary"
+                    />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_tool_insert_page_right"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:background="@drawable/tools_common_oval_ripple"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/tools_pageedit_right_arrow"
+                    app:tint="@color/tools_on_primary" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/iv_tool_insert_page_cur_size"
+                    style="@style/tools_edit_page_insertpage_cursize_style"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_tool_insert_page_right"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="A4(595*842)"
+                    android:textColor="@color/tools_text_color_primary"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_pagesize"
+                android:visibility="gone"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RadioGroup
+                    android:id="@+id/rg_tools_edit_page_insertpage_pagesize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    >
+                </RadioGroup>
+                <View style="@style/tools_document_info_dividing_line_style"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rg_tools_edit_page_insertpage_pagesize"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tools_pageedit_line_height"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp">
+                <TextView
+                    style="@style/tools_edit_page_insertpage_pagesize_style"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="@string/tools_page_edit_insert_page_pagedirection"
+                    android:textColor="@color/tools_text_color_primary"
+                    />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_tool_insert_page_horizontal"
+                    android:layout_width="40dp"
+                    android:layout_height="32dp"
+                    android:paddingLeft="11dp"
+                    android:paddingRight="11dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:background="@drawable/tools_pageedit_hdirection_bg"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/tools_ic_pageedit_direction_horizontal"
+                    app:tint="@color/tools_icon_status_color" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_tool_insert_page_verticel"
+                    android:layout_width="40dp"
+                    android:layout_height="32dp"
+                    android:paddingStart="11dp"
+                    android:paddingEnd="11dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:background="@drawable/tools_pageedit_vdirection_bg"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_tool_insert_page_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:srcCompat="@drawable/tools_ic_pageedit_direction_verticle"
+                    app:tint="@color/tools_icon_status_color"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/tools_document_info_dividing_line_style" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_insert_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+                <TextView
+                    android:id="@+id/tv_tools_edit_page_insert_location_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/tools_pageedit_line_height"
+                    android:gravity="center"
+                    android:textColor="@color/tools_text_color_primary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="@string/tools_page_edit_insert_page_insert_to"
+                    />
+                <RadioGroup
+                    android:id="@+id/rp_tools_edit_page_insertpage_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_tools_edit_page_insert_location_title"
+                    >
+
+                    <RadioButton
+                        android:id="@+id/rb_tools_edit_page_insert_location_homepage"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/tools_pageedit_line_height"
+                        android:checked="true"
+                        android:textColor="@color/tools_radio_btn_text_status_color"
+                        android:text="@string/tools_page_edit_insert_page_home_page" />
+
+                    <RadioButton
+                        android:id="@+id/rb_tools_edit_page_insert_location_lastpage"
+                        android:layout_width="match_parent"
+                        android:checked="false"
+                        android:textColor="@color/tools_radio_btn_text_status_color"
+                        android:layout_height="@dimen/tools_pageedit_line_height"
+                        android:text="@string/tools_page_edit_insert_page_last_page"/>
+                    <RadioButton
+                        android:id="@+id/rb_tools_edit_page_insert_location_before"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/tools_pageedit_line_height"
+                        android:checked="false"
+                        android:textColor="@color/tools_radio_btn_text_status_color"
+                        android:text="@string/tools_page_edit_insert_page_before"/>
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_tool_edit_page_enterpage"
+                        android:hint="@string/tools_page_edit_insert_page_enterpage_tint"
+                        android:gravity="bottom"
+                        android:inputType="number"
+                        android:textColorHint="@color/tools_text_color_hint"
+                        android:textSize="14sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/tools_pageedit_line_height"/>
+                    <RadioButton
+                        android:id="@+id/rb_tools_edit_page_insert_location_after"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/tools_pageedit_line_height"
+                        android:textColor="@color/tools_radio_btn_text_status_color"
+                        android:text="@string/tools_page_edit_insert_page_after"/>
+                </RadioGroup>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

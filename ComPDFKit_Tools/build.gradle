@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.library'
+}
+
+def getProductName() {
+    return "ComPDFKitDemo"
+}
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd_hh-mm-ss", TimeZone.getTimeZone("GMT+08:00"))
+}
+
+android {
+    namespace 'com.compdfkit.tools'
+    compileSdk rootProject.ext.android.COMPILESDK
+    resourcePrefix 'tools_'
+
+    defaultConfig {
+        minSdk rootProject.ext.android.MINSDK
+        targetSdk rootProject.ext.android.TARGETSDK
+        buildConfigField("String", "COMPDFKit_SDK_VERSION", "\"${versionName}\"")
+        buildConfigField("String", "COMPDFKit_SDK_BUILD_TAG", "\"${versionName}_${versionCode}_${releaseTime()}\"")
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(path:':ComPDFKit_Repo:compdfkit')
+    api project(path:':ComPDFKit_Repo:compdfkit-ui')
+//    api 'com.compdf:compdfkit:1.11.0'
+//    api 'com.compdf:compdfkit-ui:1.11.0'
+    api 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+    api 'androidx.documentfile:documentfile:1.0.1'
+    api 'androidx.appcompat:appcompat:1.6.1'
+    api 'com.google.android.material:material:1.8.0'
+    api 'androidx.constraintlayout:constraintlayout:2.1.4'
+}

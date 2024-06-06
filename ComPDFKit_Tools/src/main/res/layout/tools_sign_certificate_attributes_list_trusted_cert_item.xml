@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="16dp">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_attr_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/tools_cert_is_trusted_to"
+        android:textColor="@color/tools_text_color_secondary"
+        android:textStyle="bold"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cb_1"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:focusable="false"
+        android:clickable="false"
+        android:button="@drawable/tools_ic_cert_trusted_checkbox_radio"
+        android:paddingStart="8dp"
+        android:text="@string/tools_trusted_1"
+        app:layout_constrainedWidth="true"
+        android:textColor="@color/tools_text_color_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_attr_title" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cb_2"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:layout_marginStart="24dp"
+        android:focusable="false"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/tools_text_color_primary"
+        android:clickable="false"
+        android:button="@drawable/tools_ic_cert_trusted_checkbox_radio"
+        android:paddingStart="8dp"
+        android:text="@string/tools_trusted_2"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cb_1" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_trusted"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/tools_sign_cert_info_btn_bg"
+        android:foreground="@drawable/tools_common_btn_corner_ripple"
+        android:gravity="center"
+        android:text="@string/tools_add_to_trusted_cert"
+        android:textAllCaps="false"
+        android:textColor="@color/tools_color_accent"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cb_2"
+        app:layout_constraintVertical_bias="1" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

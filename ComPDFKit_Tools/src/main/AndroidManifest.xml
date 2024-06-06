@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <application android:supportsRtl="true" >
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/tools_file_paths" />
+        </provider>
+
+        <activity
+            android:name=".annotation.pdfproperties.pdfsignature.CAddSignatureActivity"
+            android:theme="@style/Tools_Base_Theme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".annotation.pdfproperties.pdfstamp.CAddCustomStampActivity"
+            android:theme="@style/Tools_Base_Theme"
+            android:exported="false"/>
+
+        <service
+            android:name=".common.utils.voice.CMediaPlayService"
+            android:enabled="true"
+            android:exported="false" />
+
+    </application>
+</manifest>

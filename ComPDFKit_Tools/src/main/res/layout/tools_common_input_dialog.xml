@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/tools_color_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="@dimen/tools_dialog_layout_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/common_input_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            android:textColor="@color/tools_text_color_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Title" />
+
+
+        <TextView
+            android:id="@+id/common_input_dialog_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/tools_text_color_primary"
+            android:textSize="16sp"
+            tools:text="Jump to" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/common_input_dialog_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            tools:hint="1234"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="12dp"
+            android:textCursorDrawable="@drawable/tools_normal_et_cursor"
+            android:backgroundTint="@color/tools_color_accent"
+            android:textColorHint="@color/tools_text_color_hint"
+            android:textColor="@color/tools_text_color_primary"
+            android:textSize="14sp" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="4dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/common_input_dialog_cancel"
+                style="@style/tools_dialog_button_style"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:text="@string/tools_cancel" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/common_input_dialog_ok"
+                style="@style/tools_dialog_button_style"
+                android:text="@string/contextmenu_done" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

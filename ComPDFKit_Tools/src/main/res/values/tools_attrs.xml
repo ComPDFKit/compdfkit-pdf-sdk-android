@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <attr name="tools_show_title" format="boolean"/>
+
+    <declare-styleable name="CPDFToolBar" tools:ignore="ResourceName">
+        <attr name="android:title"/>
+    </declare-styleable>
+
+    <declare-styleable name="CToolBar" tools:ignore="ResourceName">
+        <attr name="android:title"/>
+        <attr name="tools_toolbar_back_icon" format="reference"/>
+        <attr name="android:textSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="CPDFReaderView" tools:ignore="ResourceName">
+        <attr name="tools_enable_slider_bar" format="boolean"/>
+        <attr name="tools_slider_bar_position" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
+        <attr name="tools_slider_bar_thumbnail_width" format="dimension"/>
+        <attr name="tools_slider_bar_thumbnail_height" format="dimension"/>
+        <attr name="tools_slider_bar_icon" format="reference"/>
+        <attr name="tools_enable_page_indicator" format="boolean"/>
+        <attr name="tools_page_indicator_margin_bottom" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="CColorListView" tools:ignore="ResourceName">
+        <attr name="tools_show_color_picker" format="boolean"/>
+        <attr name="tools_color_list" format="reference"/>
+        <attr name="tools_show_title"/>
+        <attr name="android:title"/>
+    </declare-styleable>
+
+    <declare-styleable name="CSliderBar"  tools:ignore="ResourceName">
+        <attr name="android:title"/>
+        <attr name="tools_show_title"/>
+        <attr name="android:max"/>
+        <attr name="android:min"/>
+        <attr name="android:progress"/>
+        <attr name="tools_slider_bar_value_show_type" format="enum">
+            <enum name="source" value="0"/>
+            <enum name="percentage" value="1"/>
+        </attr>
+        <attr name="tools_value_unit" format="string"/>
+        <attr name="tools_slider_bar_show_value" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CStylePreviewView" tools:ignore="ResourceName">
+        <attr name="tools_annot_type" format="enum">
+            <enum name="text" value="0"/>
+            <enum name="highlight" value="1"/>
+            <enum name="underline" value="2"/>
+            <enum name="squiggly" value="3"/>
+            <enum name="strikeout" value="4"/>
+            <enum name="ink" value="5"/>
+            <enum name="circle" value="6"/>
+            <enum name="square" value="7"/>
+            <enum name="arrow" value="8"/>
+            <enum name="line" value="9"/>
+            <enum name="freetext" value="10"/>
+            <enum name="signature" value="11"/>
+            <enum name="editImage" value="12"/>
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="CSliderBarValueView" tools:ignore="ResourceName">
+        <attr name="tools_show_type" format="enum">
+            <enum name="source" value="0"/>
+            <enum name="percentage" value="1"/>
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="CPropertiesSwitchView" tools:ignore="ResourceName">
+        <attr name="android:title"/>
+        <attr name="android:checked"/>
+    </declare-styleable>
+
+    <declare-styleable name="CPageEditBar" tools:ignore="ResourceName">
+        <attr name="android:title"/>
+        <attr name="tools_done_title" format="string"/>
+        <attr name="tools_pageeditbar_back_icon" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ColorPickerView" tools:ignore="ResourceName">
+        <attr name="tools_show_alpha_slider_bar" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CEditText"  tools:ignore="ResourceName">
+        <attr name="android:title"/>
+        <attr name="android:imeOptions"/>
+        <attr name="android:inputType"/>
+        <attr name="android:hint"/>
+        <attr name="showKeyTag" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CVerifySignStatusView" tools:ignore="ResourceName">
+        <attr name="status" format="flags">
+            <flag name="valid" value="0"/>
+            <flag name="failures" value="1"/>
+            <flag name="wrong" value="2"/>
+        </attr>
+    </declare-styleable>
+
+
+    <!--水印-->
+    <declare-styleable name="WatermarkView" tools:ignore="ResourceName">
+        <attr name="src" format="reference" tools:ignore="ResourceName" />            <!-- 用于缩放旋转的图标 -->
+        <attr name="editable" format="boolean" tools:ignore="ResourceName"/>          <!-- 是否SingleTouchView处于可编辑状态 -->
+        <attr name="frameColor" format="color" tools:ignore="ResourceName"/>         <!-- 边框颜色 -->
+        <attr name="frameWidth" format="dimension" tools:ignore="ResourceName"/>     <!-- 边框线宽度 -->
+        <attr name="framePadding" format="dimension" tools:ignore="ResourceName"/>   <!-- 边框与图片的间距 -->
+        <attr name="controlDrawableWidth" format="dimension" tools:ignore="ResourceName"/> <!-- 控制图标宽-->
+        <attr name="controlDrawableHeight" format="dimension" tools:ignore="ResourceName"/> <!-- 控制图标高-->
+        <attr name="degree" format="float" tools:ignore="ResourceName"/>             <!-- 旋转角度 -->
+        <attr name="scale" format="float" tools:ignore="ResourceName"/>              <!-- 缩放比例 -->
+        <attr name="controlDrawable" format="reference" tools:ignore="ResourceName"/> <!-- 控制图标 -->
+        <attr name="controlLocation" >                     <!-- 控制图标的位置 -->
+            <enum name="left_top" value="0" />
+            <enum name="right_top" value="1" />
+            <enum name="right_bottom" value="2" />
+            <enum name="left_bottom" value="3" />
+        </attr>
+    </declare-styleable>
+
+
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="@color/tools_annot_list_item_select_bg_color" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="@color/tools_color_primary" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+
+</selector>
