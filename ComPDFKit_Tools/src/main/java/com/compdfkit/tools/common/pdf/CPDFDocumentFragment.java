@@ -799,4 +799,17 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     protected interface CRequestPermissionListener {
         void request();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        try {
+            if (pdfView.getCPdfReaderView().getPDFDocument() != null) {
+                pdfView.getCPdfReaderView().getPDFDocument().close();
+            }
+        }catch (Exception e){
+
+        }
+
+    }
 }

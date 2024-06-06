@@ -15,16 +15,10 @@ dependencyResolutionManagement {
 
     }
 }
-rootProject.name = "compdfkit_android_demo"
+rootProject.name = "compdfkit-pdf-sdk-android"
 include ':PDFViewer'
-include ':Viewer'
-include ':Annotations'
-include ':ContentEditor'
-include ':Forms'
-include ':DocsEditor'
 include ':ComPDFKit_Tools'
 include ':ComPDFKit_Repo:compdfkit'
 include ':ComPDFKit_Repo:compdfkit-ui'
 include ':Samples'
 include ':Samples_kotlin'
-include ':DigitalSignature'
