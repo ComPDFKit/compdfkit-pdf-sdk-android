@@ -52,8 +52,8 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api project(path:':ComPDFKit_Repo:compdfkit')
     api project(path:':ComPDFKit_Repo:compdfkit-ui')
-//    api ('com.compdf:compdfkit:1.13.0')
-//    api ('com.compdf:compdfkit-ui:1.13.0')
+//    api ('com.compdf:compdfkit:1.13.1')
+//    api ('com.compdf:compdfkit-ui:1.13.1')
     api 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     api 'androidx.documentfile:documentfile:1.0.1'
