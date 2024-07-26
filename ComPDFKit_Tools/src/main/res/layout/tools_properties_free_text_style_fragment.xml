@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    tools:background="?attr/compdfkit_PDFStyleDialog_ContentColor"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -57,7 +58,6 @@
             app:layout_constraintTop_toBottomOf="@id/slider_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:layout_height="30dp"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -65,7 +65,7 @@
             style="@style/tools_style_fragment_sub_title_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="16dp"
             android:text="@string/tools_annot_align_type"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/font_view" />

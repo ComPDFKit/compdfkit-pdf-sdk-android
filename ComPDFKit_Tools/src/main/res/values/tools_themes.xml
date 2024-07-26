@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Tools_Base_Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <attr name="compdfkit_BottomSheetDialog_Transparent_Theme" format="reference" tools:ignore="ResourceName"/>
+    <attr name="compdfkit_BottomSheetDialog_Theme" format="reference" tools:ignore="ResourceName"/>
+    <attr name="compdfkit_BottomSheetDialog_CloseIcon" format="reference" tools:ignore="ResourceName"/>
+    <attr name="compdfkit_PDFStyleDialog_ContentColor" format="reference" tools:ignore="ResourceName"/>
+    <attr name="compdfkit_HeadItem_BackgroundColor" format="color" tools:ignore="ResourceName"/>
+    <attr name="compdfkit_tabLayoutStyle" format="reference" tools:ignore="ResourceName"/>
+    <attr name="compdfkit_textColorPrimaryNoEnable" format="color" tools:ignore="ResourceName"/>
+
+    <style name="ComPDFKit.Theme" parent="Theme.MaterialComponents.NoActionBar.Bridge" tools:ignore="ResourceName">
         <item name="colorPrimary">@color/tools_color_primary</item>
+        <item name="colorPrimaryDark">@color/tools_color_primary</item>
         <item name="android:colorAccent">@color/tools_color_accent</item>
         <item name="colorAccent">@color/tools_color_accent</item>
+        <item name="colorSecondary">@color/tools_secondary</item>
+        <item name="colorOnSecondary">@color/tools_on_secondary</item>
         <item name="colorOnPrimary">@color/tools_on_primary</item>
         <item name="colorPrimaryContainer">@color/tools_primary_container</item>
-        <item name="colorSecondary">@color/tools_secondary</item>
         <item name="android:textColorPrimary">@color/tools_text_color_primary</item>
         <item name="android:textColorSecondary">@color/tools_text_color_secondary</item>
         <item name="android:textColorHint">@color/tools_text_color_hint</item>
@@ -15,54 +25,298 @@
         <item name="android:colorBackground">@color/tools_color_background</item>
         <item name="android:statusBarColor">@color/tools_color_primary</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="textAppearanceSubtitle1">@style/ToolsTextAppearanceSubtitle1</item>
-        <item name="textAppearanceButton">@style/ToolsAppTextAppearance.Button</item>
+
         <item name="colorControlActivated">@color/tools_color_accent</item>
+        <item name="android:colorControlActivated">@color/tools_color_accent</item>
+        <item name="isLightTheme">true</item>
+
+        <item name="textAppearanceSubtitle1">@style/ComPDFKit.Theme.TextAppearance.Subtitle1.Light</item>
+        <item name="textAppearanceSubtitle2">@style/ComPDFKit.Theme.TextAppearance.Subtitle2.Light</item>
+        <item name="textAppearanceHeadline6">@style/ComPDFKit.Theme.TextAppearance.Headline6.Light</item>
+
+        <item name="textAppearanceButton">@style/ToolsAppTextAppearance.Button</item>
+
+        <item name="switchStyle">@style/ComPDFKit.Theme.SwitchCompat</item>
+        <item name="dialogTheme">@style/ComPDFKit.Theme.Dialog</item>
+        <item name="seekBarStyle">@style/ComPDFKit.Theme.SeekBar</item>
+
+        <item name="dividerColor">@color/tools_divider_color</item>
+
+        <item name="compdfkit_textColorPrimaryNoEnable">@color/tools_icon_enable_color</item>
+        <item name="compdfkit_tabLayoutStyle">@style/ComPDFKit.Theme.TabLayout</item>
+        <item name="compdfkit_BottomSheetDialog_Transparent_Theme">@style/ComPDFKit.Theme.BottomSheetDialog.Light.Transparent</item>
+        <item name="compdfkit_BottomSheetDialog_Theme">@style/ComPDFKit.Theme.BottomSheetDialog.Light</item>
+        <item name="compdfkit_HeadItem_BackgroundColor">@color/tools_reader_setting_head_bg_color</item>
+        <item name="compdfkit_PDFStyleDialog_ContentColor">@color/tools_style_content_bg</item>
+
     </style>
 
-    <style name="ToolsTextAppearanceSubtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textColor">@color/tools_subtitle_1_color</item>
-        <item name="android:lineSpacingExtra">5sp</item>
+    <style name="ComPDFKit.Theme.Light" tools:ignore="ResourceName">
+    </style>
+
+    <style name="ComPDFKit.Theme.Dark" tools:ignore="ResourceName">
+        <item name="colorPrimary">@color/tools_dark_color_primary</item>
+        <item name="colorPrimaryDark">@color/tools_dark_on_primary</item>
+        <item name="android:colorAccent">@color/tools_dark_color_accent</item>
+        <item name="colorAccent">@color/tools_dark_color_accent</item>
+        <item name="colorSecondary">@color/tools_dark_secondary</item>
+        <item name="colorOnSecondary">@color/tools_dark_on_secondary</item>
+        <item name="colorOnPrimary">@color/tools_dark_on_primary</item>
+        <item name="colorPrimaryContainer">@color/tools_dark_primary_container</item>
+        <item name="android:textColorPrimary">@color/tools_dark_text_color_primary</item>
+        <item name="android:textColorSecondary">@color/tools_dark_text_color_secondary</item>
+        <item name="android:colorBackground">@color/tools_dark_color_background</item>
+        <item name="android:statusBarColor">@color/tools_dark_color_primary</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:colorControlActivated">@color/tools_dark_color_accent</item>
+        <item name="colorControlActivated">@color/tools_dark_color_accent</item>
+        <item name="isLightTheme">false</item>
+
+        <item name="textAppearanceSubtitle1">@style/ComPDFKit.Theme.TextAppearance.Subtitle1.Dark</item>
+        <item name="textAppearanceSubtitle2">@style/ComPDFKit.Theme.TextAppearance.Subtitle2.Dark</item>
+        <item name="textAppearanceHeadline6">@style/ComPDFKit.Theme.TextAppearance.Headline6.Dark</item>
+
+        <item name="textAppearanceButton">@style/ToolsAppTextAppearance.Button</item>
+
+        <item name="switchStyle">@style/ComPDFKit.Theme.SwitchCompat</item>
+        <item name="dialogTheme">@style/ComPDFKit.Theme.Dialog.Dark</item>
+        <item name="seekBarStyle">@style/ComPDFKit.Theme.SeekBar</item>
+
+        <item name="dividerColor">@color/tools_dark_divider_color</item>
+
+        <item name="compdfkit_textColorPrimaryNoEnable">@color/tools_dark_icon_enable_color</item>
+        <item name="compdfkit_tabLayoutStyle">@style/ComPDFKit.Theme.TabLayout</item>
+        <item name="compdfkit_BottomSheetDialog_Transparent_Theme">@style/ComPDFKit.Theme.BottomSheetDialog.Dark.Transparent</item>
+        <item name="compdfkit_BottomSheetDialog_Theme">@style/ComPDFKit.Theme.BottomSheetDialog.Dark</item>
+        <item name="compdfkit_HeadItem_BackgroundColor">@color/tools_dark_reader_setting_head_bg_color</item>
+        <item name="compdfkit_PDFStyleDialog_ContentColor">@color/tools_dark_style_content_bg</item>
+
     </style>
 
     <style name="ToolsAppTextAppearance.Button" parent="TextAppearance.MaterialComponents.Button">
         <item name="android:textColor">@color/tools_color_accent</item>
     </style>
 
-    <style name="Tools_Base_Theme.BasicBottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="colorPrimary">@color/tools_color_primary</item>
-        <item name="android:colorAccent">@color/tools_color_accent</item>
-        <item name="colorAccent">@color/tools_color_accent</item>
+
+    <style name="ComPDFKit.Theme.TextAppearance.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1" tools:ignore="ResourceName">
+        <item name="android:lineSpacingExtra">5sp</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.TextAppearance.Subtitle1.Dark" tools:ignore="ResourceName">
+        <item name="android:textColor">@color/tools_dark_subtitle_1_color</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.TextAppearance.Subtitle1.Light" tools:ignore="ResourceName">
+        <item name="android:textColor">@color/tools_subtitle_1_color</item>
+    </style>
+
+
+    <style name="ComPDFKit.Theme.TextAppearance.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2" tools:ignore="ResourceName">
+        <item name="android:textColor">@color/tools_style_title_color</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.TextAppearance.Subtitle2.Dark" tools:ignore="ResourceName">
+        <item name="android:textColor">@color/tools_dark_style_title_color</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.TextAppearance.Subtitle2.Light" tools:ignore="ResourceName">
+    </style>
+
+
+    <style name="ComPDFKit.Theme.TextAppearance.Headline6" parent="TextAppearance.MaterialComponents.Headline6" tools:ignore="ResourceName">
+        <item name="android:lineSpacingExtra">5sp</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.TextAppearance.Headline6.Dark"  tools:ignore="ResourceName">
+        <item name="android:textColor">@color/tools_dark_subtitle_1_color</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.TextAppearance.Headline6.Light"  tools:ignore="ResourceName">
+        <item name="android:textColor">@color/tools_subtitle_1_color</item>
+    </style>
+
+
+    <style name="ComPDFKit.Theme.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog" tools:ignore="ResourceName">
+        <item name="bottomSheetStyle">@style/ComPDFKit.Theme.BottomSheetStyle</item>
+        <item name="android:textColorSecondary">@color/tools_text_color_secondary</item>
+        <item name="android:textColorPrimaryInverse">@color/tools_text_color_primary_inverse</item>
+        <item name="compdfkit_tabLayoutStyle">@style/ComPDFKit.Theme.TabLayout</item>
+        <item name="switchStyle">@style/ComPDFKit.Theme.SwitchCompat</item>
+        <item name="seekBarStyle">@style/ComPDFKit.Theme.SeekBar</item>
+        <item name="colorOnSecondary">@color/tools_on_secondary</item>
+        <item name="dialogTheme">@style/ComPDFKit.Theme.Dialog</item>
+        <item name="compdfkit_textColorPrimaryNoEnable">@color/tools_icon_enable_color</item>
+        <item name="android:colorControlActivated">@color/tools_color_accent</item>
+        <item name="colorControlActivated">@color/tools_color_accent</item>
+
+    </style>
+
+    <style name="ComPDFKit.Theme.BottomSheetDialog.Dark" tools:ignore="ResourceName">
+        <item name="colorOnPrimary">@color/tools_dark_on_primary</item>
+        <item name="colorPrimary">@color/tools_dark_color_primary</item>
+        <item name="textAppearanceSubtitle1">@style/ComPDFKit.Theme.TextAppearance.Subtitle1.Dark</item>
+        <item name="textAppearanceSubtitle2">@style/ComPDFKit.Theme.TextAppearance.Subtitle2.Dark</item>
+        <item name="android:colorBackground">@color/tools_dark_color_background</item>
+        <item name="compdfkit_PDFStyleDialog_ContentColor">@color/tools_dark_style_content_bg</item>
+        <item name="android:textColorPrimary">@color/tools_dark_text_color_primary</item>
+        <item name="colorControlActivated">@color/tools_dark_color_accent</item>
+        <item name="android:colorControlActivated">@color/tools_dark_color_accent</item>
+        <item name="colorControlNormal">?attr/colorOnPrimary</item>
+        <item name="colorAccent">@color/tools_dark_color_accent</item>
+        <item name="android:colorAccent">@color/tools_dark_color_accent</item>
+        <item name="colorSecondary">@color/tools_dark_secondary</item>
+        <item name="hintTextColor">@color/tools_text_color_hint</item>
+        <item name="android:textColorHint">@color/tools_text_color_hint</item>
+        <item name="compdfkit_HeadItem_BackgroundColor">@color/tools_dark_reader_setting_head_bg_color</item>
+        <item name="android:textColorSecondary">@color/tools_dark_text_color_secondary</item>
+        <item name="android:textColorPrimaryInverse">@color/tools_dark_text_color_primary_inverse</item>
+        <item name="dividerColor">@color/tools_dark_divider_color</item>
+        <item name="colorOnSecondary">@color/tools_dark_on_secondary</item>
+        <item name="switchStyle">@style/ComPDFKit.Theme.SwitchCompat</item>
+        <item name="compdfkit_textColorPrimaryNoEnable">@color/tools_dark_icon_enable_color</item>
+        <item name="compdfkit_tabLayoutStyle">@style/ComPDFKit.Theme.TabLayout</item>
+        <item name="isLightTheme">false</item>
+
+    </style>
+
+    <style name="ComPDFKit.Theme.BottomSheetDialog.Light" tools:ignore="ResourceName">
         <item name="colorOnPrimary">@color/tools_on_primary</item>
-        <item name="colorPrimaryContainer">@color/tools_primary_container</item>
+        <item name="colorPrimary">@color/tools_color_primary</item>
+        <item name="textAppearanceSubtitle1">@style/ComPDFKit.Theme.TextAppearance.Subtitle1.Light</item>
+        <item name="textAppearanceSubtitle2">@style/ComPDFKit.Theme.TextAppearance.Subtitle2.Light</item>
+        <item name="android:colorBackground">@color/tools_color_background</item>
+        <item name="compdfkit_PDFStyleDialog_ContentColor">@color/tools_style_content_bg</item>
+        <item name="android:textColorPrimary">@color/tools_text_color_primary</item>
+        <item name="colorControlActivated">@color/tools_dark_color_accent</item>
+        <item name="colorControlNormal">?attr/colorOnPrimary</item>
+        <item name="colorAccent">@color/tools_color_accent</item>
         <item name="colorSecondary">@color/tools_secondary</item>
+        <item name="hintTextColor">@color/tools_text_color_hint</item>
+        <item name="compdfkit_HeadItem_BackgroundColor">@color/tools_reader_setting_head_bg_color</item>
+        <item name="dividerColor">@color/tools_divider_color</item>
+        <item name="isLightTheme">true</item>
+
+    </style>
+
+    <style name="ComPDFKit.Theme.BottomSheetDialog.Dark.Transparent" tools:ignore="ResourceName">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/ComPDFKit.Theme.BottomSheetStyle.Transparent</item>
+        <item name="compdfkit_BottomSheetDialog_CloseIcon">@drawable/tools_ic_grey_oval_close_dark</item>
+        <item name="colorControlActivated">@color/tools_dark_color_accent</item>
+        <item name="colorControlNormal">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.BottomSheetDialog.Light.Transparent" tools:ignore="ResourceName">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/ComPDFKit.Theme.BottomSheetStyle.Transparent</item>
+        <item name="compdfkit_BottomSheetDialog_CloseIcon">@drawable/tools_ic_grey_oval_close</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.TabLayout.TabTextAppearance" parent="TextAppearance.AppCompat.Button" tools:ignore="ResourceName">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.TabLayout" parent="Widget.Design.TabLayout" tools:ignore="ResourceName">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+        <item name="tabRippleColor">@color/tools_color_accent_50</item>
+        <item name="tabSelectedTextColor">?attr/colorAccent</item>
+        <item name="tabTextAppearance">@style/ComPDFKit.Theme.TabLayout.TabTextAppearance</item>
+        <item name="tabTextColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.Dialog" parent="Theme.AppCompat.Light.Dialog" tools:ignore="ResourceName">
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:colorAccent">@color/tools_color_accent</item>
+        <item name="colorPrimary">@color/tools_color_primary</item>
+        <item name="colorPrimaryContainer">@color/tools_color_accent</item>
+        <item name="colorSecondary">@color/tools_secondary</item>
+        <item name="colorAccent">@color/tools_color_accent</item>
+        <item name="android:colorBackground">@color/tools_color_background</item>
         <item name="android:textColorPrimary">@color/tools_text_color_primary</item>
         <item name="android:textColorSecondary">@color/tools_text_color_secondary</item>
-        <item name="colorError">@color/tools_error</item>
-        <item name="android:colorBackground">@color/tools_color_background</item>
-        <item name="android:statusBarColor">@color/tools_color_primary</item>
-        <item name="android:isLightTheme" tools:targetApi="q">true</item>
-        <item name="textAppearanceSubtitle1">@style/ToolsTextAppearanceSubtitle1</item>
-        <item name="textAppearanceButton">@style/ToolsAppTextAppearance.Button</item>
-        <item name="bottomSheetStyle">@style/tools_basic_bottom_sheet_style</item>
-        <item name="colorControlActivated">@color/tools_color_accent</item>
-        <item name="android:navigationBarColor">@color/tools_style_content_bg</item>
-        <item name="android:windowIsFloating">false</item>
+        <item name="hintTextColor">@color/tools_text_color_hint</item>
+        <item name="android:textColorHint">@color/tools_text_color_hint</item>
+        <item name="switchStyle">@style/ComPDFKit.Theme.SwitchCompat</item>
+        <item name="seekBarStyle">@style/ComPDFKit.Theme.SeekBar</item>
+    </style>
 
+    <style name="ComPDFKit.Theme.Dialog.Dark" tools:ignore="ResourceName">
+        <item name="android:colorAccent">@color/tools_dark_color_accent</item>
+        <item name="colorPrimary">@color/tools_dark_color_primary</item>
+        <item name="colorPrimaryContainer">@color/tools_dark_color_accent</item>
+        <item name="colorSecondary">@color/tools_dark_secondary</item>
+        <item name="colorAccent">@color/tools_dark_color_accent</item>
+        <item name="android:colorBackground">@color/tools_dark_color_background</item>
+        <item name="android:textColorPrimary">@color/tools_dark_text_color_primary</item>
+        <item name="android:textColorSecondary">@color/tools_dark_text_color_secondary</item>
 
     </style>
 
-    <style name="Tools_MySwitch" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">@color/tools_color_accent</item>
+    <style name="ComPDFKit.Theme.SwitchCompat" parent="Theme.AppCompat.Light" tools:ignore="ResourceName">
+        <item name="colorControlActivated">?attr/colorAccent</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.SeekBar" parent="Widget.AppCompat.ProgressBar.Horizontal"  tools:ignore="ResourceName">
+        <item name="android:progressDrawable">@drawable/tools_seek_bar_progress_drawable</item>
+        <item name="android:maxHeight">2dp</item>
+        <item name="android:minHeight">2dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:thumb">@drawable/tools_seek_bar_thumb_drawable</item>
+    </style>
+
+    <attr name="compdfkit_setting_icon_vertical" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_horizontal" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_single_page" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_double_page" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_cover_double_page" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_continuous_scroll" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_crop" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_light_mode" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_dark_mode" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_sepia_mode" format="reference" tools:ignore="ResourceName" />
+    <attr name="compdfkit_setting_icon_reseda_mode" format="reference" tools:ignore="ResourceName" />
+
+    <style name="ComPDFKit.Theme.BottomSheetDialog.Light.SettingsDialog"  tools:ignore="ResourceName" >
+        <item name="compdfkit_setting_icon_vertical">@drawable/tools_ic_vertical_scrolling</item>
+        <item name="compdfkit_setting_icon_horizontal">@drawable/tools_ic_horizontal_scrolling</item>
+        <item name="compdfkit_setting_icon_single_page">@drawable/tools_ic_single_page</item>
+        <item name="compdfkit_setting_icon_double_page">@drawable/tools_ic_double_page</item>
+        <item name="compdfkit_setting_icon_cover_double_page">@drawable/tools_ic_page_cover</item>
+        <item name="compdfkit_setting_icon_continuous_scroll">@drawable/tools_ic_continuous</item>
+        <item name="compdfkit_setting_icon_crop">@drawable/tools_ic_crop</item>
+        <item name="compdfkit_setting_icon_light_mode">@drawable/tools_ic_theme_light</item>
+        <item name="compdfkit_setting_icon_dark_mode">@drawable/tools_ic_theme_dark</item>
+        <item name="compdfkit_setting_icon_sepia_mode">@drawable/tools_ic_theme_sepia</item>
+        <item name="compdfkit_setting_icon_reseda_mode">@drawable/tools_ic_theme_reseda</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.BottomSheetDialog.Dark.SettingsDialog"  tools:ignore="ResourceName" >
+        <item name="compdfkit_setting_icon_vertical">@drawable/tools_ic_vertical_scrolling_dark</item>
+        <item name="compdfkit_setting_icon_horizontal">@drawable/tools_ic_horizontal_scrolling_dark</item>
+        <item name="compdfkit_setting_icon_single_page">@drawable/tools_ic_single_page_dark</item>
+        <item name="compdfkit_setting_icon_double_page">@drawable/tools_ic_double_page_dark</item>
+        <item name="compdfkit_setting_icon_cover_double_page">@drawable/tools_ic_page_cover_dark</item>
+        <item name="compdfkit_setting_icon_continuous_scroll">@drawable/tools_ic_continuous_dark</item>
+        <item name="compdfkit_setting_icon_crop">@drawable/tools_ic_crop_dark</item>
+        <item name="compdfkit_setting_icon_light_mode">@drawable/tools_ic_theme_light_dark</item>
+        <item name="compdfkit_setting_icon_dark_mode">@drawable/tools_ic_theme_dark_dark</item>
+        <item name="compdfkit_setting_icon_sepia_mode">@drawable/tools_ic_theme_sepia_dark</item>
+        <item name="compdfkit_setting_icon_reseda_mode">@drawable/tools_ic_theme_reseda_dark</item>
 
     </style>
 
 
-    <style name="Tools_Base_Theme.BasicBottomSheetDialogStyle.TopCorners">
-        <item name="bottomSheetStyle">@style/tools_transparent_bottom_sheet_style</item>
+    <style name="LaunchTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Show a splash screen on the activity. Automatically removed when
+             the Flutter engine draws its first frame -->
+
     </style>
 
-    <style name="Tools_Base_Theme.BasicBottomSheetDialogStyle.FillScreen">
-        <item name="bottomSheetStyle">@style/tools_basic_bottom_sheet_style.fillscreen</item>
-    </style>
+
 </resources>

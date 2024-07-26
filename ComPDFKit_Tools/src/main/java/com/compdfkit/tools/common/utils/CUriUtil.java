@@ -15,6 +15,29 @@ import java.io.InputStream;
 
 public class CUriUtil {
 
+    public static String getUriType(Context context, Uri uri) {
+
+        Cursor cursor = null;
+        final String column = MediaStore.Files.FileColumns.MIME_TYPE;
+        final String[] projection = {column};
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, null, null,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return "";
+    }
+
     public static String getUriFileName(Context context, Uri uri) {
 
         Cursor cursor = null;

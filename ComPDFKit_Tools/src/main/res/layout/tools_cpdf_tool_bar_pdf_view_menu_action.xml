@@ -4,14 +4,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.AppCompatImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.appcompat.widget.AppCompatImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/iv_action"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginVertical="10dp"
         android:layout_marginHorizontal="4dp"
-        android:background="@drawable/tools_common_oval_ripple"
+        android:background="@drawable/tools_common_oval_ripple_in_widget"
         android:clickable="true"
         android:focusable="true"
         android:padding="8dp"

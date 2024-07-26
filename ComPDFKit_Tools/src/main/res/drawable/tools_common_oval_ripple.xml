@@ -3,7 +3,7 @@
     android:color="@color/tools_ripple_color">
     <item android:id="@android:id/mask">
         <shape android:shape="oval">
-            <solid android:color="@color/tools_color_background" />
+            <solid android:color="?android:attr/colorBackground" />
         </shape>
     </item>
 </ripple>

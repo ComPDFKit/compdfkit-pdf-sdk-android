@@ -1,6 +1,8 @@
 package com.compdfkit.tools.common.utils.window;
 
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,12 +18,15 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.color.MaterialColors;
 
 import java.util.LinkedHashSet;
 
@@ -80,7 +85,7 @@ public class CModeSwitchDialogFragment extends CBasicBottomSheetDialogFragment
 
     @Override
     protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle_TopCorners;
+        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Transparent_Theme);
     }
 
     @Override
@@ -218,6 +223,8 @@ public class CModeSwitchDialogFragment extends CBasicBottomSheetDialogFragment
     private void setRadioButtonInfo(AppCompatRadioButton item, @StringRes int titleResId, @DrawableRes int startDrawableResId){
         item.setText(titleResId);
         Drawable startDrawable = ContextCompat.getDrawable(getContext(), startDrawableResId);
+        DrawableCompat.setTint(startDrawable, MaterialColors.getColor(getContext(), R.attr.colorOnPrimary, Color.BLACK));
+        DrawableCompat.setTintMode(startDrawable, PorterDuff.Mode.SRC_ATOP);
         Drawable endDrawable = ContextCompat.getDrawable(getContext(), R.drawable.tools_reader_settings_page_mode_radio_button);
         item.setCompoundDrawablesWithIntrinsicBounds(startDrawable, null,endDrawable,null);
     }

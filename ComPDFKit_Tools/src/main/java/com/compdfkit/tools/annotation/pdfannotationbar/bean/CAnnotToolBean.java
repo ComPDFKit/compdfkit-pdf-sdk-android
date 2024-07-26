@@ -23,6 +23,9 @@ public class CAnnotToolBean {
     @DrawableRes
     private int iconResId;
 
+    @DrawableRes
+    private int iconDarkResId;
+
     private boolean select;
 
     private int bgColor = Color.TRANSPARENT;
@@ -41,6 +44,14 @@ public class CAnnotToolBean {
         this.colorOpacity = colorOpacity;
     }
 
+    public CAnnotToolBean(CAnnotationType type, @DrawableRes int iconResId,@DrawableRes int iconDarkResId, int bgColor, int colorOpacity){
+        this.type = type;
+        this.iconResId = iconResId;
+        this.bgColor = bgColor;
+        this.colorOpacity = colorOpacity;
+        this.iconDarkResId = iconDarkResId;
+    }
+
     public CAnnotationType getType() {
         return type;
     }
@@ -51,6 +62,14 @@ public class CAnnotToolBean {
 
     public int getIconResId() {
         return iconResId;
+    }
+
+    public void setIconDarkResId(int iconDarkResId) {
+        this.iconDarkResId = iconDarkResId;
+    }
+
+    public int getIconDarkResId() {
+        return iconDarkResId;
     }
 
     public void setIconResId(int iconResId) {

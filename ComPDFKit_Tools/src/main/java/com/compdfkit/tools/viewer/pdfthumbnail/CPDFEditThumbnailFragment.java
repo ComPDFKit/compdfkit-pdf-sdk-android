@@ -42,9 +42,9 @@ public class CPDFEditThumbnailFragment extends Fragment {
 
     private CPDFPageEditDialogFragment pageEditDialogFragment = null;
 
-    public static final int updateTypeRotate = 1;
+    public static final int UPDATE_TYPE_ROTATE = 1;
 
-    public static final int updateTypeDelete = 2;
+    public static final int UPDATE_TYPE_DELETE = 2;
 
     /**
      * Creates a new instance of CPDFThumbnailFragment.
@@ -167,11 +167,11 @@ public class CPDFEditThumbnailFragment extends Fragment {
         if (getActivity() != null) {
             getActivity().runOnUiThread(()->{
                 if (thumbnailListAdapter != null && pages != null) {
-                    if (updateType == updateTypeRotate) {
+                    if (updateType == UPDATE_TYPE_ROTATE) {
                         for (int page : pages) {
                             thumbnailListAdapter.notifyItemChanged(page);
                         }
-                    } else if (updateType == updateTypeDelete) {
+                    } else if (updateType == UPDATE_TYPE_DELETE) {
                         for (int length = pages.length - 1; length >= 0; length--) {
                             thumbnailListAdapter.notifyItemRemoved(pages[length]);
                         }

@@ -41,20 +41,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    packagingOptions {
-        pickFirst 'META-INF/spring.factories'
-        pickFirst 'META-INF/license.txt'
-        pickFirst 'META-INF/DEPENDENCIES'
-        pickFirst 'META-INF/web-fragment.xml'
-        pickFirst 'META-INF/LICENSE.md'
-        pickFirst 'META-INF/NOTICE.md'
-        pickFirst 'META-INF/spring.schemas'
-        pickFirst 'META-INF/spring.tooling'
-        pickFirst 'META-INF/spring.handlers'
-        pickFirst 'META-INF/spring-configuration-metadata.json'
-        pickFirst 'META-INF/additional-spring-configuration-metadata.json'
-        pickFirst 'META-INF/notice.txt'
-    }
 }
 
 dependencies {

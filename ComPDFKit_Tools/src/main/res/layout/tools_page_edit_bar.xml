@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
     tools:layout_height="?android:attr/actionBarSize">
 
 
@@ -14,8 +15,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/tools_text_color_primary"
-        android:textSize="22sp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0"
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tools_ic_back"
-        app:tint="@color/tools_on_primary" />
+        app:tint="?attr/colorOnPrimary" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_tool_bar_done"
@@ -73,7 +73,9 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/tv_tool_bar_done"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorAccent"
         app:srcCompat="@drawable/tools_pageedit_bar_select"
+
          />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -89,6 +91,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tools_ic_pageedit_bar_edit"
-        app:tint="@color/tools_text_color_primary"
+        app:tint="?attr/colorOnPrimary"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

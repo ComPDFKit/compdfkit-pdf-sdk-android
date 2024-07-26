@@ -14,21 +14,23 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
-import com.compdfkit.tools.R;
 import com.google.android.material.shape.MaterialShapeDrawable;
 
 public class CViewUtils {
@@ -82,7 +84,8 @@ public class CViewUtils {
     }
 
     public static void applyViewBackground(View view) {
-        applyViewBackground(view, ContextCompat.getColor(view.getContext(), R.color.tools_color_primary));
+
+        applyViewBackground(view, getThemeAttrData(view.getContext().getTheme(), android.R.attr.colorPrimary));
     }
 
     public static void showKeyboard(View view) {
@@ -118,5 +121,46 @@ public class CViewUtils {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
+    public static int getThemeAttrResourceId(Resources.Theme theme, int resId){
+        try {
+            TypedValue typedValue = new TypedValue();
+            boolean result = theme.resolveAttribute(resId, typedValue, true );
+            if (result){
+                return typedValue.resourceId;
+            }else {
+                return 0;
+            }
+        }catch (Exception e){
+            return 0;
+        }
+    }
+    public static int getThemeAttrData(Resources.Theme theme, int resId){
+        try {
+            TypedValue typedValue = new TypedValue();
+            boolean result = theme.resolveAttribute(resId, typedValue, true);
+            int data = typedValue.data;
+            if (result){
+                return data;
+            }else {
+                return 0;
+            }
+        }catch (Exception e){
+            return 0;
+        }
+    }
+
+    public static boolean isDarkMode(Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            int uiMode = context.getResources().getConfiguration().uiMode;
+            return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        }else {
+            return false;
+        }
+    }
+
+    public static int getColor(int color,@IntRange(from = 0, to = 255) int alpha){
+        return Color.argb(alpha,Color.red(color),Color.green(color),Color.blue(color));
     }
 }

@@ -872,6 +872,7 @@ public class CWatermarkView extends View {
                     clickEventActionListener.callback(event, mScale, mCenterPoint);
                 }
                 break;
+            default:break;
         }
         return true;
     }
@@ -1057,6 +1058,7 @@ public class CWatermarkView extends View {
                 return mRBPoint;
             case LEFT_BOTTOM:
                 return mLBPoint;
+            default:break;
         }
         return mLTPoint;
     }

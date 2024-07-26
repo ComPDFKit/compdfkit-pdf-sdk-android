@@ -17,12 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.SwitchCompat;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CFileUtils;
@@ -51,7 +51,7 @@ public class CWatermarkImageStyleFragment extends CBasicPropertiesFragment imple
 
     private Spinner pageRangeSpinner;
 
-    private SwitchCompat swTile;
+    private Switch swTile;
 
     private AppCompatImageView ivLocationTop;
 

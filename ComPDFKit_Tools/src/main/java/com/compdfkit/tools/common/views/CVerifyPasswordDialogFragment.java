@@ -104,6 +104,11 @@ public class CVerifyPasswordDialogFragment extends CBasicBottomSheetDialogFragme
     }
 
     @Override
+    protected int getStyle() {
+        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
+    }
+
+    @Override
     protected int layoutId() {
         return R.layout.tools_verify_password_dialog_fragment;
     }

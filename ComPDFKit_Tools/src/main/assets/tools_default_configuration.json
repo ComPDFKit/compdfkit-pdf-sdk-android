@@ -1,6 +1,7 @@
 {
   "modeConfig": {
     "initialViewMode": "viewer",
+    "readerOnly": false,
     "availableViewModes": [
       "viewer",
       "annotations",
@@ -34,10 +35,12 @@
       "security",
       "flattened",
       "share",
-      "openDocument"
+      "openDocument",
+      "snip"
     ]
   },
   "annotationsConfig": {
+    "annotationAuthor": "Guest",
     "availableTypes": [
       "note",
       "highlight",
@@ -254,5 +257,9 @@
     "pageSpacing": 10,
     "pageScale": 1.0,
     "pageSameWidth": true
+  },
+  "global" : {
+    "themeMode" : "system",
+    "fileSaveExtraFontSubset" : true
   }
 }

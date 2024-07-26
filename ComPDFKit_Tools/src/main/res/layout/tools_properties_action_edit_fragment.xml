@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="?android:attr/colorBackground"
     android:layout_gravity="center">
 
     <com.compdfkit.tools.common.views.CToolBar
@@ -19,13 +21,11 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tools_color_primary"
+        android:background="?attr/colorPrimary"
         android:elevation="4dp"
+        style="?attr/compdfkit_tabLayoutStyle"
         app:layout_constraintTop_toBottomOf="@id/cl_tool_bar"
-        app:tabIndicatorColor="@color/tools_color_accent"
-        app:tabSelectedTextColor="@color/tools_color_accent"
-        app:tabTextAppearance="@style/tools_tab_layout_text_style"
-        app:tabTextColor="@color/tools_text_color_primary" />
+        />
 
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -38,8 +38,8 @@
         android:paddingHorizontal="8dp"
         android:paddingVertical="6dp"
         android:textCursorDrawable="@drawable/tools_normal_et_cursor"
-        android:textColor="@color/tools_text_color_primary"
-        android:textColorHint="@color/tools_text_color_hint"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?attr/hintTextColor"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

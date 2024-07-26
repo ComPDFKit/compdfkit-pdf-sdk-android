@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:paddingVertical="6dp"
-    android:background="@color/tools_reader_setting_head_bg_color">
+    android:background="?attr/compdfkit_HeadItem_BackgroundColor">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
@@ -14,7 +14,7 @@
         android:layout_marginStart="16dp"
         android:textSize="14sp"
         android:id="@+id/tv_page"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintStart_toEndOf="@id/tv_page"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_page"
         android:layout_marginStart="8dp"
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?android:attr/textColorPrimary"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_page"

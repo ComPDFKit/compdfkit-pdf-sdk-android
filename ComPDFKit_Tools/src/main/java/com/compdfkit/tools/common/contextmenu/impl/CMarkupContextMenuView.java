@@ -48,6 +48,14 @@ public class CMarkupContextMenuView implements ContextMenuMarkupProvider {
             annotationManager.editNote(helper.getReaderView(), pageView, markupAnnotImpl.onGetAnnotation());
             helper.dismissContextMenu();
         });
+        menuView.addItem(R.string.tools_reply, v -> {
+            new CPDFAnnotationManager().showAddReplyDialog(pageView, markupAnnotImpl, helper, true);
+            helper.dismissContextMenu();
+        });
+        menuView.addItem(R.string.tools_view_reply, v -> {
+            new CPDFAnnotationManager().showReplyDetailsDialog(pageView, markupAnnotImpl, helper);
+            helper.dismissContextMenu();
+        });
         menuView.addItem(R.string.tools_delete, v -> {
             pageView.deleteAnnotation(markupAnnotImpl);
             helper.dismissContextMenu();

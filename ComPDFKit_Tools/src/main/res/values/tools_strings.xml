@@ -494,5 +494,37 @@
     <string name="tools_font_style_bold">Bold</string>
     <string name="tools_font_style_italic">Italic</string>
     <string name="tools_font_style_bold_italic">Bold&amp;Italic</string>
+    
+    
+<!--    v2.1.0-->
+    <string name="tools_import_annotations">Import Annotations</string>
+    <string name="tools_export_annotations">Export Annotations</string>
+    <string name="tools_delete_all_annotations">Delete all annotations</string>
+    <string name="tools_delete_all_replies">Delete all replies</string>
+    <string name="tools_import_success">Import successful</string>
+    <string name="tools_please_select_xfdf_format_file">Please select xfdf format file</string>
+
+    <string name="tools_marked">Marked</string>
+    <string name="tools_unmarked">UnMarked</string>
+    <string name="tools_accepted">Accepted</string>
+    <string name="tools_rejected">Rejected</string>
+    <string name="tools_cancelled">Cancelled</string>
+    <string name="tools_completed">Completed</string>
+
+    <string name="tools_add_a_new_reply">Add a new Reply</string>
+    <string name="tools_add_new_reply">Add New Reply</string>
+    <string name="tools_edit_reply">Edit Reply</string>
+    <string name="tools_view_replies">View replies</string>
+    <string name="tools_delete_annotation">Delete annotation</string>
+    <string name="tools_reply_or_add_thoughts">Reply or add thoughts</string>
+    <string name="tools_replies_of_annotation">Replies of Annotation</string>
+    <string name="tools_total">Total: %d</string>
+    <string name="tools_reply">Reply</string>
+    <string name="tools_view_reply">View Reply</string>
+
+
+    <string name="tools_snap">Snap</string>
+
+    <string name="tools_exit">Exit</string>
 
 </resources>

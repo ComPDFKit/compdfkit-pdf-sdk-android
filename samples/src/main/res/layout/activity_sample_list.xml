@@ -5,14 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".SampleListActivity">
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/rv_sample_list"
         tools:listitem="@layout/layout_sample_list_item"
         />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

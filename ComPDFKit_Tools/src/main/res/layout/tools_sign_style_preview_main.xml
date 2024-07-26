@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sl_main"
     android:layout_width="match_parent"
+    tools:background="?android:attr/colorBackground"
     android:layout_height="wrap_content">
 
 
@@ -25,12 +27,12 @@
             android:layout_width="match_parent"
             android:layout_height="28dp"
             android:layout_marginTop="16dp"
-            android:background="@color/tools_reader_setting_head_bg_color"
+            android:background="?attr/compdfkit_HeadItem_BackgroundColor"
             android:gravity="center_vertical"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="@string/tools_text_properties"
-            android:textColor="@color/tools_text_color_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="12sp"
             app:layout_constraintTop_toBottomOf="@id/digital_sign_preview" />
 
@@ -44,9 +46,9 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="@string/tools_annot_align_type"
-            android:textColor="@color/tools_text_color_primary"
-            app:layout_constraintTop_toBottomOf="@id/tv_text_signature" />
-
+            android:textColor="?android:attr/textColorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/tv_text_signature"
+            tools:layout_editor_absoluteX="0dp" />
 
         <LinearLayout
             android:id="@+id/ll_alignment_type"
@@ -98,7 +100,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/tools_location"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -113,8 +115,8 @@
                 android:gravity="center_vertical|end"
                 android:maxLines="2"
                 android:text="@string/tools_close"
-                android:textColor="@color/tools_text_color_primary"
-                app:drawableTint="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
+                app:drawableTint="?attr/colorOnPrimary"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -139,7 +141,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/tools_reason"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -152,8 +154,8 @@
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical|end"
                 android:text="@string/tools_close"
-                android:textColor="@color/tools_text_color_primary"
-                app:drawableTint="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
+                app:drawableTint="?attr/colorOnPrimary"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -168,12 +170,12 @@
             android:id="@+id/tv_optional_reasons"
             android:layout_width="match_parent"
             android:layout_height="28dp"
-            android:background="@color/tools_reader_setting_head_bg_color"
+            android:background="?attr/compdfkit_HeadItem_BackgroundColor"
             android:gravity="center_vertical"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="@string/tools_include_text"
-            android:textColor="@color/tools_text_color_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="12sp"
             app:layout_constraintTop_toBottomOf="@id/cl_reason" />
 
@@ -186,7 +188,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_optional_reasons"
-
             />
 
         <androidx.appcompat.widget.AppCompatCheckBox
@@ -198,7 +199,7 @@
             android:gravity="center_vertical"
             android:paddingStart="8dp"
             android:text="@string/tools_field_name"
-            android:textColor="@color/tools_text_color_primary" />
+            android:textColor="?android:attr/textColorPrimary" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_date"
@@ -209,7 +210,7 @@
             android:gravity="center_vertical"
             android:paddingStart="8dp"
             android:text="@string/tools_date"
-            android:textColor="@color/tools_text_color_primary" />
+            android:textColor="?android:attr/textColorPrimary" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_logo"
@@ -220,7 +221,7 @@
             android:gravity="center_vertical"
             android:paddingStart="8dp"
             android:text="@string/tools_logo"
-            android:textColor="@color/tools_text_color_primary" />
+            android:textColor="?android:attr/textColorPrimary"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_distinguishable_name"
@@ -230,7 +231,7 @@
             android:gravity="center_vertical"
             android:paddingStart="8dp"
             android:text="@string/tools_distinguishable_name"
-            android:textColor="@color/tools_text_color_primary" />
+            android:textColor="?android:attr/textColorPrimary"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_compdfkit_version"
@@ -240,7 +241,7 @@
             android:gravity="center_vertical"
             android:paddingStart="8dp"
             android:text="@string/tools_compdfkit_versions"
-            android:textColor="@color/tools_text_color_primary" />
+            android:textColor="?android:attr/textColorPrimary"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_tab"
@@ -251,7 +252,7 @@
             android:gravity="center_vertical"
             android:paddingStart="8dp"
             android:text="@string/tools_tab"
-            android:textColor="@color/tools_text_color_primary" />
+            android:textColor="?android:attr/textColorPrimary"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

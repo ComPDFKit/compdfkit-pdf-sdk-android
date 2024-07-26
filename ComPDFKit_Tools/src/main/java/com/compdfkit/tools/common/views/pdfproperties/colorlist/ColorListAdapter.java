@@ -23,6 +23,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickAdapter;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickViewHolder;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
+import com.google.android.material.color.MaterialColors;
 
 import java.util.List;
 
@@ -49,7 +50,8 @@ class ColorListAdapter extends CBaseQuickAdapter<CColorItemBean, CBaseQuickViewH
                 drawable.setColor(item.getColor());
                 if (item.getColor() == Color.WHITE){
                     drawable.setStroke(CDimensUtils.dp2px(holder.itemView.getContext(), 1),
-                            ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_control_line_color));
+                            MaterialColors.getColor(holder.itemView.getContext(), R.attr.dividerColor,
+                                    ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_divider_color)));
                 }else {
                     drawable.setStroke(CDimensUtils.dp2px(holder.itemView.getContext(), 2),
                             Color.TRANSPARENT);

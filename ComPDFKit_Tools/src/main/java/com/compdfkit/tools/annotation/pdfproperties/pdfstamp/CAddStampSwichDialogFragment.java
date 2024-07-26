@@ -20,6 +20,7 @@ import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -41,7 +42,7 @@ public class CAddStampSwichDialogFragment  extends CBasicBottomSheetDialogFragme
 
     @Override
     protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle_TopCorners;
+        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Transparent_Theme);
     }
 
     @Override

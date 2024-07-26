@@ -86,7 +86,7 @@ public class CFontSpinnerAdapter extends BaseAdapter {
         List<CFontStyleItemBean> styleItemBeans = new ArrayList<>();
         for (String styleName : cpdfFontName.getStyleName()) {
             String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(cpdfFontName.getFamilyName(), styleName);
-            if (styleName.equals("Regular")) {
+            if ("Regular".equals(styleName)) {
                 styleItemBeans.add(0, new CFontStyleItemBean(styleName, psName));
             } else {
                 styleItemBeans.add(new CFontStyleItemBean(styleName, psName));

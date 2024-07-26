@@ -2,6 +2,7 @@
 <com.compdfkit.tools.common.utils.view.CNestedScrollableHost xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="?android:attr/colorBackground"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -23,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
-            android:background="@color/tools_color_background"
+            android:background="?android:attr/colorBackground"
             >
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -33,7 +34,7 @@
                 android:textSize="18sp"
                 android:layout_marginTop="16dp"
                 android:text="@string/tools_no_outlines"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

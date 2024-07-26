@@ -90,7 +90,7 @@ class BatesTest : PDFSamples() {
         val document = CPDFDocument(context())
         val file = File(outputDir(), "BatesTest/AddBatesTest.pdf")
         document.open(file.absolutePath)
-        val bates = document.bates.clear()
+        document.bates.clear()
         val resultsFile = File(outputDir(), "BatesTest/ClearBatesTest.pdf")
         saveSamplePDF(document, resultsFile, false)
         outputListener?.println("Done. Results saved in ClearBatesTest.pdf")

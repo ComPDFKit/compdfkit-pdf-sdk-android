@@ -5,7 +5,7 @@
     android:id="@+id/iv_tool_item"
     style="@style/tools_annotation_tool_bar_item_iv_style"
     android:layout_marginStart="12dp"
-    android:background="@drawable/tools_common_btn_corner_ripple"
+    android:background="@drawable/tools_common_btn_corner_ripple_in_widget"
     android:padding="3dp"
     app:srcCompat="@drawable/tools_ic_annotation_setting"
     app:tint="@color/tools_annotation_iv_status_color"

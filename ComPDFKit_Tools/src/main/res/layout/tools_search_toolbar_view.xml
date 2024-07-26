@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:elevation="4dp"
+    android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:background="@color/tools_color_primary"
-    android:layout_height="wrap_content">
+    android:background="?android:attr/colorPrimary"
+    android:elevation="4dp">
 
     <com.compdfkit.tools.common.views.CToolBar
         android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:background="?android:attr/colorPrimary"
         android:title="@string/tools_search_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,18 +29,19 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="50dp"
                 android:layout_weight="1"
-                app:tabPaddingStart="16dp"
-                app:tabPaddingEnd="16dp"
-                android:background="@color/tools_color_primary"
+                android:background="?attr/colorPrimary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:visibility="invisible"
-                tools:visibility="visible"
-                app:tabMode="auto"
-                app:tabRippleColor="@color/tools_color_accent_50"
                 app:layout_constraintTop_toBottomOf="@id/tool_bar"
-                app:tabIndicatorColor="@color/tools_color_accent"
-                app:tabSelectedTextColor="@color/tools_color_accent"
+                app:tabIndicatorColor="?attr/colorAccent"
+                app:tabMode="auto"
+                app:tabPaddingEnd="16dp"
+                app:tabPaddingStart="16dp"
+                app:tabRippleColor="@null"
+                app:tabSelectedTextColor="?attr/colorAccent"
                 app:tabTextAppearance="@style/tools_tab_layout_text_style"
-                app:tabTextColor="@color/tools_text_color_primary" />
+                app:tabTextColor="?android:attr/textColorPrimary"
+                tools:visibility="visible" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_search_setting"
@@ -47,9 +49,10 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical|end"
                 android:layout_marginEnd="8dp"
-                android:background="@drawable/tools_common_oval_ripple"
+                android:background="@drawable/tools_common_oval_ripple_in_widget"
                 android:padding="4dp"
-                app:srcCompat="@drawable/tools_ic_search_setting" />
+                app:srcCompat="@drawable/tools_ic_search_setting"
+                app:tint="?attr/colorOnPrimary" />
 
         </LinearLayout>
 
@@ -65,15 +68,14 @@
             android:id="@+id/et_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:background="@null"
             android:gravity="center_vertical"
             android:hint="@string/tools_find"
+            android:imeOptions="actionSearch"
             android:paddingStart="16dp"
             android:paddingEnd="8dp"
             android:singleLine="true"
-            android:imeOptions="actionSearch"
-            android:background="@null"
-            android:textColor="@color/tools_text_color_primary"
-            android:textColorHint="@color/tools_text_color_hint"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/barrier"
@@ -92,12 +94,13 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/tools_common_oval_ripple"
+            android:background="@drawable/tools_common_oval_ripple_in_widget"
             android:padding="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/iv_search"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/tools_ic_close" />
+            app:srcCompat="@drawable/tools_ic_close"
+            app:tint="?attr/colorOnPrimary" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_search"
@@ -107,8 +110,10 @@
             android:padding="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/tools_common_oval_ripple_in_widget"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/tools_ic_search" />
+            app:srcCompat="@drawable/tools_ic_search"
+            app:tint="?attr/colorOnPrimary" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_previous"
@@ -117,37 +122,37 @@
             android:layout_marginEnd="8dp"
             android:background="@drawable/tools_common_oval_ripple"
             android:padding="6dp"
-            app:tint="@color/tools_text_color_primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/iv_next"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/tools_ic_left_arrow" />
+            app:srcCompat="@drawable/tools_ic_left_arrow"
+            app:tint="?attr/colorOnPrimary" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_next"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="8dp"
-            android:padding="6dp"
-            app:tint="@color/tools_text_color_primary"
             android:background="@drawable/tools_common_oval_ripple"
+            android:padding="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/iv_search_list"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/tools_ic_right_arrow" />
+            app:srcCompat="@drawable/tools_ic_right_arrow"
+            app:tint="?attr/colorOnPrimary" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_search_list"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="8dp"
-            android:padding="6dp"
-            app:tint="@color/tools_text_color_primary"
             android:background="@drawable/tools_common_oval_ripple"
+            android:padding="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/tools_ic_search_list" />
+            app:srcCompat="@drawable/tools_ic_search_list"
+            app:tint="?attr/colorOnPrimary" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_search_before"
@@ -166,7 +171,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/tools_item_dividing_line_color"
+            android:background="?attr/dividerColor"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -182,15 +187,14 @@
             android:id="@+id/et_replace_with"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:background="@null"
             android:gravity="center_vertical"
             android:hint="@string/tools_replace_with"
+            android:imeOptions="actionDone"
             android:paddingStart="16dp"
             android:paddingEnd="8dp"
             android:singleLine="true"
-            android:imeOptions="actionDone"
-            android:background="@null"
-            android:textColor="@color/tools_text_color_primary"
-            android:textColorHint="@color/tools_text_color_hint"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/btn_replace_all"
@@ -203,17 +207,16 @@
             android:layout_height="32dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/tools_sign_cert_info_btn_bg"
-            android:foreground="@drawable/tools_common_btn_corner_ripple"
+            android:foreground="@drawable/tools_common_btn_corner_ripple_in_widget"
             android:gravity="center"
             android:paddingHorizontal="16dp"
             android:text="@string/tools_replace_all"
             android:textAllCaps="false"
-            android:textColor="@color/tools_color_accent"
+            android:textColor="?attr/colorAccent"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,7 +11,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="4dp" />
-            <solid android:color="@color/tools_color_background" />
+            <solid android:color="?android:attr/colorBackground" />
         </shape>
     </item>
 

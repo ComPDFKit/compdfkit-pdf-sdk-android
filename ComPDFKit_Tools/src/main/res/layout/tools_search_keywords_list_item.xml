@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="@drawable/tools_common_btn_rectangle_ripple"
-    android:background="@color/tools_color_primary">
+    android:background="?android:attr/colorPrimary">
 
     <TextView
         android:id="@+id/id_item_search_content_text"
@@ -15,7 +15,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:maxLines="3"
-        android:textColor="@color/tools_text_color_secondary"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="14sp"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"

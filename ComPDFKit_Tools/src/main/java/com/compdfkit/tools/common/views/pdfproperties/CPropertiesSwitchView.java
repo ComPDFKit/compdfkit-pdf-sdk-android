@@ -17,18 +17,18 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.SwitchCompat;
 
 import com.compdfkit.tools.R;
 
 
 public class CPropertiesSwitchView extends FrameLayout {
 
-    private SwitchCompat switchCompat;
+    private Switch switchCompat;
 
     private AppCompatTextView title;
 

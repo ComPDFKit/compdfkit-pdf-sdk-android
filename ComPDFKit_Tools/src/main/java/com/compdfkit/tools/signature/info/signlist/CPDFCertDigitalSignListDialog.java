@@ -55,11 +55,6 @@ public class CPDFCertDigitalSignListDialog extends CBasicBottomSheetDialogFragme
     }
 
     @Override
-    protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle;
-    }
-
-    @Override
     protected boolean fullScreen() {
         return true;
     }
@@ -110,8 +105,7 @@ public class CPDFCertDigitalSignListDialog extends CBasicBottomSheetDialogFragme
                 alertDialog.dismiss();
             });
             alertDialog.setConfirmClickListener(v -> {
-                boolean result = CertificateDigitalDatas.removeDigitalSign(pdfView.getCPdfReaderView(),
-                        pdfView.getCPdfReaderView().getPDFDocument(), signature.getSignature());
+                boolean result = CertificateDigitalDatas.removeDigitalSign(pdfView, signature.getSignature());
                 if (result) {
                     signListAdapter.remove(position);
                 }

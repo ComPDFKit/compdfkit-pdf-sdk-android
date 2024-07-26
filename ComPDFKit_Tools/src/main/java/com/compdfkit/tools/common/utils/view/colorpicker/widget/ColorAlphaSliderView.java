@@ -84,10 +84,6 @@ public class ColorAlphaSliderView extends View implements CMotionEventUpdatable 
         selectorPaint.setStyle(Paint.Style.STROKE);
         selectorPaint.setStrokeWidth(circleWidth);
 
-//        outPaint.setColor(0x29000000);
-//        outPaint.setStyle(Paint.Style.STROKE);
-//        outPaint.setStrokeWidth(CDimensUtils.px2dp(context, 2));
-
         alphaBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.tools_color_picker_bg_color_alpha);
     }
 

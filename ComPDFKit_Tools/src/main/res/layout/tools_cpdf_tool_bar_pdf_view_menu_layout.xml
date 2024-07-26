@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Tools_Base_Theme"
     android:layout_width="wrap_content"
     android:orientation="horizontal"
     android:id="@+id/ll_menu"
     android:gravity="center_vertical"
     android:layout_height="?android:attr/actionBarSize"
-    android:layout_gravity="center_vertical"
-    android:theme="@style/Tools_Base_Theme">
+    android:layout_gravity="center_vertical">
 
 <!--    <androidx.appcompat.widget.AppCompatImageView-->
 <!--        android:id="@+id/iv_tool_bar_thumbnail"-->

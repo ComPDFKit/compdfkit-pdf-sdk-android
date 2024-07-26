@@ -3,13 +3,13 @@
 
     <item android:state_enabled="false">
         <shape>
-            <solid android:color="#DDE9FF" />
+            <solid android:color="@color/tools_annot_list_item_select_bg_color" />
         </shape>
     </item>
 
     <item>
         <shape>
-            <solid android:color="@color/tools_color_accent" />
+            <solid android:color="?attr/colorAccent" />
         </shape>
     </item>
 

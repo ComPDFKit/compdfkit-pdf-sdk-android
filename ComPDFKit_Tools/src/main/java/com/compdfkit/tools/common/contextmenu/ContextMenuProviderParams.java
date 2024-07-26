@@ -24,6 +24,7 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuLongPressPro
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuMarkupProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuPushButtonProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuRadioButtonProvider;
+import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuScreenShotProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSearchReplaceProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSelectContentProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuShapeProvider;
@@ -70,4 +71,6 @@ class ContextMenuProviderParams {
     public ContextMenuPushButtonProvider pushButtonProvider;
 
     public ContextMenuSearchReplaceProvider searchReplaceProvider;
+
+    public ContextMenuScreenShotProvider screenShotProvider;
 }

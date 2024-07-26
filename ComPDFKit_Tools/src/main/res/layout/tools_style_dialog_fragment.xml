@@ -14,7 +14,7 @@
         android:id="@+id/cl_viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tools_style_content_bg"
+        android:background="?attr/compdfkit_PDFStyleDialog_ContentColor"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="44dp"

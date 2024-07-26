@@ -33,7 +33,7 @@ public class CustomSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
     public void onSignatureWidgetFocused(CPDFSignatureWidget cpdfSignatureWidget) {
         CStyleManager styleManager = new CStyleManager(this, pageView);
         CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(styleManager.getStyle(CStyleType.FORM_SIGNATURE_FIELDS));
-        CStyleUIParams styleUiParams = CStyleUIParams.defaultStyle(CStyleType.FORM_SIGNATURE_FIELDS);
+        CStyleUIParams styleUiParams = CStyleUIParams.defaultStyle(pageView.getContext(), CStyleType.FORM_SIGNATURE_FIELDS);
         styleDialogFragment.setStyleUiConfig(styleUiParams);
         styleDialogFragment.setStyleDialogDismissListener(() -> {
             CAnnotStyle annotStyle = styleDialogFragment.getAnnotStyle();

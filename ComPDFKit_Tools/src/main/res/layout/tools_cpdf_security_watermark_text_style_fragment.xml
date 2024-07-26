@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:background="?android:attr/colorBackground"
+    tools:layout_gravity="bottom">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_rootView"
@@ -30,13 +33,12 @@
             app:tools_slider_bar_value_show_type="percentage" />
 
         <com.compdfkit.tools.common.views.pdfproperties.font.CPDFFontView
+            android:id="@+id/font_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/slider_bar"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/font_view"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/slider_bar" />
 
         <com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar
             android:id="@+id/font_size_slider_bar"
@@ -117,7 +119,7 @@
                 android:id="@+id/spinner_page_range"
                 android:layout_width="180dp"
                 android:layout_height="match_parent"
-                android:dropDownSelector="@color/tools_color_primary"
+                android:dropDownSelector="?attr/colorPrimary"
                 android:popupBackground="@drawable/tools_common_window_bg" />
 
         </LinearLayout>
@@ -131,20 +133,19 @@
             android:layout_marginTop="28dp"
             android:layout_marginBottom="32dp"
             android:text="@string/tools_tile"
-            android:textColor="@color/tools_text_color_disable"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_page_range" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <Switch
             android:id="@+id/sw_tile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:theme="@style/Tools_MySwitch"
             app:layout_constraintBottom_toBottomOf="@id/tv_tile"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_tile" />
+            app:layout_constraintTop_toTopOf="@id/tv_tile"
+            tools:checked="true" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -100,9 +100,11 @@ object FileUtils {
     fun deleteFile(file: File) {
         if (file.isDirectory) {
             val files = file.listFiles()
-            for (i in files.indices) {
-                val f = files[i]
-                deleteFile(f)
+            if (files != null) {
+                for (i in files.indices) {
+                    val f = files[i]
+                    deleteFile(f)
+                }
             }
             file.delete() //如要保留文件夹，只删除文件，请注释这行
         } else if (file.exists()) {

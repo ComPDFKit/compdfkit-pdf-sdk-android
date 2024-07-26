@@ -28,6 +28,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 
 public class CInputOwnerPwdDialog extends DialogFragment {
@@ -72,15 +73,12 @@ public class CInputOwnerPwdDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.tools_dialog_theme);
+        setStyle(STYLE_NO_TITLE, CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme));
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getDialog() != null && getDialog().getWindow() != null) {
-            getDialog().getWindow().setBackgroundDrawableResource(R.drawable.tools_dialog_background);
-        }
         View rootView = inflater.inflate(R.layout.tools_cpdf_security_input_owner_pwd_dialog, container, false);
         etPassword = rootView.findViewById(R.id.et_password);
         btnCancel = rootView.findViewById(R.id.btn_cancel);

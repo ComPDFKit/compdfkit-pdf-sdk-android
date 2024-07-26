@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tools_style_content_bg"
+    android:background="?attr/compdfkit_PDFStyleDialog_ContentColor"
     android:paddingHorizontal="8dp"
     android:orientation="vertical"
     android:gravity="center"

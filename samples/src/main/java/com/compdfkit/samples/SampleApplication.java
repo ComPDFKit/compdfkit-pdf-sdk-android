@@ -13,12 +13,15 @@ package com.compdfkit.samples;
 import android.app.Application;
 
 import com.compdfkit.samples.samples.AnnotationImportExportTest;
+import com.compdfkit.samples.samples.AnnotationReplyTest;
 import com.compdfkit.samples.samples.AnnotationTest;
 import com.compdfkit.samples.samples.BackgroundTest;
 import com.compdfkit.samples.samples.BatesTest;
 import com.compdfkit.samples.samples.BookmarkTest;
+import com.compdfkit.samples.samples.ContentEditorTest;
 import com.compdfkit.samples.samples.DigitalSignaturesTest;
 import com.compdfkit.samples.samples.DocumentInfoTest;
+import com.compdfkit.samples.samples.DocumentSaveExtraFontSubsetTest;
 import com.compdfkit.samples.samples.EncryptTest;
 import com.compdfkit.samples.samples.FlattenTest;
 import com.compdfkit.samples.samples.HeaderFooterTest;
@@ -52,6 +55,7 @@ public class SampleApplication extends Application {
         super.onCreate();
         application = this;
         samplesList.clear();
+        samplesList.add(new DocumentSaveExtraFontSubsetTest());
         samplesList.add(new DigitalSignaturesTest());
         samplesList.add(new BookmarkTest());
         samplesList.add(new OutlineTest());
@@ -59,6 +63,7 @@ public class SampleApplication extends Application {
         samplesList.add(new TextSearchTest());
         samplesList.add(new AnnotationTest());
         samplesList.add(new AnnotationImportExportTest());
+        samplesList.add(new AnnotationReplyTest());
         samplesList.add(new InteractiveFormsTest());
         samplesList.add(new PDFPageTest());
         samplesList.add(new ImageExtractTest());
@@ -72,5 +77,6 @@ public class SampleApplication extends Application {
         samplesList.add(new EncryptTest());
         samplesList.add(new PDFATest());
         samplesList.add(new FlattenTest());
+        samplesList.add(new ContentEditorTest());
     }
 }

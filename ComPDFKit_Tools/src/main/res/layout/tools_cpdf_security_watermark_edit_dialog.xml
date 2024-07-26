@@ -30,7 +30,7 @@
                 android:gravity="center"
                 android:minWidth="70dp"
                 android:text="@string/tools_page_edit_toolbar_done"
-                android:textColor="@color/tools_color_accent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +44,7 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/tools_common_btn_corner_ripple"
                 android:padding="4dp"
-                app:tint="@color/tools_text_color_primary"
+                app:tint="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_done"
                 app:layout_constraintTop_toTopOf="parent"
@@ -59,12 +59,10 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/tools_color_primary"
+        android:background="?android:attr/colorPrimary"
         android:elevation="4dp"
         app:layout_constraintTop_toBottomOf="@id/tool_bar"
-        app:tabIndicatorColor="@color/tools_color_accent"
-        app:tabSelectedTextColor="@color/tools_color_accent"
-        app:tabTextColor="@color/tools_text_color_primary" />
+        style="?attr/compdfkit_tabLayoutStyle" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager2"

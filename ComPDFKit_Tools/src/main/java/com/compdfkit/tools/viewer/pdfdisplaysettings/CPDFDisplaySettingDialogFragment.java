@@ -78,8 +78,15 @@ public class CPDFDisplaySettingDialogFragment extends BottomSheetDialogFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle);
+        int themeId = R.style.ComPDFKit_Theme_BottomSheetDialog_Light_SettingsDialog;
+        int isLightThemeValue = CViewUtils.getThemeAttrData(getContext().getTheme(), R.attr.isLightTheme);
+        boolean isDarkTheme = isLightThemeValue == 0;
+        if (isDarkTheme){
+            themeId = R.style.ComPDFKit_Theme_BottomSheetDialog_Dark_SettingsDialog;
+        }
+        setStyle(STYLE_NORMAL, themeId);
     }
+
 
     @Override
     public void onStart() {
@@ -154,12 +161,19 @@ public class CPDFDisplaySettingDialogFragment extends BottomSheetDialogFragment
         }
         if (checkedId == R.id.r_btn_light_mode) {
             setReaderBackgroundColor(ContextCompat.getColor(getContext(), R.color.tools_themes_light));
+            pdfView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.tools_pdf_view_ctrl_background_color));
         } else if (checkedId == R.id.r_btn_dark_mode) {
-            setReaderBackgroundColor(ContextCompat.getColor(getContext(), R.color.tools_themes_dark));
+            int color = ContextCompat.getColor(getContext(), R.color.tools_themes_dark);
+            setReaderBackgroundColor(color);
+            pdfView.setBackgroundColor(CViewUtils.getColor(color, 190));
         } else if (checkedId == R.id.r_btn_sepia_mode) {
-            setReaderBackgroundColor(ContextCompat.getColor(getContext(), R.color.tools_themes_sepia));
+            int color = ContextCompat.getColor(getContext(), R.color.tools_themes_sepia);
+            setReaderBackgroundColor(color);
+            pdfView.setBackgroundColor(CViewUtils.getColor(color, 190));
         } else if (checkedId == R.id.r_btn_reseda_mode) {
-            setReaderBackgroundColor(ContextCompat.getColor(getContext(), R.color.tools_themes_reseda));
+            int color = ContextCompat.getColor(getContext(), R.color.tools_themes_reseda);
+            setReaderBackgroundColor(color);
+            pdfView.setBackgroundColor(CViewUtils.getColor(color, 190));
         } else if (checkedId == R.id.r_btn_single_page) {
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setDoublePageMode(false);

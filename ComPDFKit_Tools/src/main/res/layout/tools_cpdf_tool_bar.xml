@@ -5,7 +5,7 @@
     android:id="@+id/cl_pdf_root_tool_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tools_color_primary"
+    android:background="?android:attr/colorPrimary"
     android:elevation="4dp"
     tools:layout_height="?android:attr/actionBarSize">
 
@@ -26,13 +26,13 @@
         android:layout_marginStart="8dp"
         android:visibility="gone"
         tools:visibility="visible"
-        android:background="@drawable/tools_common_oval_ripple"
+        android:background="@drawable/tools_common_oval_ripple_in_widget"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tools_ic_back"
-        app:tint="@color/tools_on_primary" />
+        app:tint="?attr/colorOnPrimary" />
 
     <LinearLayout
         android:id="@+id/ll_title"
@@ -40,7 +40,7 @@
         android:layout_height="match_parent"
         android:layout_marginVertical="4dp"
         android:layout_marginStart="4dp"
-        android:background="@drawable/tools_common_btn_corner_ripple"
+        android:background="@drawable/tools_common_btn_corner_ripple_in_widget"
         android:gravity="center_vertical"
         android:paddingHorizontal="4dp"
         app:layout_constrainedWidth="true"
@@ -57,11 +57,11 @@
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/tools_ic_syas_arrow"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/tools_text_color_primary"
-            android:textSize="22sp"
-            app:autoSizeMaxTextSize="22sp"
+            android:textSize="20sp"
+            app:autoSizeMaxTextSize="20sp"
+            android:textAppearance="?attr/textAppearanceHeadline6"
             android:drawablePadding="8dp"
-            app:drawableTint="@color/tools_text_color_primary"
+            app:drawableTint="?attr/colorOnPrimary"
             android:maxLines="1"
             android:gravity="center_vertical"
             app:autoSizeMinTextSize="14sp"

@@ -111,7 +111,7 @@ class DigitalSignaturesTest : PDFSamples() {
     private fun createSignature() {
         outputListener?.println("Create digital signature.")
         val document = CPDFDocument(context())
-        var error = document.open(getAssetsTempFile(context(), "CommonFivePage.pdf"))
+        document.open(getAssetsTempFile(context(), "CommonFivePage.pdf"))
         //Insert a Form Signature Widget (unsigned)
         val cpdfPage = document.pageAtIndex(0)
         val pageSize = cpdfPage.size
@@ -196,7 +196,7 @@ class DigitalSignaturesTest : PDFSamples() {
                 val certIsTrusted = certChainTrusted || certificateIsTrusted
 
                 // Check if the certificate has expired
-                val isExpired = signer.cert.isExpired
+                signer.cert.isExpired
 
                 // Take appropriate actions based on the verification results
                 if (isSignVerified && certIsTrusted) {
@@ -224,7 +224,7 @@ class DigitalSignaturesTest : PDFSamples() {
         val password = "ComPDFKit"
         if (CPDFSignature.checkPKCS12Password(certFilePath, password)) {
             val x509 = CPDFSignature.getX509ByPKCS12Cert(certFilePath, password)
-            val result = x509.addToTrustedCertificates(context())
+            x509.addToTrustedCertificates(context())
             val isTrusted = x509.checkCertificateIsTrusted(context())
             if (isTrusted) {
                 outputListener?.println("Certificate is trusted")

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="?android:attr/colorBackground"
     android:layout_height="match_parent">
 
     <com.compdfkit.tools.docseditor.CPageEditBar
@@ -41,7 +42,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:text="@string/tools_page_edit_insert_page_pagesize"
-                    android:textColor="@color/tools_text_color_primary"
                     />
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_tool_insert_page_right"
@@ -54,7 +54,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/tools_pageedit_right_arrow"
-                    app:tint="@color/tools_on_primary" />
+                    app:tint="?attr/colorOnPrimary" />
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/iv_tool_insert_page_cur_size"
                     style="@style/tools_edit_page_insertpage_cursize_style"
@@ -62,7 +62,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:text="A4(595*842)"
-                    android:textColor="@color/tools_text_color_primary"
                     />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -104,7 +103,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:text="@string/tools_page_edit_insert_page_pagedirection"
-                    android:textColor="@color/tools_text_color_primary"
                     />
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_tool_insert_page_horizontal"
@@ -150,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/tools_pageedit_line_height"
                     android:gravity="center"
-                    android:textColor="@color/tools_text_color_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:text="@string/tools_page_edit_insert_page_insert_to"
@@ -164,7 +162,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_tools_edit_page_insert_location_title"
                     >
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_homepage"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
@@ -172,30 +170,32 @@
                         android:textColor="@color/tools_radio_btn_text_status_color"
                         android:text="@string/tools_page_edit_insert_page_home_page" />
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_lastpage"
                         android:layout_width="match_parent"
                         android:checked="false"
                         android:textColor="@color/tools_radio_btn_text_status_color"
                         android:layout_height="@dimen/tools_pageedit_line_height"
                         android:text="@string/tools_page_edit_insert_page_last_page"/>
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_before"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
                         android:checked="false"
                         android:textColor="@color/tools_radio_btn_text_status_color"
                         android:text="@string/tools_page_edit_insert_page_before"/>
+
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_tool_edit_page_enterpage"
                         android:hint="@string/tools_page_edit_insert_page_enterpage_tint"
                         android:gravity="bottom"
                         android:inputType="number"
-                        android:textColorHint="@color/tools_text_color_hint"
+                        android:textColorHint="?attr/hintTextColor"
                         android:textSize="14sp"
+                        android:focusableInTouchMode="false"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"/>
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_after"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"

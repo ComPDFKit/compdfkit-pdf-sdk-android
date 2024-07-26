@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    tools:background="?android:attr/colorBackground"
     android:layout_height="match_parent">
 
     <com.compdfkit.tools.common.views.CToolBar
@@ -33,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="40dp"
-        android:backgroundTint="@color/tools_color_accent"
+        android:backgroundTint="?attr/colorAccent"
         android:src="@drawable/tools_ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

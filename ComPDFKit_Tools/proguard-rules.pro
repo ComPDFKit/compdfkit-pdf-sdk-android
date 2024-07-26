@@ -249,3 +249,5 @@ public *;
 
 # These classes are duplicated between android.jar and core-lambda-stubs.jar.
 -dontnote java.lang.invoke.**
+
+-dontwarn com.google.android.material.R$id

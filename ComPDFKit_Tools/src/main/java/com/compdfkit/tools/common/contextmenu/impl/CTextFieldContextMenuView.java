@@ -32,6 +32,7 @@ public class CTextFieldContextMenuView implements ContextMenuTextFieldProvider {
             CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_TEXT_FIELD);
             CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
+            styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
             styleDialogFragment.show(helper.getReaderView().getContext());
             helper.dismissContextMenu();
         });

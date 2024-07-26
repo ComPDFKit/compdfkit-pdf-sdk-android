@@ -22,10 +22,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/run"
+        app:rippleColor="#334982E6"
         app:cornerRadius="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_description"
-
+        android:textColor="?android:attr/textColorPrimary"
         />
 
     <com.google.android.material.button.MaterialButton
@@ -35,6 +36,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/open_files"
         app:cornerRadius="4dp"
+        app:rippleColor="#334982E6"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintStart_toEndOf="@id/btn_run"
         app:layout_constraintTop_toTopOf="@id/btn_run" />
 
@@ -54,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            android:background="#80E4E0E0"
+            android:background="#1AE4E0E0"
             android:padding="4dp"
             tools:text="Done!" />
 

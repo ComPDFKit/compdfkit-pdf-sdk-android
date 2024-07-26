@@ -33,7 +33,7 @@ class ImageExtractTest : PDFSamples() {
         val extractDir = File(outputDir(), "imageExtract/ImageExtractTest")
         extractDir.delete()
         extractDir.mkdirs()
-        document.extractImage(extractDir.absolutePath) { pageIndex, imageIndex, index ->
+        document.extractImage(extractDir.absolutePath) { pageIndex, imageIndex, _ ->
             //Customize the returned file name
             return@extractImage document.fileName + "_" + pageIndex + "_" + imageIndex
         }

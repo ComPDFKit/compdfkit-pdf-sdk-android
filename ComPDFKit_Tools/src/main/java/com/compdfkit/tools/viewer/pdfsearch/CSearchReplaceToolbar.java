@@ -475,9 +475,9 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
             searchResultDialog.show(fragmentManager, "searchResultDialogFragment");
             searchResultDialog.setSearchTextInfos(list);
             searchResultDialog.setOnClickSearchItemListener(clickItem -> {
+                searchResultDialog.dismiss();
                 pdfView.getCPdfReaderView().setDisplayPageIndex(clickItem.page);
                 cpdfSearch.select(clickItem.page, clickItem.textRangeIndex);
-                searchResultDialog.dismiss();
             });
         }
     }

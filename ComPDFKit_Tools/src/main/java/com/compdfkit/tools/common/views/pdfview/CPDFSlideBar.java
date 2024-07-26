@@ -223,6 +223,7 @@ public class CPDFSlideBar extends View {
                 currentSlideBarPosition.right = slideBarWidth;
                 currentSlideBarPosition.bottom = currentSlideBarPosition.top + slideBarHeight;
                 break;
+            default:break;
         }
         postInvalidate();
     }
@@ -265,6 +266,7 @@ public class CPDFSlideBar extends View {
                     currentSlideBarPosition.left = pageIndex * perPageDistance;
                     currentSlideBarPosition.right = currentSlideBarPosition.left + slideBarWidth;
                     break;
+                default:break;
             }
             changeThumbnailPosition();
         }
@@ -355,6 +357,7 @@ public class CPDFSlideBar extends View {
                     thumbnailPosition.right = parentWidth;
                 }
                 break;
+            default:break;
         }
     }
 
@@ -387,6 +390,7 @@ public class CPDFSlideBar extends View {
                 currentSlideBarPosition.top = thumbnailHeight + gapBetweenThumbnailAndSlideBar;
                 currentSlideBarPosition.bottom = thumbnailHeight + slideBarHeight + gapBetweenThumbnailAndSlideBar;
                 break;
+            default:break;
         }
     }
 
@@ -452,7 +456,7 @@ public class CPDFSlideBar extends View {
                 lastX = 0;
                 lastY = 0;
                 break;
-
+            default:break;
         }
         return super.onTouchEvent(event);
     }
@@ -548,6 +552,7 @@ public class CPDFSlideBar extends View {
             case BOTTOM:
                 super.layout(0, parentHeight - slideBarHeight - thumbnailHeight - gapBetweenThumbnailAndSlideBar, parentWidth, parentHeight);
                 break;
+            default:break;
         }
     }
 

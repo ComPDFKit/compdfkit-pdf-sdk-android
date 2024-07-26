@@ -1,7 +1,18 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Compdfkit_android_demo" parent="Theme.Material3.DayNight">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <item name="android:colorAccent">#6499FF</item>
+        <item name="android:statusBarColor">#222429</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+
+        <item name="colorPrimary">#222429</item>
+        <item name="android:colorPrimary">#222429</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#222429</item>
+        <item name="android:textColorPrimary">@color/white</item>
+
     </style>
 </resources>

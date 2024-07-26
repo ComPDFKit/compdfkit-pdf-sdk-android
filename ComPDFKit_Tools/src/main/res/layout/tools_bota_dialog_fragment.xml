@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <com.compdfkit.tools.common.views.CToolBar
         android:id="@+id/tool_bar"
@@ -14,18 +15,32 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tools_toolbar_back_icon="@drawable/tools_ic_back"
         android:title="@string/tools_outlines"
-         />
+        android:animateLayoutChanges="true"
+        >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/tools_ic_more_vertical"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="16dp"
+            app:tint="?attr/colorOnPrimary"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:padding="4dp"
+            android:background="@drawable/tools_common_oval_ripple"
+            />
+
+    </com.compdfkit.tools.common.views.CToolBar>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"
-        app:tabTextAppearance="@style/tools_tab_layout_text_style"
-        android:background="@color/tools_color_primary"
-        app:tabSelectedTextColor="@color/tools_color_accent"
-        app:tabTextColor="@color/tools_text_color_primary"
-        app:tabIndicatorColor="@color/tools_color_accent"
+        android:background="?android:attr/colorPrimary"
+        style="?attr/compdfkit_tabLayoutStyle"
         app:layout_constraintTop_toBottomOf="@id/tool_bar" />
 
     <androidx.viewpager2.widget.ViewPager2

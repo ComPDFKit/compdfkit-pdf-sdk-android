@@ -33,6 +33,7 @@ public class CRadioButtonContextMenuView implements ContextMenuRadioButtonProvid
             CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_RADIO_BUTTON);
             CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
+            styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
             styleDialogFragment.show(helper.getReaderView().getContext());
             helper.dismissContextMenu();
         });

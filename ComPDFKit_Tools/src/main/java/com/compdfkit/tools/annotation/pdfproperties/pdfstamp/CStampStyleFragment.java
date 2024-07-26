@@ -34,11 +34,13 @@ public class CStampStyleFragment extends CBasicPropertiesFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.tools_properties_stamp_style_fragment, container, false);
         tabLayout = rootView.findViewById(R.id.tab_layout);
         viewPager2 = rootView.findViewById(R.id.view_pager);
         return rootView;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

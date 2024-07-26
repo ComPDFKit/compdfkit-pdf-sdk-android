@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
+    tools:background="?android:attr/colorBackground"
     android:focusable="true"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -14,7 +15,7 @@
         android:gravity="center_vertical"
         android:paddingStart="16dp"
         android:text="@string/tools_location"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,7 +35,7 @@
         android:layout_height="28dp"
         android:visibility="gone"
         tools:visibility="visible"
-        android:background="@color/tools_reader_setting_head_bg_color"
+        android:background="?attr/compdfkit_HeadItem_BackgroundColor"
         app:layout_constraintTop_toBottomOf="@id/tv_reason_title" />
 
 

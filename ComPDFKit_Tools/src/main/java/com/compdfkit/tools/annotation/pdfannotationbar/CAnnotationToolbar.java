@@ -129,7 +129,7 @@ public class CAnnotationToolbar extends FrameLayout {
         CStyleManager styleManager = new CStyleManager(pdfView);
         CStyleType styleType = toolListAdapter.getCurrentAnnotType().getStyleType();
         CAnnotStyle style = styleManager.getStyle(styleType);
-        CStyleUIParams styleUiParams = CStyleUIParams.defaultStyle(styleType);
+        CStyleUIParams styleUiParams = CStyleUIParams.defaultStyle(getContext(), styleType);
         CStyleDialogFragment dialogFragment = CStyleDialogFragment.newInstance(style);
         dialogFragment.setStyleUiConfig(styleUiParams);
         styleManager.setAnnotStyleFragmentListener(dialogFragment);

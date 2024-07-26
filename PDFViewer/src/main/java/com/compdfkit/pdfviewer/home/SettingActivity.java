@@ -10,6 +10,9 @@
 package com.compdfkit.pdfviewer.home;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -34,7 +37,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         binding = ActivitySettingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.tvVersionValue.setText("V " + CPDFSdk.getSDKVersion());
+        binding.tvVersionValue.setText("V" + CPDFSdk.getSDKVersion());
         binding.tvCompdfWebsite.setOnClickListener(this);
         binding.tvAboutUs.setOnClickListener(this);
         binding.tvTechnicalSupport.setOnClickListener(this);
@@ -46,12 +49,51 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         binding.swHighlightLink.setChecked(SettingDatas.isHighlightLink(this));
         binding.swHighlightForm.setChecked(SettingDatas.isHighlightForm(this));
+        binding.swFileSaveExtraSubset.setChecked(SettingDatas.isExtraFontSet(this));
+        binding.etDocumentAuthor.setText(SettingDatas.getDocumentAuthor(this));
+        binding.etAnnotationAuthor.setText(SettingDatas.getAnnotationAuthor(this));
 
         binding.swHighlightForm.setListener((buttonView, isChecked) -> {
             SettingDatas.setHighlightForm(this, isChecked);
         });
         binding.swHighlightLink.setListener((buttonView, isChecked) -> {
             SettingDatas.setHighlightLink(this, isChecked);
+        });
+        binding.swFileSaveExtraSubset.setListener((buttonView, isChecked) -> {
+            SettingDatas.setFileSaveExtraFontSet(this, isChecked);
+        });
+
+        binding.etAnnotationAuthor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s)) {
+                    SettingDatas.setAnnotationAuthor(getBaseContext(), s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        binding.etDocumentAuthor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s)) {
+                    SettingDatas.setDocumentAuthor(getBaseContext(), s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 

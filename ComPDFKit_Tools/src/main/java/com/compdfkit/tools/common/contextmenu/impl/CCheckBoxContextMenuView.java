@@ -33,6 +33,7 @@ public class CCheckBoxContextMenuView implements ContextMenuCheckBoxProvider {
             CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_CHECK_BOX);
             CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
+            styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
             styleDialogFragment.show(helper.getReaderView().getContext());
             helper.dismissContextMenu();
         });

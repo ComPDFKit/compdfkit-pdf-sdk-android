@@ -42,7 +42,7 @@ class TextSearchTest : PDFSamples() {
             val keywords = "PDF"
             // Search for all relevant text in a document based on a keyword
             val list = startSearch(document, keywords)
-            if (list != null && list.isNotEmpty()) {
+            if (list.isNotEmpty()) {
                 val textRange = list[0]
                 val pdfPage = document.pageAtIndex(0)
                 val pdfTextPage = pdfPage.textPage
@@ -74,7 +74,7 @@ class TextSearchTest : PDFSamples() {
                 highlightAnnotation.rect = annotRect
                 highlightAnnotation.updateAp()
             }
-            outputListener?.println("the key `" + keywords + "` have " + list!!.size + " results")
+            outputListener?.println("the key `" + keywords + "` have " + list.size + " results")
             val file = File(outputDir(), "TextSearchTest/TextSearchResults.pdf")
             saveSamplePDF(document, file, false)
             outputListener?.println("Done. Results saved in TextSearchResults.pdf")

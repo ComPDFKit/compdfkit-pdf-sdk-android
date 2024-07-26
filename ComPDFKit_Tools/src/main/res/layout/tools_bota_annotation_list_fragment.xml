@@ -32,7 +32,7 @@
             android:id="@+id/cl_annot_empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/tools_color_background"
+            android:background="?android:attr/colorBackground"
             android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/tools_no_annotation"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -14,12 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickAdapter;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickViewHolder;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.viewer.pdfoutline.bean.COutlineData;
 import com.compdfkit.tools.viewer.pdfoutline.data.COutlineDatas;
@@ -67,7 +67,8 @@ public class COutlineListAdapter extends CBaseQuickAdapter<COutlineData, CBaseQu
         holder.getView(R.id.iv_outline_item_arrow).setLayoutParams(layoutParams);
         holder.getView(R.id.iv_outline_item_arrow).setVisibility( item.childOutlineIsEmpty() ? View.INVISIBLE : View.VISIBLE);
         holder.setImageResource(R.id.iv_outline_item_arrow, item.isExpand() ? R.drawable.tools_ic_arrow_down : R.drawable.tools_ic_right);
-        holder.setBackgroundColor(R.id.cl_root, ContextCompat.getColor(holder.itemView.getContext(), item.getLevel() == 1 ? R.color.tools_reader_setting_head_bg_color : R.color.tools_color_background));
+        holder.setBackgroundColor(R.id.cl_root, CViewUtils.getThemeAttrData(holder.itemView.getContext().getTheme(),
+                item.getLevel() == 1 ? R.attr.compdfkit_HeadItem_BackgroundColor : android.R.attr.colorBackground));
         holder.itemView.setOnClickListener(v -> {
             // Check if the child outline of the item is empty
             // If the child outline is empty and an outlineClickListener is set, display the page

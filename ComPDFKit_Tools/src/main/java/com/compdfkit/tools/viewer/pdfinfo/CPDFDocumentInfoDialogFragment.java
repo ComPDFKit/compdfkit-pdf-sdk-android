@@ -74,6 +74,12 @@ public class CPDFDocumentInfoDialogFragment extends BottomSheetDialogFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme));
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         if (!CViewUtils.isLandScape(getContext())){

@@ -28,6 +28,7 @@ import com.compdfkit.core.document.CPDFInfo;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.databinding.FragmentDocumentListBinding;
 import com.compdfkit.pdfviewer.home.datas.FunDatas;
+import com.compdfkit.pdfviewer.home.datas.SettingDatas;
 import com.compdfkit.pdfviewer.home.samples.SamplesFactory;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
@@ -102,7 +103,7 @@ public class DocumentListFragment extends Fragment {
                         // create document
                         if (document.getInfo() != null) {
                             CPDFInfo info = document.getInfo();
-                            info.setAuthor(getString(R.string.tools_compdfkit_author));
+                            info.setAuthor(SettingDatas.getDocumentAuthor(getContext()));
                             document.setInfo(info);
                         }
                         String fileName = "SampleBlankPDF.pdf";

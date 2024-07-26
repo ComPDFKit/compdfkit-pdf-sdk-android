@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground">
 
     <com.compdfkit.tools.docseditor.CPageEditBar
         android:id="@+id/page_edit_tool_bar"
@@ -10,10 +11,10 @@
         android:layout_height="?android:attr/actionBarSize"
         android:elevation="4dp"
         android:title="@string/tools_document_info"
-        app:tools_done_title="@string/tools_save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tools_done_title="@string/tools_save" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -39,7 +40,6 @@
                 <TextView
                     style="@style/tools_edit_page_insertpage_pagesize_style"
                     android:text="@string/tools_page_edit_insert_page_filename"
-                    android:textColor="@color/tools_text_color_primary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -55,13 +55,12 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/tools_ic_pageedit_arrow_right"
-                    app:tint="@color/tools_on_primary" />
+                    app:tint="?attr/colorOnPrimary" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/iv_tool_insert_page_filename"
                     style="@style/tools_edit_page_insertpage_cursize_style"
                     android:singleLine="true"
-                    android:textColor="@color/tools_text_color_primary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/iv_tool_insert_page_right"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -81,7 +80,7 @@
                     android:layout_height="@dimen/tools_pageedit_line_height"
                     android:gravity="center"
                     android:text="@string/tools_page_edit_insert_page_range"
-                    android:textColor="@color/tools_text_color_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -93,7 +92,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_tools_edit_page_insert_from_location_title">
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_from_all"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
@@ -101,21 +100,21 @@
                         android:text="@string/tools_page_edit_insert_page_allpage"
                         android:textColor="@color/tools_radio_btn_text_status_color" />
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_from_odd"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
                         android:text="@string/tools_page_edit_insert_page_oddpage"
                         android:textColor="@color/tools_radio_btn_text_status_color" />
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_from_even"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
                         android:text="@string/tools_page_edit_insert_page_evenpage"
                         android:textColor="@color/tools_radio_btn_text_status_color" />
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_from_specify"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
@@ -131,8 +130,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="bottom"
-                android:inputType="textCapWords"
                 android:hint="@string/tools_e_g_page"
+                android:focusableInTouchMode="false"
+                android:inputType="textCapWords"
+                android:textColorHint="?attr/hintTextColor"
                 android:textSize="14sp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -147,7 +148,7 @@
                     android:layout_height="@dimen/tools_pageedit_line_height"
                     android:gravity="center"
                     android:text="@string/tools_page_edit_insert_page_insert_to"
-                    android:textColor="@color/tools_text_color_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -159,42 +160,45 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_tools_edit_page_insert_location_title">
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_homepage"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
                         android:checked="true"
-                        android:textColor="@color/tools_radio_btn_text_status_color"
-                        android:text="@string/tools_page_edit_insert_page_home_page" />
+                        android:text="@string/tools_page_edit_insert_page_home_page"
+                        android:textColor="@color/tools_radio_btn_text_status_color" />
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_lastpage"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
-                        android:textColor="@color/tools_radio_btn_text_status_color"
-                        android:text="@string/tools_page_edit_insert_page_last_page" />
+                        android:text="@string/tools_page_edit_insert_page_last_page"
+                        android:textColor="@color/tools_radio_btn_text_status_color" />
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_before"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
-                        android:textColor="@color/tools_radio_btn_text_status_color"
-                        android:text="@string/tools_page_edit_insert_page_before" />
+                        android:text="@string/tools_page_edit_insert_page_before"
+                        android:textColor="@color/tools_radio_btn_text_status_color" />
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_tool_edit_page_enterpage"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
-                        android:textSize="14sp"
                         android:gravity="bottom"
                         android:hint="@string/tools_page_edit_insert_page_enterpage_tint"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:focusableInTouchMode="false"
+                        android:textColorHint="?attr/hintTextColor"
+                        android:textSize="14sp" />
 
-                    <RadioButton
+                    <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/rb_tools_edit_page_insert_location_after"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/tools_pageedit_line_height"
-                        android:text="@string/tools_page_edit_insert_page_after" />
+                        android:text="@string/tools_page_edit_insert_page_after"
+                        android:textColor="@color/tools_radio_btn_text_status_color" />
                 </RadioGroup>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

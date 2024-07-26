@@ -39,12 +39,12 @@
                     android:id="@+id/tv_global_setting"
                     android:layout_width="match_parent"
                     android:layout_height="28dp"
-                    android:background="@color/tools_reader_setting_head_bg_color"
+                    android:background="?attr/compdfkit_HeadItem_BackgroundColor"
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@string/tools_global_setting"
-                    android:textColor="@color/tools_text_color_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="12sp" />
 
                 <com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginHorizontal="8dp"
-                    android:background="@color/tools_item_dividing_line_color" />
+                    android:background="?attr/dividerColor" />
 
                 <com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView
                     android:id="@+id/sw_highlight_form"
@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginHorizontal="8dp"
-                    android:background="@color/tools_item_dividing_line_color" />
+                    android:background="?attr/dividerColor" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -86,31 +86,94 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="0dp"
                         android:text="@string/tools_file_author"
-                        android:textColor="@color/tools_text_color_primary"
+                        android:textColor="?android:attr/textColorPrimary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_document_author"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:paddingHorizontal="16dp"
+                        android:background="@null"
+                        android:textSize="14sp"
+                        android:gravity="end|center_vertical"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintStart_toEndOf="@id/tv_document_author"
                         android:text="@string/tools_compdfkit_author"
-                        android:textColor="@color/tools_text_color_primary"
+                        android:textColor="?android:attr/textColorPrimary"
                         app:layout_constraintBaseline_toBaselineOf="@id/tv_document_author"
                         app:layout_constraintEnd_toEndOf="parent" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="?attr/dividerColor" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_annotation_author"
+                        style="@style/tools_style_fragment_sub_title_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="0dp"
+                        android:text="@string/tools_annotation_author"
+                        android:textColor="?android:attr/textColorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_annotation_author"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:paddingHorizontal="16dp"
+                        android:background="@null"
+                        tools:text="Guest"
+                        android:textSize="14sp"
+                        android:gravity="end|center_vertical"
+                        app:layout_constraintStart_toEndOf="@id/tv_annotation_author"
+                        android:layout_marginStart="16dp"
+                        android:textColor="?android:attr/textColorPrimary"
+                        app:layout_constraintBaseline_toBaselineOf="@id/tv_annotation_author"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="?attr/dividerColor" />
+
+
+                <com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView
+                    android:id="@+id/sw_file_save_extra_subset"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:checked="true"
+                    android:title="@string/the_fonts_data_is_saved_with_the_file"
+                    app:layout_constraintTop_toBottomOf="@id/tv_global_setting" />
+
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_sdk_information"
                     android:layout_width="match_parent"
                     android:layout_height="28dp"
-                    android:background="@color/tools_reader_setting_head_bg_color"
+                    android:background="?attr/compdfkit_HeadItem_BackgroundColor"
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@string/tools_sdk_information"
-                    android:textColor="@color/tools_text_color_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="12sp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -125,7 +188,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="0dp"
                         android:text="@string/tools_versions"
-                        android:textColor="@color/tools_text_color_primary"
+                        android:textColor="?android:attr/textColorPrimary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -135,7 +198,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
-                        android:textColor="@color/tools_text_color_primary"
+                        android:textColor="?android:attr/textColorPrimary"
                         app:layout_constraintBaseline_toBaselineOf="@id/tv_version"
                         app:layout_constraintEnd_toEndOf="parent"
                         tools:text="V1.11.0" />
@@ -146,12 +209,12 @@
                     android:id="@+id/tv_company_information"
                     android:layout_width="match_parent"
                     android:layout_height="28dp"
-                    android:background="@color/tools_reader_setting_head_bg_color"
+                    android:background="?attr/compdfkit_HeadItem_BackgroundColor"
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@string/tools_company_information"
-                    android:textColor="@color/tools_text_color_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -162,81 +225,81 @@
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp"
-                    app:drawableTint="@color/tools_text_color_primary"
+                    app:drawableTint="?attr/colorOnPrimary"
                     android:text="@string/tools_compdf_website"
-                    android:textColor="@color/tools_text_color_primary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginHorizontal="8dp"
-                    android:background="@color/tools_item_dividing_line_color" />
+                    android:background="?attr/dividerColor" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_about_us"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    app:drawableTint="@color/tools_text_color_primary"
+                    app:drawableTint="?attr/colorOnPrimary"
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp"
                     android:text="@string/tools_about_compdfkit"
-                    android:textColor="@color/tools_text_color_primary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginHorizontal="8dp"
-                    android:background="@color/tools_item_dividing_line_color" />
+                    android:background="?attr/dividerColor" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_technical_support"
                     android:layout_width="match_parent"
-                    app:drawableTint="@color/tools_text_color_primary"
+                    app:drawableTint="?attr/colorOnPrimary"
                     android:layout_height="48dp"
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp"
                     android:text="@string/tools_technical_support"
-                    android:textColor="@color/tools_text_color_primary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginHorizontal="8dp"
-                    android:background="@color/tools_item_dividing_line_color" />
+                    android:background="?attr/dividerColor" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_contact_sales"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    app:drawableTint="@color/tools_text_color_primary"
+                    app:drawableTint="?attr/colorOnPrimary"
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp"
                     android:text="@string/tools_contact_sales"
-                    android:textColor="@color/tools_text_color_primary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginHorizontal="8dp"
-                    android:background="@color/tools_item_dividing_line_color" />
+                    android:background="?attr/dividerColor" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_support_email"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    app:drawableTint="@color/tools_text_color_primary"
+                    app:drawableTint="?attr/colorOnPrimary"
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp"
                     android:text="@string/tools_compdf_email"
-                    android:textColor="@color/tools_text_color_primary" />
+                    android:textColor="?android:attr/textColorPrimary" />
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -247,7 +310,7 @@
                 android:layout_marginTop="32dp"
                 android:gravity="center"
                 android:text="@string/tools_copy_right"
-                android:textColor="@color/tools_text_color_disable"
+                android:textColor="?attr/compdfkit_textColorPrimaryNoEnable"
                 android:textSize="11sp"
                 app:layout_constraintBottom_toTopOf="@id/ll_privacy"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -275,7 +338,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:text="@string/tools_privacy_policy"
-                    android:textColor="@color/tools_color_accent"
+                    android:textColor="?attr/colorAccent"
                     android:textSize="11sp" />
 
                 <View
@@ -283,7 +346,7 @@
                     android:layout_height="12dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@color/tools_control_line_color" />
+                    android:background="?attr/dividerColor" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_terms_of_service"
@@ -291,7 +354,7 @@
                     android:background="@drawable/tools_common_btn_rectangle_ripple"
                     android:layout_height="wrap_content"
                     android:text="@string/tools_terms_of_service"
-                    android:textColor="@color/tools_color_accent"
+                    android:textColor="?attr/colorAccent"
                     android:textSize="11sp" />
 
             </LinearLayout>

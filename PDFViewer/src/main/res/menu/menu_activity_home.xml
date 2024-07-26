@@ -7,7 +7,7 @@
         android:id="@+id/home_setting"
         android:icon="@drawable/ic_pdfviewer_home_setting"
         android:visible="true"
-        app:iconTint="@color/tools_text_color_primary"
+        app:iconTint="?attr/colorOnPrimary"
         app:showAsAction="always" />
 
 </menu>

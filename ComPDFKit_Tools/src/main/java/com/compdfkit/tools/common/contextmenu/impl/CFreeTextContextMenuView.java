@@ -18,6 +18,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuFreeTextProvider;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
+import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -45,6 +46,14 @@ public class CFreeTextContextMenuView implements ContextMenuFreeTextProvider {
             });
             menuView.addItem(R.string.tools_edit, v -> {
                 pageView.createInputBox(freetextAnnotImpl, IContextMenuShowListener.ContextMenuType.FreeTextEdit);
+                helper.dismissContextMenu();
+            });
+            menuView.addItem(R.string.tools_reply, v -> {
+                new CPDFAnnotationManager().showAddReplyDialog(pageView, freetextAnnotImpl, helper, true);
+                helper.dismissContextMenu();
+            });
+            menuView.addItem(R.string.tools_view_reply, v -> {
+                new CPDFAnnotationManager().showReplyDetailsDialog(pageView, freetextAnnotImpl, helper);
                 helper.dismissContextMenu();
             });
             menuView.addItem(R.string.tools_delete, v -> {

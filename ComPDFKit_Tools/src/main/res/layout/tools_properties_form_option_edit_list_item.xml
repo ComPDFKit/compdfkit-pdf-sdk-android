@@ -5,7 +5,7 @@
     android:id="@+id/cl_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/tools_color_background"
+    android:background="?android:attr/colorBackground"
     android:foreground="@drawable/tools_common_btn_rectangle_ripple">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -16,6 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:padding="4dp"
+        app:tint="?attr/colorOnPrimary"
         android:background="@drawable/tools_common_btn_corner_ripple"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tools_ic_drag" />
@@ -27,7 +28,7 @@
         android:layout_marginVertical="16dp"
         android:layout_marginStart="16dp"
         android:maxLines="1"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/iv_more"
@@ -47,13 +48,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tools_ic_more_vertical"
-        app:tint="@color/tools_on_primary" />
+        app:tint="?attr/colorOnPrimary" />
 
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/tools_control_line_color"
+        android:background="?attr/dividerColor"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

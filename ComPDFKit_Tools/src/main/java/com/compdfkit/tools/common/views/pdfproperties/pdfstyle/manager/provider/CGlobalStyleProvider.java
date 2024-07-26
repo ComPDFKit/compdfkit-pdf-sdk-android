@@ -173,14 +173,14 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     if (params.getBorderStyle() != null) {
                         dataFether1.setIntValue("custom_line_attr", "custom_line_bs_id", params.getBorderStyle().getStyle().id);
                         dataFether1.setFloatValue("custom_line_attr", "custom_line_bs_borderWidth", params.getBorderStyle().getBorderWidth());
-                        float dashs[] = params.getBorderStyle().getDashArr();
+                        float[] dashes = params.getBorderStyle().getDashArr();
                         StringBuilder stringBuilder = new StringBuilder();
-                        int len = dashs.length;
+                        int len = dashes.length;
                         for (int i = 0; i < len; i++) {
                             if (i != 0) {
                                 stringBuilder.append(",");
                             }
-                            stringBuilder.append(dashs[i]);
+                            stringBuilder.append(dashes[i]);
                         }
                         dataFether1.setString("custom_line_attr", "custom_line_bs_dash", stringBuilder.toString());
                     }
@@ -208,14 +208,14 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     if (params.getBorderStyle() != null) {
                         dataFether.setIntValue("custom_arrow_attr", "custom_arrow_bs_id", params.getBorderStyle().getStyle().id);
                         dataFether.setFloatValue("custom_arrow_attr", "custom_arrow_bs_borderWidth", params.getBorderStyle().getBorderWidth());
-                        float dashs[] = params.getBorderStyle().getDashArr();
+                        float[] dashes = params.getBorderStyle().getDashArr();
                         StringBuilder stringBuilder = new StringBuilder();
-                        int len = dashs.length;
+                        int len = dashes.length;
                         for (int i = 0; i < len; i++) {
                             if (i != 0) {
                                 stringBuilder.append(",");
                             }
-                            stringBuilder.append(dashs[i]);
+                            stringBuilder.append(dashes[i]);
                         }
                         dataFether.setString("custom_arrow_attr", "custom_arrow_bs_dash", stringBuilder.toString());
                     }
@@ -432,11 +432,11 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 String bs_dash_str1 = dataFether1.getString("custom_line_attr", "custom_line_bs_dash", "12,12");
                 try {
                     if (!TextUtils.isEmpty(bs_dash_str1)) {
-                        String dash_strs[] = bs_dash_str1.split(",");
-                        int len = dash_strs.length;
-                        float dash[] = new float[len];
+                        String[] dashStrs = bs_dash_str1.split(",");
+                        int len = dashStrs.length;
+                        float[] dash = new float[len];
                         for (int i = 0; i < len; i++) {
-                            dash[i] = Float.valueOf(dash_strs[i]);
+                            dash[i] = Float.valueOf(dashStrs[i]);
                         }
                         borderStyle1.setDashArr(dash);
                         style.setBorderStyle(borderStyle1);
@@ -469,11 +469,11 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 String bs_dash_str = dataFether.getString("custom_arrow_attr", "custom_arrow_bs_dash", "12,12");
                 try {
                     if (!TextUtils.isEmpty(bs_dash_str)) {
-                        String dash_strs[] = bs_dash_str.split(",");
-                        int len = dash_strs.length;
-                        float dash[] = new float[len];
+                        String[] dashStrs = bs_dash_str.split(",");
+                        int len = dashStrs.length;
+                        float[] dash = new float[len];
                         for (int i = 0; i < len; i++) {
-                            dash[i] = Float.valueOf(dash_strs[i]);
+                            dash[i] = Float.valueOf(dashStrs[i]);
                         }
                         borderStyle.setDashArr(dash);
                         style.setBorderStyle(borderStyle);

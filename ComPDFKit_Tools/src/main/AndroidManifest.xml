@@ -19,12 +19,12 @@
         <activity
             android:name=".annotation.pdfproperties.pdfsignature.CAddSignatureActivity"
             android:exported="false"
-            android:theme="@style/Tools_Base_Theme" />
+            android:theme="@style/ComPDFKit.Theme.Dark" />
 
         <activity
             android:name=".annotation.pdfproperties.pdfstamp.CAddCustomStampActivity"
             android:exported="false"
-            android:theme="@style/Tools_Base_Theme" />
+            android:theme="@style/ComPDFKit.Theme.Dark" />
 
         <service
             android:name=".common.utils.voice.CMediaPlayService"
@@ -35,7 +35,7 @@
             android:name=".common.pdf.CPDFDocumentActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:theme="@style/Tools_Base_Theme"
+            android:theme="@style/ComPDFKit.Theme.Light"
             android:windowSoftInputMode="adjustPan">
 <!--            <intent-filter tools:ignore="AppLinkUrlError"-->
 <!--                android:scheme="http">-->

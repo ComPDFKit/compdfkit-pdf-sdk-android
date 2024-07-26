@@ -28,6 +28,8 @@ public class CPDFConfiguration implements Serializable {
 
     public ReaderViewConfig readerViewConfig = new ReaderViewConfig();
 
+    public GlobalConfig globalConfig = new GlobalConfig();
+
     @NonNull
     @Override
     public String toString() {

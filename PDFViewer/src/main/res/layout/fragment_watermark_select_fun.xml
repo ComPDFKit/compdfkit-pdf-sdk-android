@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/tools_style_content_bg"
+    android:background="?attr/compdfkit_PDFStyleDialog_ContentColor"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
             android:text="@string/tools_add_watermark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="@color/tools_editpage_insert_page_color"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             />
 
@@ -31,7 +31,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/tools_control_line_color"
+        android:background="?attr/dividerColor"
         app:layout_constraintTop_toBottomOf="@id/cl_add_watermark"
         />
 
@@ -53,7 +53,7 @@
             android:text="@string/tools_remove_watermark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="@color/tools_editpage_insert_page_color"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             />
 

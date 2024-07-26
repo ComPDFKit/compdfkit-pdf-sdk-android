@@ -24,9 +24,6 @@ public interface CStyleProvider {
 
     public CAnnotStyle getStyle(CStyleType type);
 
-
-
-
     default public String getAnnotStyleFontName(CAnnotStyle annotStyle){
         CLog.e("字体", "类型：" + annotStyle.getType().name() +"更新字体：" + annotStyle.getExternFontName());
         return annotStyle.getExternFontName();

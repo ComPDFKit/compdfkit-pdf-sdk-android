@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.tools.R;
+import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -130,7 +131,7 @@ public class CAnnotLineTypePreviewView extends CBasicAnnotPreviewView {
         }
 
         private void init(Context context) {
-            color = ContextCompat.getColor(context, R.color.tools_on_primary);
+            color = MaterialColors.getColor(context, R.attr.colorOnPrimary, ContextCompat.getColor(context, R.color.tools_on_primary));
             linePaint.setColor(color);
             linePaint.setStyle(Paint.Style.FILL);
             linePaint.setStrokeWidth(lineWidth);

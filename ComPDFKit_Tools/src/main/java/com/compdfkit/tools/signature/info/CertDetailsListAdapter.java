@@ -25,6 +25,7 @@ import com.compdfkit.tools.common.utils.adapter.CBaseQuickAdapter;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickViewHolder;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.signature.bean.CPDFOwnerItemData;
+import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,10 @@ public class CertDetailsListAdapter extends CBaseQuickAdapter<CPDFOwnerItemData,
         holder.setText(R.id.tv_item_title, item.getContent());
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.getView(R.id.iv_item_arrow).getLayoutParams();
         layoutParams.setMarginStart(getLevelMargin(holder.itemView.getContext(), position +1));
-        holder.setBackgroundColor(R.id.cl_root, ContextCompat.getColor(holder.itemView.getContext(), position == 0 ? R.color.tools_reader_setting_head_bg_color : R.color.tools_color_background));
+        holder.setBackgroundColor(R.id.cl_root, MaterialColors.getColor(holder.itemView.getContext(), position == 0 ?
+                R.attr.compdfkit_HeadItem_BackgroundColor : android.R.attr.colorBackground,
+                ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_color_background)));
+
         AppCompatTextView title = holder.getView(R.id.tv_item_title);
         title.setTypeface(position == 0 ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
         holder.setImageResource(R.id.iv_item_arrow, item.isExpanded() ? R.drawable.tools_ic_arrow_down : R.drawable.tools_ic_right);

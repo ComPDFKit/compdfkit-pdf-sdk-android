@@ -13,6 +13,7 @@ package com.compdfkit.tools.common.views.pdfview;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -68,14 +69,17 @@ public class CPDFPageIndicatorView extends LinearLayout {
         tvPageIndicator = new AppCompatTextView(getContext());
         // set layout params for the text view
         LinearLayout.LayoutParams currentPageLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        currentPageLayoutParams.gravity = Gravity.CENTER;
         int horizontalMargin = CDimensUtils.dp2px(getContext(), 8);
         int verticalMargin = CDimensUtils.dp2px(getContext(), 4);
         currentPageLayoutParams.setMargins(horizontalMargin, verticalMargin, horizontalMargin, verticalMargin);
-        tvPageIndicator.setLayoutParams(currentPageLayoutParams);
+//        tvPageIndicator.setLayoutParams(currentPageLayoutParams);
         // set text color to white
         tvPageIndicator.setTextColor(Color.WHITE);
+        tvPageIndicator.setGravity(Gravity.CENTER);
+        tvPageIndicator.setMinimumWidth(CDimensUtils.dp2px(getContext(), 35));
         // add the text view to the layout
-        addView(tvPageIndicator);
+        addView(tvPageIndicator, currentPageLayoutParams);
         // set background resource for the layout
         setBackgroundResource(R.drawable.tools_pdf_page_indactor_bg);
         // set click listener for the layout

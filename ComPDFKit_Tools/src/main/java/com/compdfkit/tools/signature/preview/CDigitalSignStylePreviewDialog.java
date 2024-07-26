@@ -123,7 +123,7 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
 
     @Override
     protected int getStyle() {
-        return  R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle;
+        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
         initData();
     }
 
-    private void initListener(){
+    private void initListener() {
         clPosition.setOnClickListener(this);
         clReason.setOnClickListener(this);
         toolBar.setBackBtnClickListener(this);
@@ -184,22 +184,22 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
         ivAlignmentLeft.setOnClickListener(this);
         ivAlignmentRight.setOnClickListener(this);
         positionView.setCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked){
+            if (isChecked) {
                 tvPositionDesc.setText(positionView.getPosition());
-            }else {
+            } else {
                 previewView.setLocation("");
                 tvPositionDesc.setText(R.string.tools_close);
             }
             previewView.setShowLocation(isChecked);
         });
         positionView.setTextChangedListener((s, start, before, count) -> {
-            if (positionView.isEnablePosition()){
+            if (positionView.isEnablePosition()) {
                 tvPositionDesc.setText(s);
-                previewView.setLocation(TextUtils.isEmpty(s) ?"" : s.toString());
+                previewView.setLocation(TextUtils.isEmpty(s) ? "" : s.toString());
             }
         });
         reasonView.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked){
+            if (isChecked) {
                 tvReasonDesc.setText(reasonView.getReason());
             } else {
                 tvReasonDesc.setText(R.string.tools_close);
@@ -208,7 +208,7 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
             previewView.setReason(reasonView.getReason());
         });
         reasonView.setSelectReasonListener(reason -> {
-            if (reasonView.isEnableReason()){
+            if (reasonView.isEnableReason()) {
                 tvReasonDesc.setText(reason);
                 previewView.setReason(reason);
             }
@@ -217,21 +217,21 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
         cbName.setOnCheckedChangeListener((buttonView, isChecked) -> previewView.setShowName(isChecked));
         cbDate.setOnCheckedChangeListener((buttonView, isChecked) -> previewView.setShowDate(isChecked));
         cbDistinguishableName.setOnCheckedChangeListener((buttonView, isChecked) -> previewView.setShowDistinguishableName(isChecked));
-        cbSDKVersion.setOnCheckedChangeListener((buttonView, isChecked) -> previewView.setShowSDKVersion(isChecked));
+        cbSDKVersion.setOnCheckedChangeListener((buttonView, isChecked) -> previewView.setShowSdkVersion(isChecked));
         cbLogo.setOnCheckedChangeListener((buttonView, isChecked) -> previewView.setShowLogo(isChecked));
     }
 
-    private void initData(){
+    private void initData() {
         if (getArguments() != null) {
             String signImagePath = getArguments().getString(EXTRA_SIGN_IMAGE_PATH, "");
             tvAlignment.setVisibility(TextUtils.isEmpty(signImagePath) ? View.GONE : View.VISIBLE);
             llAlignment.setVisibility(TextUtils.isEmpty(signImagePath) ? View.GONE : View.VISIBLE);
             previewView.setSignImage(signImagePath);
-            if (!TextUtils.isEmpty(getArguments().getString(EXTRA_COMMON_NAME))){
+            if (!TextUtils.isEmpty(getArguments().getString(EXTRA_COMMON_NAME))) {
                 String commonName = getArguments().getString(EXTRA_COMMON_NAME);
                 previewView.setCommonName(commonName);
             }
-            if (!TextUtils.isEmpty(getArguments().getString(EXTRA_DIGTINGUISHABLE_NAME))){
+            if (!TextUtils.isEmpty(getArguments().getString(EXTRA_DIGTINGUISHABLE_NAME))) {
                 previewView.setDistinguishableName(getArguments().getString(EXTRA_DIGTINGUISHABLE_NAME));
             }
         }
@@ -239,7 +239,7 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
         previewView.setShowDate(cbDate.isChecked());
         previewView.setShowLogo(cbLogo.isChecked());
         previewView.setShowDistinguishableName(cbDistinguishableName.isChecked());
-        previewView.setShowSDKVersion(cbSDKVersion.isChecked());
+        previewView.setShowSdkVersion(cbSDKVersion.isChecked());
         previewView.setShowTab(cbTab.isChecked());
         ivAlignmentLeft.setSelected(true);
     }
@@ -254,16 +254,16 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
             reasonView.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.GONE);
             slMain.setVisibility(View.GONE);
-        } else if (v.getId() == toolBar.getIvToolBarBackBtn().getId()){
+        } else if (v.getId() == toolBar.getIvToolBarBackBtn().getId()) {
             CViewUtils.hideKeyboard(getDialog());
-            if (positionView.getVisibility() == View.VISIBLE){
+            if (positionView.getVisibility() == View.VISIBLE) {
                 positionView.setVisibility(View.GONE);
                 slMain.setVisibility(View.VISIBLE);
                 btnSave.setVisibility(View.VISIBLE);
                 positionView.hideKeyboard();
                 return;
             }
-            if (reasonView.getVisibility() == View.VISIBLE){
+            if (reasonView.getVisibility() == View.VISIBLE) {
                 reasonView.setVisibility(View.GONE);
                 slMain.setVisibility(View.VISIBLE);
                 btnSave.setVisibility(View.VISIBLE);
@@ -278,7 +278,7 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
             ivAlignmentLeft.setSelected(false);
             ivAlignmentRight.setSelected(true);
             previewView.setContentAlignLeft(true);
-        } else if (v.getId() == R.id.btn_save){
+        } else if (v.getId() == R.id.btn_save) {
             CViewUtils.hideKeyboard(getDialog());
             if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
                 multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
@@ -290,20 +290,20 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
                         }
                     }
                 });
-            }else {
+            } else {
                 save();
             }
 
         }
     }
 
-    private void save(){
-        if (positionView.getVisibility() == View.VISIBLE){
+    private void save() {
+        if (positionView.getVisibility() == View.VISIBLE) {
             positionView.setVisibility(View.GONE);
             slMain.setVisibility(View.VISIBLE);
             return;
         }
-        if (reasonView.getVisibility() == View.VISIBLE){
+        if (reasonView.getVisibility() == View.VISIBLE) {
             reasonView.setVisibility(View.GONE);
             slMain.setVisibility(View.VISIBLE);
             return;
@@ -320,7 +320,7 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
         this.resultDigitalSignListener = resultDigitalSignListener;
     }
 
-    public interface COnResultDigitalSignListener{
+    public interface COnResultDigitalSignListener {
         void sign(String signPreviewImagePath, CPDFDigitalSigConfig config, String location, String reason);
     }
 }

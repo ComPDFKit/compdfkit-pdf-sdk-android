@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
-        <shape >
-            <solid android:color="@color/tools_text_color_primary_inverse"/>
-            <stroke android:color="@color/tools_color_accent" android:width="2dp"/>
+        <shape>
+
+            <stroke android:width="2dp" android:color="?attr/colorAccent" />
+            <solid android:color="?attr/colorOnSecondary"/>
         </shape>
     </item>
-    <item >
-        <shape >
-            <solid android:color="@color/tools_text_color_primary_inverse"/>
-            <stroke android:color="@color/tools_item_dividing_line_color" android:width="1px"/>
+    <item>
+        <shape>
+
+            <stroke android:width="1px" android:color="?attr/dividerColor" />
+            <solid android:color="?attr/colorOnSecondary"/>
+
         </shape>
     </item>
 </selector>

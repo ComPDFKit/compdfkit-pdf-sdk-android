@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="44dp"
-        android:background="@color/tools_style_content_bg"
+        android:background="?attr/compdfkit_PDFStyleDialog_ContentColor"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:paddingBottom="16dp"

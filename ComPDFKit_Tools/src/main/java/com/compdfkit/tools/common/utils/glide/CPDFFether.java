@@ -21,6 +21,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.request.target.Target;
 import com.compdfkit.core.document.CPDFDocument;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.glide.wrapper.impl.CPDFDocumentPageWrapper;
 
 class CPDFFether implements DataFetcher<Bitmap> {
@@ -74,6 +75,7 @@ class CPDFFether implements DataFetcher<Bitmap> {
             height = (int) sizeRect.height();
         }
         Bitmap bitmap = Glide.get(context).getBitmapPool().get(width, height, Bitmap.Config.ARGB_4444);
+        CLog.e("ComPDFKit", "CPDFFether load PDF Image Size: " + width +" * " + height);
         boolean res = tpdfDocument.renderPageAtIndex(bitmap,
                 pageIndex,
                 width,

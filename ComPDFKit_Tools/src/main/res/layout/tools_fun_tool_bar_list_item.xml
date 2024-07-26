@@ -15,7 +15,8 @@
         android:orientation="vertical"
         app:cardCornerRadius="4dp"
         app:cardElevation="0dp"
-        android:foreground="@drawable/tools_common_btn_corner_ripple"
+        tools:cardBackgroundColor="?attr/colorPrimary"
+        android:foreground="@drawable/tools_common_btn_corner_ripple_in_widget"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +28,8 @@
             android:layout_gravity="center"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/tools_ic_annotation_highlight"
+            tools:tint="?attr/colorOnPrimary"
+            android:src="@drawable/tools_ic_annotation_freetext"
              />
 
     </androidx.cardview.widget.CardView>

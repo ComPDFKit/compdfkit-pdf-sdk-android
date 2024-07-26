@@ -19,11 +19,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.compdfkit.samples.util.FileUtils;
 import com.compdfkit.samples.util.LoggingOutputListener;
-import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
 
@@ -43,8 +43,8 @@ public class SampleDetailActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_sample_detail);
-        MaterialButton btnRun = findViewById(R.id.btn_run);
-        MaterialButton btnOpenFiles = findViewById(R.id.btn_open_files);
+        AppCompatButton btnRun = findViewById(R.id.btn_run);
+        AppCompatButton btnOpenFiles = findViewById(R.id.btn_open_files);
         AppCompatTextView logTextView = findViewById(R.id.tv_logging);
         ScrollView scrollView = findViewById(R.id.scroll_view);
         AppCompatTextView tvDescription = findViewById(R.id.tv_description);
@@ -63,11 +63,11 @@ public class SampleDetailActivity extends AppCompatActivity {
             pdfSamples.getOutputFileList().clear();
         }
         btnRun.setOnClickListener(v -> {
-            new Thread(() -> {
+//            new Thread(() -> {
                 if (pdfSamples != null) {
                     pdfSamples.run(outputListener);
                 }
-            }).start();
+//            }).start();
         });
         btnOpenFiles.setOnClickListener(v -> {
             if (pdfSamples.getOutputFileList() != null) {

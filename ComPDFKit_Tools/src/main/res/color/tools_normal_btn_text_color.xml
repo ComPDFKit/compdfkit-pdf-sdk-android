@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/tools_text_color_disable" android:state_enabled="false"/>
-    <item android:color="@color/tools_color_accent" android:state_enabled="true"/>
-    <item android:color="@color/tools_color_accent"/>
+    <item android:color="?attr/compdfkit_textColorPrimaryNoEnable" android:state_enabled="false"/>
+    <item android:color="?attr/colorAccent" android:state_enabled="true"/>
+    <item android:color="?attr/colorAccent"/>
 </selector>

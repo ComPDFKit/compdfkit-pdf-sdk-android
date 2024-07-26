@@ -21,6 +21,7 @@ import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.home.HomeFunBean;
 import com.compdfkit.pdfviewer.home.SelectWatermarkFunFragment;
+import com.compdfkit.pdfviewer.home.datas.SettingDatas;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
@@ -71,6 +72,7 @@ public class WatermarkSamplesImpl extends OpenPDFSamplesImpl {
             verifyDocument(filePath, uri, document -> {
                 CWatermarkEditDialog watermarkEditDialog = CWatermarkEditDialog.newInstance();
                 watermarkEditDialog.setDocument(document);
+                watermarkEditDialog.setSaveFileExtraFontSubset(SettingDatas.isExtraFontSet(fragment.getContext()));
                 watermarkEditDialog.setPageIndex(0);
                 watermarkEditDialog.setCompleteListener(pdfFile -> {
                     watermarkEditDialog.dismiss();

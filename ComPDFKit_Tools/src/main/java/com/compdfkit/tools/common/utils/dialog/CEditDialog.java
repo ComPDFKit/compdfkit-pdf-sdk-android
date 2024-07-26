@@ -17,10 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.DialogFragment;
@@ -39,9 +39,9 @@ public class CEditDialog extends DialogFragment {
 
     private AppCompatEditText editText;
 
-    private Button btnCancel;
+    private AppCompatButton btnCancel;
 
-    private Button btnAdd;
+    private AppCompatButton btnAdd;
 
     private OnEditBookmarkListener editListener;
 
@@ -59,7 +59,11 @@ public class CEditDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.tools_dialog_theme);
+        int themeId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme);
+        if (themeId == 0){
+            themeId = R.style.ComPDFKit_Theme_Dialog;
+        }
+        setStyle(STYLE_NO_TITLE, themeId);
     }
 
     @Override
@@ -70,9 +74,6 @@ public class CEditDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getDialog() != null && getDialog().getWindow() != null) {
-            getDialog().getWindow().setBackgroundDrawableResource(R.drawable.tools_dialog_background);
-        }
         View rootView = inflater.inflate(R.layout.tools_bota_bookmark_input_dialog, container, false);
         editText = rootView.findViewById(R.id.tv_message);
         tvTitle = rootView.findViewById(R.id.tv_title);

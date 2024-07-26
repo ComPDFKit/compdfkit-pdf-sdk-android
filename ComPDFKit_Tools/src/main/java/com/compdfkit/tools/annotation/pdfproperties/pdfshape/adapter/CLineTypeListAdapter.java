@@ -21,6 +21,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickAdapter;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickViewHolder;
 import com.compdfkit.tools.common.views.pdfproperties.preview.CAnnotLineTypePreviewView;
+import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
 
@@ -61,7 +62,8 @@ public class CLineTypeListAdapter extends CBaseQuickAdapter<CPDFLineAnnotation.L
         if (item == selectLineType){
             previewView.setBorderColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_annot_icon_select_color));
         }else {
-            previewView.setBorderColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_text_color_primary));
+            previewView.setBorderColor(MaterialColors.getColor(holder.itemView.getContext(), R.attr.colorOnPrimary,
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_on_primary)));
         }
     }
 

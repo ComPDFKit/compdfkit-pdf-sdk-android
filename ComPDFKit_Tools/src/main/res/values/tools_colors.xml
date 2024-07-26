@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="tools_search_result_text_color">#333333</color>
     <color name="tools_search_result_text_highlight">#FFEC66</color>
-    <color name="tools_item_dividing_line_color">#1F000000</color>
-
     <color name="tools_pdf_view_ctrl_background_color">#F2F2F2</color>
 
     <color name="tools_themes_light">#FFFFFFFF</color>
     <color name="tools_themes_dark">#000000</color>
     <color name="tools_themes_sepia">#FFEFBE</color>
     <color name="tools_themes_reseda">#CDE6D0</color>
-
-    <color name="tools_custom_theme_color_1">#80CBC4</color>
-    <color name="tools_custom_theme_color_2">#A5D6A7</color>
-    <color name="tools_custom_theme_color_3">#C5E1A5</color>
-    <color name="tools_custom_theme_color_4">#90CAF9</color>
 
     <color name="tools_color_primary">#FAFCFF</color>
     <color name="tools_color_accent">#1460F3</color>
@@ -37,29 +29,38 @@
     <color name="tools_style_title_color">#999999</color>
 
     <color name="tools_annotation_markup_default_color">#A5D6A7</color>
-    <color name="tools_annotation_markup_default_color1">#33A5D6A7</color>
     <color name="tools_ripple_color">#334982E6</color>
     <color name="tools_annot_list_item_select_bg_color">#DDE9FF</color>
-    <color name="tools_control_line_color">#1A000000</color>
-    <color name="tools_alert_dialog_message_color">#99000000</color>
+    <color name="tools_divider_color">#1A000000</color>
 
-
-    <color name="tools_edit_text_bg_normal">#FAFCFF</color>
-    <color name="tools_edit_text_bg_select">#dde9ff</color>
     <color name="tools_style_content_bg">@color/tools_color_primary</color>
-    <color name="tools_stamp_add_custom_layer_color">#B3000000</color>
     <color name="tools_annot_icon_select_color">#43474D</color>
     <color name="tools_icon_enable_color">#D9D9D9</color>
 
-    <color name="tools_edit_page_insertpage_pagesize_style">#000000</color>
-    <color name="tools_editpage_bar_done_bg_strike_color">#1460f3</color>
-    <color name="tools_editpage_insert_page_color">#1460f3</color>
-    <color name="tools_editpage_title_color">#43474d</color>
-    <color name="tools_editpage_checkbox_select">#2d77fa</color>
-    <color name="tools_editpage_checkbox_normal">#d9d9d9</color>
 
     <color name="tools_form_default_bg_color">#CCE5E5FF</color>
     <color name="tools_sign_preview_text_color">#232531</color>
     <color name="tools_sign_preview_bg_color">#F4F7FF</color>
     <color name="tools_directory_item_title_color">#4982E6</color>
+
+
+    <color name="tools_dark_color_primary">#222429</color>
+    <color name="tools_dark_color_accent">#6499FF</color>
+    <color name="tools_dark_on_primary">#FFFFFF</color>
+    <color name="tools_dark_primary_container">#6499FF</color>
+    <color name="tools_dark_secondary">#6499FF</color>
+    <color name="tools_dark_on_secondary">#606773</color>
+    <color name="tools_dark_color_background">#414347</color>
+    <color name="tools_dark_subtitle_1_color">#FFFFFF</color>
+    <color name="tools_dark_text_color_primary">#FFFFFF</color>
+    <color name="tools_dark_text_color_secondary">#FFFFFF</color>
+    <color name="tools_dark_text_color_primary_inverse">#CC000000</color>
+    <color name="tools_dark_reader_setting_head_bg_color">#303238</color>
+
+    <color name="tools_dark_style_content_bg">#414347</color>
+    <color name="tools_dark_divider_color">#1AFFFFFF</color>
+    <color name="tools_dark_style_title_color">#CCCCCC</color>
+    <color name="tools_dark_icon_enable_color">#4DD9D9D9</color>
+
+
 </resources>

@@ -117,13 +117,17 @@ public class CSearchReplaceResultDailogFragment extends CBasicBottomSheetDialogF
     }
 
     ArrayList<CSearchReplaceInfo> getEditSearchReplaceInfo() {
-        if (results == null) return null;
+        if (results == null) {
+            return null;
+        }
         ArrayList<CSearchReplaceInfo> infoList = new ArrayList<>();
         for (int i = 0; i < readerView.getPageCount();i++) {
             ArrayList<CSearchReplaceInfo> selectionList = results.get(i);
 
             CPDFPage page = tpdfDocument.pageAtIndex(i);
-            if (page == null) continue;
+            if (page == null) {
+                continue;
+            }
             CPDFTextPage textPage = page.getTextPage();
 
             if (selectionList != null && selectionList.size() > 0) {

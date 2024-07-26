@@ -68,7 +68,6 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
             pageView.operateEditTextArea(CPDFPageView.EditTextAreaFuncType.CUT);
             helper.dismissContextMenu();
         });
-
         menuView.addItem(R.string.tools_copy, 0, v -> {
             if (helper.isAllowsCopying()) {
                 pageView.operateEditTextArea(CPDFPageView.EditTextAreaFuncType.COPY);

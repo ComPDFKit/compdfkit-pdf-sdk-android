@@ -70,7 +70,9 @@ public class ToolbarConfig implements Serializable {
         Share,
         OpenDocument,
 
-        Flattened;
+        Flattened,
+
+        Snip;
 
         public static MenuAction fromString(String str) {
             try {

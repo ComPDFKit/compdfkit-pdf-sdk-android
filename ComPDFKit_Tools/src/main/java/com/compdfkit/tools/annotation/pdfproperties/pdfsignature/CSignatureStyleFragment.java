@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdfsignature.adapter.CSignatureListAdapter;
 import com.compdfkit.tools.annotation.pdfproperties.pdfsignature.data.CSignatureDatas;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.basic.CBasicPropertiesFragment;
@@ -67,6 +68,7 @@ public class CSignatureStyleFragment extends CBasicPropertiesFragment {
         fabAddSignature.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), CAddSignatureActivity.class);
             intent.putExtra(CAddSignatureActivity.EXTRA_SCREEN_ORIENTATION, CViewUtils.isLandScape(getContext())?ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            intent.putExtra(CAddSignatureActivity.EXTRA_THEME_ID, CPDFApplyConfigUtil.getInstance().getThemeId());
             addSignatureLauncher.launch(intent);
         });
         signatureListAdapter = new CSignatureListAdapter();

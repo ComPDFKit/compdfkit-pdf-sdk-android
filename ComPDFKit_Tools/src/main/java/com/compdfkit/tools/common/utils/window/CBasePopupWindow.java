@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -32,21 +31,18 @@ public abstract class CBasePopupWindow extends PopupWindow implements View.OnCli
         setContentView(mContentView);
         setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        //setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ddffffff")));
-//        setBackgroundDrawable(null);
         setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        setFocusable(false);
-        setOutsideTouchable(true);
-//        setTouchable(true);
-        setTouchInterceptor((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                dismiss();
-                return true;
-            }
-            return false;
-        });
+//        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        setFocusable(true);
+//        setOutsideTouchable(true);
+//        setTouchInterceptor((v, event) -> {
+//            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+//                dismiss();
+//                return false;
+//            }
+//            return false;
+//        });
 
         imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -93,15 +89,5 @@ public abstract class CBasePopupWindow extends PopupWindow implements View.OnCli
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         }
         activity.getWindow().setAttributes(lp);
-    }
-
-    protected void showOrHintSoftKeyboard(View view, boolean show) {
-        if (show) {
-            view.requestFocus();
-            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-        } else {
-            view.clearFocus();
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 }

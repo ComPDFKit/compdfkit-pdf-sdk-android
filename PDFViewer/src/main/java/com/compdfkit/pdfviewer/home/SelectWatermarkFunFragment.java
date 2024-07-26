@@ -27,12 +27,12 @@ public class SelectWatermarkFunFragment extends CBasicBottomSheetDialogFragment 
     }
 
     @Override
-    protected int layoutId() {
+    public int layoutId() {
         return R.layout.fragment_watermark_select_fun;
     }
 
     @Override
-    protected void onCreateView(View rootView) {
+    public void onCreateView(View rootView) {
         ConstraintLayout clAddWatermark = rootView.findViewById(R.id.cl_add_watermark);
         ConstraintLayout clRemoveWatermark = rootView.findViewById(R.id.cl_remove_watermark);
         clAddWatermark.setOnClickListener(addWatermarkClickListener);
@@ -40,7 +40,7 @@ public class SelectWatermarkFunFragment extends CBasicBottomSheetDialogFragment 
     }
 
     @Override
-    protected void onViewCreate() {
+    public void onViewCreate() {
 
     }
 

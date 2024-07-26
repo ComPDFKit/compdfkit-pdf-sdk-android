@@ -28,12 +28,12 @@
                 android:id="@+id/tv_sign_message"
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
-                android:background="@color/tools_reader_setting_head_bg_color"
+                android:background="?attr/compdfkit_HeadItem_BackgroundColor"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/tools_annot_signature"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="12sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,7 +51,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/tools_signer"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_sign_message" />
 
@@ -62,7 +62,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="end"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_sign_founder_title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
-                android:background="@color/tools_item_dividing_line_color"
+                android:background="?attr/dividerColor"
                 app:layout_constraintTop_toBottomOf="@id/tv_sign_founder" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -85,7 +85,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/tools_signing_time"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_line" />
 
@@ -96,7 +96,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_date_of_sign_title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -110,12 +110,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
                 android:layout_marginTop="16dp"
-                android:background="@color/tools_reader_setting_head_bg_color"
+                android:background="?attr/compdfkit_HeadItem_BackgroundColor"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/tools_cert_auth_statement"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="12sp"
                 app:layout_constraintTop_toBottomOf="@id/tv_date_of_sign_title" />
 
@@ -126,7 +126,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
                 app:layout_constrainedWidth="true"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -145,7 +145,7 @@
                 android:gravity="center"
                 android:text="@string/tools_view_cert"
                 android:textAllCaps="false"
-                android:textColor="@color/tools_color_accent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"

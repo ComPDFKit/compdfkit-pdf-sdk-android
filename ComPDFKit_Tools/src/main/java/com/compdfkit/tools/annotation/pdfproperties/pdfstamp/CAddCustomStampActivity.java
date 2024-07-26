@@ -17,6 +17,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,12 +25,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.SwitchCompat;
 
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdfstamp.bean.CTextStampBean;
 import com.compdfkit.tools.annotation.pdfproperties.pdfstamp.data.CStampDatas;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView;
 import com.compdfkit.tools.common.views.pdfproperties.stamp.CPDFStampTextView;
@@ -57,9 +58,9 @@ public class CAddCustomStampActivity extends AppCompatActivity implements View.O
 
     private ColorListView colorListView;
 
-    private SwitchCompat swDate;
+    private Switch swDate;
 
-    private SwitchCompat swTime;
+    private Switch swTime;
 
     private AppCompatButton btnSave;
 
@@ -68,6 +69,7 @@ public class CAddCustomStampActivity extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(CPDFApplyConfigUtil.getInstance().getThemeId());
         setContentView(R.layout.tools_properties_stamp_style_add_custom_activity);
         cToolBar = findViewById(R.id.tool_bar);
         stampTextView = findViewById(R.id.stamp_text_view);

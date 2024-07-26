@@ -96,7 +96,7 @@ public class CStyleDialogFragment extends BottomSheetDialogFragment implements C
             return;
         }
         if (styleUIParams == null){
-            styleUIParams = CStyleUIParams.defaultStyle(annotStyle.getType());
+            styleUIParams = CStyleUIParams.defaultStyle(getContext(), annotStyle.getType());
         }
         viewModel = new ViewModelProvider(getActivity()).get(CStyleViewModel.class);
         setStyle(STYLE_NORMAL, styleUIParams.theme);

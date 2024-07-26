@@ -58,7 +58,7 @@ public class CertDetailsDialog extends CBasicBottomSheetDialogFragment {
 
     @Override
     protected int getStyle() {
-        return  R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle;
+        return  CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
     }
 
     @Override

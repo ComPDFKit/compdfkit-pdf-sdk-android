@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="?android:attr/colorBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +33,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/progress_bar"
             android:layout_marginStart="8dp"
-            android:textColor="@color/tools_text_color_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginEnd="16dp"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"

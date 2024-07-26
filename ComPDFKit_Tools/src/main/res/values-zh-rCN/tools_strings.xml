@@ -86,7 +86,7 @@
     <string name="tools_annotations">注释</string>
 
     <string name="tools_copy">复制</string>
-    <string name="tools_annot_highlight">亮高</string>
+    <string name="tools_annot_highlight">高亮</string>
     <string name="tools_annot_underline">下划线</string>
     <string name="tools_context_menu_strikethrough">删除线</string>
     <string name="tools_annot_squiggly">波浪线</string>
@@ -263,7 +263,7 @@
     <string name="tools_page_edit_insert_page_enterpage_tint">请输入页码</string>
     <string name="tools_page_edit_insert_page_filename">文件名</string>
     <string name="tools_page_edit_insert_page_range">页面范围</string>
-    <string name="tools_page_edit_insert_page_allpage">所以页面</string>
+    <string name="tools_page_edit_insert_page_allpage">所有页面</string>
     <string name="tools_page_edit_insert_page_oddpage">奇数页</string>
     <string name="tools_page_edit_insert_page_evenpage">偶数页</string>
     <string name="tools_page_edit_insert_page_specifypage">自定义范围</string>
@@ -483,11 +483,37 @@
     <string name="tools_loading">加载中…</string>
     <string name="tools_flattened_suffix">_扁平化文档.pdf</string>
 
-
+    <!--    v2.0.0 -->
     <string name="tools_font_style_normal">常规</string>
     <string name="tools_font_style_bold">加粗</string>
     <string name="tools_font_style_italic">斜体</string>
     <string name="tools_font_style_bold_italic">加粗&amp;斜体</string>
 
+    <!--    v2.1.0-->
+    <string name="tools_import_annotations">导入注释</string>
+    <string name="tools_export_annotations">导出注释</string>
+    <string name="tools_delete_all_annotations">删除所有注释</string>
+    <string name="tools_delete_all_replies">删除所有回复</string>
+    <string name="tools_import_success">导入成功</string>
+    <string name="tools_please_select_xfdf_format_file">请选择xfdf格式文件</string>
+    <string name="tools_exit">退出</string>
+    <string name="tools_snap">截取</string>
 
+    <string name="tools_marked">已标记</string>
+    <string name="tools_unmarked">未标记</string>
+    <string name="tools_accepted">已接受</string>
+    <string name="tools_rejected">已拒绝</string>
+    <string name="tools_cancelled">已取消</string>
+    <string name="tools_completed">已完成</string>
+
+    <string name="tools_add_a_new_reply">新增回复</string>
+    <string name="tools_add_new_reply">新增回复</string>
+    <string name="tools_edit_reply">编辑回复</string>
+    <string name="tools_view_replies">查看回复</string>
+    <string name="tools_delete_annotation">删除注释</string>
+    <string name="tools_reply_or_add_thoughts">请输入回复内容</string>
+    <string name="tools_replies_of_annotation">所有回复</string>
+    <string name="tools_total">共计%d条</string>
+    <string name="tools_reply">回复</string>
+    <string name="tools_view_reply">查看回复</string>
 </resources>

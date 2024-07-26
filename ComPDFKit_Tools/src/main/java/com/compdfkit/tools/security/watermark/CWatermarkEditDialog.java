@@ -28,7 +28,6 @@ import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
@@ -81,6 +80,8 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
     private String password;
 
+    private boolean saveFileExtraFontSubset = false;
+
     protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
 
     public static CWatermarkEditDialog newInstance() {
@@ -92,6 +93,10 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
     public void setDocument(CPDFDocument document) {
         this.document = document;
+    }
+
+    public void setSaveFileExtraFontSubset(boolean saveFileExtraFontSubset) {
+        this.saveFileExtraFontSubset = saveFileExtraFontSubset;
     }
 
     public void setDocument(@Nullable String pdfFilePath, @Nullable Uri uri) {
@@ -115,7 +120,11 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
     @Override
     protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle_FillScreen;
+        int themeId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
+        if (themeId == 0){
+            themeId  = R.style.ComPDFKit_Theme_BottomSheetDialog_Light;
+        }
+        return themeId;
     }
 
     @Override
@@ -231,15 +240,11 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
                     @Override
                     protected String onRun() {
                         try {
-                            long time = System.currentTimeMillis();
                             boolean success = ((CWatermarkPageFragment) fragment).applyWatermark();
-                            CLog.e("水印", "生成水印耗时:" +(System.currentTimeMillis() - time));
-                            long time2 =System.currentTimeMillis();
                             if (!success) {
                                 return null;
                             }
-                            boolean result = document.saveAs(pdfFile.getAbsolutePath(), false);
-                            CLog.e("水印", "水印文件保存耗时:" +(System.currentTimeMillis() - time2));
+                            boolean result = document.saveAs(pdfFile.getAbsolutePath(), false, false, saveFileExtraFontSubset);
                             return result ? pdfFile.getAbsolutePath() : null;
                         } catch (Exception e) {
 
@@ -249,6 +254,9 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
                     @Override
                     protected void onSuccess(String result) {
+                        if (document.shouleReloadDocument()) {
+                            document.reload();
+                        }
                         if (completeListener != null) {
                             completeListener.complete(result);
                         }

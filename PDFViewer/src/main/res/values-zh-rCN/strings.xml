@@ -6,7 +6,7 @@
     <string name="tools_global_setting">设置</string>
     <string name="tools_highlight_links">高亮链接文字</string>
     <string name="tools_highlight_form_fields">高亮表单域</string>
-    <string name="tools_file_author">文档作者</string>
+    <string name="tools_file_author">文档作者：</string>
     <string name="tools_sdk_information">SDK 信息</string>
     <string name="tools_versions">版本</string>
     <string name="tools_company_information">公司信息</string>
@@ -61,5 +61,9 @@
     <string name="tools_compdfkit_sample_file_content_editor">内容编辑器_ComPDFKit_示例文档.pdf</string>
     <string name="tools_compdfkit_sample_file_security">文档密码_compdfkit_ComPDFKit_PDF安全_示例文档.pdf</string>
     <string name="tools_compdfkit_sample_file_watermark">水印_ComPDFKit_示例文档.pdf</string>
+
+    <string name="the_fonts_data_is_saved_with_the_file">字体数据随文件一起保存</string>
+    <string name="tools_annotation_author">注释作者：</string>
+
 
 </resources>

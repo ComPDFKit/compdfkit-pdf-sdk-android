@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -42,10 +43,10 @@ public class CInsertBlankPageDialogFragment extends CBasicBottomSheetDialogFragm
     private AppCompatImageView ivDirectionV;
     private AppCompatImageView ivDirectionH;
     private AppCompatImageView ivRightArrow;
-    private RadioButton rbHomePage;
-    private RadioButton rbLastPage;
-    private RadioButton rbToPageLocationBefore;
-    private RadioButton rbToPageLocationAfter;
+    private AppCompatRadioButton rbHomePage;
+    private AppCompatRadioButton rbLastPage;
+    private AppCompatRadioButton rbToPageLocationBefore;
+    private AppCompatRadioButton rbToPageLocationAfter;
     private AppCompatEditText etInputPageIndex;
 
     private ConstraintLayout clInsertLocation;
@@ -62,11 +63,6 @@ public class CInsertBlankPageDialogFragment extends CBasicBottomSheetDialogFragm
 
     public void setDocument(CPDFDocument document) {
         this.document = document;
-    }
-
-    @Override
-    protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle;
     }
 
     @Override
@@ -155,9 +151,11 @@ public class CInsertBlankPageDialogFragment extends CBasicBottomSheetDialogFragm
 
         rgInsertTo.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rb_tools_edit_page_insert_location_homepage) {
+                etInputPageIndex.setFocusableInTouchMode(false);
                 etInputPageIndex.clearFocus();
                 updateDoneBtnStatus();
             } else if (checkedId == R.id.rb_tools_edit_page_insert_location_lastpage) {
+                etInputPageIndex.setFocusableInTouchMode(false);
                 etInputPageIndex.clearFocus();
                 updateDoneBtnStatus();
             } else if (checkedId == R.id.rb_tools_edit_page_insert_location_before) {
@@ -259,7 +257,7 @@ public class CInsertBlankPageDialogFragment extends CBasicBottomSheetDialogFragm
             return;
         }
         for (int i = 0; i < sizeArr.length; i++) {
-            RadioButton radio = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.tools_pageedit_pagesize_item, null);
+            AppCompatRadioButton radio = (AppCompatRadioButton) LayoutInflater.from(getContext()).inflate(R.layout.tools_pageedit_pagesize_item, null);
             RadioGroup.LayoutParams layoutParams =
                     new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CDimensUtils.dp2px(getContext(), 50));
             radio.setLayoutParams(layoutParams);

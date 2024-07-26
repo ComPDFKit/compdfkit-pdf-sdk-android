@@ -18,10 +18,10 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.common.basic.activity.CBasicPDFActivity;
+import com.compdfkit.tools.common.basic.activity.CPermissionActivity;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 
-public class CPDFDocumentActivity extends CBasicPDFActivity {
+public class CPDFDocumentActivity extends CPermissionActivity {
 
     public static final String EXTRA_FILE_PATH = CPDFDocumentFragment.EXTRA_FILE_PATH;
     public static final String EXTRA_FILE_PASSWORD = CPDFDocumentFragment.EXTRA_FILE_PASSWORD;
@@ -46,15 +46,21 @@ public class CPDFDocumentActivity extends CBasicPDFActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CPDFConfiguration configuration;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            configuration = getIntent().getSerializableExtra(CPDFDocumentFragment.EXTRA_CONFIGURATION, CPDFConfiguration.class);
+        } else {
+            configuration = (CPDFConfiguration) getIntent().getSerializableExtra(CPDFDocumentFragment.EXTRA_CONFIGURATION);
+        }
+        if (configuration == null) {
+            configuration = CPDFConfigurationUtils.normalConfig(this, "tools_default_configuration.json");
+        }
+        int themeId = CPDFApplyConfigUtil.getInstance().getThemeId(getApplicationContext(), configuration);
+        setTheme(themeId);
         setContentView(R.layout.tools_pdf_document_activity);
         if (getIntent() != null) {
             String password = getIntent().getStringExtra(CPDFDocumentFragment.EXTRA_FILE_PASSWORD);
-            CPDFConfiguration configuration;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                configuration = getIntent().getSerializableExtra(CPDFDocumentFragment.EXTRA_CONFIGURATION, CPDFConfiguration.class);
-            } else {
-                configuration = (CPDFConfiguration) getIntent().getSerializableExtra(CPDFDocumentFragment.EXTRA_CONFIGURATION);
-            }
+
             CPDFDocumentFragment documentFragment;
             if (!TextUtils.isEmpty(getIntent().getStringExtra(CPDFDocumentFragment.EXTRA_FILE_PATH))){
                 documentFragment = CPDFDocumentFragment.newInstance(

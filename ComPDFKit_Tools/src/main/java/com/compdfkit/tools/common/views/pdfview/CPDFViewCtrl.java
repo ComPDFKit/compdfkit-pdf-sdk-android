@@ -35,8 +35,8 @@ import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditManager;
-import com.compdfkit.tools.BuildConfig;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CToastUtil;
@@ -133,7 +133,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
     private int pageIndicatorMarginBottom = 0;
 
-    private OnTapMainDocAreaCallback onTapMainDocAreaCallback;
+    private List<CPDFIReaderViewCallback> readerViewCallbacks = new ArrayList<>();
 
     private boolean isScrolling = false;
 
@@ -143,6 +143,11 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
     private List<OnFocusedTypeChangedListener> pdfViewFocusedListenerList = new ArrayList<>();
 
+    private CPDFConfiguration cpdfConfiguration;
+
+    private COnSaveCallback saveGlobalCallback;
+
+    private COnSaveError saveGlobalErrorCallback;
 
     private Runnable hideIndicatorRunnable = () -> {
         if (pageIndicatorAnimator != null) {
@@ -150,8 +155,6 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
             pageIndicatorAnimator.reverse();
         }
     };
-
-    COnEndScrollCallback endScrollCallback = null;
 
     public CPDFViewCtrl(@NonNull Context context) {
         this(context, null);
@@ -278,11 +281,11 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         CPDFDocument cpdfDocument = new CPDFDocument(getContext());
         // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
         CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfUri, password);
-        CLog.e("CPDFViewCtrl", "openPDF-error:" + pdfDocumentError.name());
         setPDFDocument(cpdfDocument, pdfUri, pdfDocumentError, openPdfFinishCallback);
     }
 
     private void setPDFDocument(CPDFDocument cpdfDocument, Object pdf, CPDFDocument.PDFDocumentError error, COnOpenPdfFinishCallback openPdfFinishCallback) {
+        CLog.e("ComPDFKit", "CPDFViewCtrl-openPDF:" + error.name());
         // Switch on the result of the open method to handle the different possible outcomes.
         switch (error) {
             // If the PDF file was successfully opened, set the PDF document of the CPdfReaderView instance to the opened document.
@@ -372,7 +375,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         }
     }
 
-    public void savePDF(COnSaveCallback callback, COnSaveError error) {
+    public void savePDF(COnSaveCallback callback, COnSaveError error){
         CThreadPoolUtils.getInstance().executeMain(() -> {
             cPdfReaderView.pauseAllRenderProcess();
             cPdfReaderView.removeAllAnnotFocus();
@@ -384,31 +387,46 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                 if (error != null) {
                     error.error(new Exception("document is null"));
                 }
+                if (saveGlobalErrorCallback != null) {
+                    saveGlobalErrorCallback.error(new Exception("document is null"));
+                }
                 return;
             }
             exitEditMode();
             if (document.hasChanges()) {
                 try {
-                    boolean success = document.save();
+
+                    boolean saveFileExtraFontSubset = false;
+                    if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null){
+                        saveFileExtraFontSubset = cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
+                    }
+                    CLog.e("ComPDFKit", "save pdf extra font subset:" + saveFileExtraFontSubset);
+                    boolean success = document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental, saveFileExtraFontSubset);
                     if (!success) {
-                        document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveNoIncremental);
+                        document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveNoIncremental, saveFileExtraFontSubset);
                     }
                     if (callback != null) {
                         callback.callback(document.getAbsolutePath(), document.getUri());
                     }
+                    if (saveGlobalCallback != null) {
+                        saveGlobalCallback.callback(document.getAbsolutePath(), document.getUri());
+                    }
                 } catch (CPDFDocumentException e) {
                     e.printStackTrace();
-                    if (BuildConfig.DEBUG) {
-                        CToastUtil.showLongToast(getContext(), "保存异常");
-                    }
                     CLog.e("ComPDFKit", "save fail:" + e.getMessage());
                     if (error != null) {
                         error.error(e);
+                    }
+                    if (saveGlobalErrorCallback != null) {
+                        saveGlobalErrorCallback.error(new Exception("document is null"));
                     }
                 }
             } else {
                 if (callback != null) {
                     callback.callback(document.getAbsolutePath(), document.getUri());
+                }
+                if (saveGlobalCallback != null) {
+                    saveGlobalCallback.callback(document.getAbsolutePath(), document.getUri());
                 }
             }
         });
@@ -447,10 +465,6 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         return cPdfReaderView;
     }
 
-    public void setEndScrollCallback(COnEndScrollCallback callback) {
-        this.endScrollCallback = callback;
-    }
-
     @Override
     public void onTypeChanged(CPDFAnnotation.Type type) {
         if (pdfViewFocusedListenerList != null) {
@@ -462,8 +476,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
     @Override
     public void onTapMainDocArea() {
-        if (onTapMainDocAreaCallback != null) {
-            onTapMainDocAreaCallback.onTapMainDocArea();
+        if (readerViewCallbacks != null) {
+            for (CPDFIReaderViewCallback readerViewCallback : readerViewCallbacks) {
+                readerViewCallback.onTapMainDocArea();
+            }
         }
     }
 
@@ -476,13 +492,20 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         if (indicatorView != null) {
             indicatorView.setCurrentPageIndex(pageIndex);
         }
+        if (readerViewCallbacks != null) {
+            for (CPDFIReaderViewCallback readerViewCallback : readerViewCallbacks) {
+                readerViewCallback.onMoveToChild(pageIndex);
+            }
+        }
     }
 
     @Override
     public void onEndScroll() {
         hidePageIndicator();
-        if (endScrollCallback != null) {
-            endScrollCallback.onEndScrollCallback();
+        if (readerViewCallbacks != null) {
+            for (CPDFIReaderViewCallback readerViewCallback : readerViewCallbacks) {
+                readerViewCallback.onEndScroll();
+            }
         }
     }
 
@@ -494,11 +517,20 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
             isScrolling = true;
             showPageIndicator();
         }
+        if (readerViewCallbacks != null) {
+            for (CPDFIReaderViewCallback readerViewCallback : readerViewCallbacks) {
+                readerViewCallback.onScrolling();
+            }
+        }
     }
 
     @Override
     public void onRecordLastJumpPageNum(int i) {
-
+        if (readerViewCallbacks != null) {
+            for (CPDFIReaderViewCallback readerViewCallback : readerViewCallbacks) {
+                readerViewCallback.onRecordLastJumpPageNum(i);
+            }
+        }
     }
 
     private void initCPDFSliderBar() {
@@ -604,8 +636,8 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         pdfViewFocusedListenerList.add(listener);
     }
 
-    public void setOnTapMainDocAreaCallback(OnTapMainDocAreaCallback onTapMainDocAreaCallback) {
-        this.onTapMainDocAreaCallback = onTapMainDocAreaCallback;
+    public void addReaderViewCallback(CPDFIReaderViewCallback callback){
+        this.readerViewCallbacks.add(callback);
     }
 
     public void enablePageIndicator(boolean enablePageIndicator) {
@@ -618,8 +650,25 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         initCPDFSliderBar();
     }
 
-    public interface OnTapMainDocAreaCallback {
-        void onTapMainDocArea();
+    public boolean isSaveFileExtraFontSubset() {
+        if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null){
+            return cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
+        }else {
+            return false;
+        }
+    }
+
+    public void setCPDFConfiguration(CPDFConfiguration cpdfConfiguration) {
+        this.cpdfConfiguration = cpdfConfiguration;
+    }
+
+    public CPDFConfiguration getCPDFConfiguration() {
+        return cpdfConfiguration;
+    }
+
+    public void setSaveCallback(COnSaveCallback saveGlobalCallback, COnSaveError error) {
+        this.saveGlobalCallback = saveGlobalCallback;
+        this.saveGlobalErrorCallback = error;
     }
 
     public interface COnSaveCallback {
@@ -631,11 +680,8 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         void error(Exception e);
     }
 
-    public interface COnEndScrollCallback {
-        void onEndScrollCallback();
-    }
-
     public interface COnOpenPdfFinishCallback {
         void onOpenPdfFinishCallback();
     }
+
 }

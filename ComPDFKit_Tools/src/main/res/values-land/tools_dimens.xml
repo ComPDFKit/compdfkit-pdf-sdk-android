@@ -2,6 +2,5 @@
 <resources>
 
     <dimen name="tools_dialog_layout_width">300dp</dimen>
-    <dimen name="tools_signature_recycler_view_height">-2</dimen>
 
 </resources>

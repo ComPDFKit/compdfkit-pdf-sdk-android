@@ -18,7 +18,7 @@
         android:id="@+id/cl_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tools_reader_setting_head_bg_color"
+        android:background="?attr/compdfkit_HeadItem_BackgroundColor"
         android:layout_below="@id/id_search_head"
         >
 
@@ -51,7 +51,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-
         android:id="@+id/id_reader_search_recyclerView"
         android:layout_width="match_parent"
         tools:listitem="@layout/tools_search_keywords_list_item"
@@ -87,6 +86,7 @@
             android:textSize="18sp"
             android:layout_marginTop="16dp"
             android:text="@string/tools_sorry_no_contents"
+            android:textColor="?android:attr/textColorPrimary"
             app:layout_constraintTop_toBottomOf="@id/iv_search_empty"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

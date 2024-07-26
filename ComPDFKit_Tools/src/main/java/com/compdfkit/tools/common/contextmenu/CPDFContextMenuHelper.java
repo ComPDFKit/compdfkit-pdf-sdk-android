@@ -32,6 +32,7 @@ import com.compdfkit.tools.common.contextmenu.impl.CLongPressContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CMarkupContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CPushButtonContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CRadioButtonContextMenuView;
+import com.compdfkit.tools.common.contextmenu.impl.CScreenShotContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSearchReplaceContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSelectContentContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CShapeContextMenuView;
@@ -52,6 +53,7 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuListBoxProvi
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuLongPressProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuMarkupProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuRadioButtonProvider;
+import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuScreenShotProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSearchReplaceProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSelectContentProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSoundContentProvider;
@@ -85,8 +87,13 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
 
     private PopupWindow.OnDismissListener dismissListener;
 
+    private String annotationAuthor;
+
     public CPDFContextMenuHelper(CPDFViewCtrl pdfView, ContextMenuProviderParams params) {
         super(pdfView.getCPdfReaderView());
+        if (pdfView.getCPDFConfiguration() != null && pdfView.getCPDFConfiguration().annotationsConfig != null){
+            annotationAuthor = pdfView.getCPDFConfiguration().annotationsConfig.annotationAuthor;
+        }
         this.helperParams = params;
     }
 
@@ -288,6 +295,14 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
     }
 
     @Override
+    public View getScreenShotContentView(CPDFPageView cpdfPageView, LayoutInflater layoutInflater, RectF rectF) {
+        if (helperParams.screenShotProvider != null){
+            return helperParams.screenShotProvider.getScreenShotContentView(this, cpdfPageView, layoutInflater, rectF);
+        }
+        return super.getScreenShotContentView(cpdfPageView, layoutInflater, rectF);
+    }
+
+    @Override
     public void dismissContextMenu() {
         if (popupWindow != null) {
             popupWindow.setOnDismissListener(()->{
@@ -298,6 +313,10 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
             });
         }
         super.dismissContextMenu();
+    }
+
+    public String getAnnotationAuthor() {
+        return annotationAuthor;
     }
 
     private int loadType = CPDFEditPage.LoadNone;
@@ -451,6 +470,11 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
             return this;
         }
 
+        public Builder setScreenShotContextMenu(ContextMenuScreenShotProvider screenShotProvider){
+            this.params.screenShotProvider = screenShotProvider;
+            return this;
+        }
+
         public CPDFContextMenuHelper create(CPDFViewCtrl pdfView){
             return new CPDFContextMenuHelper(pdfView, params);
         }
@@ -466,6 +490,7 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
             params.stampProvider = new CStampContextMenuView();
             params.linkProvider = new CLinkContextMenuView();
             params.searchReplaceProvider = new CSearchReplaceContextMenuView();
+            params.screenShotProvider = new CScreenShotContextMenuView();
             return this;
         }
 
@@ -478,6 +503,7 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
             params.formSignatureProvider = new CSignatureContextMenuView();
             params.pushButtonProvider = new CPushButtonContextMenuView();
             params.selectContentProvider = new CopyContextMenuView();
+            params.screenShotProvider = new CScreenShotContextMenuView();
             return this;
         }
     }

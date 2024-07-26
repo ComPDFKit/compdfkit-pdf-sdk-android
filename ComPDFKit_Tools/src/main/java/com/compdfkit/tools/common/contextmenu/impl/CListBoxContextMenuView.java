@@ -48,6 +48,7 @@ public class CListBoxContextMenuView implements ContextMenuListBoxProvider {
             CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_LIST_BOX);
             CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
+            styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
             styleDialogFragment.show(helper.getReaderView().getContext());
             helper.dismissContextMenu();
         });

@@ -22,6 +22,7 @@ import com.compdfkit.core.signature.CPDFSignature;
 import com.compdfkit.core.signature.CPDFSigner;
 import com.compdfkit.core.signature.CPDFX509;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.signature.bean.CPDFDocumentSignInfo;
 import com.compdfkit.tools.signature.bean.CPDFSignatureStatusInfo;
 import com.compdfkit.ui.reader.CPDFReaderView;
@@ -202,12 +203,14 @@ public class CertificateDigitalDatas {
         }
     }
 
-    public static boolean removeDigitalSign(CPDFReaderView readerView, CPDFDocument document, CPDFSignature signature) {
+    public static boolean removeDigitalSign(CPDFViewCtrl pdfView, CPDFSignature signature) {
         try {
+            CPDFReaderView readerView = pdfView.getCPdfReaderView();
+            CPDFDocument document = readerView.getPDFDocument();
             boolean result = document.removeSignature(signature, true, cpdfSignatureWidget ->{
                 readerView.refreshSignatureWidget(cpdfSignatureWidget);
             });
-            document.save();
+            document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental, pdfView.isSaveFileExtraFontSubset());
             return result;
         } catch (Exception e) {
             e.printStackTrace();

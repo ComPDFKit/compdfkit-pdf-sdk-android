@@ -14,11 +14,11 @@
         android:background="@null"
         android:gravity="start|top"
         android:textCursorDrawable="@drawable/tools_normal_et_cursor"
-        android:textColor="@color/tools_annot_icon_select_color"
+        android:textColor="@color/tools_text_color_primary"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/id_note_delete"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="" />
+        tools:text="ComPDFKit" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/id_note_delete"

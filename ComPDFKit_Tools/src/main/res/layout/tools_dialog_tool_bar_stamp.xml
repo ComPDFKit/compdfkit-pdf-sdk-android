@@ -7,7 +7,7 @@
     android:layout_height="?android:attr/actionBarSize"
     app:layout_constraintEnd_toEndOf="parent"
     android:elevation="4dp"
-    android:background="@color/tools_color_primary"
+    android:background="?attr/colorPrimary"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
@@ -18,7 +18,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="24dp"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="22sp"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tools_ic_back"
-        app:tint="@color/tools_on_primary" />
+        app:tint="?attr/colorOnPrimary" />
 
 
     <androidx.appcompat.widget.AppCompatImageView

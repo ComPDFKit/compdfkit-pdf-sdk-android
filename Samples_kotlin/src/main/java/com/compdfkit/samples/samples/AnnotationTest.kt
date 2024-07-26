@@ -436,12 +436,12 @@ class AnnotationTest : PDFSamples() {
      */
     private fun addStamp(document: CPDFDocument) {
         // add standard stamp annotation
-        var yOffset = 50
+        var yOffset: Int
         var lastOffset = 0F
         for (i in StandardStamp.values().indices) {
             val page = document.pageAtIndex(4)
             val standardStamp = StandardStamp.values()[i]
-            if (standardStamp == null || standardStamp == StandardStamp.UNKNOWN) {
+            if (standardStamp == StandardStamp.UNKNOWN) {
                 continue
             }
             // add Standard stamp

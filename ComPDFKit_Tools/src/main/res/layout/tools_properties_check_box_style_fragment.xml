@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:background="?android:attr/colorBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_rootView"
@@ -23,29 +25,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:title="@string/tools_line_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_field_view"
-            android:title="@string/tools_line_color" />
+            app:layout_constraintTop_toBottomOf="@id/text_field_view" />
 
 
         <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
             android:id="@+id/background_color_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:title="@string/tools_background_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/border_color_list_view"
-            android:title="@string/tools_background_color" />
+            app:layout_constraintTop_toBottomOf="@id/border_color_list_view" />
 
         <com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView
             android:id="@+id/check_color_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:title="@string/tools_check_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/background_color_list_view"
-            android:title="@string/tools_check_color" />
+            app:layout_constraintTop_toBottomOf="@id/background_color_list_view" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,7 +66,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="0dp"
                 android:text="@string/tools_button_style"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -89,7 +91,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/iv_check_style_arrow"
                     app:srcCompat="@drawable/tools_ic_check_box_check"
-                    app:tint="@color/tools_text_color_primary" />
+                    app:tint="?attr/colorOnPrimary" />
 
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -102,7 +104,7 @@
                     app:layout_constraintStart_toEndOf="@id/iv_check_box"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/tools_ic_grey_arrow"
-                    app:tint="@color/tools_text_color_primary" />
+                    app:tint="?attr/colorOnPrimary" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

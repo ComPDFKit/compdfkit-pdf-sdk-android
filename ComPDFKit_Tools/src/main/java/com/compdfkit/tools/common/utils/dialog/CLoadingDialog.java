@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 
 public class CLoadingDialog extends DialogFragment {
@@ -33,18 +34,31 @@ public class CLoadingDialog extends DialogFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        int themeId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme);
+        if (themeId == 0){
+            themeId = R.style.ComPDFKit_Theme_Dialog;
+        }
+        setStyle(STYLE_NO_TITLE, themeId);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         setCancelable(false);
         if (getDialog() != null) {
             getDialog().setCanceledOnTouchOutside(false);
         }
-        setStyle(STYLE_NO_TITLE, R.style.tools_dialog_theme);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            getDialog().getWindow().setBackgroundDrawableResource(R.drawable.tools_dialog_background);
+        }
         View rootView = inflater.inflate(R.layout.tools_loading_dialog_fragment, container, false);
         return rootView;
     }

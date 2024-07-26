@@ -20,7 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@drawable/tools_ic_add"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/tools_color_accent"
+        android:backgroundTint="?attr/colorAccent"
         android:layout_marginBottom="40dp"
         app:tint="@android:color/white"
         />

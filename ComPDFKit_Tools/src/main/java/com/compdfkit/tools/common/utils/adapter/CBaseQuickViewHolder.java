@@ -32,6 +32,10 @@ public class CBaseQuickViewHolder extends RecyclerView.ViewHolder {
         super(LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false));
     }
 
+    public CBaseQuickViewHolder(View rootView){
+        super(rootView);
+    }
+
 
     public <T extends View> T getView(@IdRes int viewId) {
         if (views.get(viewId) != null) {

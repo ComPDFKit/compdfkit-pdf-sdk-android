@@ -42,6 +42,14 @@ public class CStampContextMenuView implements ContextMenuStampProvider {
                 annotationManager.editNote(helper.getReaderView(), pageView, stampAnnotImpl.onGetAnnotation());
                 helper.dismissContextMenu();
             });
+            menuView.addItem(R.string.tools_reply, v -> {
+                new CPDFAnnotationManager().showAddReplyDialog(pageView, stampAnnotImpl, helper, true);
+                helper.dismissContextMenu();
+            });
+            menuView.addItem(R.string.tools_view_reply, v -> {
+                new CPDFAnnotationManager().showReplyDetailsDialog(pageView, stampAnnotImpl, helper);
+                helper.dismissContextMenu();
+            });
         }
         menuView.addItem(R.string.tools_delete, v -> {
             pageView.deleteAnnotation(stampAnnotImpl);

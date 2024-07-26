@@ -47,6 +47,14 @@ public class CInkContextMenuView implements ContextMenuInkProvider {
             annotationManager.editNote(helper.getReaderView(), pageView, inkAnnotImpl.onGetAnnotation());
             helper.dismissContextMenu();
         });
+        menuView.addItem(R.string.tools_reply, v -> {
+            new CPDFAnnotationManager().showAddReplyDialog(pageView, inkAnnotImpl, helper, true);
+            helper.dismissContextMenu();
+        });
+        menuView.addItem(R.string.tools_view_reply, v -> {
+            new CPDFAnnotationManager().showReplyDetailsDialog(pageView, inkAnnotImpl, helper);
+            helper.dismissContextMenu();
+        });
         menuView.addItem(R.string.tools_delete, v -> {
             pageView.deleteAnnotation(inkAnnotImpl);
             helper.dismissContextMenu();

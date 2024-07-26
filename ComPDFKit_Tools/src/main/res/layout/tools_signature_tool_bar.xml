@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
-    android:background="@color/tools_color_primary">
+    android:background="?attr/colorPrimary">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_add_digital_signature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/tools_signature_toolbar_btn_corner_status_bg"
-        android:foreground="@drawable/tools_common_btn_corner_ripple"
+        android:foreground="@drawable/tools_common_btn_corner_ripple_in_widget"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/cl_verify_digital_signature"
@@ -26,7 +26,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/tools_text_color_primary" />
+            app:tint="@color/tools_signature_iv_status_color" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_add"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/tools_add_a_signature_field"
-            android:textColor="@color/tools_text_color_primary"
+            android:textColor="@color/tools_signature_iv_status_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_add"
@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/tools_signature_toolbar_btn_corner_status_bg"
-        android:foreground="@drawable/tools_common_btn_corner_ripple"
+        android:foreground="@drawable/tools_common_btn_corner_ripple_in_widget"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +63,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/tools_text_color_primary" />
+            app:tint="?attr/colorOnPrimary" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_verify"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/tools_verify_signatures"
-            android:textColor="@color/tools_text_color_primary"
+            android:textColor="?android:attr/textColorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_verify"

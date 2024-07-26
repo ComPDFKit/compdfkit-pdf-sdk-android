@@ -10,20 +10,15 @@
 package com.compdfkit.tools.common.basic.fragment;
 
 
-import android.graphics.Color;
 import android.net.Uri;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.compdfkit.core.annotation.CPDFBorderStyle;
-import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFLinkAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAnnotation;
 import com.compdfkit.core.annotation.form.CPDFComboboxWidget;
 import com.compdfkit.core.annotation.form.CPDFListboxWidget;
 import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
-import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdflink.CLinkAnnotAttachHelper;
@@ -32,12 +27,12 @@ import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CPDFtextAnnotImpl;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.impl.CEditImageContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CEditTextContextMenuView;
+import com.compdfkit.tools.common.contextmenu.impl.CScreenShotContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSearchReplaceContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSignatureContextMenuView;
+import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
-import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
-import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment;
@@ -52,12 +47,13 @@ import java.io.File;
 
 public class CBasicPDFFragment extends CPermissionFragment {
 
+    protected CPDFConfiguration cpdfConfiguration;
+
     public int curEditMode = CPDFEditPage.LoadNone;
 
     protected Uri documentUri;
 
     protected String documentPath;
-
 
     protected void resetContextMenu(CPDFViewCtrl pdfView, CPreviewMode mode) {
         switch (mode) {
@@ -65,6 +61,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
                 pdfView.getCPdfReaderView().setContextMenuShowListener(
                         new CPDFContextMenuHelper.Builder()
                                 .setSelectContentMenu(new CopyContextMenuView())
+                                .setScreenShotContextMenu(new CScreenShotContextMenuView())
                                 .create(pdfView));
                 break;
             case Annotation:
@@ -78,6 +75,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
                                 .setEditTextContentMenu(new CEditTextContextMenuView())
                                 .setEditImageContentMenu(new CEditImageContextMenuView())
                                 .setSearchReplaceContextMenu(new CSearchReplaceContextMenuView())
+                                .setScreenShotContextMenu(new CScreenShotContextMenuView())
                                 .create(pdfView));
                 break;
             case Form:
@@ -90,43 +88,12 @@ public class CBasicPDFFragment extends CPermissionFragment {
                 pdfView.getCPdfReaderView().setContextMenuShowListener(
                         new CPDFContextMenuHelper.Builder()
                                 .setSignatureContextMenu(new CSignatureContextMenuView())
+                                .setScreenShotContextMenu(new CScreenShotContextMenuView())
                                 .create(pdfView));
                 break;
             default:
                 break;
         }
-    }
-
-    protected void initAnnotationAttr(CPDFViewCtrl pdfView) {
-        int defaultColor = ContextCompat.getColor(getContext(), R.color.tools_annotation_markup_default_color);
-        new CStyleManager.Builder()
-                .setNote(defaultColor, 255)
-                .setMarkup(CStyleType.ANNOT_HIGHLIGHT, defaultColor, 255)
-                .setMarkup(CStyleType.ANNOT_UNDERLINE, defaultColor, 255)
-                .setMarkup(CStyleType.ANNOT_SQUIGGLY, defaultColor, 255)
-                .setMarkup(CStyleType.ANNOT_STRIKEOUT, defaultColor, 255)
-                .setShape(CStyleType.ANNOT_SQUARE, defaultColor, 255, Color.TRANSPARENT, 0, 10, null)
-                .setShape(CStyleType.ANNOT_CIRCLE, defaultColor, 255, Color.TRANSPARENT, 0, 5, null)
-                .setShape(CStyleType.ANNOT_LINE, defaultColor, 255, defaultColor, 255, 5, null)
-                .setShapeArrow(defaultColor, 255, defaultColor, 255, 5,
-                        CPDFLineAnnotation.LineType.LINETYPE_NONE, CPDFLineAnnotation.LineType.LINETYPE_ARROW,
-                        new CPDFBorderStyle(CPDFBorderStyle.Style.Border_Solid, 5, new float[]{8.0F, 0F}))
-                .setInkAttribute(defaultColor, 255, 10, 10)
-                .setFreeText(defaultColor, 255, 50)
-                .init(pdfView, true);
-    }
-
-    protected void initFormAttr(CPDFViewCtrl pdfView) {
-        int bgColor = ContextCompat.getColor(getContext(), R.color.tools_form_default_bg_color);
-        new CStyleManager.Builder()
-                .setTextField(Color.TRANSPARENT, bgColor, Color.BLACK, 25, 2, false)
-                .setCheckBox(Color.BLACK, bgColor, Color.BLACK, 2, CPDFWidget.CheckStyle.CK_Check, false)
-                .setRadioButton(Color.BLACK, bgColor, Color.BLACK, 2, CPDFWidget.CheckStyle.CK_Circle, false)
-                .setListBox(Color.TRANSPARENT, bgColor, Color.BLACK, 20, 2)
-                .setComboBox(Color.TRANSPARENT, bgColor, Color.BLACK, 20, 2)
-                .setPushButton(Color.BLACK, Color.WHITE, Color.BLACK, 20, 2, "Push Button")
-                .setFormSignature(Color.TRANSPARENT, bgColor, 0)
-                .init(pdfView, true);
     }
 
     protected void registerAnnotHelper(CPDFViewCtrl pdfView) {
@@ -178,6 +145,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
     public void showPageEdit(CPDFViewCtrl pdfView, boolean enterEdit, CPDFPageEditDialogFragment.OnBackLisener backListener) {
         curEditMode = pdfView.getCPdfReaderView().getLoadType();
         pdfView.exitEditMode();
+        pdfView.getCPdfReaderView().getContextMenuShowListener().dismissContextMenu();
         CPDFPageEditDialogFragment pageEditDialogFragment = CPDFPageEditDialogFragment.newInstance();
         pageEditDialogFragment.initWithPDFView(pdfView);
         pageEditDialogFragment.setEnterEdit(enterEdit);

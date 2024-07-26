@@ -6,7 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     android:layout_height="?android:attr/actionBarSize"
-    android:background="@color/tools_color_primary"
+    android:background="?attr/colorPrimary"
     android:elevation="4dp">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -25,7 +25,7 @@
         android:id="@+id/ll_form_attr"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@color/tools_color_primary"
+        android:background="?attr/colorPrimary"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
             android:layout_width="1dp"
             android:layout_height="20dp"
             android:layout_marginStart="4dp"
-            android:background="@color/tools_control_line_color"
+            android:background="?attr/dividerColor"
             />
 
     </LinearLayout>

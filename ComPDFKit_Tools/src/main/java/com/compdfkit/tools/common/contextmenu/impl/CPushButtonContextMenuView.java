@@ -45,6 +45,7 @@ public class CPushButtonContextMenuView implements ContextMenuPushButtonProvider
             CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_PUSH_BUTTON);
             CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
+            styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
             styleDialogFragment.show(helper.getReaderView().getContext());
             helper.dismissContextMenu();
         });

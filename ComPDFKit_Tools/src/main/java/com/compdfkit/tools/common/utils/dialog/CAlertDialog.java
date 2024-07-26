@@ -14,14 +14,15 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 
 public class CAlertDialog extends DialogFragment {
@@ -36,9 +37,9 @@ public class CAlertDialog extends DialogFragment {
 
     private AppCompatTextView tvMessage;
 
-    private Button btnCancel;
+    private AppCompatButton btnCancel;
 
-    private Button btnConfirm;
+    private AppCompatButton btnConfirm;
 
     private View.OnClickListener cancelListener;
 
@@ -62,7 +63,11 @@ public class CAlertDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.tools_dialog_theme);
+        int themeId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme);
+        if (themeId == 0){
+            themeId = R.style.ComPDFKit_Theme_Dialog;
+        }
+        setStyle(STYLE_NO_TITLE, themeId);
     }
 
     @Nullable

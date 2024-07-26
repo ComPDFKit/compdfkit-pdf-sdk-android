@@ -15,6 +15,13 @@ android {
     compileSdk rootProject.ext.android.COMPILESDK
     resourcePrefix 'tools_'
 
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+
     defaultConfig {
         minSdk rootProject.ext.android.MINSDK
         targetSdk rootProject.ext.android.TARGETSDK
@@ -23,7 +30,6 @@ android {
 
         consumerProguardFiles "proguard-rules.pro"
         setProperty("archivesBaseName", "ComPDFKit_Tools")
-
     }
 
     buildTypes {
@@ -31,13 +37,6 @@ android {
             minifyEnabled true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            libraryVariants.all { variant ->
-                variant.outputs.all { output ->
-                    if (outputFile != null && outputFileName.endsWith('.aar')) {
-                        outputFileName = "ComPDFKit_Tools.aar"
-                    }
-                }
-            }
         }
     }
 
@@ -50,10 +49,12 @@ android {
 dependencies {
 
     api fileTree(include: ['*.jar'], dir: 'libs')
-    api project(path:':ComPDFKit_Repo:compdfkit')
-    api project(path:':ComPDFKit_Repo:compdfkit-ui')
-//    api ('com.compdf:compdfkit:2.0.0')
-//    api ('com.compdf:compdfkit-ui:2.0.0')
+    // use this
+//    api project(path:':ComPDFKit_Repo:compdfkit')
+//    api project(path:':ComPDFKit_Repo:compdfkit-ui')
+    // or use
+    api ('com.compdf:compdfkit:2.1.0')
+    api ('com.compdf:compdfkit-ui:2.1.0')
     api 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     api 'androidx.documentfile:documentfile:1.0.1'

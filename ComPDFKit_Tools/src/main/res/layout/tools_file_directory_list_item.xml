@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="65dp"
+    tools:background="?android:attr/colorBackground"
     android:background="@drawable/tools_common_btn_rectangle_ripple">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -15,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tools_ic_baseline_folder"
-        app:tint="@color/tools_text_color_secondary" />
+        app:tint="?attr/colorOnPrimary" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_name"
@@ -26,7 +27,7 @@
         android:singleLine="true"
         android:layout_marginEnd="8dp"
         android:textSize="16sp"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

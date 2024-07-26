@@ -2,6 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="?android:attr/colorBackground"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,11 +18,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
-            android:background="@color/tools_reader_setting_head_bg_color"
+            android:background="?attr/compdfkit_HeadItem_BackgroundColor"
             android:lineSpacingMultiplier="1.25"
             android:padding="16dp"
             android:text="@string/tools_certificate_digital_id_save_info"
-            android:textColor="@color/tools_text_color_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tools_save_location"
-                android:textColor="@color/tools_text_color_disable"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
                 app:layout_constraintStart_toStartOf="@id/tv_save_desc" />
 
 
@@ -67,7 +69,7 @@
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:singleLine="true"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +104,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/tools_confirm_password_error"
-            android:textColor="@color/tools_error"
+            android:textColor="?attr/colorError"
             android:visibility="gone"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"

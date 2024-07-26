@@ -69,7 +69,6 @@ class ColorRectSelector extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        canvas.drawCircle(currentPoint.x, currentPoint.y, RADIUS + (levelTwoWidth - levelOneWidth), levelTwoPaint);
         canvas.drawCircle(currentPoint.x, currentPoint.y, RADIUS, levelOnePaint);
     }
 

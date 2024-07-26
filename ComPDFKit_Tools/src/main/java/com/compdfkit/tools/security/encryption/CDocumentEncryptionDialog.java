@@ -36,6 +36,7 @@ import com.compdfkit.core.document.CPDFDocumentPermissionInfo;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
@@ -43,6 +44,7 @@ import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
+import com.google.android.material.color.MaterialColors;
 
 import java.io.File;
 
@@ -104,6 +106,8 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
 
     private CPDFDocument document;
 
+    private boolean saveFileExtraFontSubset = false;
+
     private CEncryptionResultListener encryptionResultListener;
 
     protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
@@ -112,10 +116,8 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
         this.document = document;
     }
 
-
-    @Override
-    protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle_FillScreen;
+    public void setSaveFileExtraFontSubset(boolean saveFileExtraFontSubset) {
+        this.saveFileExtraFontSubset = saveFileExtraFontSubset;
     }
 
     @Override
@@ -308,7 +310,12 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
     }
 
     private void setTextViewEnable(TextView textView, boolean enable) {
-        textView.setTextColor(ContextCompat.getColor(getContext(), enable ? R.color.tools_text_color_primary : R.color.tools_text_color_disable));
+        if (enable){
+            textView.setTextColor(MaterialColors.getColor(getContext(), android.R.attr.textColorPrimary,
+                    ContextCompat.getColor(getContext(), R.color.tools_text_color_primary)));
+        }else {
+            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.tools_text_color_disable));
+        }
         textView.setEnabled(enable);
     }
 
@@ -391,12 +398,17 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
                 String filePath = CFileUtils.renameNameSuffix(file).getAbsolutePath();
                 if (isRemoveSecurity) {
                     // remove security
-                    result = document.saveAs(filePath, true);
+                    result = document.saveAs(filePath, true, false, saveFileExtraFontSubset);
                 } else {
                     // Save to specified directory
-                    result = document.saveAs(filePath, false);
+                    result = document.saveAs(filePath, false, false, saveFileExtraFontSubset);
                 }
-                document.close();
+                boolean shouleReloadDocument = document.shouleReloadDocument();
+                CLog.e("ComPDFKit", "是否需要重新加载文档：" + shouleReloadDocument);
+                if (shouleReloadDocument) {
+                    CLog.e("ComPDFKit", "重新加载文档---");
+                    document.reload();
+                }
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         if (encryptionResultListener != null) {

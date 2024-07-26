@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="?android:attr/colorBackground"
         android:layout_width="@dimen/tools_dialog_layout_width"
         android:layout_height="wrap_content"
         android:paddingTop="24dp"
@@ -24,7 +24,7 @@
             android:layout_marginHorizontal="24dp"
             android:gravity="center_vertical|start"
             android:text="@string/tools_add_bookmarks"
-            android:textColor="@color/tools_text_color_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,14 +35,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="12dp"
-            android:backgroundTint="@color/tools_color_accent"
+            android:backgroundTint="?attr/colorAccent"
             android:gravity="center_vertical"
             android:layout_marginEnd="24dp"
             android:textSize="13sp"
             android:maxLines="1"
             android:minHeight="45dp"
-            android:textColor="@color/tools_text_color_primary"
-            android:textColorHint="@color/tools_text_color_hint"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textColorHint="?android:attr/textColorHint"
             android:textCursorDrawable="@drawable/tools_normal_et_cursor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,17 +59,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_message">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_cancel"
-                style="@style/tools_dialog_button_style"
-                android:text="@string/tools_cancel"
-                tools:textColor="@android:color/black" />
+                style="@style/ComPDFKit.Theme.Dialog.Button"
+                android:text="@string/tools_cancel" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_add"
-                style="@style/tools_dialog_button_style"
-                android:text="@string/tools_okay"
-                tools:textColor="@android:color/black" />
+                style="@style/ComPDFKit.Theme.Dialog.Button"
+                android:text="@string/tools_okay" />
 
         </LinearLayout>
 

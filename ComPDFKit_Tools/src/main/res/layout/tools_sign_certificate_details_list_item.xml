@@ -21,7 +21,7 @@
         app:srcCompat="@drawable/tools_ic_right"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintHorizontal_bias="0"
-        app:tint="@color/tools_text_color_primary"
+        app:tint="?attr/colorOnPrimary"
         app:layout_constraintEnd_toStartOf="@id/tv_item_title"
         tools:visibility="visible" />
 
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:paddingVertical="8dp"
-        android:textColor="@color/tools_text_color_secondary"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="14sp"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"

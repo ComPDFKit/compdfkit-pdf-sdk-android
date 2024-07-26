@@ -24,6 +24,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickAdapter;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickViewHolder;
 import com.compdfkit.tools.forms.pdfformbar.bean.CFormToolBean;
+import com.google.android.material.color.MaterialColors;
 
 import java.util.List;
 
@@ -41,7 +42,10 @@ public class CPDFFormToolListAdapter extends CBaseQuickAdapter<CFormToolBean, CB
     protected void onBindViewHolder(CBaseQuickViewHolder holder, int position, CFormToolBean item) {
         holder.setImageResource(R.id.iv_annot_type, item.getIconResId());
         CardView cardView = holder.getView(R.id.card_view);
-        cardView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), item.isSelect() ? R.color.tools_annot_list_item_select_bg_color : R.color.tools_color_primary));
+        int selectColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_annot_list_item_select_bg_color);
+        int normalColor = MaterialColors.getColor(holder.itemView.getContext(), android.R.attr.colorPrimary,
+                ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_color_primary));
+        cardView.setCardBackgroundColor(item.isSelect() ? selectColor : normalColor);
         refreshAnnotColor(holder, item);
         holder.setItemHorizontalMargin(list, 16, 0, 16);
     }
@@ -54,7 +58,10 @@ public class CPDFFormToolListAdapter extends CBaseQuickAdapter<CFormToolBean, CB
             for (Object payload : payloads) {
                 if (payload == REFRESH_ITEM) {
                     CardView cardView = holder.getView(R.id.card_view);
-                    cardView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), item.isSelect() ? R.color.tools_annot_list_item_select_bg_color : R.color.tools_color_primary));
+                    int selectColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_annot_list_item_select_bg_color);
+                    int normalColor = MaterialColors.getColor(holder.itemView.getContext(), android.R.attr.colorPrimary,
+                            ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_color_primary));
+                    cardView.setCardBackgroundColor(item.isSelect() ? selectColor : normalColor);
                     refreshAnnotColor(holder, item);
                 }
             }
@@ -67,7 +74,7 @@ public class CPDFFormToolListAdapter extends CBaseQuickAdapter<CFormToolBean, CB
         if (item.isSelect()) {
             holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tools_annot_icon_select_color)));
         } else {
-            holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tools_text_color_primary)));
+            holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(MaterialColors.getColor(context, R.attr.colorOnPrimary, ContextCompat.getColor(context, R.color.tools_text_color_primary))));
         }
     }
 

@@ -33,6 +33,9 @@ public class AnnotationsConfig implements Serializable {
 
     }
 
+    public String annotationAuthor = "";
+
+
     /**
      * A collection of annotation functions enabled by the annotation list.
      * Annotation types not in the collection will be hidden.

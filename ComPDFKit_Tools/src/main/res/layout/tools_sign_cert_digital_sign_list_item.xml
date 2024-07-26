@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
+    tools:background="?android:attr/colorBackground"
     android:layout_marginTop="16dp"
-
     android:background="@drawable/tools_style_signature_list_item_bg"
     android:foreground="@drawable/tools_common_btn_rectangle_ripple">
 
@@ -36,7 +36,7 @@
         android:layout_marginTop="4dp"
         android:lineSpacingMultiplier="1.2"
         android:text="@string/tools_signed_by"
-        android:textColor="@color/tools_on_primary"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constrainedWidth="true"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/iv_icon"
@@ -49,7 +49,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="40dp"
         android:lineSpacingMultiplier="1.2"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constrainedWidth="true"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_sign_common_name_title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,7 @@
         android:layout_marginTop="4dp"
         android:lineSpacingMultiplier="1.2"
         android:text="@string/tools_date_"
-        android:textColor="@color/tools_on_primary"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constrainedWidth="true"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@id/tv_sign_common_name_title"
@@ -77,7 +77,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="40dp"
         android:lineSpacingMultiplier="1.2"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constrainedWidth="true"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_sign_date_title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +93,7 @@
         android:layout_marginTop="4dp"
         android:lineSpacingMultiplier="1.2"
         android:text="@string/tools_status"
-        android:textColor="@color/tools_on_primary"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constrainedWidth="true"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@id/tv_sign_common_name_title"
@@ -107,7 +107,7 @@
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="16dp"
         android:lineSpacingMultiplier="1.2"
-        android:textColor="@color/tools_text_color_primary"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +115,7 @@
         app:layout_constraintStart_toEndOf="@id/barrier"
         app:layout_constraintTop_toTopOf="@id/tv_sign_status_title"
         app:layout_constraintVertical_bias="0"
-        tools:text="@string/tools_sign_is_valid_info" />
+        tools:text="ComPDFKit" />
 
 
     <androidx.appcompat.widget.AppCompatImageView

@@ -1,8 +1,17 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Compdfkit_android_demo" parent="Theme.Material3.DayNight">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#FAFCFF</item>
+        <item name="android:colorPrimary">#FAFCFF</item>
+        <item name="colorOnPrimary">#FAFCFF</item>
+        <item name="colorSurface">#FAFCFF</item>
+        <item name="android:colorAccent">#1460F3</item>
+        <item name="android:statusBarColor">#FAFCFF</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="android:textColorPrimary">@color/black</item>
+
     </style>
 
     <style name="Theme.Compdfkit_android_demo" parent="Base.Theme.Compdfkit_android_demo" />

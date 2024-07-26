@@ -18,7 +18,6 @@ import com.compdfkit.core.edit.CPDFEditArea;
 import com.compdfkit.core.edit.CPDFEditImageArea;
 import com.compdfkit.core.edit.CPDFEditTextArea;
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;

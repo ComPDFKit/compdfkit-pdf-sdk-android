@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.home.HomeFunBean;
+import com.compdfkit.pdfviewer.home.datas.SettingDatas;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
@@ -59,6 +60,7 @@ public class DocumentEncryptionSamplesImpl extends OpenPDFSamplesImpl {
     private void showDocumentEncryptionDialog(CPDFDocument document){
         CDocumentEncryptionDialog encryptionDialog = CDocumentEncryptionDialog.newInstance();
         encryptionDialog.setDocument(document);
+        encryptionDialog.setSaveFileExtraFontSubset(SettingDatas.isExtraFontSet(fragment.getContext()));
         encryptionDialog.setEncryptionResultListener((isRemoveSecurity, result, file, password) -> {
             encryptionDialog.dismiss();
             int tipsResId;

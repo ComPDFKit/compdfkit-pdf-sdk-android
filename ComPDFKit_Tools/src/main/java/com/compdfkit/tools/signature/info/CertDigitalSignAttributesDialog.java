@@ -65,11 +65,6 @@ public class CertDigitalSignAttributesDialog extends CBasicBottomSheetDialogFrag
     }
 
     @Override
-    protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle;
-    }
-
-    @Override
     protected boolean fullScreen() {
         return true;
     }

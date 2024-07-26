@@ -19,19 +19,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdfsignature.CAddSignatureActivity;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.signature.interfaces.COnSelectCertFileListener;
 
 public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements View.OnClickListener {
@@ -77,6 +79,7 @@ public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements 
         intent.putExtra(CAddSignatureActivity.EXTRA_TITLE, getString(R.string.tools_customize_the_signature_appearance));
         intent.putExtra(CAddSignatureActivity.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         intent.putExtra(CAddSignatureActivity.EXTRA_HIDE_TYPEFACE, true);
+        intent.putExtra(CAddSignatureActivity.EXTRA_THEME_ID, CPDFApplyConfigUtil.getInstance().getThemeId());
         addSignatureLauncher.launch(intent);
     }
 
@@ -99,7 +102,7 @@ public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.tools_dialog_theme);
+        setStyle(STYLE_NO_TITLE, CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme));
     }
 
     @Nullable
@@ -110,8 +113,8 @@ public class CPDFSelectDigitalSignatureDialog extends DialogFragment implements 
         }
         View view = inflater.inflate(R.layout.tools_sign_digital_sign_select_dialog, container, false);
         rgType = view.findViewById(R.id.rg_type);
-        Button btnCancel = view.findViewById(R.id.btn_cancel);
-        Button btnDone = view.findViewById(R.id.btn_confirm);
+        AppCompatButton btnCancel = view.findViewById(R.id.btn_cancel);
+        AppCompatButton btnDone = view.findViewById(R.id.btn_confirm);
         btnCancel.setOnClickListener(this);
         btnDone.setOnClickListener(this);
         return view;

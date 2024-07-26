@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="?android:attr/actionBarSize"
         android:animateLayoutChanges="true"
-        android:background="@color/tools_color_primary"
+        android:background="?android:attr/colorPrimary"
         android:clickable="true"
         android:elevation="4dp"
         android:focusable="true">
@@ -32,14 +32,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/tools_text_color_primary" />
+                app:tint="?attr/colorOnPrimary" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_insert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tools_page_edit_toolbar_insert"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -63,14 +63,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/tools_text_color_primary" />
+                app:tint="?attr/colorOnPrimary" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_replace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tools_page_edit_toolbar_replace"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -96,14 +96,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/tools_text_color_primary" />
+                app:tint="?attr/colorOnPrimary" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_extract"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tools_page_edit_toolbar_extract"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -128,14 +128,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/tools_text_color_primary" />
+                app:tint="?attr/colorOnPrimary" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_copy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tools_page_edit_toolbar_copy"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -160,14 +160,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/tools_text_color_primary" />
+                app:tint="?attr/colorOnPrimary" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_rotate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tools_page_edit_toolbar_rotate"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -192,14 +192,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/tools_text_color_primary" />
+                app:tint="?attr/colorOnPrimary" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tools_page_edit_toolbar_delete"
-                android:textColor="@color/tools_text_color_primary"
+                android:textColor="?attr/colorOnPrimary"
 
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

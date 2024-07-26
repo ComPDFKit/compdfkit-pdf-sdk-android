@@ -10,6 +10,9 @@
 package com.compdfkit.tools.common.pdf;
 
 
+import android.content.Context;
+import android.view.View;
+
 import androidx.core.content.ContextCompat;
 
 import com.compdfkit.core.annotation.CPDFBorderStyle;
@@ -35,6 +38,8 @@ import com.compdfkit.tools.common.pdf.config.forms.FormsListBoxAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsPushButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsRadioButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsTextFieldAttr;
+import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -45,6 +50,8 @@ import com.compdfkit.ui.reader.CPDFReaderView;
 public class CPDFApplyConfigUtil {
 
     private CPDFConfiguration configuration;
+
+    private int themeId;
 
     private static CPDFApplyConfigUtil instance;
 
@@ -57,6 +64,14 @@ public class CPDFApplyConfigUtil {
 
     public CPDFConfiguration getConfiguration() {
         return configuration;
+    }
+
+    public int getThemeId() {
+        if (themeId == 0){
+            CLog.e("主题", "getThemeId() - themeId=0 使用默认Light主题");
+            themeId = R.style.ComPDFKit_Theme_Light;
+        }
+        return themeId;
     }
 
     public void applyConfiguration(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
@@ -87,6 +102,8 @@ public class CPDFApplyConfigUtil {
                     readerView.setDoublePageMode(true);
                     readerView.setCoverPageMode(true);
                     break;
+                default:
+                    break;
             }
             readerView.setContinueMode(readerViewConfig.continueMode);
             readerView.setVerticalMode(readerViewConfig.verticalMode);
@@ -94,22 +111,29 @@ public class CPDFApplyConfigUtil {
             readerView.setPageSameWidth(readerViewConfig.pageSameWidth);
             switch (readerViewConfig.themes) {
                 case Dark:
-                    readerView.setReadBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_dark));
+                    int darkColor = ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_dark);
+                    readerView.setReadBackgroundColor(darkColor);
+                    fragment.pdfView.setBackgroundColor(CViewUtils.getColor(darkColor, 190));
                     break;
                 case Sepia:
-                    readerView.setReadBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_sepia));
+                    int sepiaColor = ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_sepia);
+                    readerView.setReadBackgroundColor(sepiaColor);
+                    fragment.pdfView.setBackgroundColor(CViewUtils.getColor(sepiaColor, 190));
                     break;
                 case Reseda:
-                    readerView.setReadBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_reseda));
+                    int resedaColor = ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_reseda);
+                    readerView.setReadBackgroundColor(resedaColor);
+                    fragment.pdfView.setBackgroundColor(CViewUtils.getColor(resedaColor, 190));
                     break;
                 default:
                     readerView.setReadBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_light));
+                    fragment.pdfView.setBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_pdf_view_ctrl_background_color));
                     break;
             }
             readerView.setPageSpacing(readerViewConfig.pageSpacing);
             readerView.setScale(readerViewConfig.pageScale);
             CPDFDocument document = fragment.pdfView.getCPdfReaderView().getPDFDocument();
-            if (document != null){
+            if (document != null) {
                 fragment.pdfView.enableSliderBar(readerViewConfig.enableSliderBar);
                 fragment.pdfView.enablePageIndicator(readerViewConfig.enablePageIndicator);
             }
@@ -140,6 +164,10 @@ public class CPDFApplyConfigUtil {
                         }
                     }
                 });
+            }
+            if (modeConfig.readerOnly) {
+                fragment.flTool.setVisibility(View.GONE);
+                fragment.flBottomToolBar.setVisibility(View.GONE);
             }
         }
     }
@@ -310,5 +338,47 @@ public class CPDFApplyConfigUtil {
         builder.setAnnotStyle(signatureFieldsStyle);
 
         builder.init(fragment.pdfView, true);
+    }
+
+    private void applyGlobalConfig(Context context, CPDFConfiguration configuration) {
+        switch (configuration.globalConfig.themeMode) {
+            case Light:
+                themeId = R.style.ComPDFKit_Theme_Light;
+                break;
+            case Dark:
+                themeId = R.style.ComPDFKit_Theme_Dark;
+                break;
+            default:
+                if (CViewUtils.isDarkMode(context)) {
+                    themeId = R.style.ComPDFKit_Theme_Dark;
+                } else {
+                    themeId = R.style.ComPDFKit_Theme_Light;
+                }
+                break;
+        }
+    }
+
+    public int getThemeId(Context context, CPDFConfiguration configuration){
+        switch (configuration.globalConfig.themeMode) {
+            case Light:
+                themeId = R.style.ComPDFKit_Theme_Light;
+                CLog.e("ComPDFKit_Tools", "Theme-getThemeId(Context context, CPDFConfiguration configuration) - Use Light Theme");
+                break;
+            case Dark:
+                themeId = R.style.ComPDFKit_Theme_Dark;
+                CLog.e("ComPDFKit_Tools", "Theme-getThemeId(Context context, CPDFConfiguration configuration) - Use Dark Theme");
+                break;
+            default:
+                if (CViewUtils.isDarkMode(context)) {
+                    themeId = R.style.ComPDFKit_Theme_Dark;
+                    CLog.e("ComPDFKit_Tools", "Theme-getThemeId(Context context, CPDFConfiguration configuration) - Follow the system and use the Dark theme");
+
+                } else {
+                    themeId = R.style.ComPDFKit_Theme_Light;
+                    CLog.e("ComPDFKit_Tools", "Theme-getThemeId(Context context, CPDFConfiguration configuration) - Follow the system and use the Light theme");
+                }
+                break;
+        }
+        return themeId;
     }
 }

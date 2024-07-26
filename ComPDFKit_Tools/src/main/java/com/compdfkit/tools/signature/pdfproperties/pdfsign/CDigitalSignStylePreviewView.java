@@ -24,7 +24,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.date.CDateUtil;
 import com.compdfkit.tools.common.utils.glide.GlideApp;
-import com.compdfkit.tools.common.utils.image.CBitmapUtil;
+import com.compdfkit.tools.common.utils.image.CImageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class CDigitalSignStylePreviewView extends FrameLayout {
 
     private boolean showDistinguishableName;
 
-    private boolean showSDKVersion;
+    private boolean showSdkVersion;
 
     private boolean showTab;
 
@@ -122,8 +122,8 @@ public class CDigitalSignStylePreviewView extends FrameLayout {
         update();
     }
 
-    public void setShowSDKVersion(boolean show) {
-        this.showSDKVersion = show;
+    public void setShowSdkVersion(boolean show) {
+        this.showSdkVersion = show;
         update();
     }
 
@@ -242,7 +242,7 @@ public class CDigitalSignStylePreviewView extends FrameLayout {
         if (showDistinguishableName) {
             appendData(list, R.string.tools_dn, distinguishableName);
         }
-        if (showSDKVersion) {
+        if (showSdkVersion) {
             appendData(list, R.string.tools_compdfkit_versions, CPDFSdk.getSDKVersion());
         }
         if (showLocation) {
@@ -271,13 +271,17 @@ public class CDigitalSignStylePreviewView extends FrameLayout {
     }
 
     public Bitmap getBitmap() {
-        buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(getDrawingCache());
-        return CBitmapUtil.cropTransparent(bitmap);
+        return CImageUtil.getViewBitmap(this);
     }
 
     public enum Alignment {
+        /**
+         * content align left
+         */
         left,
+        /**
+         * content align right
+         */
         right
     }
 

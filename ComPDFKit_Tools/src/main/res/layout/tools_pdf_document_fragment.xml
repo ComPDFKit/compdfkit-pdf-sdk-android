@@ -33,8 +33,8 @@
         android:id="@+id/fl_tool"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tools_color_primary"
         android:elevation="4dp"
+        android:background="?android:attr/colorBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -43,7 +43,6 @@
             android:id="@+id/pdf_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@color/tools_color_primary"
             android:elevation="4dp"
             android:title="@string/tools_pdf_viewer_mode"
             app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +64,7 @@
             android:id="@+id/search_toolbar_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/tools_color_primary"
+            android:background="?android:attr/colorPrimary"
             android:elevation="4dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/fl_tool" />
 
     <com.compdfkit.tools.signature.verify.CVerifySignStatusView
@@ -91,7 +91,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fl_tool"
         app:status="valid"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/fl_bottom_tool_bar"

@@ -23,7 +23,9 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfannotationbar.bean.CAnnotToolBean;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickAdapter;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickViewHolder;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
+import com.google.android.material.color.MaterialColors;
 
 import java.util.List;
 
@@ -39,9 +41,14 @@ public class CPDFAnnotationToolListAdapter extends CBaseQuickAdapter<CAnnotToolB
 
     @Override
     protected void onBindViewHolder(CBaseQuickViewHolder holder, int position, CAnnotToolBean item) {
-        holder.setImageResource(R.id.iv_annot_type, item.getIconResId());
+        int isLightTheme = CViewUtils.getThemeAttrData(holder.itemView.getContext().getTheme(), R.attr.isLightTheme);
+        boolean isDarkTheme = isLightTheme == 0;
+        holder.setImageResource(R.id.iv_annot_type, isDarkTheme && item.getIconDarkResId() != 0 ? item.getIconDarkResId() : item.getIconResId());
         CardView cardView = holder.getView(R.id.card_view);
-        cardView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), item.isSelect() ? R.color.tools_annot_list_item_select_bg_color : R.color.tools_color_primary));
+        int selectColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_annot_list_item_select_bg_color);
+        int normalColor = MaterialColors.getColor(holder.itemView.getContext(), android.R.attr.colorPrimary,
+                ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_color_primary));
+        cardView.setCardBackgroundColor(item.isSelect() ? selectColor : normalColor);
         refreshAnnotColor(holder, item);
         holder.setItemHorizontalMargin(list, 16, 0, 16);
     }
@@ -54,7 +61,10 @@ public class CPDFAnnotationToolListAdapter extends CBaseQuickAdapter<CAnnotToolB
             for (Object payload : payloads) {
                 if (payload == REFRESH_ITEM) {
                     CardView cardView = holder.getView(R.id.card_view);
-                    cardView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), item.isSelect() ? R.color.tools_annot_list_item_select_bg_color : R.color.tools_color_primary));
+                    int selectColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_annot_list_item_select_bg_color);
+                    int normalColor = MaterialColors.getColor(holder.itemView.getContext(), android.R.attr.colorPrimary,
+                            ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_color_primary));
+                    cardView.setCardBackgroundColor(item.isSelect() ? selectColor : normalColor);
                     refreshAnnotColor(holder, item);
                 }
             }
@@ -88,7 +98,7 @@ public class CPDFAnnotationToolListAdapter extends CBaseQuickAdapter<CAnnotToolB
                 if (item.isSelect()) {
                     holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tools_annot_icon_select_color)));
                 } else {
-                    holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tools_text_color_primary)));
+                    holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(MaterialColors.getColor(context, R.attr.colorOnPrimary, ContextCompat.getColor(context, R.color.tools_text_color_primary))));
                 }
                 break;
         }

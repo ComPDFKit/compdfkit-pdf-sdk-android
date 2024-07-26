@@ -3,13 +3,13 @@
 
     <item android:state_enabled="false">
         <shape>
-            <solid android:color="@color/tools_text_color_hint" />
+            <solid android:color="?attr/compdfkit_textColorPrimaryNoEnable" />
         </shape>
     </item>
 
     <item>
         <shape>
-            <solid android:color="@color/tools_color_accent" />
+            <solid android:color="?attr/colorAccent" />
         </shape>
     </item>
 

@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -18,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.compdfkit.core.document.CPDFDocument;
@@ -41,16 +41,16 @@ public class CInsertPdfPageDialogFragment extends CBasicBottomSheetDialogFragmen
     private CPDFViewCtrl pdfView;
     private AppCompatTextView tvFilename;
 
-    private RadioButton rbFromPageLocationAll;
-    private RadioButton rbFromPageLocationOdd;
-    private RadioButton rbFromPageLocationEven;
-    private RadioButton rbFromPageLocationSpecify;
+    private AppCompatRadioButton rbFromPageLocationAll;
+    private AppCompatRadioButton rbFromPageLocationOdd;
+    private AppCompatRadioButton rbFromPageLocationEven;
+    private AppCompatRadioButton rbFromPageLocationSpecify;
     private AppCompatEditText etFromInputPageIndex;
 
-    private RadioButton rbToPageLocationHome;
-    private RadioButton rbToPageLocationLast;
-    private RadioButton rbToPageLocationBefore;
-    private RadioButton rbToPageLocationAfter;
+    private AppCompatRadioButton rbToPageLocationHome;
+    private AppCompatRadioButton rbToPageLocationLast;
+    private AppCompatRadioButton rbToPageLocationBefore;
+    private AppCompatRadioButton rbToPageLocationAfter;
 
     private AppCompatEditText etToInputPageIndex;
 
@@ -96,11 +96,6 @@ public class CInsertPdfPageDialogFragment extends CBasicBottomSheetDialogFragmen
 
     public void initWithPDFView(CPDFViewCtrl pdfView) {
         this.pdfView = pdfView;
-    }
-
-    @Override
-    protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle;
     }
 
     @Override
@@ -163,10 +158,13 @@ public class CInsertPdfPageDialogFragment extends CBasicBottomSheetDialogFragmen
         });
         rgPageRange.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rb_tools_edit_page_insert_location_from_all) {
+                etFromInputPageIndex.setFocusableInTouchMode(false);
                 etFromInputPageIndex.clearFocus();
             } else if (checkedId == R.id.rb_tools_edit_page_insert_location_from_odd) {
+                etFromInputPageIndex.setFocusableInTouchMode(false);
                 etFromInputPageIndex.clearFocus();
             } else if (checkedId == R.id.rb_tools_edit_page_insert_location_from_even) {
+                etFromInputPageIndex.setFocusableInTouchMode(false);
                 etFromInputPageIndex.clearFocus();
             } else if (checkedId == R.id.rb_tools_edit_page_insert_location_from_specify) {
                 if (!etFromInputPageIndex.isFocused()) {
@@ -205,8 +203,10 @@ public class CInsertPdfPageDialogFragment extends CBasicBottomSheetDialogFragmen
         });
         rgInsertTo.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rb_tools_edit_page_insert_location_homepage) {
+                etToInputPageIndex.setFocusableInTouchMode(false);
                 etToInputPageIndex.clearFocus();
             } else if (checkedId == R.id.rb_tools_edit_page_insert_location_lastpage) {
+                etToInputPageIndex.setFocusableInTouchMode(false);
                 etToInputPageIndex.clearFocus();
             } else if (checkedId == R.id.rb_tools_edit_page_insert_location_before) {
                 if (!etToInputPageIndex.isFocused()) {

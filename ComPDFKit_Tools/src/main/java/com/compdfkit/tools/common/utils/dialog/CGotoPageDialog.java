@@ -62,7 +62,11 @@ public class CGotoPageDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.tools_dialog_theme);
+        int themeId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme);
+        if (themeId == 0){
+            themeId = R.style.ComPDFKit_Theme_Dialog;
+        }
+        setStyle(STYLE_NO_TITLE,themeId);
     }
 
     @Override

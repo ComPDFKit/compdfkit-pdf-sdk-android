@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tools_style_content_bg">
+    android:background="?attr/compdfkit_PDFStyleDialog_ContentColor">
 
     <com.compdfkit.tools.common.views.CToolBar
         android:id="@+id/tool_bar"
@@ -25,7 +25,7 @@
             android:background="@drawable/tools_properties_signature_add_sign"
             android:minWidth="70dp"
             android:text="@string/tools_save"
-            android:textColor="@color/tools_color_accent"
+            android:textColor="?attr/colorAccent"
             android:textSize="16sp" />
 
     </com.compdfkit.tools.common.views.CToolBar>

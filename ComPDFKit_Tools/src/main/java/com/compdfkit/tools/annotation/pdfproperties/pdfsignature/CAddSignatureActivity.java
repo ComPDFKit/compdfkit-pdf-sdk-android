@@ -33,7 +33,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdfsignature.data.CSignatureDatas;
 import com.compdfkit.tools.common.utils.dialog.CImportImageDialogFragment;
-import com.compdfkit.tools.common.utils.image.CBitmapUtil;
+import com.compdfkit.tools.common.utils.image.CImageUtil;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.view.colorpicker.ColorPickerDialogFragment;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
@@ -53,6 +53,8 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
     public static final String EXTRA_SCREEN_ORIENTATION = "extra_screen_orientation";
 
     public static final String EXTRA_HIDE_TYPEFACE = "extra_hide_typeface";
+
+    public static final String EXTRA_THEME_ID = "extra_theme_id";
 
     public static final String RESULT_NONE = "result_none";
 
@@ -95,6 +97,8 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int themeId = getIntent().getIntExtra(EXTRA_THEME_ID, R.style.ComPDFKit_Theme_Light);
+        setTheme(themeId);
         int screenOrientation = getIntent().getIntExtra(EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setRequestedOrientation(screenOrientation);
         setContentView(R.layout.tools_properties_signature_style_add_activity);
@@ -299,10 +303,7 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
                 savePath = CSignatureDatas.saveSignatureBitmap(this, resultBitmap);
             } else if (ivAddTextSignature.isSelected()) {
                 if (editText.getText() != null && editText.getText().length() > 0) {
-                    editText.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-                    editText.buildDrawingCache();
-                    Bitmap bitmap = Bitmap.createBitmap(editText.getDrawingCache());
-                    Bitmap resultBitmap = CBitmapUtil.cropTransparent(bitmap);
+                    Bitmap resultBitmap = CImageUtil.getViewBitmap(editText);
                     savePath = CSignatureDatas.saveSignatureBitmap(this, resultBitmap);
                 } else {
                     savePath = null;

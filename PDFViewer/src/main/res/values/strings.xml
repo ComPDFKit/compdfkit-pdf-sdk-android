@@ -7,7 +7,7 @@
     <string name="tools_global_setting">Settings</string>
     <string name="tools_highlight_links">Highlight Links</string>
     <string name="tools_highlight_form_fields">Highlight Form Fields</string>
-    <string name="tools_file_author">File Author</string>
+    <string name="tools_file_author">File Author:</string>
     <string name="tools_compdfkit_author" translatable="false">ComPDFKit</string>
     <string name="tools_sdk_information">SDK Information</string>
     <string name="tools_versions">Versions</string>
@@ -66,4 +66,7 @@
     <string name="tools_compdfkit_sample_file_security">Password_compdfkit_ComPDFKit_Security_Sample_File.pdf</string>
     <string name="tools_compdfkit_sample_file_watermark">ComPDFKit_Watermark_Sample_File.pdf</string>
 
+    <string name="the_fonts_data_is_saved_with_the_file">The fonts data is saved with the file</string>
+    <string name="tools_annotation_author">Annotation Author:</string>
+    <string name="tools_default_annotation_author_name">Guest</string>
 </resources>

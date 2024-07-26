@@ -55,7 +55,8 @@ public class ModeConfig implements Serializable {
     @Override
     public String toString() {
         String stringBuilder = "[modeConfig: " + "initialViewMode:" + initialViewMode.name() +
-                ", availableViewModes: " + availableViewModes.toString() + "]";
+                ", availableViewModes: " + availableViewModes.toString() +
+                ", readerOnly: " + readerOnly + "]";
         return stringBuilder;
     }
 }

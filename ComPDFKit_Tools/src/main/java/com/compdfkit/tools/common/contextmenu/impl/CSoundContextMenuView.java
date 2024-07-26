@@ -21,6 +21,7 @@ import com.compdfkit.tools.annotation.pdfproperties.pdfsound.CRecordVoicePopupWi
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSoundContentProvider;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
+import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.ui.proxy.CPDFSoundAnnotImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
@@ -32,6 +33,14 @@ public class CSoundContextMenuView implements ContextMenuSoundContentProvider {
     public View createSoundContentView(CPDFContextMenuHelper helper, CPDFPageView pageView, CPDFSoundAnnotImpl soundAnnotImpl) {
         ContextMenuView menuView = new ContextMenuView(helper.getReaderView().getContext());
         CPDFSoundAnnotation soundAnnotation = soundAnnotImpl.onGetAnnotation();
+        menuView.addItem(R.string.tools_reply, v -> {
+            new CPDFAnnotationManager().showAddReplyDialog(pageView, soundAnnotImpl, helper, true);
+            helper.dismissContextMenu();
+        });
+        menuView.addItem(R.string.tools_view_reply, v -> {
+            new CPDFAnnotationManager().showReplyDetailsDialog(pageView, soundAnnotImpl, helper);
+            helper.dismissContextMenu();
+        });
         if (soundAnnotation.isRecorded()) {
             menuView.addItem(R.string.tools_play, v -> {
                 new SimpleBackgroundTask<String>(helper.getReaderView().getContext()) {

@@ -10,10 +10,12 @@ package com.compdfkit.samples
 
 import android.app.Application
 import com.compdfkit.samples.samples.AnnotationImportExportTest
+import com.compdfkit.samples.samples.AnnotationReplyTest
 import com.compdfkit.samples.samples.AnnotationTest
 import com.compdfkit.samples.samples.BackgroundTest
 import com.compdfkit.samples.samples.BatesTest
 import com.compdfkit.samples.samples.BookmarkTest
+import com.compdfkit.samples.samples.ContentEditorTest
 import com.compdfkit.samples.samples.DigitalSignaturesTest
 import com.compdfkit.samples.samples.DocumentInfoTest
 import com.compdfkit.samples.samples.EncryptTest
@@ -46,6 +48,7 @@ class SampleApplication : Application() {
         samplesList.add(TextSearchTest())
         samplesList.add(AnnotationTest())
         samplesList.add(AnnotationImportExportTest())
+        samplesList.add(AnnotationReplyTest())
         samplesList.add(InteractiveFormsTest())
         samplesList.add(PDFPageTest())
         samplesList.add(ImageExtractTest())
@@ -59,6 +62,7 @@ class SampleApplication : Application() {
         samplesList.add(EncryptTest())
         samplesList.add(PDFATest())
         samplesList.add(FlattenTest())
+        samplesList.add(ContentEditorTest())
     }
 
     companion object {

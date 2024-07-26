@@ -22,6 +22,7 @@ import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.FormsConfig;
+import com.compdfkit.tools.common.pdf.config.GlobalConfig;
 import com.compdfkit.tools.common.pdf.config.ModeConfig;
 import com.compdfkit.tools.common.pdf.config.ReaderViewConfig;
 import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
@@ -69,8 +70,10 @@ public class CPDFConfigurationUtils {
             configuration.contentEditorConfig = parseContentEditorConfig(rootJsonObject.optJSONObject("contentEditorConfig"));
             configuration.formsConfig = parseFormsConfig(rootJsonObject.optJSONObject("formsConfig"));
             configuration.readerViewConfig = parseReaderViewConfig(rootJsonObject.optJSONObject("readerViewConfig"));
+            configuration.globalConfig = parseGlobalConfig(rootJsonObject.optJSONObject("global"));
             return configuration;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -80,6 +83,7 @@ public class CPDFConfigurationUtils {
             return ModeConfig.normal();
         }
         ModeConfig modeConfig = ModeConfig.normal();
+        modeConfig.readerOnly = jsonObject.optBoolean("readerOnly", false);
         CPreviewMode mode = CPreviewMode.fromAlias(jsonObject.optString("initialViewMode"));
         modeConfig.initialViewMode = mode != null ? mode : CPreviewMode.Viewer;
         JSONArray availableViewModes = jsonObject.optJSONArray("availableViewModes");
@@ -163,6 +167,7 @@ public class CPDFConfigurationUtils {
             case "reseda":
                 readerViewConfig.themes = ReaderViewConfig.Themes.Reseda;
                 break;
+            default:break;
         }
         readerViewConfig.enableSliderBar = jsonObject.optBoolean("enableSliderBar", true);
         readerViewConfig.enablePageIndicator = jsonObject.optBoolean("enablePageIndicator", true);
@@ -174,7 +179,10 @@ public class CPDFConfigurationUtils {
 
     private static AnnotationsConfig parseAnnotationsConfig(@Nullable JSONObject jsonObject) {
         AnnotationsConfig annotationsConfig = new AnnotationsConfig();
-
+        if (jsonObject == null){
+            return annotationsConfig;
+        }
+        annotationsConfig.annotationAuthor = jsonObject.optString("annotationAuthor", "");
         List<CAnnotationType> annotationTypes = new ArrayList<>();
         JSONArray availableAnnotTypes = jsonObject.optJSONArray("availableTypes");
         if (availableAnnotTypes != null) {
@@ -670,6 +678,7 @@ public class CPDFConfigurationUtils {
                 String psName1 = "Times-"+styleName1;
                 CLog.e("CPDFConfig", "psName：" + psName1);
                 return psName1;
+            default:break;
         }
         return "Helvetica";
     }
@@ -692,5 +701,16 @@ public class CPDFConfigurationUtils {
             default:
                 return CPDFWidget.CheckStyle.CK_Check;
         }
+    }
+
+    private static GlobalConfig parseGlobalConfig(@Nullable JSONObject jsonObject) {
+        GlobalConfig globalConfig = new GlobalConfig();
+        if (jsonObject == null){
+            return globalConfig;
+        }
+        globalConfig.themeMode = GlobalConfig.CThemeMode.fromString(jsonObject.optString("themeMode", "light"));
+        globalConfig.fileSaveExtraFontSubset = jsonObject.optBoolean("fileSaveExtraFontSubset", true);
+
+        return globalConfig;
     }
 }

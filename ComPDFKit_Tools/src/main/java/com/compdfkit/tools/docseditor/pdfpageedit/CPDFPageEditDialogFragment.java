@@ -124,7 +124,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
 
     @Override
     protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle;
+        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
     }
 
     @Override
@@ -431,7 +431,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         CPDFDocument newDocument = CPDFDocument.createDocument(getContext());
         res = newDocument.importPages(pdfView.getCPdfReaderView().getPDFDocument(), pageNum, 0);
         try {
-            res &= newDocument.saveAs(filePath, false);
+            res &= newDocument.saveAs(filePath, false, false, pdfView.isSaveFileExtraFontSubset());
         } catch (Exception e) {
 
         }
@@ -508,7 +508,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
             }
             hasEdit = true;
         }
-        editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.updateTypeRotate);
+        editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_ROTATE);
         return true;
     }
 
@@ -528,7 +528,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         }
         boolean res = document.removePages(pageNum);
         editThumbnailFragment.setSelectAll(false);
-        editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.updateTypeDelete);
+        editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_DELETE);
         hasEdit = true;
         return res;
     }
@@ -546,17 +546,17 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
     private String getNewFileName(int[] exportPages) {
         CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
         String fileName = document.getFileName();
-        String newName = fileName.substring(0, fileName.indexOf(".pdf"));
-        newName = newName + "_Page";
+        StringBuilder newName = new StringBuilder(fileName.substring(0, fileName.indexOf(".pdf")));
+        newName.append("_Page");
         for (int i = 0; i < exportPages.length; i++) {
             if (i != 0) {
-                newName = newName + "," + (exportPages[i] + 1);
+                newName.append(",").append(exportPages[i] + 1);
             } else {
-                newName = newName + (exportPages[i] + 1);
+                newName.append(exportPages[i] + 1);
             }
         }
-        newName = newName + ".pdf";
-        return newName;
+        newName.append(".pdf");
+        return newName.toString();
     }
 
     @Override

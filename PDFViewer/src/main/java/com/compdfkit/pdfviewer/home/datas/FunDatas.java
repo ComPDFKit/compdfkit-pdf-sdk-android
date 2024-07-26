@@ -96,6 +96,8 @@ public class FunDatas {
         ReaderViewConfig readerViewConfig = configuration.readerViewConfig;
         readerViewConfig.linkHighlight = SettingDatas.isHighlightLink(context);
         readerViewConfig.formFieldHighlight = SettingDatas.isHighlightForm(context);
+        configuration.globalConfig.fileSaveExtraFontSubset = SettingDatas.isExtraFontSet(context);
+        configuration.annotationsConfig.annotationAuthor = SettingDatas.getAnnotationAuthor(context);
         return configuration;
     }
 }

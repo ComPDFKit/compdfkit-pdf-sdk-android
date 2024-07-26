@@ -120,7 +120,7 @@ public class CFileUtils {
 
     public static String copyFileToInternalDirectory(
             Context context,
-            Uri imageUri,
+            Uri uri,
             String dir,
             String fileName
     ) {
@@ -129,7 +129,7 @@ public class CFileUtils {
             file.getParentFile().mkdirs();
 
             ContentResolver cr = context.getContentResolver();
-            ParcelFileDescriptor fd = cr.openFileDescriptor(imageUri, "r");
+            ParcelFileDescriptor fd = cr.openFileDescriptor(uri, "r");
             FileInputStream ist = new FileInputStream(fd.getFileDescriptor());
             FileOutputStream outputStream = new FileOutputStream(file.getAbsolutePath());
             if (writeFile(ist, outputStream)) {

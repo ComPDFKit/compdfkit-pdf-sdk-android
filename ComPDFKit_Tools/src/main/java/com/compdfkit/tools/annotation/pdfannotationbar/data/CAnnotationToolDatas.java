@@ -22,19 +22,24 @@ public class CAnnotationToolDatas {
         list.add(new CAnnotToolBean(CAnnotationType.TEXT, R.drawable.tools_ic_annotation_note, noteStyle.getColor(), noteStyle.getOpacity()));
 
         CAnnotStyle highStyle = styleManager.getStyle(CStyleType.ANNOT_HIGHLIGHT);
-        list.add(new CAnnotToolBean(CAnnotationType.HIGHLIGHT, R.drawable.tools_ic_annotation_highlight, highStyle.getColor(), highStyle.getOpacity()));
+        list.add(new CAnnotToolBean(CAnnotationType.HIGHLIGHT, R.drawable.tools_ic_annotation_highlight,
+                R.drawable.tools_ic_annotation_highlight_dark, highStyle.getColor(), highStyle.getOpacity()));
 
         CAnnotStyle underLineStyle = styleManager.getStyle(CStyleType.ANNOT_UNDERLINE);
-        list.add(new CAnnotToolBean(CAnnotationType.UNDERLINE, R.drawable.tools_ic_annotation_underline, underLineStyle.getColor(), underLineStyle.getOpacity()));
+        list.add(new CAnnotToolBean(CAnnotationType.UNDERLINE, R.drawable.tools_ic_annotation_underline,
+                R.drawable.tools_ic_annotation_underline_dark,  underLineStyle.getColor(), underLineStyle.getOpacity()));
 
         CAnnotStyle strikeoutStyle = styleManager.getStyle(CStyleType.ANNOT_STRIKEOUT);
-        list.add(new CAnnotToolBean(CAnnotationType.STRIKEOUT, R.drawable.tools_ic_annotation_strikeout, strikeoutStyle.getColor(), strikeoutStyle.getOpacity()));
+        list.add(new CAnnotToolBean(CAnnotationType.STRIKEOUT, R.drawable.tools_ic_annotation_strikeout,
+                R.drawable.tools_ic_annotation_strikeout_dark, strikeoutStyle.getColor(), strikeoutStyle.getOpacity()));
 
         CAnnotStyle squigglyStyle = styleManager.getStyle(CStyleType.ANNOT_SQUIGGLY);
-        list.add(new CAnnotToolBean(CAnnotationType.SQUIGGLY, R.drawable.tools_ic_annotation_squiggly, squigglyStyle.getColor(), squigglyStyle.getOpacity()));
+        list.add(new CAnnotToolBean(CAnnotationType.SQUIGGLY, R.drawable.tools_ic_annotation_squiggly,
+                R.drawable.tools_ic_annotation_squiggly_dark, squigglyStyle.getColor(), squigglyStyle.getOpacity()));
 
         CAnnotStyle inkStyle = styleManager.getStyle(CStyleType.ANNOT_INK);
-        list.add(new CAnnotToolBean(CAnnotationType.INK, R.drawable.tools_ic_annotation_ink, inkStyle.getColor(), inkStyle.getOpacity()));
+        list.add(new CAnnotToolBean(CAnnotationType.INK, R.drawable.tools_ic_annotation_ink,
+                R.drawable.tools_ic_annotation_ink_dark, inkStyle.getColor(), inkStyle.getOpacity()));
 
         list.add(new CAnnotToolBean(CAnnotationType.CIRCLE, R.drawable.tools_ic_annotation_shape_circular));
         list.add(new CAnnotToolBean(CAnnotationType.SQUARE, R.drawable.tools_ic_annotation_shape_rectangle));
@@ -48,6 +53,5 @@ public class CAnnotationToolDatas {
         list.add(new CAnnotToolBean(CAnnotationType.SOUND, R.drawable.tools_ic_annotation_sound));
         return list;
     }
-
 
 }

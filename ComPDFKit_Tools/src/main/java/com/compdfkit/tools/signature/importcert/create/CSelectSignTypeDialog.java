@@ -14,14 +14,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 public class CSelectSignTypeDialog extends DialogFragment implements View.OnClickListener {
 
@@ -46,7 +47,7 @@ public class CSelectSignTypeDialog extends DialogFragment implements View.OnClic
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.tools_dialog_theme);
+        setStyle(STYLE_NO_TITLE, CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme));
     }
 
     @Nullable
@@ -57,8 +58,8 @@ public class CSelectSignTypeDialog extends DialogFragment implements View.OnClic
         }
         View view = inflater.inflate(R.layout.tools_sign_select_sign_type_dialog, container, false);
         rgType = view.findViewById(R.id.rg_type);
-        Button btnCancel = view.findViewById(R.id.btn_cancel);
-        Button btnDone = view.findViewById(R.id.btn_confirm);
+        AppCompatButton btnCancel = view.findViewById(R.id.btn_cancel);
+        AppCompatButton btnDone = view.findViewById(R.id.btn_confirm);
         btnCancel.setOnClickListener(this);
         btnDone.setOnClickListener(this);
         return view;

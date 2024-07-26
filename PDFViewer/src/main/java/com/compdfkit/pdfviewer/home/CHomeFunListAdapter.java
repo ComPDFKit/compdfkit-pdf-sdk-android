@@ -30,7 +30,7 @@ public class CHomeFunListAdapter extends CBaseQuickAdapter<HomeFunBean, CBaseQui
     public static final int ITEM_CONTENT = 1;
 
     @Override
-    protected CBaseQuickViewHolder onCreateViewHolder(Context context, ViewGroup parent, int viewType) {
+    public CBaseQuickViewHolder onCreateViewHolder(Context context, ViewGroup parent, int viewType) {
         if (viewType == ITEM_TITLE){
             return new CBaseQuickViewHolder(R.layout.rv_item_home_fun_item_title, parent);
         }else {
@@ -39,7 +39,7 @@ public class CHomeFunListAdapter extends CBaseQuickAdapter<HomeFunBean, CBaseQui
     }
 
     @Override
-    protected void onBindViewHolder(CBaseQuickViewHolder holder, int position, HomeFunBean item) {
+    public void onBindViewHolder(CBaseQuickViewHolder holder, int position, HomeFunBean item) {
         if (item.isHead()) {
             holder.setText(R.id.tv_title, item.getTitle());
         } else {

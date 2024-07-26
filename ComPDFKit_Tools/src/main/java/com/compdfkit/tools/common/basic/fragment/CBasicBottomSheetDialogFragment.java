@@ -10,6 +10,7 @@
 package com.compdfkit.tools.common.basic.fragment;
 
 
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.interfaces.COnDialogDismissListener;
 import com.compdfkit.tools.common.utils.dialog.CDialogFragmentUtil;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -28,10 +30,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public abstract class CBasicBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
+    protected COnDialogDismissListener dismissListener;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, getStyle());
+        int styleId = getStyle();
+        if (styleId != 0){
+            setStyle(STYLE_NORMAL, getStyle());
+        }
     }
 
     @Override
@@ -66,7 +73,7 @@ public abstract class CBasicBottomSheetDialogFragment extends BottomSheetDialogF
     protected abstract @LayoutRes int layoutId();
 
     protected int getStyle(){
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle;
+        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
     }
 
     protected boolean fullScreen(){
@@ -89,5 +96,25 @@ public abstract class CBasicBottomSheetDialogFragment extends BottomSheetDialogF
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         CDialogFragmentUtil.setDimAmount(getDialog(), dimAmount());
+    }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        if (dismissListener != null) {
+            dismissListener.dismiss();
+        }
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (dismissListener != null){
+            dismissListener.dismiss();
+        }
+    }
+
+    public void setDismissListener(COnDialogDismissListener dismissListener) {
+        this.dismissListener = dismissListener;
     }
 }

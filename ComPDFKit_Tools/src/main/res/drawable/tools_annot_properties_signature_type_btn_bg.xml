@@ -11,7 +11,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="4dp" />
-            <solid android:color="@color/tools_reader_setting_head_bg_color" />
+            <solid android:color="?attr/compdfkit_HeadItem_BackgroundColor" />
         </shape>
     </item>
 

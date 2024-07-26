@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    tools:background="?android:attr/colorBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/tools_dialog_layout_width"
@@ -20,44 +21,41 @@
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:layout_marginHorizontal="24dp"
-            android:textColor="@color/tools_text_color_primary"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center_vertical"
+            android:text="@string/tools_select_sign_type"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/tools_select_sign_type" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <RadioGroup
             android:id="@+id/rg_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:layout_constraintStart_toStartOf="parent"
-             >
+            app:layout_constraintTop_toBottomOf="@id/tv_title">
 
             <androidx.appcompat.widget.AppCompatRadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/rb_electronic_signature"
-                android:checked="true"
-                android:textColor="@color/tools_text_color_primary"
-                android:text="@string/tools_sign_with_electronic_signatures"
-                />
-
-            <androidx.appcompat.widget.AppCompatRadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/tools_sign_with_electronic_signatures"
+                android:textColor="?android:attr/textColorPrimary" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rb_digital_signature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/tools_text_color_primary"
                 android:text="@string/tools_sign_with_digital_signatures"
-                />
+                android:textColor="?android:attr/textColorPrimary" />
 
         </RadioGroup>
 
@@ -70,16 +68,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rg_type">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_cancel"
-                style="@style/tools_dialog_button_style"
+                style="@style/ComPDFKit.Theme.Dialog.Button"
+
                 android:background="@drawable/tools_common_btn_corner_ripple"
                 android:text="@string/tools_cancel"
                 tools:textColor="@color/tools_normal_btn_text_color" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_confirm"
-                style="@style/tools_dialog_button_style"
+                style="@style/ComPDFKit.Theme.Dialog.Button"
+
                 android:background="@drawable/tools_common_btn_corner_ripple"
                 android:text="@string/tools_okay"
                 tools:textColor="@color/tools_normal_btn_text_color" />

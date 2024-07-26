@@ -31,7 +31,9 @@
 
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/seek_bar"
-            style="@style/tools_seek_bar_style"
+            style="?attr/seekBarStyle"
+            android:paddingHorizontal="12dp"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:max="100"
             android:layout_gravity="center"

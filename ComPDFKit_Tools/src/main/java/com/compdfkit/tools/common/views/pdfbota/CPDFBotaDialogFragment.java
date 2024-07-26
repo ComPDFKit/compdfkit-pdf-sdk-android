@@ -15,9 +15,12 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.annotation.pdfannotationlist.CPDFAnnotationListFragment;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
@@ -46,6 +49,8 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
 
     private CPDFViewCtrl pdfView;
 
+    private AppCompatImageView ivMenu;
+
     private ArrayList<CPDFBotaFragmentTabs> tabs = new ArrayList<>();
 
     public static CPDFBotaDialogFragment newInstance(){
@@ -62,11 +67,6 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
 
     public void setBotaDialogTab(CPDFBotaFragmentTabs tab){
         this.tabs.add(tab);
-    }
-
-    @Override
-    protected int getStyle() {
-        return R.style.Tools_Base_Theme_BasicBottomSheetDialogStyle;
     }
 
     @Override
@@ -89,7 +89,14 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
         tabLayout = rootView.findViewById(R.id.tab_layout);
         viewPager2 = rootView.findViewById(R.id.view_pager);
         toolBar = rootView.findViewById(R.id.tool_bar);
+        ivMenu = rootView.findViewById(R.id.iv_menu);
         toolBar.setBackBtnClickListener(v -> dismiss());
+        ivMenu.setOnClickListener(v -> {
+            CPDFAnnotationListFragment annotationListFragment = getAnnotationFragment();
+            if (annotationListFragment != null){
+                annotationListFragment.showAnnotationMenu(ivMenu);
+            }
+        });
     }
 
     @Override
@@ -123,11 +130,13 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
         viewPager2.setCurrentItem(getDefaultSelectIndex(), false);
         if (tabs.size()>0){
             toolBar.setTitle(tabs.get(getDefaultSelectIndex()).getTitle());
+            ivMenu.setVisibility(tabs.get(getDefaultSelectIndex()).getBotaType() == CPDFBOTA.ANNOTATION ? View.VISIBLE : View.GONE);
         }
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 toolBar.setTitle(tabs.get(position).getTitle());
+                ivMenu.setVisibility(tabs.get(position).getBotaType() == CPDFBOTA.ANNOTATION ? View.VISIBLE : View.GONE);
             }
         });
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
@@ -150,9 +159,27 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
         return defaultSelectIndex;
     }
 
+
+    private @Nullable CPDFAnnotationListFragment getAnnotationFragment(){
+        int annotationIndex = 0;
+        for (int i = 0; i < tabs.size(); i++) {
+            if (tabs.get(i).getBotaType() == CPDFBOTA.ANNOTATION) {
+                annotationIndex = i;
+                break;
+            }
+        }
+        Fragment fragment = getChildFragmentManager().findFragmentByTag("f"+annotationIndex);
+        if (fragment != null && fragment instanceof CPDFAnnotationListFragment){
+           return (CPDFAnnotationListFragment) fragment;
+        }else {
+            return null;
+        }
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable("tabs", tabs);
         super.onSaveInstanceState(outState);
     }
+
 }

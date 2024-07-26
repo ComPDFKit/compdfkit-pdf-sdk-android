@@ -65,6 +65,16 @@
     <string name="digital_signature_title">DigitalSignature</string>
     <string name="digital_signature_desc">This sample demonstrates the creation of digital certificates, the generation of digital signatures, the verification of digital certificates, the validation of digital signatures, the reading of digital signature information, certificate trust, and signature removal functionality.</string>
 
+    <string name="content_editor_title">ContentEditor</string>
+    <string name="content_editor_desc">This example shows how to insert text and images through the content editing function.</string>
+
+    <string name="content_document_save_extra_font_subset_title">DocumentSaveExtraFontSubset</string>
+    <string name="content_document_save_extra_font_subset_desc">This example shows how to save pdf document extra font subset data.</string>
+
+    <string name="annotation_reply_title">AnnotationReply</string>
+    <string name="annotation_reply_desc">This example shows how to add comments, delete replies, etc.</string>
+
+
     <string name="tools_allowed">Allowed</string>
     <string name="tools_not_allowed">Not Allowed</string>
 

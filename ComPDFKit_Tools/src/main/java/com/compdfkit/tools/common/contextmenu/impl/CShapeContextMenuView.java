@@ -47,6 +47,14 @@ public class CShapeContextMenuView implements ContextMenuShapeProvider {
             annotationManager.editNote(helper.getReaderView(), pageView, annotImpl.onGetAnnotation());
             helper.dismissContextMenu();
         });
+        menuView.addItem(R.string.tools_reply, v -> {
+            new CPDFAnnotationManager().showAddReplyDialog(pageView, annotImpl, helper, true);
+            helper.dismissContextMenu();
+        });
+        menuView.addItem(R.string.tools_view_reply, v -> {
+            new CPDFAnnotationManager().showReplyDetailsDialog(pageView, annotImpl, helper);
+            helper.dismissContextMenu();
+        });
         menuView.addItem(R.string.tools_delete, v -> {
             pageView.deleteAnnotation(annotImpl);
             helper.dismissContextMenu();

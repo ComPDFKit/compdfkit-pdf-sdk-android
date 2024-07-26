@@ -43,7 +43,10 @@ abstract class PDFSamples {
             val names = arrayOfNulls<String>(outputFileList.size)
             outputFileList.toArray(names)
             for (i in names.indices) {
-                val file = File(names[i])
+                if (names[i]?.isEmpty() == true) {
+                    continue
+                }
+                val file = File(names[i]!!)
                 names[i] = file.name
             }
             return names

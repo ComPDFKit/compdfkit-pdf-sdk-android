@@ -11,6 +11,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnPrimary"
         app:srcCompat="@drawable/tools_ic_grey_arrow" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

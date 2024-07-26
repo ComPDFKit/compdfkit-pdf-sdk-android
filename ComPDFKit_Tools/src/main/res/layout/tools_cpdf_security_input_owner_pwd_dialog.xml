@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    tools:background="?android:attr/colorBackground"
     android:layout_gravity="center">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +24,7 @@
             android:layout_marginHorizontal="24dp"
             android:gravity="center_vertical"
             android:text="@string/tools_enter_owner_pwd_title"
-            android:textColor="@color/tools_text_color_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,6 +40,8 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textSize="13sp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textColorHint="?android:attr/textColorHint"
             android:hint="@string/tools_please_enter_owner_password"
             android:inputType="textPassword"
             app:layout_constraintTop_toBottomOf="@id/tv_title" />
@@ -49,6 +52,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
+            app:tint="?attr/colorOnPrimary"
             android:src="@drawable/tools_btn_eyes_visible_selector"
             app:layout_constraintBottom_toBottomOf="@id/et_password"
             app:layout_constraintEnd_toEndOf="@id/et_password"
@@ -69,7 +73,7 @@
             android:textSize="12sp"
             android:visibility="invisible"
             tools:visibility="visible"
-            android:textColor="@color/tools_error"
+            android:textColor="?attr/colorError"
             />
 
         <LinearLayout
@@ -81,16 +85,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_pwd_error">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_cancel"
-                style="@style/tools_dialog_button_style"
+                style="@style/ComPDFKit.Theme.Dialog.Button"
                 android:background="@drawable/tools_common_btn_corner_ripple"
                 android:text="@string/tools_cancel"
                 tools:textColor="@color/tools_normal_btn_text_color" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_confirm"
-                style="@style/tools_dialog_button_style"
+                style="@style/ComPDFKit.Theme.Dialog.Button"
                 android:background="@drawable/tools_common_btn_corner_ripple"
                 android:text="@string/tools_okay"
                 tools:textColor="@color/tools_normal_btn_text_color" />

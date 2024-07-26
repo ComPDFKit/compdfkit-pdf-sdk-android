@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFFreetextAnnotation;
+import com.compdfkit.core.annotation.CPDFReplyAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
@@ -36,7 +37,10 @@ import com.compdfkit.core.document.action.CPDFUriAction;
 import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.core.utils.TMathUtils;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFEditReplyDialogFragment;
+import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFReplyDetailsDialogFragment;
 import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CNoteEditDialog;
+import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.views.pdfproperties.action.CActionEditDialogFragment;
 import com.compdfkit.tools.forms.pdfproperties.option.edit.CFormOptionEditFragment;
 import com.compdfkit.ui.attribute.CPDFFreetextAttr;
@@ -164,6 +168,8 @@ public class CPDFAnnotationManager {
                     break;
                 case ExifInterface.ORIENTATION_ROTATE_270:
                     rotate = 270;
+                    break;
+                default:
                     break;
             }
         } catch (Exception e) {
@@ -339,4 +345,31 @@ public class CPDFAnnotationManager {
         });
         actionEditDialogFragment.show(fragmentManager, "actionEdit");
     }
+
+    public void showAddReplyDialog(CPDFPageView pageView, CPDFBaseAnnotImpl annotImpl, CPDFContextMenuHelper helper, boolean jumpToDetail){
+        CPDFEditReplyDialogFragment editReplyDialogFragment = CPDFEditReplyDialogFragment.addReply();
+        editReplyDialogFragment.setReplyContentListener(content -> {
+            CPDFReplyAnnotation replyAnnotation = annotImpl.onGetAnnotation()
+                    .createReplyAnnotation();
+            replyAnnotation.setTitle(helper.getAnnotationAuthor());
+            replyAnnotation.setContent(content);
+            if (jumpToDetail){
+                showReplyDetailsDialog(pageView, annotImpl, helper);
+            }
+        });
+        editReplyDialogFragment.show(helper.getFragmentManager(), "addReplyDialogFragment");
+    }
+
+    public void showReplyDetailsDialog(CPDFPageView pageView, CPDFBaseAnnotImpl annotImpl, CPDFContextMenuHelper helper){
+        CPDFReplyDetailsDialogFragment dialogFragment = CPDFReplyDetailsDialogFragment.newInstance();
+        dialogFragment.setCPDFAnnotation(annotImpl.onGetAnnotation());
+        dialogFragment.setAnnotAuthor(helper.getAnnotationAuthor());
+        dialogFragment.setUpdateAnnotationListListener(()->{
+            pageView.deleteAnnotation(annotImpl);
+            helper.dismissContextMenu();
+        });
+        dialogFragment.show(helper.getFragmentManager(), "ReplyDetailsDialogFragment");
+    }
+
+
 }

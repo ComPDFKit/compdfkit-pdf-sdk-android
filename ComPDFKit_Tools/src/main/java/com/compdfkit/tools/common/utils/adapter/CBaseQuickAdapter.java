@@ -190,6 +190,12 @@ public abstract class CBaseQuickAdapter<T,VH extends CBaseQuickViewHolder> exten
         childClickArray.put(viewId, listener);
     }
 
+    public void addOnItemChildClickListener(OnItemChildClickListener<T> listener, @IdRes int... viewIds){
+        for (int viewId : viewIds) {
+            childClickArray.put(viewId, listener);
+        }
+    }
+
     public void addOnItemChildLongClickListener(@IdRes int viewId, OnItemChildLongClickListener<T> listener){
         childLongClickArray.put(viewId, listener);
     }

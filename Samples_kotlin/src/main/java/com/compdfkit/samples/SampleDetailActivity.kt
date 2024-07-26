@@ -51,11 +51,11 @@ open class SampleDetailActivity : AppCompatActivity() {
         }
         btnOpenFiles.setOnClickListener {
             pdfSamples?.let { pdfSamples ->
-                pdfSamples.outputFileList?.let {
+                pdfSamples.outputFileList.let {
                     AlertDialog.Builder(this)
                             .apply {
                                 setTitle(R.string.choose_a_file_to_open)
-                                setItems(pdfSamples.outputFileNames) { dialog: DialogInterface?, which: Int ->
+                                setItems(pdfSamples.outputFileNames) { _: DialogInterface?, which: Int ->
                                     val filePath = it[which]
                                     var mimeType = "application/pdf"
                                     if (filePath.endsWith(".pdf")) {
@@ -74,7 +74,7 @@ open class SampleDetailActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return super.onSupportNavigateUp()
     }
 
