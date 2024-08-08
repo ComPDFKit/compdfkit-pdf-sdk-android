@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp">
+
+    <FrameLayout
+        android:id="@+id/fl_annot_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/tv_annot_date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_author">
+
+        <View
+            android:id="@+id/view_icon_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/tools_color_background" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_annot_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/tools_ic_annotation_highlight_normal" />
+
+    </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginStart="8dp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toTopOf="@id/tv_annot_date"
+        app:layout_constraintEnd_toStartOf="@id/iv_review_status"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/fl_annot_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="@tools:sample/full_names" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_annot_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@id/fl_annot_icon"
+        app:layout_constraintStart_toStartOf="@id/tv_author"
+        app:layout_constraintTop_toBottomOf="@id/tv_author"
+        tools:text="@tools:sample/date/ddmmyy" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_more"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:tint="?attr/colorOnPrimary"
+        android:background="@drawable/tools_common_btn_corner_ripple"
+        app:layout_constraintBottom_toBottomOf="@id/fl_annot_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fl_annot_icon"
+        app:srcCompat="@drawable/tools_ic_more_vertical" />
+
+    <CheckBox
+        android:id="@+id/cb_marked_status"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:buttonTint="?attr/colorOnPrimary"
+        android:button="@drawable/tools_annot_replies_checkbox_btn"
+        app:layout_constraintBottom_toBottomOf="@id/iv_more"
+        app:layout_constraintEnd_toStartOf="@id/iv_more"
+        tools:checked="false" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_review_status"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        app:tint="@color/tools_icon_status_color"
+        android:background="@drawable/tools_common_btn_corner_ripple"
+        app:layout_constraintBottom_toBottomOf="@id/iv_more"
+        app:layout_constraintEnd_toStartOf="@id/cb_marked_status"
+        app:srcCompat="@drawable/tools_annot_review_status_none" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_annot_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="14sp"
+        android:visibility="visible"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@id/tv_author"
+        app:layout_constraintTop_toBottomOf="@id/tv_annot_date"
+        tools:text="@tools:sample/lorem/random" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.compdfkit.tools.common.views.CToolBar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:elevation="4dp"
+        android:textSize="18sp"
+        android:title="@string/tools_replies_of_annotation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+    </com.compdfkit.tools.common.views.CToolBar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_annotation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar"
+        tools:itemCount="1"
+        android:paddingVertical="8dp"
+        tools:listitem="@layout/tools_bota_annotation_list_item_content" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/cl_menu"
+        app:layout_constraintTop_toBottomOf="@id/rv_annotation">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:background="?attr/compdfkit_HeadItem_BackgroundColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/tools_total"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            tools:text="Total:23"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_reply"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/tools_annot_reply_list_item_content" />
+
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/cl_menu"
+        android:layout_width="match_parent"
+        android:elevation="2dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:background="?attr/colorPrimary">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_delete_annotation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tools_signature_toolbar_btn_corner_status_bg"
+            android:foreground="@drawable/tools_common_btn_corner_ripple_in_widget"
+            android:padding="8dp"
+            android:text="@string/tools_delete_annotation"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_add_reply"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_add_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tools_signature_toolbar_btn_corner_status_bg"
+            android:foreground="@drawable/tools_common_btn_corner_ripple_in_widget"
+            android:padding="8dp"
+            android:text="@string/tools_add_new_reply"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_delete_annotation"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
