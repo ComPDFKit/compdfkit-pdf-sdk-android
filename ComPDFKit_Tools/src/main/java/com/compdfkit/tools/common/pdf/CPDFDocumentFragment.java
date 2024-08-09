@@ -510,6 +510,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     editManager.enable();
                     editManager.beginEdit(curEditMode);
                 }
+                editToolBar.updateUndoRedo();
             }
             pdfToolBar.setVisibility(VISIBLE);
             pdfSearchToolBarView.setVisibility(GONE);
