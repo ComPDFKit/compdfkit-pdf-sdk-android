@@ -115,7 +115,7 @@ public abstract class PDFSamples {
     protected void saveSamplePDF(CPDFDocument document, File file, boolean close){
         try {
             file.getParentFile().mkdirs();
-            document.saveAs(file.getAbsolutePath(), false);
+            document.saveAs(file.getAbsolutePath(), false, true);
             if (file.exists()) {
                 getOutputFileList().add(file.getAbsolutePath());
             }

@@ -1,6 +1,6 @@
 /**
  * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
- *
+ * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
  * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
@@ -16,8 +16,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.compdfkit.core.document.CPDFSdk;
+import com.compdfkit.core.utils.TFileUtils;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.databinding.ActivityHomeBinding;
+import com.compdfkit.tools.common.utils.CFileUtils;
+
+import java.io.File;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -38,19 +42,27 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         });
 
-        if (getSupportFragmentManager().findFragmentByTag("homeFunFragment") == null){
+        if (getSupportFragmentManager().findFragmentByTag("homeFunFragment") == null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_content, new HomeFunFragment(), "homeFunFragment")
                     .commit();
         }
+//        String savePath = new File(getFilesDir(), "fonts/").getAbsolutePath();
+        // Copy the font from assets to the internal storage directory
+//        CFileUtils.copyFileFromAssets(this, "Arial.ttf", savePath, "Arial.ttf", false);
+//        String path = savePath + File.separator + "Arial.ttf";
+        // Set the font to use
+//        CPDFSdk.setDefaultFontPath(this, path);
+        // Enable the default font
+//        CPDFSdk.useDefaultFont(true);
     }
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() <=0){
+        if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
             super.onBackPressed();
-        }else {
+        } else {
             getSupportFragmentManager().popBackStack();
         }
     }

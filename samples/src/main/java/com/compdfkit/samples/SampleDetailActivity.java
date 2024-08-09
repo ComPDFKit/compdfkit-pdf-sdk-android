@@ -63,11 +63,11 @@ public class SampleDetailActivity extends AppCompatActivity {
             pdfSamples.getOutputFileList().clear();
         }
         btnRun.setOnClickListener(v -> {
-//            new Thread(() -> {
+            new Thread(() -> {
                 if (pdfSamples != null) {
                     pdfSamples.run(outputListener);
                 }
-//            }).start();
+            }).start();
         });
         btnOpenFiles.setOnClickListener(v -> {
             if (pdfSamples.getOutputFileList() != null) {
