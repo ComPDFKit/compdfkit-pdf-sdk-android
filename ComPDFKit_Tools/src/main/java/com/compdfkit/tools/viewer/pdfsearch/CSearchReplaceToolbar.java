@@ -483,7 +483,9 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
     }
 
     private void resetSearch() {
-        cpdfSearch.resetSearch();
+        if (cpdfSearch != null) {
+            cpdfSearch.resetSearch();
+        }
         groupSearchBefore.setVisibility(VISIBLE);
         groupSearchAfter.setVisibility(GONE);
     }
@@ -505,6 +507,9 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
             loadingDialog.dismiss();
         }
         if (getContext() instanceof FragmentActivity){
+            if (pdfView == null || pdfView.getCPdfReaderView() == null){
+                return;
+            }
             if (pdfView.getCPdfReaderView().getPDFDocument().getPageCount() < 40) {
                 return;
             }

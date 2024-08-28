@@ -67,7 +67,7 @@ class CPDFFether implements DataFetcher<Bitmap> {
         if (tpdfDocument == null) {
             throw new Exception("CPDFDocument is null!");
         }
-        RectF sizeRect = tpdfDocument.getPageSize(pageIndex);
+        RectF sizeRect = tpdfDocument.pageAtIndex(pageIndex).getSize();
         if (width == Target.SIZE_ORIGINAL ){
             width = (int) sizeRect.width();
         }
@@ -75,7 +75,6 @@ class CPDFFether implements DataFetcher<Bitmap> {
             height = (int) sizeRect.height();
         }
         Bitmap bitmap = Glide.get(context).getBitmapPool().get(width, height, Bitmap.Config.ARGB_4444);
-        CLog.e("ComPDFKit", "CPDFFether load PDF Image Size: " + width +" * " + height);
         boolean res = tpdfDocument.renderPageAtIndex(bitmap,
                 pageIndex,
                 width,

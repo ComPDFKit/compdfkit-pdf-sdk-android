@@ -30,6 +30,7 @@ import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
+import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
@@ -234,6 +235,8 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
             File file = new File(dir, CFileUtils.getFileNameNoExtension(document.getFileName()) + getString(R.string.tools_watermark_suffix));
             File pdfFile = CFileUtils.renameNameSuffix(file);
             Fragment fragment = getChildFragmentManager().findFragmentByTag("f" + tabLayout.getSelectedTabPosition());
+            CLoadingDialog loadingDialog = CLoadingDialog.newInstance();
+            loadingDialog.show(getChildFragmentManager(), "saveDialog");
             if (fragment != null && fragment instanceof CWatermarkPageFragment) {
                 new SimpleBackgroundTask<String>(getContext()) {
 
@@ -254,6 +257,9 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
                     @Override
                     protected void onSuccess(String result) {
+                        if (loadingDialog != null) {
+                            loadingDialog.dismiss();
+                        }
                         if (document.shouleReloadDocument()) {
                             document.reload();
                         }

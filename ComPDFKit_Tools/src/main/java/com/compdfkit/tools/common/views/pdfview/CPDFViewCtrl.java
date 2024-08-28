@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -261,11 +262,16 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
 
     public void openPDF(String pdfFilePath, String password, COnOpenPdfFinishCallback openPdfFinishCallback) {
-        // Create a new instance of the CPDFDocument class, passing in the current context.
-        CPDFDocument cpdfDocument = new CPDFDocument(getContext());
-        // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
-        CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfFilePath, password);
-        setPDFDocument(cpdfDocument, pdfFilePath, pdfDocumentError, openPdfFinishCallback);
+        CThreadPoolUtils.getInstance().executeIO(() -> {
+            // Create a new instance of the CPDFDocument class, passing in the current context.
+            CPDFDocument cpdfDocument = new CPDFDocument(getContext());
+            // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
+
+            CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfFilePath, password);
+            CThreadPoolUtils.getInstance().executeMain(() -> {
+                setPDFDocument(cpdfDocument, pdfFilePath, pdfDocumentError, openPdfFinishCallback);
+            });
+        });
     }
 
     public void openPDF(Uri pdfUri) {
@@ -277,11 +283,15 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
 
     public void openPDF(Uri pdfUri, String password, COnOpenPdfFinishCallback openPdfFinishCallback) {
-        // Create a new instance of the CPDFDocument class, passing in the current context.
-        CPDFDocument cpdfDocument = new CPDFDocument(getContext());
-        // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
-        CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfUri, password);
-        setPDFDocument(cpdfDocument, pdfUri, pdfDocumentError, openPdfFinishCallback);
+        CThreadPoolUtils.getInstance().executeIO(() -> {
+            // Create a new instance of the CPDFDocument class, passing in the current context.
+            CPDFDocument cpdfDocument = new CPDFDocument(getContext());
+            // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
+            CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfUri, password);
+            CThreadPoolUtils.getInstance().executeMain(() -> {
+                setPDFDocument(cpdfDocument, pdfUri, pdfDocumentError, openPdfFinishCallback);
+            });
+        });
     }
 
     private void setPDFDocument(CPDFDocument cpdfDocument, Object pdf, CPDFDocument.PDFDocumentError error, COnOpenPdfFinishCallback openPdfFinishCallback) {
@@ -375,7 +385,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         }
     }
 
-    public void savePDF(COnSaveCallback callback, COnSaveError error){
+    public void savePDF(COnSaveCallback callback, COnSaveError error) {
         CThreadPoolUtils.getInstance().executeMain(() -> {
             cPdfReaderView.pauseAllRenderProcess();
             cPdfReaderView.removeAllAnnotFocus();
@@ -394,33 +404,36 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
             }
             exitEditMode();
             if (document.hasChanges()) {
-                try {
-
-                    boolean saveFileExtraFontSubset = false;
-                    if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null){
-                        saveFileExtraFontSubset = cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
+                CThreadPoolUtils.getInstance().executeIO(() -> {
+                    try {
+                        boolean saveFileExtraFontSubset = false;
+                        if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null) {
+                            saveFileExtraFontSubset = cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
+                        }
+                        CLog.e("ComPDFKit", "save pdf extra font subset:" + saveFileExtraFontSubset);
+                        boolean success = document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental, saveFileExtraFontSubset);
+                        if (!success) {
+                            document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveNoIncremental, saveFileExtraFontSubset);
+                        }
+                        CThreadPoolUtils.getInstance().executeMain(()->{
+                            if (callback != null) {
+                                callback.callback(document.getAbsolutePath(), document.getUri());
+                            }
+                            if (saveGlobalCallback != null) {
+                                saveGlobalCallback.callback(document.getAbsolutePath(), document.getUri());
+                            }
+                        });
+                    } catch (CPDFDocumentException e) {
+                        e.printStackTrace();
+                        CLog.e("ComPDFKit", "save fail:" + e.getMessage());
+                        if (error != null) {
+                            error.error(e);
+                        }
+                        if (saveGlobalErrorCallback != null) {
+                            saveGlobalErrorCallback.error(new Exception("document is null"));
+                        }
                     }
-                    CLog.e("ComPDFKit", "save pdf extra font subset:" + saveFileExtraFontSubset);
-                    boolean success = document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental, saveFileExtraFontSubset);
-                    if (!success) {
-                        document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveNoIncremental, saveFileExtraFontSubset);
-                    }
-                    if (callback != null) {
-                        callback.callback(document.getAbsolutePath(), document.getUri());
-                    }
-                    if (saveGlobalCallback != null) {
-                        saveGlobalCallback.callback(document.getAbsolutePath(), document.getUri());
-                    }
-                } catch (CPDFDocumentException e) {
-                    e.printStackTrace();
-                    CLog.e("ComPDFKit", "save fail:" + e.getMessage());
-                    if (error != null) {
-                        error.error(e);
-                    }
-                    if (saveGlobalErrorCallback != null) {
-                        saveGlobalErrorCallback.error(new Exception("document is null"));
-                    }
-                }
+                });
             } else {
                 if (callback != null) {
                     callback.callback(document.getAbsolutePath(), document.getUri());
@@ -636,7 +649,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         pdfViewFocusedListenerList.add(listener);
     }
 
-    public void addReaderViewCallback(CPDFIReaderViewCallback callback){
+    public void addReaderViewCallback(CPDFIReaderViewCallback callback) {
         this.readerViewCallbacks.add(callback);
     }
 
@@ -651,9 +664,9 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
 
     public boolean isSaveFileExtraFontSubset() {
-        if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null){
+        if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null) {
             return cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
-        }else {
+        } else {
             return false;
         }
     }

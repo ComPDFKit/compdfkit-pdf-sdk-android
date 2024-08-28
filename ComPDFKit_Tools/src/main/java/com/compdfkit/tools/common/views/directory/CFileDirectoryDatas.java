@@ -65,7 +65,6 @@ public class CFileDirectoryDatas {
     public static List<String> publicDirectoryList(){
         List<String> list = new ArrayList<>();
         list.add(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
-        list.add(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
         list.add(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath());
         return list;
     }

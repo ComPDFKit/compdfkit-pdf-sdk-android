@@ -9,30 +9,34 @@
     android:elevation="4dp"
     tools:layout_height="?android:attr/actionBarSize">
 
-    <include
+    <LinearLayout
         android:id="@+id/ll_menu"
-        layout="@layout/tools_cpdf_tool_bar_pdf_view_menu_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ll_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_back_action"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:padding="6dp"
         android:layout_marginStart="8dp"
-        android:visibility="gone"
-        tools:visibility="visible"
         android:background="@drawable/tools_common_oval_ripple_in_widget"
+        android:padding="6dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tools_ic_back"
-        app:tint="?attr/colorOnPrimary" />
+        app:tint="?attr/colorOnPrimary"
+        tools:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/ll_title"
@@ -44,29 +48,27 @@
         android:gravity="center_vertical"
         android:paddingHorizontal="4dp"
         app:layout_constrainedWidth="true"
-        app:layout_goneMarginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ll_menu"
         app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@id/iv_back_action"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginStart="16dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_tool_bar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/tools_ic_syas_arrow"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="20sp"
-            app:autoSizeMaxTextSize="20sp"
-            android:textAppearance="?attr/textAppearanceHeadline6"
             android:drawablePadding="8dp"
-            app:drawableTint="?attr/colorOnPrimary"
-            android:maxLines="1"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center_vertical"
-            app:autoSizeMinTextSize="14sp"
-            app:autoSizeTextType="uniform"
-            tools:text="PDF View" />
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textSize="16sp"
+            app:drawableTint="?attr/colorOnPrimary"
+            tools:text="@string/tools_pdf_edit_mode" />
 
     </LinearLayout>
 

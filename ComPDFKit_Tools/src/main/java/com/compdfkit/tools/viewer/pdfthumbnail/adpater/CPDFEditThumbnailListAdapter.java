@@ -8,9 +8,12 @@
  */
 package com.compdfkit.tools.viewer.pdfthumbnail.adpater;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,338 +35,342 @@ import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
+import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.docseditor.drag.CDefaultItemTouchHelpCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CPDFEditThumbnailListAdapter
-    extends RecyclerView.Adapter<CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder>
-    implements CDefaultItemTouchHelpCallback.OnItemTouchCallbackListener {
-  private CPDFDocument cPdfDocument;
+        extends RecyclerView.Adapter<CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder>
+        implements CDefaultItemTouchHelpCallback.OnItemTouchCallbackListener {
+    private CPDFDocument cPdfDocument;
 
-  private int currentPageIndex;
+    private int currentPageIndex;
 
-  private COnSetPDFDisplayPageIndexListener displayPageIndexListener;
+    private COnSetPDFDisplayPageIndexListener displayPageIndexListener;
 
-  private boolean isEdit = false;
+    private boolean isEdit = false;
 
-  private SparseIntArray selectArr = new SparseIntArray();
+    private SparseIntArray selectArr = new SparseIntArray();
 
-  private OnPageEditListener onPageEditListener = null;
+    private OnPageEditListener onPageEditListener = null;
 
-  private int[] itemSize = new int[2];
+    private int[] itemSize = new int[2];
 
-  public CPDFEditThumbnailListAdapter(CPDFDocument cPdfDocument, int currentPageIndex) {
-    this.cPdfDocument = cPdfDocument;
-    this.currentPageIndex = currentPageIndex;
-  }
+    public CPDFEditThumbnailListAdapter(CPDFDocument cPdfDocument, int currentPageIndex) {
+        this.cPdfDocument = cPdfDocument;
+        this.currentPageIndex = currentPageIndex;
+    }
 
-  @NonNull
-  @Override
-  public CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder onCreateViewHolder(
-      @NonNull ViewGroup parent, int viewType) {
-    return new CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder(
-        LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.tools_edit_thumbnail_list_item, parent, false));
-  }
 
-  @Override
-  public void onBindViewHolder(
-      @NonNull CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder holder, int position) {
+    @NonNull
+    @Override
+    public CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder onCreateViewHolder(
+            @NonNull ViewGroup parent, int viewType) {
+        return new CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder(
+                LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.tools_edit_thumbnail_list_item, parent, false));
+    }
 
-    RequestBuilder<Drawable> requestBuilder =
+    public static final int SPAN = 6;
+
+    private int[] calculateItemSize(CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder holder, int position) {
+        boolean isPortrait = holder.itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        int spanSize = isPortrait ? 2 : 1;
+        int screenWidth = CDimensUtils.getScreenWidth(holder.itemView.getContext());
+        if (spanSize == 1) {
+            screenWidth = CDimensUtils.dp2px(holder.itemView.getContext(), 600);
+        }
+        int itemWidth = screenWidth / (SPAN / spanSize);
+        int itemMarginHorizontal = CDimensUtils.dp2px(holder.itemView.getContext(), 4) * 2;
+        itemWidth -= itemMarginHorizontal;
+
+        RectF rectF = cPdfDocument.pageAtIndex(position).getSize();
+        float itemHeight = itemWidth * (134F / 104F);
+
+        float imageWidth = itemWidth;
+        float imageHeight = ((float) imageWidth / (float) rectF.width()) * rectF.height();
+
+        if (imageHeight > itemHeight) {
+            imageHeight = itemHeight;
+            imageWidth = (imageHeight / rectF.height()) * rectF.width();
+        }
+        ConstraintLayout.LayoutParams layoutParams =
+                (ConstraintLayout.LayoutParams) holder.clThumbnail.getLayoutParams();
+        layoutParams.width = (int) imageWidth;
+        layoutParams.height = (int) imageHeight;
+        holder.clThumbnail.setLayoutParams(layoutParams);
+        return new int[]{(int) imageWidth, (int) imageHeight};
+    }
+
+
+    @Override
+    public void onBindViewHolder(
+            @NonNull CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder holder, int position) {
+
+        int[] size = calculateItemSize(holder, position);
+
         Glide.with(holder.itemView.getContext())
-            .load(CPDFWrapper.fromDocument(cPdfDocument, position));
-    if (itemSize[0] != 0 && itemSize[1] != 0) {
-        requestBuilder = requestBuilder.override(itemSize[0], itemSize[1]);
+                .load(CPDFWrapper.fromDocument(cPdfDocument, position))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .override(size[0], size[1])
+                .into(holder.ivThumbnailImage);
+
+        holder.tvPageIndex.setText(String.valueOf(holder.getAdapterPosition() + 1));
+        updateSelectStatus(holder);
     }
-    requestBuilder
-        .diskCacheStrategy(DiskCacheStrategy.NONE)
-        .into(
-            new CustomTarget<Drawable>() {
-              @Override
-              public void onResourceReady(
-                  @NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                RectF rectF = cPdfDocument.pageAtIndex(position).getSize();
-                float itemWidth = holder.clItem.getMeasuredWidth();
-                float itemHeight = holder.clItem.getMeasuredHeight();
-                if (itemSize[0] == 0 || itemSize[1] == 0) {
-                  itemSize[0] = (int) (itemWidth * 0.6F);
-                  itemSize[1] = (int) (itemHeight * 0.6F);
-                }
-                float imageWidth = itemWidth;
-                float imageHeight = ((float) imageWidth / (float) rectF.width()) * rectF.height();
 
-                if (imageHeight > itemHeight) {
-                  imageHeight = itemHeight;
-                  imageWidth = (imageHeight / rectF.height()) * rectF.width();
-                }
-                ConstraintLayout.LayoutParams layoutParams =
-                    (ConstraintLayout.LayoutParams) holder.clThumbnail.getLayoutParams();
-                layoutParams.width = (int) imageWidth;
-                layoutParams.height = (int) imageHeight;
-                holder.clThumbnail.setLayoutParams(layoutParams);
-                holder.ivThumbnailImage.setImageDrawable(resource);
-              }
-
-              @Override
-              public void onLoadCleared(@Nullable Drawable placeholder) {}
-            });
-
-    holder.tvPageIndex.setText(String.valueOf(holder.getAdapterPosition() + 1));
-    updateSelectStatus(holder);
-  }
-
-  private void updateSelectStatus(CPDFThumbnailItemViewHolder holder) {
-    if (isEdit) {
-      if (selectArr.get(holder.getAdapterPosition()) == 1) {
-        holder.ivSelect.setSelected(true);
-        holder.tvPageIndex.setSelected(true);
-        holder.clThumbnail.setSelected(true);
-      } else {
-        holder.ivSelect.setSelected(false);
-        holder.tvPageIndex.setSelected(false);
-        holder.clThumbnail.setSelected(false);
-      }
-      holder.ivSelect.setVisibility(View.VISIBLE);
-    } else {
-      holder.ivSelect.setSelected(false);
-      holder.ivSelect.setVisibility(View.GONE);
-      holder.tvPageIndex.setSelected(holder.getAdapterPosition() == currentPageIndex);
-      holder.clThumbnail.setSelected(holder.getAdapterPosition() == currentPageIndex);
-    }
-  }
-
-  @Override
-  public int getItemCount() {
-    return cPdfDocument == null ? 0 : cPdfDocument.getPageCount();
-  }
-
-  public void setPDFDisplayPageIndexListener(COnSetPDFDisplayPageIndexListener listener) {
-    this.displayPageIndexListener = listener;
-  }
-
-  public void setEdit(boolean edit) {
-    isEdit = edit;
-    if (selectArr != null) {
-      selectArr.clear();
-    }
-  }
-
-  public boolean isEdit() {
-    return isEdit;
-  }
-
-  public void setItemClick(int position) {
-    if (isEdit) {
-      if (selectArr.get(position) == 0) {
-        selectArr.put(position, 1);
-      } else {
-        selectArr.removeAt(selectArr.indexOfKey(position));
-      }
-    }
-    notifyItemChanged(position);
-  }
-
-  public void setAllClick(RecyclerView recyclerView) {
-    if (isEdit && cPdfDocument != null) {
-      for (int i = 0; i < cPdfDocument.getPageCount(); i++) {
-        selectArr.put(i, 1);
-        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(i);
-        if (viewHolder != null) {
-          updateSelectStatus((CPDFThumbnailItemViewHolder) viewHolder);
-        } else {
-          notifyItemChanged(i);
-        }
-      }
-    }
-  }
-
-  public void setAllUnClick(RecyclerView recyclerView) {
-    if (isEdit) {
-      for (int size = selectArr.size() - 1; size >= 0; size--) {
-        int key = selectArr.keyAt(size);
-        selectArr.removeAt(size);
-        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(key);
-        if (viewHolder != null) {
-          updateSelectStatus((CPDFThumbnailItemViewHolder) viewHolder);
-        } else {
-          notifyItemChanged(key);
-        }
-      }
-    }
-  }
-
-  public SparseIntArray getSelectArr() {
-    return selectArr;
-  }
-
-  public void setSelectArr(int[] pageNum) {
-    if (pageNum != null) {
-      selectArr.clear();
-      for (int i = 0; i < pageNum.length; i++) {
-        selectArr.put(pageNum[i], 1);
-      }
-    }
-    notifyDataSetChanged();
-  }
-
-  public void setOnPageEditListener(OnPageEditListener onPageEditListener) {
-    this.onPageEditListener = onPageEditListener;
-  }
-
-  @Override
-  public void onSwiped(int adapterPosition) {}
-
-  @Override
-  public boolean onDragging(
-      RecyclerView.ViewHolder sourceViewHolder, RecyclerView.ViewHolder targetViewHolder) {
-    int sourcePosition = sourceViewHolder.getAdapterPosition();
-    int targetPosition = targetViewHolder.getAdapterPosition();
-    notifyItemMoved(sourcePosition, targetPosition);
-    return true;
-  }
-
-  @Override
-  public void onMoved(
-      RecyclerView.ViewHolder sourceViewHolder, int sourcePosition, int targetPosition) {
-    AsyncTask<Void, Void, Boolean> asyncTask =
-        new AsyncTask<Void, Void, Boolean>() {
-          @Override
-          protected Boolean doInBackground(Void... voids) {
-            boolean isSuccess;
-            try {
-              isSuccess = cPdfDocument.movePage(sourcePosition, targetPosition);
-              if (sourcePosition < targetPosition) { // 往后移动
-                List<Integer> selected = new ArrayList<>();
-                for (int i = sourcePosition; i <= targetPosition; i++) {
-                  if (selectArr.get(i) == 1) {
-                    selected.add(i);
-                    selectArr.removeAt(selectArr.indexOfKey(i));
-                  }
-                }
-                for (int i = 0; i < selected.size(); i++) {
-                  if (selected.get(i) == sourcePosition) {
-                    continue;
-                  }
-                  selectArr.put(selected.get(i) - 1, 1);
-                }
-                if (selected.size() > 0) {
-                  if (selected.get(0) == sourcePosition) {
-                    selectArr.put(targetPosition, 1);
-                  }
-                }
-              } else { // 往前移动
-                List<Integer> selected = new ArrayList<>();
-                for (int i = sourcePosition; i >= targetPosition; i--) {
-                  if (selectArr.get(i) == 1) {
-                    selected.add(i);
-                    selectArr.removeAt(selectArr.indexOfKey(i));
-                  }
-                }
-                for (int i = 0; i < selected.size(); i++) {
-                  if (selected.get(i) == sourcePosition) {
-                    continue;
-                  }
-                  selectArr.put(selected.get(i) + 1, 1);
-                }
-                if (selected.size() > 0) {
-                  if (selected.get(0) == sourcePosition) {
-                    selectArr.put(targetPosition, 1);
-                  }
-                }
-              }
-              if (currentPageIndex == sourcePosition) {
-                currentPageIndex = targetPosition;
-              } else if (currentPageIndex == targetPosition) {
-                if (sourcePosition < targetPosition) {
-                  currentPageIndex = targetPosition - 1;
-                } else {
-                  currentPageIndex = targetPosition + 1;
-                }
-              } else {
-                if (sourcePosition < currentPageIndex && currentPageIndex < targetPosition) {
-                  currentPageIndex--;
-                } else if (targetPosition < currentPageIndex && currentPageIndex < sourcePosition) {
-                  currentPageIndex++;
-                }
-              }
-            } catch (Exception e) {
-              return false;
-            }
-            return isSuccess;
-          }
-
-          @Override
-          protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if (aBoolean) {
-              if (onPageEditListener != null) {
-                onPageEditListener.onEdit();
-              }
-              if (displayPageIndexListener != null) {
-                displayPageIndexListener.displayPage(currentPageIndex);
-              }
-              int start = sourcePosition < targetPosition ? sourcePosition : targetPosition;
-              int count = Math.abs(sourcePosition - targetPosition) + 1;
-              notifyItemRangeChanged(start, count);
-            }
-          }
-        };
-    asyncTask.execute();
-  }
-
-  @Override
-  public void onSwaped(
-      RecyclerView.ViewHolder sourceViewHolder, RecyclerView.ViewHolder targetViewHolder) {
-    int sourcePosition = sourceViewHolder.getAdapterPosition();
-    int targetPosition = targetViewHolder.getAdapterPosition();
-    AsyncTask<Void, Void, Boolean> asyncTask =
-        new AsyncTask<Void, Void, Boolean>() {
-          @Override
-          protected Boolean doInBackground(Void... voids) {
-            boolean isSuccess;
-            try {
-              isSuccess = cPdfDocument.exchangePage(sourcePosition, targetPosition);
-            } catch (Exception e) {
-              return false;
-            }
-            return isSuccess;
-          }
-
-          @Override
-          protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if (aBoolean) {
-              notifyDataSetChanged();
+    private void updateSelectStatus(CPDFThumbnailItemViewHolder holder) {
+        if (isEdit) {
+            if (selectArr.get(holder.getAdapterPosition()) == 1) {
+                holder.ivSelect.setSelected(true);
+                holder.tvPageIndex.setSelected(true);
+                holder.clThumbnail.setSelected(true);
             } else {
-
+                holder.ivSelect.setSelected(false);
+                holder.tvPageIndex.setSelected(false);
+                holder.clThumbnail.setSelected(false);
             }
-          }
-        };
-    asyncTask.execute();
-  }
-
-  static class CPDFThumbnailItemViewHolder extends RecyclerView.ViewHolder {
-    private AppCompatImageView ivThumbnailImage;
-    private AppCompatTextView tvPageIndex;
-    private ConstraintLayout clThumbnail;
-    private AppCompatImageView ivSelect;
-
-    private ConstraintLayout clItem;
-
-    public CPDFThumbnailItemViewHolder(@NonNull View itemView) {
-      super(itemView);
-      ivThumbnailImage = itemView.findViewById(R.id.iv_thumbnail);
-      tvPageIndex = itemView.findViewById(R.id.tv_thumbnail_page_index);
-      clThumbnail = itemView.findViewById(R.id.cl_thumbnail);
-      ivSelect = itemView.findViewById(R.id.iv_check_box);
-      clItem = itemView.findViewById(R.id.cl_item);
+            holder.ivSelect.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivSelect.setSelected(false);
+            holder.ivSelect.setVisibility(View.GONE);
+            holder.tvPageIndex.setSelected(holder.getAdapterPosition() == currentPageIndex);
+            holder.clThumbnail.setSelected(holder.getAdapterPosition() == currentPageIndex);
+        }
     }
-  }
 
-  public interface OnPageEditListener {
-    void onEdit();
-  }
+    @Override
+    public int getItemCount() {
+        return cPdfDocument == null ? 0 : cPdfDocument.getPageCount();
+    }
+
+    public void setPDFDisplayPageIndexListener(COnSetPDFDisplayPageIndexListener listener) {
+        this.displayPageIndexListener = listener;
+    }
+
+    public void setEdit(boolean edit) {
+        isEdit = edit;
+        if (selectArr != null) {
+            selectArr.clear();
+        }
+    }
+
+    public boolean isEdit() {
+        return isEdit;
+    }
+
+    public void setItemClick(int position) {
+        if (isEdit) {
+            if (selectArr.get(position) == 0) {
+                selectArr.put(position, 1);
+            } else {
+                selectArr.removeAt(selectArr.indexOfKey(position));
+            }
+        }
+        notifyItemChanged(position);
+    }
+
+    public void setAllClick(RecyclerView recyclerView) {
+        if (isEdit && cPdfDocument != null) {
+            for (int i = 0; i < cPdfDocument.getPageCount(); i++) {
+                selectArr.put(i, 1);
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(i);
+                if (viewHolder != null) {
+                    updateSelectStatus((CPDFThumbnailItemViewHolder) viewHolder);
+                } else {
+                    notifyItemChanged(i);
+                }
+            }
+        }
+    }
+
+    public void setAllUnClick(RecyclerView recyclerView) {
+        if (isEdit) {
+            for (int size = selectArr.size() - 1; size >= 0; size--) {
+                int key = selectArr.keyAt(size);
+                selectArr.removeAt(size);
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(key);
+                if (viewHolder != null) {
+                    updateSelectStatus((CPDFThumbnailItemViewHolder) viewHolder);
+                } else {
+                    notifyItemChanged(key);
+                }
+            }
+        }
+    }
+
+    public SparseIntArray getSelectArr() {
+        return selectArr;
+    }
+
+    public void setSelectArr(int[] pageNum) {
+        if (pageNum != null) {
+            selectArr.clear();
+            for (int i = 0; i < pageNum.length; i++) {
+                selectArr.put(pageNum[i], 1);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void setOnPageEditListener(OnPageEditListener onPageEditListener) {
+        this.onPageEditListener = onPageEditListener;
+    }
+
+    @Override
+    public void onSwiped(int adapterPosition) {
+    }
+
+    @Override
+    public boolean onDragging(
+            RecyclerView.ViewHolder sourceViewHolder, RecyclerView.ViewHolder targetViewHolder) {
+        int sourcePosition = sourceViewHolder.getAdapterPosition();
+        int targetPosition = targetViewHolder.getAdapterPosition();
+        notifyItemMoved(sourcePosition, targetPosition);
+        return true;
+    }
+
+    @Override
+    public void onMoved(
+            RecyclerView.ViewHolder sourceViewHolder, int sourcePosition, int targetPosition) {
+        AsyncTask<Void, Void, Boolean> asyncTask =
+                new AsyncTask<Void, Void, Boolean>() {
+                    @Override
+                    protected Boolean doInBackground(Void... voids) {
+                        boolean isSuccess;
+                        try {
+                            isSuccess = cPdfDocument.movePage(sourcePosition, targetPosition);
+                            if (sourcePosition < targetPosition) { // 往后移动
+                                List<Integer> selected = new ArrayList<>();
+                                for (int i = sourcePosition; i <= targetPosition; i++) {
+                                    if (selectArr.get(i) == 1) {
+                                        selected.add(i);
+                                        selectArr.removeAt(selectArr.indexOfKey(i));
+                                    }
+                                }
+                                for (int i = 0; i < selected.size(); i++) {
+                                    if (selected.get(i) == sourcePosition) {
+                                        continue;
+                                    }
+                                    selectArr.put(selected.get(i) - 1, 1);
+                                }
+                                if (selected.size() > 0) {
+                                    if (selected.get(0) == sourcePosition) {
+                                        selectArr.put(targetPosition, 1);
+                                    }
+                                }
+                            } else { // 往前移动
+                                List<Integer> selected = new ArrayList<>();
+                                for (int i = sourcePosition; i >= targetPosition; i--) {
+                                    if (selectArr.get(i) == 1) {
+                                        selected.add(i);
+                                        selectArr.removeAt(selectArr.indexOfKey(i));
+                                    }
+                                }
+                                for (int i = 0; i < selected.size(); i++) {
+                                    if (selected.get(i) == sourcePosition) {
+                                        continue;
+                                    }
+                                    selectArr.put(selected.get(i) + 1, 1);
+                                }
+                                if (selected.size() > 0) {
+                                    if (selected.get(0) == sourcePosition) {
+                                        selectArr.put(targetPosition, 1);
+                                    }
+                                }
+                            }
+                            if (currentPageIndex == sourcePosition) {
+                                currentPageIndex = targetPosition;
+                            } else if (currentPageIndex == targetPosition) {
+                                if (sourcePosition < targetPosition) {
+                                    currentPageIndex = targetPosition - 1;
+                                } else {
+                                    currentPageIndex = targetPosition + 1;
+                                }
+                            } else {
+                                if (sourcePosition < currentPageIndex && currentPageIndex < targetPosition) {
+                                    currentPageIndex--;
+                                } else if (targetPosition < currentPageIndex && currentPageIndex < sourcePosition) {
+                                    currentPageIndex++;
+                                }
+                            }
+                        } catch (Exception e) {
+                            return false;
+                        }
+                        return isSuccess;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean aBoolean) {
+                        super.onPostExecute(aBoolean);
+                        if (aBoolean) {
+                            if (onPageEditListener != null) {
+                                onPageEditListener.onEdit();
+                            }
+                            if (displayPageIndexListener != null) {
+                                displayPageIndexListener.displayPage(currentPageIndex);
+                            }
+                            int start = sourcePosition < targetPosition ? sourcePosition : targetPosition;
+                            int count = Math.abs(sourcePosition - targetPosition) + 1;
+                            notifyItemRangeChanged(start, count);
+                        }
+                    }
+                };
+        asyncTask.execute();
+    }
+
+    @Override
+    public void onSwaped(
+            RecyclerView.ViewHolder sourceViewHolder, RecyclerView.ViewHolder targetViewHolder) {
+        int sourcePosition = sourceViewHolder.getAdapterPosition();
+        int targetPosition = targetViewHolder.getAdapterPosition();
+        AsyncTask<Void, Void, Boolean> asyncTask =
+                new AsyncTask<Void, Void, Boolean>() {
+                    @Override
+                    protected Boolean doInBackground(Void... voids) {
+                        boolean isSuccess;
+                        try {
+                            isSuccess = cPdfDocument.exchangePage(sourcePosition, targetPosition);
+                        } catch (Exception e) {
+                            return false;
+                        }
+                        return isSuccess;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean aBoolean) {
+                        super.onPostExecute(aBoolean);
+                        if (aBoolean) {
+                            notifyDataSetChanged();
+                        } else {
+
+                        }
+                    }
+                };
+        asyncTask.execute();
+    }
+
+    static class CPDFThumbnailItemViewHolder extends RecyclerView.ViewHolder {
+        private AppCompatImageView ivThumbnailImage;
+        private AppCompatTextView tvPageIndex;
+        private ConstraintLayout clThumbnail;
+        private AppCompatImageView ivSelect;
+
+        private ConstraintLayout clItem;
+
+        public CPDFThumbnailItemViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ivThumbnailImage = itemView.findViewById(R.id.iv_thumbnail);
+            tvPageIndex = itemView.findViewById(R.id.tv_thumbnail_page_index);
+            clThumbnail = itemView.findViewById(R.id.cl_thumbnail);
+            ivSelect = itemView.findViewById(R.id.iv_check_box);
+            clItem = itemView.findViewById(R.id.cl_item);
+        }
+    }
+
+    public interface OnPageEditListener {
+        void onEdit();
+    }
 }

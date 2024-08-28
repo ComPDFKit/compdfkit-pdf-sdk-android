@@ -14,6 +14,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -112,7 +113,7 @@ public class CFormToolbar extends FrameLayout {
             ivRedo.setEnabled(undoManager.canRedo());
         }
         if (ivUndo != null) {
-            ivUndo.setEnabled(undoManager.canRedo());
+            ivUndo.setEnabled(undoManager.canUndo());
         }
     }
 
@@ -146,7 +147,7 @@ public class CFormToolbar extends FrameLayout {
             ivRedo.setEnabled(undoManager.canRedo());
         }
         if (ivUndo != null) {
-            ivUndo.setEnabled(undoManager.canRedo());
+            ivUndo.setEnabled(undoManager.canUndo());
         }
         pdfView.getCPdfReaderView().getUndoManager().enable(true);
         pdfView.getCPdfReaderView().getUndoManager().addOnUndoHistoryChangeListener((cpdfUndoManager, operation, type) -> {

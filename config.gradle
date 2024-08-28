@@ -3,10 +3,10 @@ ext {
             COMPILESDK: 33,
             MINSDK: 21,
             TARGETSDK: 33,
-            VERSIONCODE: 1014
+            VERSIONCODE: 1015
     ]
     sdk = [
-            COMPDFKIT_SDK_VERSION : "2.1.1",
-            COMPDFKIT_SDK_BUILD_TAG : "build_dev_2.1.1_8485c6e5b_202408091626"
+            COMPDFKIT_SDK_VERSION : "2.1.2",
+            COMPDFKIT_SDK_BUILD_TAG : "build_dev_2.1.2_8485c6e5b_202408271626"
     ]
 }

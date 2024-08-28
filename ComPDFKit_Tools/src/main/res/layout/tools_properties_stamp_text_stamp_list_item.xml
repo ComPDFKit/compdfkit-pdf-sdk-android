@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="80dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="16dp"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
@@ -21,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:max_TextSize="25"
-        app:max_Width="240" />
+        app:max_Width="250" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_delete"

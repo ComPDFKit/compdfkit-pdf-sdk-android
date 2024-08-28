@@ -41,6 +41,8 @@ import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFEditReplyDial
 import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFReplyDetailsDialogFragment;
 import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CNoteEditDialog;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
+import com.compdfkit.tools.common.utils.CUriUtil;
+import com.compdfkit.tools.common.utils.image.CBitmapUtil;
 import com.compdfkit.tools.common.views.pdfproperties.action.CActionEditDialogFragment;
 import com.compdfkit.tools.forms.pdfproperties.option.edit.CFormOptionEditFragment;
 import com.compdfkit.ui.attribute.CPDFFreetextAttr;
@@ -152,46 +154,30 @@ public class CPDFAnnotationManager {
     public void addImageStamp(String imagePath, CPDFReaderView readerView, CPDFPageView pageView, PointF pointF) {
         CPDFPage page = readerView.getPDFDocument().pageAtIndex(readerView.getPageNum());
         CPDFStampAnnotation stampAnnotation = (CPDFStampAnnotation) page.addAnnot(CPDFAnnotation.Type.STAMP);
-        stampAnnotation.setImageStamp(imagePath);
 
-        ExifInterface exif = null;
-        int rotate = 0;
-        try {
-            exif = new ExifInterface(imagePath);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotate = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotate = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotate = 270;
-                    break;
-                default:
-                    break;
-            }
-        } catch (Exception e) {
-
-        }
-
-
-        float defaultWidth = 200F;
-        PointF vertex = new PointF(pointF.x - (defaultWidth / 2), pointF.y);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(imagePath, options);
-        RectF insertRect = new RectF(vertex.x, vertex.y, vertex.x + defaultWidth, vertex.y
-                + defaultWidth * ((rotate == 0 || rotate == 180) ? options.outHeight / options.outWidth : options.outWidth / options.outHeight));
-        RectF pageSize = readerView.getPageNoZoomSize(readerView.getPageNum());
-        insertRect.set(page.convertRectToPage(readerView.isCropMode(), pageSize.width(),
-                pageSize.height(), insertRect));
-        stampAnnotation.setRect(insertRect);
-        if (imagePath.endsWith("png")) {
+
+        int rotate = CUriUtil.getBitmapDegree(imagePath);
+
+        RectF area;
+        float defaultWidth = 200F;
+        PointF vertex = new PointF(pointF.x - (defaultWidth / 2), pointF.y);
+        if (rotate == 0 || rotate == 180) {
+            area = new RectF(vertex.x, vertex.y, vertex.x + defaultWidth, vertex.y + defaultWidth * options.outHeight / options.outWidth);
+        } else {
+            area = new RectF(vertex.x, vertex.y, vertex.x + defaultWidth, vertex.y + defaultWidth * options.outWidth / options.outHeight);
+        }
+        RectF size = readerView.getPageNoZoomSize(pageView.getPageNum());
+        area.set(page.convertRectToPage(readerView.isCropMode(), size.width(), size.height(), area));
+        stampAnnotation.setRect(area);
+
+        if (imagePath.endsWith(".png")) {
             BitmapFactory.Options tmpOptions = new BitmapFactory.Options();
             tmpOptions.inMutable = true;
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath, tmpOptions);
+
             if (rotate == 0) {
                 stampAnnotation.updateApWithBitmap(bitmap);
             } else {
@@ -203,7 +189,6 @@ public class CPDFAnnotationManager {
                 stampAnnotation.updateApWithBitmap(newBM);
                 newBM.recycle();
             }
-            bitmap.recycle();
         } else {
             stampAnnotation.setImageStamp(imagePath);
             stampAnnotation.updateAp();
