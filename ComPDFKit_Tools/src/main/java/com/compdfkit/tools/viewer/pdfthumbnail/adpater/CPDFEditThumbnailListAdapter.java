@@ -8,29 +8,22 @@
  */
 package com.compdfkit.tools.viewer.pdfthumbnail.adpater;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;

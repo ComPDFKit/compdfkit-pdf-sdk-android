@@ -15,13 +15,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.compdfkit.core.document.CPDFSdk;
-import com.compdfkit.core.utils.TFileUtils;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.databinding.ActivityHomeBinding;
-import com.compdfkit.tools.common.utils.CFileUtils;
-
-import java.io.File;
 
 
 public class HomeActivity extends AppCompatActivity {

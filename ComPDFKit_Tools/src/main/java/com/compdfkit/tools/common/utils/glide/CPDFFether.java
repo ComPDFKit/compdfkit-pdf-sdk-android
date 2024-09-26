@@ -21,7 +21,6 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.request.target.Target;
 import com.compdfkit.core.document.CPDFDocument;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.glide.wrapper.impl.CPDFDocumentPageWrapper;
 
 class CPDFFether implements DataFetcher<Bitmap> {

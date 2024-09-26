@@ -14,7 +14,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;

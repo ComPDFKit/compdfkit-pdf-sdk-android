@@ -895,6 +895,12 @@ public class CAnnotStyle implements Serializable {
         this.styleChangeListenerList.remove(styleChangeListener);
     }
 
+    public void cleanStyleChangeListener(){
+        if (this.styleChangeListenerList != null) {
+            styleChangeListenerList.clear();
+        }
+    }
+
 
     public interface OnAnnotStyleChangeListener {
 

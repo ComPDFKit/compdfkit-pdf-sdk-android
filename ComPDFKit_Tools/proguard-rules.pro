@@ -22,8 +22,6 @@
 -keepattributes InnerClasses
 # 指定代码的压缩级别 0 - 7(指定代码进行迭代优化的次数，在Android里面默认是5，这条指令也只有在可以优化时起作用。)
 -optimizationpasses 5
-# 混淆时不会产生形形色色的类名(混淆时不使用大小写混合类名)
-#-dontusemixedcaseclassnames
 # 指定不去忽略非公共的库类(不跳过library中的非public的类)
 -dontskipnonpubliclibraryclasses
 # 指定不去忽略包可见的库类的成员
@@ -56,13 +54,7 @@
 -verbose
 
 -keepattributes InnerClasses
-
-# 枚举类不能被混淆
-#-keepclassmembers enum * {
-#    public static **[] values();
-#    public static ** valueOf(java.lang.String);
-#}
-
+-keepparameternames
 
 -keepattributes Signature #泛型
 #native方法不混淆
@@ -99,11 +91,6 @@
 -keep class com.compdfkit.ui.proxy.**{*;}
 -keep enum com.compdfkit.ui.proxy.**{*;}
 -keep interface com.compdfkit.ui.proxy.**{*;}
-
-#不能除去混淆，所有内部逻辑全在里面，防止外部浏览后能知道我们的逻辑和做法
-#-keep class com.compdfkit.ui.internal.**{*;}
-#-keep enum com.compdfkit.ui.internal.**{*;}
-#-keep interface com.compdfkit.ui.internal.**{*;}
 
 -keep class com.compdfkit.ui.edit.**{*;}
 -keep enum com.compdfkit.ui.edit.**{*;}

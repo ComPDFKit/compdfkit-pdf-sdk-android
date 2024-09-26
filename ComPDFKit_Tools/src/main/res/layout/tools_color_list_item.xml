@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="40dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -11,7 +12,6 @@
         android:layout_height="28dp"
         android:layout_marginVertical="8dp"
         android:background="@drawable/tools_color_item_color_picker"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,6 +22,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginVertical="8dp"
+        tools:visibility="gone"
         android:background="@drawable/tools_color_item_select"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +34,7 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_marginVertical="8dp"
+        tools:visibility="gone"
         android:background="@drawable/tools_color_item_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

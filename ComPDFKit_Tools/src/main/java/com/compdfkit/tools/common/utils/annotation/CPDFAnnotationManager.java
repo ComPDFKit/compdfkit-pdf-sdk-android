@@ -16,7 +16,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.media.ExifInterface;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -42,7 +41,6 @@ import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFReplyDetailsD
 import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CNoteEditDialog;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.utils.CUriUtil;
-import com.compdfkit.tools.common.utils.image.CBitmapUtil;
 import com.compdfkit.tools.common.views.pdfproperties.action.CActionEditDialogFragment;
 import com.compdfkit.tools.forms.pdfproperties.option.edit.CFormOptionEditFragment;
 import com.compdfkit.ui.attribute.CPDFFreetextAttr;

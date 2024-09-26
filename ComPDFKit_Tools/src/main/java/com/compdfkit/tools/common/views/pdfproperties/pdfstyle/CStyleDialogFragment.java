@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -287,5 +288,15 @@ public class CStyleDialogFragment extends BottomSheetDialogFragment implements C
 
     public void setStyleDialogDismissListener(COnDialogDismissListener styleDialogDismissListener) {
         this.styleDialogDismissListener = styleDialogDismissListener;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        changeCallback = null;
+        dialogHeightCallback = null;
+        if (annotStyle != null){
+            annotStyle.cleanStyleChangeListener();
+        }
     }
 }

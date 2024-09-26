@@ -36,13 +36,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
 import com.compdfkit.core.document.CPDFDocument;
-import com.compdfkit.core.document.CPDFSdk;
 import com.compdfkit.core.edit.CPDFEditConfig;
 import com.compdfkit.core.edit.CPDFEditManager;
 import com.compdfkit.core.edit.CPDFEditPage;

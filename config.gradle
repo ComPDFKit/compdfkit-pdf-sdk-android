@@ -6,7 +6,7 @@ ext {
             VERSIONCODE: 1015
     ]
     sdk = [
-            COMPDFKIT_SDK_VERSION : "2.1.2",
-            COMPDFKIT_SDK_BUILD_TAG : "build_dev_2.1.2_8485c6e5b_202408271626"
+            COMPDFKIT_SDK_VERSION : "2.1.3",
+            COMPDFKIT_SDK_BUILD_TAG : "build_dev_2.1.2_32064baa5_202408091526"
     ]
 }

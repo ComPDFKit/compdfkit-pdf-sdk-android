@@ -2,7 +2,6 @@ package com.compdfkit.tools.common.utils.glide;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
