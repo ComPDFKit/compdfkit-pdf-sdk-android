@@ -29,7 +29,7 @@
 - Project specifications.
     - A `minSdkVersion` of `19` or higher.  
     - A `compileSdkVersion` of `30` or higher.  
-    - A `targetSdkVersion` of `30` or higher.  
+    - A `targetSdkVersion` of `34` or higher.  
     - Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
 
 ## How to Run a Demo
@@ -87,8 +87,8 @@ Edit it and add the complete `ComPDFKit SDK` dependency:
 
 ```groovy
 dependencies {
-  implementation 'com.compdf:compdfkit:2.1.3'
-  implementation 'com.compdf:compdfkit-ui:2.1.3'
+  implementation 'com.compdf:compdfkit:2.2.0'
+  implementation 'com.compdf:compdfkit-ui:2.2.0'
 }
 ```
 
