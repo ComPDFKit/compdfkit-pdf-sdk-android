@@ -35,6 +35,7 @@ import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CPDFtextAnnotAttachH
 import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CPDFtextAnnotImpl;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.impl.CEditImageContextMenuView;
+import com.compdfkit.tools.common.contextmenu.impl.CEditPathContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CEditTextContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSearchReplaceContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSignatureContextMenuView;
@@ -77,6 +78,7 @@ public class CBasicPDFActivity extends CPermissionActivity {
                                 .setEditTextContentMenu(new CEditTextContextMenuView())
                                 .setEditImageContentMenu(new CEditImageContextMenuView())
                                 .setSearchReplaceContextMenu(new CSearchReplaceContextMenuView())
+                                .setEditPathContentMenu(new CEditPathContextMenuView())
                                 .create(pdfView));
                 break;
             case Form:

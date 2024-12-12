@@ -63,7 +63,7 @@ public class ConstraintSetUtils {
     }
 
     private void fullVertical(ConstraintSet constraintSet, View view){
-        constraintSet.connect(view.getId(), ConstraintSet.TOP, view.getId(), ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        constraintSet.connect(view.getId(), ConstraintSet.TOP,  ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         constraintSet.connect(view.getId(), ConstraintSet.BOTTOM, view.getId(), ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
     }
 

@@ -11,9 +11,9 @@ package com.compdfkit.tools.common.views.pdfview;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -45,7 +45,11 @@ public class CPDFPageIndicatorView extends LinearLayout {
      */
     private OnPageIndicatorClickListener pageIndicatorClickListener;
 
-    private AppCompatTextView tvPageIndicator;
+    private AppCompatTextView tvPageIndex;
+
+    private AppCompatTextView tvTotalPage;
+
+    private boolean isRNMeasureLayout = false;
 
     public CPDFPageIndicatorView(Context context) {
         this(context, null);
@@ -65,23 +69,11 @@ public class CPDFPageIndicatorView extends LinearLayout {
      * Initializes the view by creating and configuring the text view and adding it to the layout.
      */
     private void initView(){
-        // create the text view for displaying the page indicator
-        tvPageIndicator = new AppCompatTextView(getContext());
-        // set layout params for the text view
-        LinearLayout.LayoutParams currentPageLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        currentPageLayoutParams.gravity = Gravity.CENTER;
-        int horizontalMargin = CDimensUtils.dp2px(getContext(), 8);
-        int verticalMargin = CDimensUtils.dp2px(getContext(), 4);
-        currentPageLayoutParams.setMargins(horizontalMargin, verticalMargin, horizontalMargin, verticalMargin);
-//        tvPageIndicator.setLayoutParams(currentPageLayoutParams);
-        // set text color to white
-        tvPageIndicator.setTextColor(Color.WHITE);
-        tvPageIndicator.setGravity(Gravity.CENTER);
-        tvPageIndicator.setMinimumWidth(CDimensUtils.dp2px(getContext(), 35));
-        // add the text view to the layout
-        addView(tvPageIndicator, currentPageLayoutParams);
-        // set background resource for the layout
-        setBackgroundResource(R.drawable.tools_pdf_page_indactor_bg);
+        LayoutInflater.from(getContext()).inflate(R.layout.tools_page_indicator_view, this);
+        setGravity(Gravity.CENTER_HORIZONTAL);
+        tvPageIndex = findViewById(R.id.tv_page_index);
+        tvTotalPage = findViewById(R.id.tv_page_count);
+
         // set click listener for the layout
         setOnClickListener(v -> {
             if (pageIndicatorClickListener != null) {
@@ -97,7 +89,9 @@ public class CPDFPageIndicatorView extends LinearLayout {
      */
     public void setTotalPage(int total){
         this.totalPage = total;
-        updatePageIndicator();
+        if (tvTotalPage != null) {
+            tvTotalPage.setText(totalPage + "");
+        }
     }
     /**
 
@@ -106,17 +100,23 @@ public class CPDFPageIndicatorView extends LinearLayout {
      */
     public void setCurrentPageIndex(int pageIndex){
         this.currentPageIndex = pageIndex + 1;
-        updatePageIndicator();
+        if (tvPageIndex != null) {
+            tvPageIndex.setText(currentPageIndex + "");
+        }
+        if (isRNMeasureLayout){
+            measure(
+                    MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+            layout(getLeft(), getTop(), getRight(), getBottom());
+        }
     }
-    /**
 
-     Updates the text view to display the current page index and the total number of pages.
-     */
-    private void updatePageIndicator(){
-        tvPageIndicator.setText(currentPageIndex + "/" + totalPage);
+    public void setRNMeasureLayout(boolean RNMeasureLayout) {
+        isRNMeasureLayout = RNMeasureLayout;
+        invalidate();
     }
-    /**
 
+    /**
      Sets the listener for page indicator click events.
      @param pageIndicatorClickListener the listener to be set
      */

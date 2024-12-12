@@ -40,6 +40,10 @@ public class SamplesFactory {
                 WatermarkSamplesImpl watermarkSamples = new WatermarkSamplesImpl(fragment, funType);
                 watermarkSamples.setPDFFile(filePath, uri, null);
                 return watermarkSamples;
+            case Compress:
+                CompressSamplesImpl compressSamples = new CompressSamplesImpl(fragment, funType);
+                compressSamples.setPDFFile(filePath, uri, null);
+                return compressSamples;
             default:
                 // Viewer、Annotations、Forms、Signatures、DocumentEditor、ContentEditor
                 // open pdf activity show pdf file

@@ -71,13 +71,76 @@
             app:tools_slider_bar_value_show_type="source"
            android:title="@string/tools_thickness" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_shape_style"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:visibility="gone"
+            android:background="@drawable/tools_common_btn_rectangle_ripple"
+            app:layout_constraintTop_toBottomOf="@id/slider_bar_border_width"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/tools_style_fragment_sub_title_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="@string/tools_line_type"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/tools_style_preview_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="16dp"
+                >
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_bord_effect_type"
+                    android:layout_width="72dp"
+                    android:layout_height="28dp"
+                    android:spinnerMode="dropdown"
+                    android:background="@drawable/tools_style_preview_bg"
+                    android:dropDownSelector="?attr/colorPrimary"
+                    android:popupBackground="@drawable/tools_common_window_bg"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintVertical_bias="0.45"
+                    app:srcCompat="@drawable/tools_ic_pageedit_arrow_down"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         <com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar
             android:id="@+id/dashed_slider_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="10"
             android:progress="0"
-            app:layout_constraintTop_toBottomOf="@id/slider_bar_border_width"
+            app:layout_constraintTop_toBottomOf="@id/cl_shape_style"
             app:layout_goneMarginBottom="8dp"
             app:tools_value_unit="pt"
             app:tools_slider_bar_value_show_type="source"

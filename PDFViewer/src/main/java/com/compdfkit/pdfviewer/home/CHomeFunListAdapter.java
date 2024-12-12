@@ -53,11 +53,15 @@ public class CHomeFunListAdapter extends CBaseQuickAdapter<HomeFunBean, CBaseQui
                 holder.setText(R.id.tv_desc, lastModifyTime + "  " + fileSize);
                 holder.setVisible(R.id.iv_pdf_sample_icon, true);
                 holder.setVisible(R.id.iv_icon, false);
+                holder.setVisible(R.id.tv_new, false);
+
             }else {
                 holder.setText(R.id.tv_desc, item.getDescription());
                 holder.setImageResource(R.id.iv_icon, item.getIconResId());
                 holder.setVisible(R.id.iv_pdf_sample_icon, false);
                 holder.setVisible(R.id.iv_icon, true);
+                holder.setVisible(R.id.tv_new, item.isNew());
+
             }
         }
     }

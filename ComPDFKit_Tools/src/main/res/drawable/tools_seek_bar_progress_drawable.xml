@@ -8,9 +8,9 @@
     </item>
 
     <item android:id="@android:id/secondaryProgress">
-        <clip>
+        <clip android:layout_width="match_parent">
             <shape>
-                <solid android:color="#5C1460F3" />
+                <solid android:color="@color/tools_seek_bar_progress_secondary_progress" />
             </shape>
         </clip>
     </item>
@@ -18,7 +18,7 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <solid android:color="?attr/colorAccent" />
+                <solid android:color="@color/tools_seek_bar_progress_main_progress" />
             </shape>
         </clip>
 

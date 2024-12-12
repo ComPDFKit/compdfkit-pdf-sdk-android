@@ -12,6 +12,7 @@ package com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider
 
 import android.text.TextUtils;
 
+import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFFreetextAnnotation;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
@@ -139,6 +140,8 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     squareAttr.setBorderAlpha(params.getLineColorOpacity());
                     squareAttr.setBorderWidth(params.getBorderWidth());
                     squareAttr.setBorderStyle(params.getBorderStyle());
+                    squareAttr.setEffectType(params.getBordEffectType());
+                    squareAttr.setEffectIntensity(CPDFAnnotation.BorderEffectIntensity.INTENSITY_ONE);
                     callback = squareAttr;
                     break;
                 case ANNOT_CIRCLE:
@@ -149,6 +152,8 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     circleAttr.setBorderAlpha(params.getLineColorOpacity());
                     circleAttr.setBorderWidth(params.getBorderWidth());
                     circleAttr.setBorderStyle(params.getBorderStyle());
+                    circleAttr.setEffectType(params.getBordEffectType());
+                    circleAttr.setEffectIntensity(CPDFAnnotation.BorderEffectIntensity.INTENSITY_ONE);
                     callback = circleAttr;
                     break;
                 case ANNOT_LINE:
@@ -399,6 +404,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 style.setLineColorOpacity(squareAttr.getBorderAlpha());
                 style.setBorderWidth(squareAttr.getBorderWidth());
                 style.setBorderStyle(squareAttr.getBorderStyle());
+                style.setBordEffectType(squareAttr.getEffectType());
                 break;
             case ANNOT_CIRCLE:
                 CPDFCircleAttr circleAttr = attribute.getCircleAttr();
@@ -408,6 +414,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 style.setLineColorOpacity(circleAttr.getBorderAlpha());
                 style.setBorderWidth(circleAttr.getBorderWidth());
                 style.setBorderStyle(circleAttr.getBorderStyle());
+                style.setBordEffectType(circleAttr.getEffectType());
                 break;
             case ANNOT_LINE:
 

@@ -17,7 +17,6 @@ import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFMarkupAnnotation;
 import com.compdfkit.core.annotation.CPDFSquareAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.views.pdfproperties.CTypeUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -65,7 +64,6 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
             } else if (annotImpl instanceof CPDFInkAnnotImpl) {
                 CPDFInkAnnotImpl inkAnnot = (CPDFInkAnnotImpl) annotImpl;
                 CPDFInkAnnotation inkAnnotation = (CPDFInkAnnotation) inkAnnot.onGetAnnotation();
-                CLog.e("注释Ink", "color: " + style.getColor() +  " alpha: " + style.getOpacity());
                 inkAnnotation.setColor(style.getColor());
                 inkAnnotation.setAlpha(style.getOpacity());
                 inkAnnotation.setBorderWidth(style.getBorderWidth());
@@ -74,25 +72,29 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 pageView.invalidate();
             } else if (annotImpl instanceof CPDFSquareAnnotImpl) {
                 CPDFSquareAnnotImpl squareAnnot = (CPDFSquareAnnotImpl) annotImpl;
-                CPDFSquareAnnotation squareAnnotation = squareAnnot.onGetAnnotation();
+                CPDFSquareAnnotation squareAnnotation = (CPDFSquareAnnotation) squareAnnot.onGetAnnotation();
                 squareAnnotation.setBorderColor(style.getLineColor());
                 squareAnnotation.setBorderAlpha(style.getLineColorOpacity());
                 squareAnnotation.setFillColor(style.getFillColor());
                 squareAnnotation.setFillAlpha(style.getFillColorOpacity());
                 squareAnnotation.setBorderStyle(style.getBorderStyle());
-                squareAnnotation.setBorderWidth(style.getBorderWidth());
+                if (style.getBordEffectType() != squareAnnotation.getBordEffectType()){
+                    squareAnnotation.setBordEffectType(style.getBordEffectType());
+                }
                 squareAnnotation.updateAp();
                 annotImpl.onAnnotAttrChange();
                 pageView.invalidate();
             } else if (annotImpl instanceof CPDFCircleAnnotImpl) {
                 CPDFCircleAnnotImpl circleAnnot = (CPDFCircleAnnotImpl) annotImpl;
-                CPDFCircleAnnotation circleAnnotation = circleAnnot.onGetAnnotation();
+                CPDFCircleAnnotation circleAnnotation = (CPDFCircleAnnotation) circleAnnot.onGetAnnotation();
                 circleAnnotation.setBorderColor(style.getLineColor());
                 circleAnnotation.setBorderAlpha(style.getLineColorOpacity());
                 circleAnnotation.setFillColor(style.getFillColor());
                 circleAnnotation.setFillAlpha(style.getFillColorOpacity());
                 circleAnnotation.setBorderStyle(style.getBorderStyle());
-                circleAnnotation.setBorderWidth(style.getBorderWidth());
+                if (style.getBordEffectType() != circleAnnotation.getBordEffectType()){
+                    circleAnnotation.setBordEffectType(style.getBordEffectType());
+                }
                 circleAnnotation.updateAp();
                 annotImpl.onAnnotAttrChange();
                 pageView.invalidate();
@@ -104,7 +106,6 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 lineAnnotation.setFillColor(style.getFillColor());
                 lineAnnotation.setFillAlpha(style.getFillColorOpacity());
                 lineAnnotation.setBorderStyle(style.getBorderStyle());
-                lineAnnotation.setBorderWidth(style.getBorderWidth());
                 lineAnnotation.setLineType(style.getStartLineType(), style.getTailLineType());
                 lineAnnotation.updateAp();
                 annotImpl.onAnnotAttrChange();
@@ -157,35 +158,37 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 break;
             case ANNOT_SQUARE:
                 CPDFSquareAnnotImpl squareAnnot = (CPDFSquareAnnotImpl) annotImpl;
-                CPDFSquareAnnotation squareAnnotation = squareAnnot.onGetAnnotation();
+                CPDFSquareAnnotation squareAnnotation = (CPDFSquareAnnotation) squareAnnot.onGetAnnotation();
                 style.setBorderColor(squareAnnotation.getBorderColor());
                 style.setLineColorOpacity(squareAnnotation.getBorderAlpha());
                 style.setFillColor(squareAnnotation.getFillColor());
                 style.setFillColorOpacity(squareAnnotation.getFillAlpha());
                 style.setBorderWidth(squareAnnotation.getBorderWidth());
+                style.setBordEffectType(squareAnnotation.getBordEffectType());
                 CPDFBorderStyle borderStyle = squareAnnotation.getBorderStyle();
                 if (borderStyle == null){
                     borderStyle = new CPDFBorderStyle();
                 }
                 if (borderStyle.getDashArr() == null || borderStyle.getDashArr().length < 2) {
-                    borderStyle.setDashArr(new float[]{8F, 0F});
+                    borderStyle.setDashArr(new float[]{});
                 }
                 style.setBorderStyle(borderStyle);
                 break;
             case ANNOT_CIRCLE:
                 CPDFCircleAnnotImpl circleAnnot = (CPDFCircleAnnotImpl) annotImpl;
-                CPDFCircleAnnotation circleAnnotation = circleAnnot.onGetAnnotation();
+                CPDFCircleAnnotation circleAnnotation = (CPDFCircleAnnotation) circleAnnot.onGetAnnotation();
                 style.setBorderColor(circleAnnotation.getBorderColor());
                 style.setLineColorOpacity(circleAnnotation.getBorderAlpha());
                 style.setFillColor(circleAnnotation.getFillColor());
                 style.setFillColorOpacity(circleAnnotation.getFillAlpha());
                 style.setBorderWidth(circleAnnotation.getBorderWidth());
+                style.setBordEffectType(circleAnnotation.getBordEffectType());
                 CPDFBorderStyle circleBorderStyle = circleAnnotation.getBorderStyle();
                 if (circleBorderStyle == null){
                     circleBorderStyle = new CPDFBorderStyle();
                 }
                 if (circleBorderStyle.getDashArr() == null || circleBorderStyle.getDashArr().length < 2) {
-                    circleBorderStyle.setDashArr(new float[]{8F, 0F});
+                    circleBorderStyle.setDashArr(new float[]{});
                 }
                 style.setBorderStyle(circleBorderStyle);
                 break;
@@ -203,7 +206,7 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                     lineBorderStyle = new CPDFBorderStyle();
                 }
                 if (lineBorderStyle.getDashArr() == null || lineBorderStyle.getDashArr().length < 2) {
-                    lineBorderStyle.setDashArr(new float[]{8F, 0F});
+                    lineBorderStyle.setDashArr(new float[]{});
                 }
                 style.setBorderStyle(lineBorderStyle);
                 style.setStartLineType(lineAnnotation.getLineHeadType());

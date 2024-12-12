@@ -78,7 +78,10 @@ public class CPDFEditReplyDialogFragment extends CBasicBottomSheetDialogFragment
     toolBar = rootView.findViewById(R.id.tool_bar);
     editText = rootView.findViewById(R.id.tv_reply_content);
     btnDone = rootView.findViewById(R.id.btn_save);
-    toolBar.setBackBtnClickListener(v -> dismiss());
+    toolBar.setBackBtnClickListener(v -> {
+      CViewUtils.hideKeyboard(editText);
+      dismiss();
+    });
     btnDone.setOnClickListener(v -> {
       CViewUtils.hideKeyboard(editText);
       editText.postDelayed(()->{

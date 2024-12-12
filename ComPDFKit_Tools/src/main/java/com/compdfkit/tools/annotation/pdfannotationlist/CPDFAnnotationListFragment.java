@@ -183,8 +183,9 @@ public class CPDFAnnotationListFragment extends Fragment {
      */
     public void showAnnotationMenu(View anchorView) {
         CPopupMenuWindow menuWindow = new CPopupMenuWindow(getContext());
+        boolean hasAnnotations = !listAdapter.list.isEmpty();
         menuWindow.addItem(R.string.tools_import_annotations, v -> importAnnotFileLauncher.launch(CFileUtils.getIntent("application/octet-stream")));
-        menuWindow.addItem(R.string.tools_export_annotations, v -> {
+        menuWindow.addItem(R.string.tools_export_annotations,hasAnnotations,  v -> {
             // Select the directory to export the annotation files
             String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
             CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(dirPath, getString(R.string.tools_saving_path), getString(R.string.tools_okay));
@@ -197,8 +198,8 @@ public class CPDFAnnotationListFragment extends Fragment {
             });
             directoryDialog.show(getChildFragmentManager(), "dirDialog");
         });
-        menuWindow.addItem(R.string.tools_delete_all_annotations, v -> deleteAllAnnotations());
-        menuWindow.addItem(R.string.tools_delete_all_replies, v -> {
+        menuWindow.addItem(R.string.tools_delete_all_annotations, hasAnnotations, v -> deleteAllAnnotations());
+        menuWindow.addItem(R.string.tools_delete_all_replies,hasAnnotations,  v -> {
             CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
             CPDFAnnotDatas.removeAllAnnotationReply(document);
             updateAnnotationList();

@@ -133,7 +133,7 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
         } else if (!ivEditText.isSelected() && ivEditImage.isSelected()) {
             pdfView.getCPdfReaderView().getEditManager().changeEditType(CPDFEditPage.LoadImage);
         } else if (!ivEditText.isSelected() && !ivEditImage.isSelected()) {
-            pdfView.getCPdfReaderView().getEditManager().changeEditType(CPDFEditPage.LoadTextImage);
+            pdfView.getCPdfReaderView().getEditManager().changeEditType(CPDFEditPage.LoadTextImage | CPDFEditPage.LoadPath);
         }
     }
 
@@ -222,7 +222,7 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
             }
         });
         if (beginedit) {
-            editManager.beginEdit(CPDFEditPage.LoadTextImage);
+            editManager.beginEdit(CPDFEditPage.LoadTextImage | CPDFEditPage.LoadPath);
         }
     }
 

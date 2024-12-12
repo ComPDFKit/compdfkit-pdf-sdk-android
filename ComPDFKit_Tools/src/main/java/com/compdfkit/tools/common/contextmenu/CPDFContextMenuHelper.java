@@ -44,6 +44,7 @@ import com.compdfkit.tools.common.contextmenu.impl.ComboBoxContextMenuView;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuCheckBoxProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuComboBoxProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditImageProvider;
+import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditPathProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditTextProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuFormSignProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuFreeTextProvider;
@@ -212,6 +213,15 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
             return helperParams.editImageProvider.createEditImageAreaContentView(this, pageView,area);
         }
         return super.getEditImageAreaContentView(pageView, layoutInflater, area);
+    }
+
+    @Override
+    public View getEditPathAreaContentView(final CPDFPageView pageView, LayoutInflater layoutInflater) {
+        this.pageView = pageView;
+        if (helperParams.editPathProvider != null) {
+            return helperParams.editPathProvider.createEditPathAreaContentView(this, pageView, null);
+        }
+        return super.getEditImageAreaContentView(pageView, layoutInflater, null);
     }
 
     @Override
@@ -432,6 +442,11 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
 
         public Builder setEditImageContentMenu(ContextMenuEditImageProvider editImageProvider){
             this.params.editImageProvider = editImageProvider;
+            return this;
+        }
+
+        public Builder setEditPathContentMenu(ContextMenuEditPathProvider editPathProvider){
+            this.params.editPathProvider = editPathProvider;
             return this;
         }
 

@@ -15,6 +15,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
+import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.edit.CPDFEditTextArea;
@@ -43,6 +44,7 @@ import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 
+import java.util.Arrays;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -130,6 +132,7 @@ public class CPDFConfigurationUtils {
             }
         }
         toolbarConfig.availableMenus = menuActionList;
+        toolbarConfig.mainToolbarVisible = jsonObject.optBoolean("mainToolbarVisible", true);
         return toolbarConfig;
     }
 
@@ -174,6 +177,14 @@ public class CPDFConfigurationUtils {
         readerViewConfig.pageSpacing = jsonObject.optInt("pageSpacing", 10);
         readerViewConfig.pageScale = Math.max((float) jsonObject.optDouble("pageScale", 1.0), 1.0F);
         readerViewConfig.pageSameWidth = jsonObject.optBoolean("pageSameWidth", true);
+        JSONArray marginsJsonArray = jsonObject.optJSONArray("margins");
+        if (marginsJsonArray != null && marginsJsonArray.length() == 4) {
+            int left = marginsJsonArray.optInt(0, 0);
+            int top = marginsJsonArray.optInt(1, 0);
+            int right = marginsJsonArray.optInt(2, 0);
+            int bottom = marginsJsonArray.optInt(3, 0);
+            readerViewConfig.margins = new ArrayList<>(Arrays.asList(left, top, right, bottom));
+        }
         return readerViewConfig;
     }
 
@@ -342,6 +353,12 @@ public class CPDFConfigurationUtils {
                     }
                     shapeBorderStyle.dashGap = (float) borderStyleJsonObject.optDouble("dashGap", 0.0);
                     shapeAttr.setBorderStyle(shapeBorderStyle);
+                }
+                String bordEffectType = annotJsonObject.optString("bordEffectType", "solid");
+                if ("solid".equals(bordEffectType)){
+                    shapeAttr.setBorderEffectType(CPDFAnnotation.CPDFBorderEffectType.CPDFBorderEffectTypeSolid);
+                }else {
+                    shapeAttr.setBorderEffectType(CPDFAnnotation.CPDFBorderEffectType.CPDFBorderEffectTypeCloudy);
                 }
                 String startLineType = annotJsonObject.optString("startLineType", AnnotShapeAttr.AnnotLineType.None.name());
                 shapeAttr.setStartLineType(AnnotShapeAttr.AnnotLineType.fromString(startLineType));

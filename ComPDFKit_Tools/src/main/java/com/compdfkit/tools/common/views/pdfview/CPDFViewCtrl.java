@@ -202,7 +202,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
 
     private void initCPDFReaderView() {
-        cPdfReaderView = new com.compdfkit.ui.reader.CPDFReaderView(getContext());
+        cPdfReaderView = new CPDFReaderView(getContext());
         cPdfReaderView.setDoublePageMode(false);
         cPdfReaderView.setReaderViewCallback(this);
         cPdfReaderView.setOnFocusedTypeChangedListener(this);
@@ -593,12 +593,12 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
             return;
         }
         removeView(indicatorView);
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         layoutParams.startToStart = LayoutParams.PARENT_ID;
         layoutParams.endToEnd = LayoutParams.PARENT_ID;
         layoutParams.bottomToBottom = LayoutParams.PARENT_ID;
         int margin = CDimensUtils.dp2px(getContext(), 16);
-        layoutParams.setMargins(margin, 0, 0, pageIndicatorMarginBottom);
+        layoutParams.setMargins(margin, 0, margin, pageIndicatorMarginBottom);
         indicatorView.setLayoutParams(layoutParams);
         indicatorView.setAlpha(0F);
         addView(indicatorView);

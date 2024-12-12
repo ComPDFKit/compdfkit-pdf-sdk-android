@@ -12,6 +12,7 @@ package com.compdfkit.tools.common.views.pdfproperties.pdfstyle;
 
 import android.net.Uri;
 
+import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
@@ -173,6 +174,21 @@ public class CBasicOnStyleChangeListener  implements CAnnotStyle.OnAnnotStyleCha
 
     @Override
     public void onChangeSignFieldsBorderStyle(CPDFWidget.BorderStyle borderStyle) {
+
+    }
+
+    @Override
+    public void onChangeShapeBordEffectType(CPDFAnnotation.CPDFBorderEffectType type) {
+
+    }
+
+    @Override
+    public void onChangeEditTextStrikeThrough(boolean addStrikeThrough) {
+
+    }
+
+    @Override
+    public void onChangeEditTextUnderline(boolean addUnderline) {
 
     }
 }

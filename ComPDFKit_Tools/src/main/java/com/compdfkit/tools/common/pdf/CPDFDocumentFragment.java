@@ -172,7 +172,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             if (readerView != null && readerView.getContextMenuShowListener() != null) {
                 readerView.getContextMenuShowListener().dismissContextMenu();
             }
-            this.documentUri = uri;
             CFileUtils.takeUriPermission(getContext(), uri);
             pdfView.resetAnnotationType();
             formToolBar.reset();
@@ -242,6 +241,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         formToolBar = rootView.findViewById(R.id.form_tool_bar);
         signatureToolBar = rootView.findViewById(R.id.signature_tool_bar);
         blockView = rootView.findViewById(R.id.block_view);
+        CPDFApplyConfigUtil.getInstance().appleUiConfig(this, cpdfConfiguration);
         return rootView;
     }
 
@@ -270,12 +270,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             String password = getArguments().getString(EXTRA_FILE_PASSWORD);
             if (!TextUtils.isEmpty(getArguments().getString(EXTRA_FILE_PATH))) {
                 String path = getArguments().getString(EXTRA_FILE_PATH);
-                documentPath = path;
                 pdfView.openPDF(path, password, callback);
             } else if (getArguments().getParcelable(EXTRA_FILE_URI) != null) {
                 Uri uri = getArguments().getParcelable(EXTRA_FILE_URI);
                 CFileUtils.takeUriPermission(getContext(), uri);
-                documentUri = uri;
                 pdfView.openPDF(uri, password, callback);
             }
         }
@@ -286,10 +284,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         pdfView.getCPdfReaderView().setMinScaleEnable(false);
         registerAnnotHelper(pdfView);
         registerFormHelper(pdfView);
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(ContextCompat.getColor(getContext(), R.color.tools_color_accent_50));
-        pdfView.getCPdfReaderView().setFormPreviewPaint(paint);
         pdfView.addOnPDFFocusedTypeChangeListener(type -> {
             if (type != CPDFAnnotation.Type.INK) {
                 if (inkCtrlView.getVisibility() == View.VISIBLE) {
@@ -310,6 +304,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 if (!cpdfConfiguration.modeConfig.readerOnly) {
                     //Use the CFillScreenManager.class to manage fullscreen switching.
                     screenManager.fillScreenChange();
+                    CPDFReaderView readerView = pdfView.getCPdfReaderView();
+                    if (!readerView.isContinueMode() && CViewUtils.isLandScape(getContext()) && !readerView.isVerticalMode()){
+                        readerView.postDelayed(()->{
+                            readerView.setScale(1F);
+                        }, 200);
+                    }
                 }
             }
 
@@ -321,12 +321,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             }
         });
         pdfView.getCPdfReaderView().setPdfAddAnnotCallback((cpdfPageView, cpdfBaseAnnot) -> {
-            CLog.e("ComPDFKit", "Add Annot Callback- type:" + cpdfBaseAnnot.getAnnotType().name());
             CPDFAnnotation annotation = cpdfBaseAnnot.onGetAnnotation();
             annotation.setTitle(cpdfConfiguration.annotationsConfig.annotationAuthor);
             annotation.updateAp();
 
-            CLog.e("ComPDFKit", "Add Annot Callback- setTitle:" + annotation.getTitle());
             // Annotation creation completed listener, you can use cpdfBaseAnnot.getAnnotType() to determine the type of the added annotation
             if (cpdfBaseAnnot instanceof CPDFListboxWidgetImpl) {
                 // When the ListBox form is created, display an editing dialog for adding list data
@@ -366,7 +364,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             readerView.setViewMode(CPDFReaderView.ViewMode.PDFEDIT);
             if (editManager != null && !editManager.isEditMode()) {
                 editManager.enable();
-                editManager.beginEdit(CPDFEditPage.LoadTextImage);
+                editManager.beginEdit(CPDFEditPage.LoadTextImage | CPDFEditPage.LoadPath);
             }
         } else {
 
@@ -404,7 +402,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                         });
                         break;
                     case Thumbnail:
-                        pdfToolBar.addAction(R.drawable.tools_ic_thumbnail, v -> showPageEdit(pdfView, false, () -> restoreEdit()));
+                        pdfToolBar.addAction(R.drawable.tools_ic_thumbnail, v -> {
+                            showPageEdit(pdfView, false, () -> restoreEdit());
+//                            CLog.e("ComPDFKit", "hasChanged:" + pdfView.getCPdfReaderView().getPDFDocument().hasChanges());
+                        });
                         break;
                     case Search:
                         pdfToolBar.addAction(R.drawable.tools_ic_search, v -> {
@@ -546,14 +547,20 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         }
         editToolBar.initWithPDFView(pdfView);
         editToolBar.setEditMode(false);
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(ContextCompat.getColor(getContext(), R.color.tools_color_accent_50));
+
         CPDFEditConfig editConfig = pdfView.getCPdfReaderView()
                 .getEditManager()
                 .getEditConfigBuilder()
                 .setScreenshotRectColor(Color.TRANSPARENT)
                 .setScreenshotBorderColor(ContextCompat.getColor(getContext(), R.color.tools_color_accent))
                 .setScreenshotBorderDash(new float[]{8.0F, 4F})
+                .setFormPreviewPaint(paint)
+                .setRotateAnnotationDrawableRes(R.drawable.tools_rotate)
                 .build();
-
         pdfView.getCPdfReaderView().getEditManager().updateEditConfig(editConfig);
 
         editToolBar.setEditPropertyBtnClickListener((view) -> {
@@ -882,10 +889,20 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        boolean pageSameWidth = cpdfConfiguration.readerViewConfig.pageSameWidth;
+        CPDFReaderView readerView = pdfView.getCPdfReaderView();
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             pdfSearchToolBarView.showSearchReplaceContextMenu();
+            if (pageSameWidth && !readerView.isContinueMode()){
+                readerView.setPageSameWidth(false);
+                readerView.invalidateAllChildren();
+            }
         } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             pdfSearchToolBarView.showSearchReplaceContextMenu();
+            if (!readerView.isContinueMode()){
+                readerView.setPageSameWidth(pageSameWidth);
+                readerView.invalidateAllChildren();
+            }
         }
     }
 
@@ -904,7 +921,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             CPDFEditManager editManager = readerView.getEditManager();
             if (editManager != null && !editManager.isEditMode()) {
                 editManager.enable();
-                editManager.beginEdit(CPDFEditPage.LoadTextImage);
+                editManager.beginEdit(CPDFEditPage.LoadTextImage | CPDFEditPage.LoadPath);
             }
         }else {
             readerView.setTouchMode(CPDFReaderView.TouchMode.BROWSE);

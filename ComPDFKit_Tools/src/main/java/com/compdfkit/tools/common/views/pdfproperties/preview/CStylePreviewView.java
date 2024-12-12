@@ -11,6 +11,7 @@ package com.compdfkit.tools.common.views.pdfproperties.preview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.compdfkit.core.annotation.CPDFAnnotation.CPDFBorderEffectType;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
@@ -151,6 +153,18 @@ public class CStylePreviewView extends FrameLayout {
         }
     }
 
+    public void setImage(Bitmap bitmap){
+        if (previewView != null){
+            previewView.setImage(bitmap);
+        }
+    }
+
+    public void setBorderEffectType(CPDFBorderEffectType effectType){
+        if (previewView != null){
+            previewView.setBorderEffectType(effectType);
+        }
+    }
+
     private void updatePreview() {
         removeAllViews();
         previewView = null;
@@ -176,13 +190,13 @@ public class CStylePreviewView extends FrameLayout {
             case ANNOT_SQUARE:
                 previewView = new CAnnotShapePreviewView(getContext());
                 previewView.setShapeType(CAnnotShapePreviewView.CShapeView.ShapeType.SQUARE);
-                layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CDimensUtils.dp2px(getContext(), 30));
+                layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CDimensUtils.dp2px(getContext(), 50));
                 layoutParams.gravity = Gravity.CENTER;
                 break;
             case ANNOT_CIRCLE:
                 previewView = new CAnnotShapePreviewView(getContext());
                 previewView.setShapeType(CAnnotShapePreviewView.CShapeView.ShapeType.CIRCLE);
-                layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CDimensUtils.dp2px(getContext(), 40));
+                layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CDimensUtils.dp2px(getContext(), 60));
                 layoutParams.gravity = Gravity.CENTER;
                 break;
             case ANNOT_LINE:
@@ -211,9 +225,10 @@ public class CStylePreviewView extends FrameLayout {
                 break;
             case EDIT_IMAGE:
                 previewView = new CEditImagePreviewView(getContext());
-                int editImageSize = CDimensUtils.dp2px(getContext(), 50);
-                layoutParams = new LayoutParams(editImageSize,editImageSize);
+                layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 layoutParams.gravity = Gravity.CENTER;
+                int margin = CDimensUtils.dp2px(getContext(), 4);
+                layoutParams.setMargins(margin, margin,margin,margin);
                 previewView.setLayoutParams(layoutParams);
                 break;
             default:

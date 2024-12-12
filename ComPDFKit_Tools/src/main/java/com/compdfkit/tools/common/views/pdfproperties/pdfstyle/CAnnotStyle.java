@@ -10,6 +10,7 @@
 package com.compdfkit.tools.common.views.pdfproperties.pdfstyle;
 
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
@@ -100,6 +102,14 @@ public class CAnnotStyle implements Serializable {
     private CPDFWidget.CheckStyle checkStyle = CPDFWidget.CheckStyle.CK_Check;
 
     private CPDFWidget.BorderStyle signFieldsBorderStyle = CPDFWidget.BorderStyle.BS_Solid;
+
+    private CPDFAnnotation.CPDFBorderEffectType bordEffectType = CPDFAnnotation.CPDFBorderEffectType.CPDFBorderEffectTypeSolid;
+
+    private boolean editTextUnderLine = false;
+
+    private boolean editTextStrikeThrough = false;
+
+    private transient Bitmap editImageBitmap;
 
     private List<OnAnnotStyleChangeListener> styleChangeListenerList = new ArrayList<>();
 
@@ -441,6 +451,29 @@ public class CAnnotStyle implements Serializable {
         return checkStyle;
     }
 
+    public void setEditTextUnderLine(boolean editTextUnderLine) {
+        this.editTextUnderLine = editTextUnderLine;
+        setUpdatePropertyType(EditUpdatePropertyType.UnderLine);
+        updateEditTextUnderLine(editTextUnderLine);
+        setUpdatePropertyType(EditUpdatePropertyType.All);
+
+    }
+
+    public boolean isEditTextUnderLine() {
+        return editTextUnderLine;
+    }
+
+    public void setEditTextStrikeThrough(boolean editTextStrikeThrough) {
+        this.editTextStrikeThrough = editTextStrikeThrough;
+        setUpdatePropertyType(EditUpdatePropertyType.StrikeThrough);
+        updateEditTextStrikeThrough(editTextStrikeThrough);
+        setUpdatePropertyType(EditUpdatePropertyType.All);
+    }
+
+    public boolean isEditTextStrikeThrough() {
+        return editTextStrikeThrough;
+    }
+
     public void setChecked(boolean checked) {
         boolean update = checked != this.isChecked;
         isChecked = checked;
@@ -470,6 +503,24 @@ public class CAnnotStyle implements Serializable {
 
     public CPDFWidget.BorderStyle getSignFieldsBorderStyle() {
         return signFieldsBorderStyle;
+    }
+
+    public CPDFAnnotation.CPDFBorderEffectType getBordEffectType() {
+        return bordEffectType;
+    }
+
+    public void setBordEffectType(CPDFAnnotation.CPDFBorderEffectType bordEffectType) {
+        boolean update = this.bordEffectType != bordEffectType;
+        this.bordEffectType = bordEffectType;
+        updateShapeBordEffectType(bordEffectType, update);
+    }
+
+    public Bitmap getEditImageBitmap() {
+        return editImageBitmap;
+    }
+
+    public void setEditImageBitmap(Bitmap editImageBitmap) {
+        this.editImageBitmap = editImageBitmap;
     }
 
     @NonNull
@@ -502,8 +553,11 @@ public class CAnnotStyle implements Serializable {
                 "formDefaultValue" + formDefaultValue + "," +
                 "hideForm" + hideForm + "," +
                 "formMultiLine" + formMultiLine + "," +
-                "customExtraMap" + customExtraMap.toString() +
-                "signFieldsBorderStyle" + (signFieldsBorderStyle != null ? signFieldsBorderStyle.name() : "empty");
+                "customExtraMap" + customExtraMap.toString() + "," +
+                "signFieldsBorderStyle" + (signFieldsBorderStyle != null ? signFieldsBorderStyle.name() : "empty") + "," +
+                "bordEffectType" + bordEffectType + "," +
+                "editTextUnderLine" + editTextUnderLine + "," +
+                "editTextStrikeThrough" + editTextStrikeThrough+ "}";
     }
 
     @Override
@@ -532,6 +586,7 @@ public class CAnnotStyle implements Serializable {
         result = 31 * result + (this.formDefaultValue != null ? this.formDefaultValue.hashCode() : 0);
         result = 31 * result + (this.customExtraMap != null ? this.customExtraMap.hashCode() : 0);
         result = 31 * result + (this.signFieldsBorderStyle != null ? this.signFieldsBorderStyle.hashCode() : 0);
+        result = 31 * result + (this.bordEffectType != null ? this.bordEffectType.hashCode() : 0);
         return result;
     }
 
@@ -883,6 +938,30 @@ public class CAnnotStyle implements Serializable {
         }
     }
 
+    private void updateShapeBordEffectType(CPDFAnnotation.CPDFBorderEffectType bordEffectType, boolean update){
+        if (styleChangeListenerList != null && update) {
+            for (OnAnnotStyleChangeListener onAnnotStyleChangeListener : styleChangeListenerList) {
+                onAnnotStyleChangeListener.onChangeShapeBordEffectType(bordEffectType);
+            }
+        }
+    }
+
+    private void updateEditTextUnderLine(boolean addUnderLine) {
+        if (styleChangeListenerList != null) {
+            for (OnAnnotStyleChangeListener onAnnotStyleChangeListener : styleChangeListenerList) {
+                onAnnotStyleChangeListener.onChangeEditTextUnderline(addUnderLine);
+            }
+        }
+    }
+
+    private void updateEditTextStrikeThrough(boolean addStrikeThrough) {
+        if (styleChangeListenerList != null) {
+            for (OnAnnotStyleChangeListener onAnnotStyleChangeListener : styleChangeListenerList) {
+                onAnnotStyleChangeListener.onChangeEditTextStrikeThrough(addStrikeThrough);
+            }
+        }
+    }
+
     public void addStyleChangeListener(OnAnnotStyleChangeListener styleChangeListener) {
         this.styleChangeListenerList.add(styleChangeListener);
     }
@@ -965,6 +1044,12 @@ public class CAnnotStyle implements Serializable {
         void onChangeExtraMap(Map<String, Object> extraMap);
 
         void onChangeSignFieldsBorderStyle(CPDFWidget.BorderStyle borderStyle);
+
+        void onChangeShapeBordEffectType(CPDFAnnotation.CPDFBorderEffectType type);
+
+        void onChangeEditTextUnderline(boolean addUnderline);
+
+        void onChangeEditTextStrikeThrough(boolean addStrikeThrough);
     }
 
     public void setUpdatePropertyType(EditUpdatePropertyType type) {
@@ -993,7 +1078,9 @@ public class CAnnotStyle implements Serializable {
         Mirror,
         ReplaceImage,
         Export,
-        Crop
+        Crop,
+        UnderLine,
+        StrikeThrough
     }
 
     public enum Mirror{

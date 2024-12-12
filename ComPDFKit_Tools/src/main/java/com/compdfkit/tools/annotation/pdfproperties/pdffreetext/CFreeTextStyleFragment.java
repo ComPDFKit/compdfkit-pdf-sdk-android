@@ -122,13 +122,9 @@ public class CFreeTextStyleFragment extends CBasicPropertiesFragment implements 
         });
         viewModel.addStyleChangeListener(this);
 
-        fontView.setFontChangeListener(new CPDFFontView.CFontChangeListener() {
-
-            @Override
-            public void font(String psName) {
-                if (viewModel != null) {
-                    viewModel.getStyle().setExternFontName(psName);
-                }
+        fontView.setFontChangeListener(psName -> {
+            if (viewModel != null) {
+                viewModel.getStyle().setExternFontName(psName);
             }
         });
     }

@@ -527,4 +527,21 @@
 
     <string name="tools_exit">Exit</string>
 
+<!--    v2.2.0 -->
+    <string name="tools_style_title">Style</string>
+    <string name="tools_line_type">Line and Border Style</string>
+    <string name="tools_compress">Compress</string>
+    <string name="tools_selected_file">Selected File</string>
+    <string name="tools_compress_quality">Compress Quality</string>
+    <string name="tools_change">Change</string>
+    <string name="tools_low_quality">Low Quality</string>
+    <string name="tools_standard_quality">Standard Quality</string>
+    <string name="tools_high_quality">High Quality</string>
+    <string name="tools_custom_quality">Custom</string>
+    <string name="tools_please_enter_percentage">Please enter percentage</string>
+    <string name="tools_save_path">Saving Path</string>
+    <string name="tools_compressed_successfully">Compressed successfully!</string>
+    <string name="compressing_">Compressing&#8230;</string>
+
+
 </resources>

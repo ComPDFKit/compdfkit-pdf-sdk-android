@@ -55,6 +55,11 @@ public class CStampContextMenuView implements ContextMenuStampProvider {
             pageView.deleteAnnotation(stampAnnotImpl);
             helper.dismissContextMenu();
         });
+        menuView.addItem(R.string.tools_edit_image_property_rotate, v -> {
+            stampAnnotImpl.setEnableRotate(true);
+            pageView.invalidate();
+            helper.dismissContextMenu();
+        });
         return menuView;
     }
 }

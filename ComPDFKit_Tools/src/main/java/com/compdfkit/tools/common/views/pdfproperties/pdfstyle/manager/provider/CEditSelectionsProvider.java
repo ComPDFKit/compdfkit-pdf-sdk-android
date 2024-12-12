@@ -53,45 +53,79 @@ public class CEditSelectionsProvider implements CStyleProvider {
             if (selections instanceof CPDFEditTextSelections && style.getType() == CStyleType.EDIT_TEXT) {
                 CPDFEditTextSelections textSelections = (CPDFEditTextSelections) selections;
                 CAnnotStyle.EditUpdatePropertyType type = style.getUpdatePropertyType();
-                if (type == CAnnotStyle.EditUpdatePropertyType.FontSize) {
-                    textSelections.setFontSize(style.getFontSize());
-                } else if (type == CAnnotStyle.EditUpdatePropertyType.TextColor) {
-                    textSelections.setColor(style.getTextColor());
-                } else if (type == CAnnotStyle.EditUpdatePropertyType.TextColorOpacity) {
-                    textSelections.setTransparancy(style.getTextColorOpacity());
-                } else if (type == CAnnotStyle.EditUpdatePropertyType.Italic) {
-                    textSelections.setItalic(style.isFontItalic());
-                } else if (type == CAnnotStyle.EditUpdatePropertyType.Bold) {
-                    textSelections.setBold(style.isFontBold());
-                } else if (type == CAnnotStyle.EditUpdatePropertyType.Alignment) {
-                    CAnnotStyle.Alignment align = style.getAlignment();
-                    if (align == CAnnotStyle.Alignment.LEFT) {
-                        textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignLeft);
-                    } else if (align == CAnnotStyle.Alignment.CENTER) {
-                        textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignMiddle);
-                    } else if (align == CAnnotStyle.Alignment.RIGHT) {
-                        textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignRight);
-                    }
-                } else if (type == CAnnotStyle.EditUpdatePropertyType.FontType) {
-                    textSelections.setFontName(getAnnotStyleFontName(style));
-                    textSelections.setBold(style.isFontBold());
-                    textSelections.setItalic(style.isFontItalic());
+                switch (type){
+                    case FontSize:
+                        textSelections.setFontSize(style.getFontSize());
+                        break;
+                    case TextColor:
+                        textSelections.setColor(style.getTextColor());
+                        break;
+                    case TextColorOpacity:
+                        textSelections.setTransparancy(style.getTextColorOpacity());
+                        break;
+                    case Italic:
+                        textSelections.setItalic(style.isFontItalic());
+                        break;
+                    case Bold:
+                        textSelections.setBold(style.isFontBold());
+                        break;
+                    case Alignment:
+                        CAnnotStyle.Alignment align = style.getAlignment();
+                        if (align == CAnnotStyle.Alignment.LEFT) {
+                            textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignLeft);
+                        } else if (align == CAnnotStyle.Alignment.CENTER) {
+                            textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignMiddle);
+                        } else if (align == CAnnotStyle.Alignment.RIGHT) {
+                            textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignRight);
+                        }
+                        break;
 
-                } else {
-                    textSelections.setColor(style.getTextColor());
-                    textSelections.setTransparancy(style.getTextColorOpacity());
-                    textSelections.setBold(style.isFontBold());
-                    textSelections.setItalic(style.isFontItalic());
-                    textSelections.setFontSize(style.getFontSize());
-                    CAnnotStyle.Alignment align = style.getAlignment();
-                    if (align == CAnnotStyle.Alignment.LEFT) {
-                        textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignLeft);
-                    } else if (align == CAnnotStyle.Alignment.CENTER) {
-                        textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignMiddle);
-                    } else if (align == CAnnotStyle.Alignment.RIGHT) {
-                        textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignRight);
-                    }
-                    textSelections.setFontName(getAnnotStyleFontName(style));
+                    case FontType:
+                        textSelections.setFontName(getAnnotStyleFontName(style));
+                        textSelections.setBold(style.isFontBold());
+                        textSelections.setItalic(style.isFontItalic());
+                        break;
+
+                    case UnderLine:
+                        if (style.isEditTextUnderLine()){
+                            textSelections.addUnderline();
+                        }else {
+                            textSelections.removeUnderline();
+                        }
+                        break;
+                    case StrikeThrough:
+                        if (style.isEditTextStrikeThrough()){
+                            textSelections.addStrikethrough();
+                        }else {
+                            textSelections.removeStrikethrough();
+                        }
+                        break;
+                    default:
+                        textSelections.setColor(style.getTextColor());
+                        textSelections.setTransparancy(style.getTextColorOpacity());
+                        textSelections.setBold(style.isFontBold());
+                        textSelections.setItalic(style.isFontItalic());
+                        textSelections.setFontSize(style.getFontSize());
+                        CAnnotStyle.Alignment align1 = style.getAlignment();
+                        if (align1 == CAnnotStyle.Alignment.LEFT) {
+                            textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignLeft);
+                        } else if (align1 == CAnnotStyle.Alignment.CENTER) {
+                            textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignMiddle);
+                        } else if (align1 == CAnnotStyle.Alignment.RIGHT) {
+                            textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignRight);
+                        }
+                        textSelections.setFontName(getAnnotStyleFontName(style));
+                        if (style.isEditTextUnderLine()){
+                            textSelections.addUnderline();
+                        }else {
+                            textSelections.removeUnderline();
+                        }
+                        if (style.isEditTextStrikeThrough()){
+                            textSelections.addStrikethrough();
+                        }else {
+                            textSelections.removeStrikethrough();
+                        }
+                        break;
                 }
             } else if (style.getType() == CStyleType.EDIT_IMAGE) {
                 CAnnotStyle.EditUpdatePropertyType updatePropertyType = style.getUpdatePropertyType();
@@ -174,8 +208,10 @@ public class CEditSelectionsProvider implements CStyleProvider {
         } else if (style.getType() == CStyleType.EDIT_IMAGE) {
             CPDFEditArea editArea = pageView.getCurrentEditArea();
             if (editArea != null && editArea instanceof CPDFEditImageArea) {
-                float transparency = ((CPDFEditImageArea)editArea).getTransparency();
+                CPDFEditImageArea editImageArea = (CPDFEditImageArea) editArea;
+                float transparency = editImageArea.getTransparency();
                 style.setOpacity((int) transparency);
+                style.setEditImageBitmap(editImageArea.getImage());
             } else {
                 style.setOpacity(255);
             }

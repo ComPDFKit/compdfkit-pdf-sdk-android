@@ -6,40 +6,18 @@
  * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
  * This notice may not be removed from this file.
  */
-
 package com.compdfkit.tools.common.utils.voice;
 
-import android.app.Service;
-import android.content.Intent;
+
 import android.media.MediaPlayer;
-import android.os.Binder;
-import android.os.IBinder;
 import android.text.TextUtils;
 
-import androidx.annotation.Nullable;
-
-public class CMediaPlayService extends Service implements MediaPlayer.OnCompletionListener {
+public class CMediaPlayManager implements MediaPlayer.OnCompletionListener {
     private IMediaPlayConstants iMediaPlayConstants = null;
-    MyBinder mybinder = new MyBinder();
 
-    static MediaPlayer mMediaPlayer = null;
+    MediaPlayer mMediaPlayer = null;
 
-     public class MyBinder extends Binder {
-        public CMediaPlayService service;
-        public CMediaPlayService get() {
-            return CMediaPlayService.this;
-        }
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mybinder;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    public CMediaPlayManager(){
         createPlayer();
     }
 
@@ -50,25 +28,26 @@ public class CMediaPlayService extends Service implements MediaPlayer.OnCompleti
         return mMediaPlayer;
     }
 
-    private void createPlayer() {
-         try {
-             if (mMediaPlayer != null) {
-                 mMediaPlayer.reset();
-                 mMediaPlayer.release();
-                 mMediaPlayer = null;
-             }
-             mMediaPlayer = new MediaPlayer();
-             mMediaPlayer.setOnCompletionListener(this);
-         } catch (Exception e) {
+    private void createPlayer(){
+        try {
+            if (mMediaPlayer != null) {
+                mMediaPlayer.reset();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+            }
+            mMediaPlayer = new MediaPlayer();
+            mMediaPlayer.setOnCompletionListener(this);
+        } catch (Exception e) {
             e.printStackTrace();
-         }
+        }
     }
 
+
     public boolean isPlaying() {
-         if (mMediaPlayer == null) {
-             return false;
-         }
-         return mMediaPlayer.isPlaying();
+        if (mMediaPlayer == null) {
+            return false;
+        }
+        return mMediaPlayer.isPlaying();
     }
 
     public void setMediaPlayConstants(IMediaPlayConstants iMediaPlayConstants) {
@@ -76,21 +55,21 @@ public class CMediaPlayService extends Service implements MediaPlayer.OnCompleti
     }
 
     public void setPlayFile(String path) {
-         try {
-             if(mMediaPlayer != null && !TextUtils.isEmpty(path)) {
-                 mMediaPlayer.reset();
-                 mMediaPlayer.setDataSource(path);
-                 mMediaPlayer.prepare();
-             }
+        try {
+            if(mMediaPlayer != null && !TextUtils.isEmpty(path)) {
+                mMediaPlayer.reset();
+                mMediaPlayer.setDataSource(path);
+                mMediaPlayer.prepare();
+            }
         } catch (Exception e) {
 
-         }
+        }
     }
 
     public void mediaStart() {
-         if (mMediaPlayer != null && !isPlaying()) {
-             mMediaPlayer.start();
-         }
+        if (mMediaPlayer != null && !isPlaying()) {
+            mMediaPlayer.start();
+        }
     }
 
     public void mediaPause() {
@@ -107,14 +86,12 @@ public class CMediaPlayService extends Service implements MediaPlayer.OnCompleti
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-         if (iMediaPlayConstants != null) {
-             iMediaPlayConstants.onCompletion(mediaPlayer);
-         }
+        if (iMediaPlayConstants != null) {
+            iMediaPlayConstants.onCompletion(mediaPlayer);
+        }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroy(){
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
             mMediaPlayer.release();
@@ -122,6 +99,7 @@ public class CMediaPlayService extends Service implements MediaPlayer.OnCompleti
         }
         iMediaPlayConstants = null;
     }
+
 
     public interface IMediaPlayConstants {
         void onCompletion(MediaPlayer mp);

@@ -11,6 +11,7 @@
     ]
   },
   "toolbarConfig": {
+    "mainToolbarVisible" : true,
     "androidAvailableActions": [
       "thumbnail",
       "search",
@@ -98,7 +99,8 @@
         "borderStyle": {
           "style": "solid",
           "dashGap": 0.0
-        }
+        },
+        "bordEffectType":"solid"
       },
       "circle": {
         "fillColor": "#1460F3",
@@ -108,7 +110,8 @@
         "borderStyle": {
           "style": "solid",
           "dashGap": 0.0
-        }
+        },
+        "bordEffectType":"solid"
       },
       "line": {
         "borderColor": "#1460F3",
@@ -255,6 +258,7 @@
     "enableSliderBar": true,
     "enablePageIndicator": true,
     "pageSpacing": 10,
+    "margins" : [0,0,0,0],
     "pageScale": 1.0,
     "pageSameWidth": true
   },

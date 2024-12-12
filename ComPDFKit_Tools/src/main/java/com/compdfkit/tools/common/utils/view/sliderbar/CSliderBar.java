@@ -154,6 +154,13 @@ public class CSliderBar extends FrameLayout implements SeekBar.OnSeekBarChangeLi
         tvTitle.setText(title);
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        seekBar.setEnabled(enabled);
+        sliderBarValueView.setEnabled(enabled);
+    }
+
     private void updateSeekBarValue(int value, boolean stop) {
         int v = value + sliderBarMinValue;
         if (v > sliderBarMaxValue){

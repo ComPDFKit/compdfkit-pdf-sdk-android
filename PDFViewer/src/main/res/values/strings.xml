@@ -69,4 +69,5 @@
     <string name="the_fonts_data_is_saved_with_the_file">The fonts data is saved with the file</string>
     <string name="tools_annotation_author">Annotation Author:</string>
     <string name="tools_default_annotation_author_name">Guest</string>
+    <string name="tools_new">New</string>
 </resources>

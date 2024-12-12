@@ -14,6 +14,8 @@ import android.graphics.Color;
 
 import androidx.annotation.FloatRange;
 
+import com.compdfkit.core.annotation.CPDFAnnotation;
+
 import java.io.Serializable;
 
 public class AnnotShapeAttr extends AnnotAttr {
@@ -33,6 +35,8 @@ public class AnnotShapeAttr extends AnnotAttr {
     private AnnotLineType tailLineType = AnnotLineType.None;
 
     private ShapeBorderStyle borderStyle = new ShapeBorderStyle();
+
+    private CPDFAnnotation.CPDFBorderEffectType borderEffectType = CPDFAnnotation.CPDFBorderEffectType.CPDFBorderEffectTypeSolid;
 
     public String getFillColorHex() {
         return fillColor;
@@ -121,6 +125,14 @@ public class AnnotShapeAttr extends AnnotAttr {
 
     public void setBorderStyle(ShapeBorderStyle borderStyle) {
         this.borderStyle = borderStyle;
+    }
+
+    public void setBorderEffectType(CPDFAnnotation.CPDFBorderEffectType borderEffectType) {
+        this.borderEffectType = borderEffectType;
+    }
+
+    public CPDFAnnotation.CPDFBorderEffectType getBorderEffectType() {
+        return borderEffectType;
     }
 
     public static class ShapeBorderStyle implements Serializable {

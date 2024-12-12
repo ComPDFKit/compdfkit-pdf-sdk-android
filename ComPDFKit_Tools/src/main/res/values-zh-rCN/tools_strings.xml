@@ -516,4 +516,20 @@
     <string name="tools_total">共计%d条</string>
     <string name="tools_reply">回复</string>
     <string name="tools_view_reply">查看回复</string>
+
+    <string name="tools_style_title">效果</string>
+    <string name="tools_line_type">线型</string>
+    <string name="tools_compress">压缩</string>
+    <string name="tools_selected_file">选中文档</string>
+    <string name="tools_compress_quality">压缩质量</string>
+    <string name="tools_change">更换</string>
+    <string name="tools_low_quality">低</string>
+    <string name="tools_standard_quality">标准</string>
+    <string name="tools_high_quality">高</string>
+    <string name="tools_custom_quality">自定义</string>
+    <string name="tools_please_enter_percentage">请输入百分比</string>
+    <string name="tools_save_path">文件存储路径</string>
+    <string name="tools_compressed_successfully">压缩成功</string>
+    <string name="compressing_">正在压缩&#8230;</string>
+
 </resources>

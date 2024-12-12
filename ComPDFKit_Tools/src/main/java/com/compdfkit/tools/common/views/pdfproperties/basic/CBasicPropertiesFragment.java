@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
@@ -224,6 +225,21 @@ public abstract class CBasicPropertiesFragment extends Fragment implements CAnno
 
     @Override
     public void onChangeSignFieldsBorderStyle(CPDFWidget.BorderStyle borderStyle) {
+
+    }
+
+    @Override
+    public void onChangeShapeBordEffectType(CPDFAnnotation.CPDFBorderEffectType type) {
+
+    }
+
+    @Override
+    public void onChangeEditTextStrikeThrough(boolean addStrikeThrough) {
+
+    }
+
+    @Override
+    public void onChangeEditTextUnderline(boolean addUnderline) {
 
     }
 

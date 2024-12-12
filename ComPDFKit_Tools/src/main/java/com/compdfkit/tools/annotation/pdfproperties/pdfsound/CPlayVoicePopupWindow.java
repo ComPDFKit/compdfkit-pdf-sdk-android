@@ -11,13 +11,9 @@ package com.compdfkit.tools.annotation.pdfproperties.pdfsound;
 
 import static java.lang.Thread.sleep;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,12 +27,12 @@ import androidx.fragment.app.FragmentActivity;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
-import com.compdfkit.tools.common.utils.voice.CMediaPlayService;
+import com.compdfkit.tools.common.utils.voice.CMediaPlayManager;
 import com.compdfkit.tools.common.utils.window.CBasePopupWindow;
 
 import java.io.File;
 
-public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPlayService.IMediaPlayConstants {
+public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPlayManager.IMediaPlayConstants {
 
     private Context context;
 
@@ -50,9 +46,7 @@ public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPla
 
     AsyncTask<Void, Void, Boolean> updateTask = null;
 
-    CMediaPlayService mediaPlayService = null;
-
-    boolean boundService = false;
+    private CMediaPlayManager mediaPlayManager;
 
     boolean isPlay = false;
 
@@ -61,40 +55,17 @@ public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPla
     private void setPlayState(boolean play) {
         isPlay = play;
         if (isPlay == true) {
-            if (mediaPlayService != null) {
-                mediaPlayService.mediaStart();
+            if (mediaPlayManager != null) {
+                mediaPlayManager.mediaStart();
                 imageState.setImageResource(R.drawable.tools_ic_record_stop);
             }
         } else {
-            if (mediaPlayService != null) {
-                mediaPlayService.mediaPause();
+            if (mediaPlayManager != null) {
+                mediaPlayManager.mediaPause();
                 imageState.setImageResource(R.drawable.tools_ic_play_arrow);
             }
         }
     }
-
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            boundService = true;
-            mediaPlayService = ((CMediaPlayService.MyBinder) iBinder).get();
-            if (mediaPlayService != null) {
-                mediaPlayService.setMediaPlayConstants(CPlayVoicePopupWindow.this);
-                mediaPlayService.getMediaPlayer().setOnErrorListener((mediaPlayer, i, i1) -> true);
-                mediaPlayService.setPlayFile(voicePath);
-                mediaPlayService.mediaStart();
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            boundService = false;
-            if (mediaPlayService != null) {
-                mediaPlayService.stopSelf();
-            }
-            mediaPlayService = null;
-        }
-    };
 
     public CPlayVoicePopupWindow(Context context, View rootView) {
         super(context);
@@ -131,13 +102,13 @@ public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPla
     protected void onClickListener(View view) {
         int id = view.getId();
         if (id == R.id.id_voice_recording_iv_state) {
-            isPlay = !(mediaPlayService == null ? false : mediaPlayService.isPlaying());
-            if (mediaPlayService != null) {
+            isPlay = !(mediaPlayManager == null ? false : mediaPlayManager.isPlaying());
+            if (mediaPlayManager != null) {
                 if (isPlay) {
-                    mediaPlayService.mediaStart();
+                    mediaPlayManager.mediaStart();
                     imageState.setImageResource(R.drawable.tools_ic_record_stop);
                 } else {
-                    mediaPlayService.mediaPause();
+                    mediaPlayManager.mediaPause();
                     imageState.setImageResource(R.drawable.tools_ic_play_arrow);
                 }
             } else {
@@ -169,8 +140,8 @@ public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPla
                 while (true) {
                     if (mContext instanceof FragmentActivity) {
                         ((FragmentActivity) mContext).runOnUiThread(() -> {
-                            if (mediaPlayService != null && mediaPlayService.getMediaPlayer() != null) {
-                                tvTimeStart.setText(convert(mediaPlayService.getMediaPlayer().getCurrentPosition()) + "");
+                            if (mediaPlayManager != null && mediaPlayManager.getMediaPlayer() != null) {
+                                tvTimeStart.setText(convert(mediaPlayManager.getMediaPlayer().getCurrentPosition()) + "");
                             }
                         });
                     }
@@ -186,11 +157,12 @@ public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPla
     }
 
     public void show() {
-        if (!boundService) {
-            Intent intent = new Intent(mContext, CMediaPlayService.class);
-            mContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-            startUpdateTask();
-        }
+        mediaPlayManager = new CMediaPlayManager();
+        mediaPlayManager.setMediaPlayConstants(this);
+        mediaPlayManager.getMediaPlayer().setOnErrorListener((mediaPlayer, i, i1) -> true);
+        mediaPlayManager.setPlayFile(voicePath);
+        mediaPlayManager.mediaStart();
+        startUpdateTask();
         if (mContext instanceof FragmentActivity) {
             ((FragmentActivity) mContext).runOnUiThread(() -> {
                 showAtLocation(rootView, Gravity.BOTTOM, 0, CViewUtils.getActionBarSize(rootView.getContext()) + CDimensUtils.dp2px(rootView.getContext(), 32));
@@ -209,8 +181,8 @@ public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPla
         if (!TextUtils.isEmpty(voicePath)) {
             new File(voicePath).delete();
         }
-        if (mediaPlayService != null) {
-            mediaPlayService.onDestroy();
+        if (mediaPlayManager != null) {
+            mediaPlayManager.onDestroy();
         }
         if (updateTask != null) {
             updateTask.cancel(true);

@@ -204,8 +204,14 @@ public class CPDFAnnotDatas {
         File cacheFile = new File(document.getContext().getCacheDir(), "annotationExportCache");
         cacheFile.mkdirs();
         CLog.e("ComPDFKit", "Annotation export path:" + saveFile.getAbsolutePath());
-        return document.exportAnnotations(saveFile.getAbsolutePath(), cacheFile.getAbsolutePath());
+        boolean result = document.exportAnnotations(saveFile.getAbsolutePath(), cacheFile.getAbsolutePath());
+        if (result){
+            CFileUtils.notifyMediaStore(document.getContext(), saveFile.getAbsolutePath());
+        }
+        return result;
     }
+
+
 
     /**
      * Import annotations in xfdf file

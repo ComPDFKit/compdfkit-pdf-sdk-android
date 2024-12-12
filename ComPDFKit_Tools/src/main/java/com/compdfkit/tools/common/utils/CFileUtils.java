@@ -45,6 +45,8 @@ public class CFileUtils {
 
     public static final String EXPORT_FOLDER = "compdfkit/edit/export";
 
+    public static final String EXTRACT_FOLDER = "compdfkit/extract";
+
     public static String getAssetsTempFile(Context context, String assetsName, String saveName) {
         String path =  context.getCacheDir().getAbsolutePath();
         copyFileFromAssets(context, assetsName, path, saveName, false);
@@ -297,6 +299,17 @@ public class CFileUtils {
         return intent;
     }
 
+    public static void notifyMediaStore(Context context, String filePath) {
+        try{
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri uri = Uri.fromFile(new File(filePath));
+            intent.setData(uri);
+            context.sendBroadcast(intent);
+        }catch (Exception e){
+
+        }
+    }
+
     public static Intent selectSystemDir(boolean isOnlyLocal) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         intent.putExtra("android.content.extra.SHOW_ADVANCED", isOnlyLocal);
@@ -490,4 +503,65 @@ public class CFileUtils {
         }
         return sb.toString();
     }
+
+
+    public static boolean delete(String delFile) {
+        File file = new File(delFile);
+        if (!file.exists()) {
+            return false;
+        } else {
+            if (file.isFile())
+                return deleteSingleFile(delFile);
+            else
+                return deleteDirectory(delFile);
+        }
+    }
+
+    public static  boolean deleteSingleFile(String filePath$Name) {
+        File file = new File(filePath$Name);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            if (file.delete()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public static  boolean deleteDirectory(String filePath) {
+        // 如果dir不以文件分隔符结尾，自动添加文件分隔符
+        if (!filePath.endsWith(File.separator))
+            filePath = filePath + File.separator;
+        File dirFile = new File(filePath);
+        if ((!dirFile.exists()) || (!dirFile.isDirectory())) {
+            return false;
+        }
+        boolean flag = true;
+        File[] files = dirFile.listFiles();
+        for (File file : files) {
+            if (file.isFile()) {
+                flag = deleteSingleFile(file.getAbsolutePath());
+                if (!flag)
+                    break;
+            }
+            else if (file.isDirectory()) {
+                flag = deleteDirectory(file
+                        .getAbsolutePath());
+                if (!flag)
+                    break;
+            }
+        }
+        if (!flag) {
+            return false;
+        }
+        if (dirFile.delete()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

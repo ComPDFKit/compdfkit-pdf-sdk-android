@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:layout_height="match_parent">
+
+    <com.compdfkit.tools.common.views.CToolBar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:textSize="18sp"
+        android:title="@string/tools_compress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_selected_file"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:background="?attr/compdfkit_HeadItem_BackgroundColor"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/tools_selected_file"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="12sp"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="4dp"
+                app:tint="?android:attr/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/tv_swap"
+                app:layout_constraintEnd_toStartOf="@id/tv_swap"
+                app:layout_constraintTop_toTopOf="@id/tv_swap"
+                app:srcCompat="@drawable/tools_swap" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_swap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/tools_common_btn_corner_ripple"
+                android:text="@string/tools_change"
+                android:textColor="?attr/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/tv_selected_file"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_selected_file" />
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_pdf_sample_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                app:srcCompat="@drawable/tools_ic_pdf"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_selected_file" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="40dp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textStyle="bold"
+                android:maxLines="2"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toTopOf="@id/tv_desc"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/iv_pdf_sample_icon"
+                app:layout_constraintTop_toTopOf="@id/iv_pdf_sample_icon"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="xxx.pdf" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="40dp"
+                android:textColor="@color/tools_text_color_disable"
+                android:textSize="11sp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/iv_pdf_sample_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/tv_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_title"
+                tools:text="sdcard/Downloads/compdfkit" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_compress_quality"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginTop="18dp"
+                android:background="?attr/compdfkit_HeadItem_BackgroundColor"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tools_compress_quality"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="12sp"
+                app:layout_constraintTop_toBottomOf="@id/iv_pdf_sample_icon" />
+
+            <LinearLayout
+                android:id="@+id/ll_compress_quality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_compress_quality">
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rb_quality_low"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:checked="false"
+                    android:text="@string/tools_low_quality"
+                    android:textColor="@color/tools_radio_btn_text_status_color" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rb_quality_standard"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:checked="true"
+                    android:text="@string/tools_standard_quality"
+                    android:textColor="@color/tools_radio_btn_text_status_color" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rb_quality_high"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:checked="false"
+                    android:text="@string/tools_high_quality"
+                    android:textColor="@color/tools_radio_btn_text_status_color" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/rb_quality_custom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:text="@string/tools_custom_quality"
+                        android:textColor="@color/tools_radio_btn_text_status_color"
+                         />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_custom_quality"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="8dp"
+                        android:focusableInTouchMode="false"
+                        android:gravity="bottom|center_horizontal"
+                        android:hint="@string/tools_please_enter_percentage"
+                        android:inputType="number"
+                        android:paddingHorizontal="8dp"
+                        android:textColorHint="?attr/hintTextColor"
+                        android:textSize="14sp"
+                        app:layout_constraintBaseline_toBaselineOf="@id/rb_quality_custom"
+
+                        app:layout_constraintStart_toEndOf="@id/rb_quality_custom" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="%"
+                        android:textStyle="bold"
+                       android:textColor="@color/tools_radio_btn_text_status_color"
+                        app:layout_constraintBaseline_toBaselineOf="@id/et_custom_quality"
+                        app:layout_constraintStart_toEndOf="@id/et_custom_quality" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <View
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="?attr/compdfkit_HeadItem_BackgroundColor"
+                app:layout_constraintTop_toBottomOf="@id/ll_compress_quality" />
+
+            <View
+                android:id="@+id/view_save_path"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                app:layout_constraintTop_toBottomOf="@id/line1"
+                android:foreground="@drawable/tools_common_btn_rectangle_ripple"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_save_path_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tools_save_path"
+                app:layout_constraintTop_toBottomOf="@id/line1"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="14sp"
+                />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/tools_ic_pageedit_arrow_right"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toTopOf="@id/tv_save_path_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_save_path_title"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_save_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorPrimary"
+                tools:text="C:\\Users\\Downloads"
+                android:layout_marginStart="16dp"
+                android:ellipsize="start"
+                android:singleLine="true"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@id/iv_arrow"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_save_path_title"
+                app:layout_constraintStart_toEndOf="@id/tv_save_path_title"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constrainedWidth="true"
+                android:textSize="13sp"
+                />
+            
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="156:48"
+                app:layout_constraintTop_toBottomOf="@id/tv_save_path_title"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                app:layout_constraintEnd_toStartOf="@id/btn_compress"
+                android:id="@+id/btn_cancel"
+                android:layout_marginTop="32dp"
+                android:text="@string/tools_cancel"
+                android:foreground="@drawable/tools_common_btn_corner_ripple"
+                android:textColor="?android:attr/colorAccent"
+                android:textAllCaps="false"
+                android:background="@drawable/tools_compress_cancel_btn"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="156:48"
+                app:layout_constraintTop_toTopOf="@id/btn_cancel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_cancel"
+                app:layout_constraintBottom_toBottomOf="@id/btn_cancel"
+                android:id="@+id/btn_compress"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:background="@drawable/tools_compress_confirm_btn"
+                android:text="@string/tools_compress"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -63,11 +63,21 @@ public class HomeFunBean {
 
     private String filePath;
 
+    private boolean isNew;
+
     public HomeFunBean(Context context, FunType funType, @DrawableRes int icon, @StringRes int title, @StringRes int description) {
         this.type = funType;
         this.iconResId = icon;
         this.title = context.getString(title);
         this.description = context.getString(description);
+    }
+
+    public HomeFunBean(Context context, FunType funType, @DrawableRes int icon, @StringRes int title, @StringRes int description, boolean isNew) {
+        this.type = funType;
+        this.iconResId = icon;
+        this.title = context.getString(title);
+        this.description = context.getString(description);
+        this.isNew = isNew;
     }
 
     public HomeFunBean() {
@@ -136,5 +146,13 @@ public class HomeFunBean {
 
     public String getFilePath() {
         return filePath;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
     }
 }

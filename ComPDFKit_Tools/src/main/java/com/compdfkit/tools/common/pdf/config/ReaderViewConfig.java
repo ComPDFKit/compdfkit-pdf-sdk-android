@@ -12,6 +12,8 @@ package com.compdfkit.tools.common.pdf.config;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class ReaderViewConfig implements Serializable {
@@ -40,6 +42,8 @@ public class ReaderViewConfig implements Serializable {
 
     public boolean pageSameWidth = true;
 
+    public ArrayList<Integer> margins = new ArrayList<>();
+
     @NonNull
     @Override
     public String toString() {
@@ -55,7 +59,8 @@ public class ReaderViewConfig implements Serializable {
                 "enablePageIndicator:" + enablePageIndicator + ", " +
                 "pageSpacing:" + pageSpacing + ", " +
                 "pageScale:" + pageScale + ", " +
-                "pageSameWidth:" + pageSameWidth + ", ";
+                "pageSameWidth:" + pageSameWidth + ", " +
+                "margins:" + margins.toString();
         return stringBuilder;
     }
 

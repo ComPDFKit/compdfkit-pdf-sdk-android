@@ -73,11 +73,18 @@ public class CPopupMenuWindow extends CBasePopupWindow {
     }
 
     public void addItem(@StringRes int stringResId, View.OnClickListener clickListener){
+        addItem(stringResId, true, clickListener);
+    }
+
+    public void addItem(@StringRes int stringResId,boolean enable, View.OnClickListener clickListener){
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.tools_menu_window_item, null);
         AppCompatImageView ivIcon = itemView.findViewById(R.id.iv_menu_icon);
         AppCompatTextView tvTitle = itemView.findViewById(R.id.tv_menu_title);
         ivIcon.setVisibility(View.GONE);
+        ivIcon.setEnabled(enable);
         tvTitle.setText(stringResId);
+        tvTitle.setEnabled(enable);
+        itemView.setEnabled(enable);
         itemView.findViewById(R.id.ll_root).setOnClickListener(v -> {
             if (clickListener != null) {
                 clickListener.onClick(v);

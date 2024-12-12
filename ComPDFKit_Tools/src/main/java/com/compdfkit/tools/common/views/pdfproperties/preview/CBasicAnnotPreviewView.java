@@ -11,6 +11,7 @@ package com.compdfkit.tools.common.views.pdfproperties.preview;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -19,6 +20,7 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.compdfkit.core.annotation.CPDFAnnotation.CPDFBorderEffectType;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 
@@ -86,4 +88,10 @@ abstract class CBasicAnnotPreviewView extends FrameLayout {
     }
 
     public void setFontPsName(String fontPsName){}
+
+    public void setImage(Bitmap bitmap){}
+
+    public void setBorderEffectType(CPDFBorderEffectType type){
+
+    }
 }

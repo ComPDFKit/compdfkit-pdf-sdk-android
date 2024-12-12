@@ -66,7 +66,7 @@ public class CScreenShotContextMenuView implements ContextMenuScreenShotProvider
             CPDFEditManager editManager = readerView.getEditManager();
             if (editManager != null && !editManager.isEditMode()) {
                 editManager.enable();
-                editManager.beginEdit(CPDFEditPage.LoadTextImage);
+                editManager.beginEdit(CPDFEditPage.LoadTextImage | CPDFEditPage.LoadPath);
             }
         }else {
             readerView.setTouchMode(CPDFReaderView.TouchMode.BROWSE);

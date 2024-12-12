@@ -11,7 +11,10 @@ package com.compdfkit.tools.common.basic.fragment;
 
 
 import android.net.Uri;
+import android.os.Environment;
+import android.text.TextUtils;
 
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.core.annotation.CPDFLinkAnnotation;
@@ -19,6 +22,7 @@ import com.compdfkit.core.annotation.CPDFTextAnnotation;
 import com.compdfkit.core.annotation.form.CPDFComboboxWidget;
 import com.compdfkit.core.annotation.form.CPDFListboxWidget;
 import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
+import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdflink.CLinkAnnotAttachHelper;
@@ -26,12 +30,15 @@ import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CPDFtextAnnotAttachH
 import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CPDFtextAnnotImpl;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.impl.CEditImageContextMenuView;
+import com.compdfkit.tools.common.contextmenu.impl.CEditPathContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CEditTextContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CScreenShotContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSearchReplaceContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSignatureContextMenuView;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
@@ -51,9 +58,6 @@ public class CBasicPDFFragment extends CPermissionFragment {
 
     public int curEditMode = CPDFEditPage.LoadNone;
 
-    protected Uri documentUri;
-
-    protected String documentPath;
 
     protected void resetContextMenu(CPDFViewCtrl pdfView, CPreviewMode mode) {
         switch (mode) {
@@ -76,6 +80,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
                                 .setEditImageContentMenu(new CEditImageContextMenuView())
                                 .setSearchReplaceContextMenu(new CSearchReplaceContextMenuView())
                                 .setScreenShotContextMenu(new CScreenShotContextMenuView())
+                                .setEditPathContentMenu(new CEditPathContextMenuView())
                                 .create(pdfView));
                 break;
             case Form:
@@ -128,16 +133,41 @@ public class CBasicPDFFragment extends CPermissionFragment {
 
     protected void sharePDF(CPDFViewCtrl pdfView) {
         pdfView.savePDF((filePath, pdfUri) -> {
-            if (null != documentUri) {
-                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", documentUri);
-            } else {
-                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", new File(documentPath));
+            if (pdfUri != null && pdfUri.toString().startsWith("content://")){
+                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", pdfUri);
+                return;
+            }
+            String externalStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            if (!TextUtils.isEmpty(filePath)) {
+                if (filePath.startsWith(getContext().getCacheDir().getAbsolutePath()) ||
+                filePath.startsWith(getContext().getFilesDir().getAbsolutePath())){
+                    CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", new File(filePath));
+                } else if (filePath.startsWith(externalStoragePath)) {
+                    Uri uri = CFileUtils.getUriBySystem(getContext(), new File(filePath));
+                    CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", uri);
+                }
             }
         }, e -> {
-            if (null != documentUri) {
-                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", documentUri);
-            } else {
-                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", new File(documentPath));
+
+            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+            if (document == null){
+                return;
+            }
+            Uri pdfUri = document.getUri();
+            String filePath = document.getAbsolutePath();
+            if (pdfUri != null && pdfUri.toString().startsWith("content://")){
+                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", pdfUri);
+                return;
+            }
+            String externalStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            if (!TextUtils.isEmpty(filePath)) {
+                if (filePath.startsWith(getContext().getCacheDir().getAbsolutePath()) ||
+                        filePath.startsWith(getContext().getFilesDir().getAbsolutePath())){
+                    CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", new File(filePath));
+                }else if (filePath.startsWith(externalStoragePath)) {
+                    Uri uri = CFileUtils.getUriBySystem(getContext(), new File(filePath));
+                    CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", uri);
+                }
             }
         });
     }

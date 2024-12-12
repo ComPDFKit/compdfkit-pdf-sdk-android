@@ -103,11 +103,11 @@
     </style>
 
     <style name="ComPDFKit.Theme.TextAppearance.Subtitle1.Dark" tools:ignore="ResourceName">
-        <item name="android:textColor">@color/tools_dark_subtitle_1_color</item>
+        <item name="android:textColor">@color/tools_normal_text_view_status_color_dark</item>
     </style>
 
     <style name="ComPDFKit.Theme.TextAppearance.Subtitle1.Light" tools:ignore="ResourceName">
-        <item name="android:textColor">@color/tools_subtitle_1_color</item>
+        <item name="android:textColor">@color/tools_normal_text_view_status_color_light</item>
     </style>
 
 

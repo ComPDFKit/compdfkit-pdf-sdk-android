@@ -15,14 +15,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.annotation.pdfproperties.pdfshape.adapter.CShapeBordEffectTypeAdapter;
 import com.compdfkit.tools.common.utils.view.colorpicker.CColorPickerFragment;
 import com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar;
 import com.compdfkit.tools.common.views.pdfproperties.basic.CBasicPropertiesFragment;
@@ -55,6 +59,11 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
 
     private CAnnotLineTypePreviewView tailLinePreview;
 
+    private ConstraintLayout clShapeStyle;
+
+    private AppCompatSpinner shapeStyleSpinner;
+
+    private CShapeBordEffectTypeAdapter bordEffectTypeAdapter;
 
     public static CShapeStyleFragment newInstance() {
         return new CShapeStyleFragment();
@@ -74,6 +83,8 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
         clTailLineType = rootView.findViewById(R.id.cl_tail_line_type);
         startLinePreview = rootView.findViewById(R.id.preview_start_line);
         tailLinePreview = rootView.findViewById(R.id.preview_tail_line);
+        clShapeStyle = rootView.findViewById(R.id.cl_shape_style);
+        shapeStyleSpinner = rootView.findViewById(R.id.spinner_bord_effect_type);
         return rootView;
     }
 
@@ -88,7 +99,10 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
             stylePreviewView.setBorderWidth((int) cAnnotStyle.getBorderWidth());
             stylePreviewView.setBorderColor(cAnnotStyle.getLineColor());
             stylePreviewView.setBorderColorOpacity(cAnnotStyle.getLineColorOpacity());
-            stylePreviewView.setDashedSpaceWidth((int) cAnnotStyle.getBorderStyle().getDashArr()[1]);
+            CPDFBorderStyle style = cAnnotStyle.getBorderStyle();
+            if (style.getDashArr() != null && style.getDashArr().length == 2) {
+                stylePreviewView.setDashedSpaceWidth((int) cAnnotStyle.getBorderStyle().getDashArr()[1]);
+            }
             stylePreviewView.setStartLineType(cAnnotStyle.getStartLineType());
             stylePreviewView.setTailLineType(cAnnotStyle.getTailLineType());
             startLinePreview.setStartLineType(cAnnotStyle.getStartLineType());
@@ -98,12 +112,16 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
             fillColorListView.setSelectColor(cAnnotStyle.getFillColor());
             borderWidthSliderBar.setProgress((int) cAnnotStyle.getBorderWidth());
             opacitySliderBar.setProgress(cAnnotStyle.getLineColorOpacity());
-            dashedSliderBar.setProgress((int) cAnnotStyle.getBorderStyle().getDashArr()[1]);
+            if (style.getDashArr() != null && style.getDashArr().length == 2) {
+                dashedSliderBar.setProgress((int) cAnnotStyle.getBorderStyle().getDashArr()[1]);
+            }
             if (cAnnotStyle.getType() == CStyleType.ANNOT_ARROW || cAnnotStyle.getType() == CStyleType.ANNOT_LINE ){
                 fillColorListView.setVisibility(View.GONE);
                 borderColorListView.setTitle(R.string.tools_color);
                 clStartLineType.setVisibility(View.VISIBLE);
                 clTailLineType.setVisibility(View.VISIBLE);
+            }else {
+                clShapeStyle.setVisibility(View.VISIBLE);
             }
         }
         viewModel.addStyleChangeListener(this);
@@ -124,13 +142,13 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
                 if (progress == 0) {
                     style.setStyle(CPDFBorderStyle.Style.Border_Solid);
                     float[] dashAttr = new float[]{8.0F, progress};
-                    if (style.getDashArr() != null) {
+                    if (style.getDashArr() != null && style.getDashArr().length > 1) {
                         dashAttr = new float[]{style.getDashArr()[0], progress};
                     }
                     style.setDashArr(dashAttr);
                 } else {
                     float[] dashAttr = new float[]{8.0F, progress};
-                    if (style.getDashArr() != null) {
+                    if (style.getDashArr() != null && style.getDashArr().length > 1) {
                         dashAttr = new float[]{style.getDashArr()[0], progress};
                     }
                     style.setStyle(CPDFBorderStyle.Style.Border_Dashed);
@@ -169,6 +187,33 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
                 lineTypeFragment.setLineTypeListener(style::setTailLineType);
             });
         });
+
+
+        bordEffectTypeAdapter = new CShapeBordEffectTypeAdapter(getContext());
+        bordEffectTypeAdapter.setBordEffectType(cAnnotStyle.getBordEffectType());
+        shapeStyleSpinner.setAdapter(bordEffectTypeAdapter);
+        shapeStyleSpinner.setSelection(bordEffectTypeAdapter.getSelectPosition());
+        shapeStyleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CPDFAnnotation.CPDFBorderEffectType bordEffectType = bordEffectTypeAdapter.list.get(position);
+                viewModel.getStyle().setBordEffectType(bordEffectType);
+                enableDashSeekBar(bordEffectType == CPDFAnnotation.CPDFBorderEffectType.CPDFBorderEffectTypeSolid);
+                stylePreviewView.setBorderEffectType(bordEffectType);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void enableDashSeekBar(boolean enable){
+        dashedSliderBar.setEnabled(enable);
+//        if (!enable){
+//            dashedSliderBar.setProgress(0);
+//        }
     }
 
     private void updateBorderColor(int color) {

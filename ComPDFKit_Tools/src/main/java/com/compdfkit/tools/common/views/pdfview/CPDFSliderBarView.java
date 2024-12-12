@@ -55,7 +55,7 @@ public class CPDFSliderBarView extends CPDFSlideBar implements CPDFSlideBar.OnSc
         sliderBarThumbnailWidth = thumbnailWidth;
         sliderBarThumbnailHeight = thumbnailHeight;
         showThumbnail(false);
-        onlyShowPageIndex(true, 100);
+        onlyShowPageIndex(true, 150);
         setSlideBarBitmap(R.drawable.tools_ic_pdf_slider_bar);
         setSlideBarPosition(position);
         setTextBackgroundColor(ContextCompat.getColor(getContext(), R.color.tools_page_indicator_bg_color));

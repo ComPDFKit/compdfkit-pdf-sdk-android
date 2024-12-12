@@ -85,6 +85,7 @@ public class CEditImagePropertiesFragment extends CBasicPropertiesFragment imple
         rlCrop.setOnClickListener(this);
         rlExport.setOnClickListener(this);
         stylePreviewView.setAnnotType(CStyleType.EDIT_IMAGE);
+        stylePreviewView.setImage(viewModel.getStyle().getEditImageBitmap());
         opacitySliderBar.setProgress(viewModel.getStyle().getOpacity());
         opacitySliderBar.setChangeListener((progress, percentageValue, isStopTouch) -> {
             if (isStopTouch) {

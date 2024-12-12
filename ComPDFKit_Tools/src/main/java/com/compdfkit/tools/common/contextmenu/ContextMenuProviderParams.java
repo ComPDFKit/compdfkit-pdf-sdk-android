@@ -14,6 +14,7 @@ package com.compdfkit.tools.common.contextmenu;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuCheckBoxProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuComboBoxProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditImageProvider;
+import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditPathProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditTextProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuFormSignProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuFreeTextProvider;
@@ -55,6 +56,7 @@ class ContextMenuProviderParams {
     public ContextMenuLinkProvider linkProvider;
 
     public ContextMenuEditImageProvider editImageProvider;
+    public ContextMenuEditPathProvider editPathProvider;
 
     public ContextMenuTextFieldProvider textFieldProvider;
 

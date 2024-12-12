@@ -46,6 +46,7 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.ui.reader.CPDFReaderView;
+import java.util.ArrayList;
 
 public class CPDFApplyConfigUtil {
 
@@ -132,6 +133,17 @@ public class CPDFApplyConfigUtil {
             }
             readerView.setPageSpacing(readerViewConfig.pageSpacing);
             readerView.setScale(readerViewConfig.pageScale);
+            ArrayList<Integer> margins = readerViewConfig.margins;
+            if (margins != null && margins.size() == 4){
+                int left = margins.get(0);
+                int top = margins.get(1);
+                int right = margins.get(2);
+                int bottom = margins.get(3);
+                readerView.setReaderViewHorizontalMargin(left, right);
+                readerView.setFixReaderViewHorizontalMargin(false);
+                readerView.setReaderViewTopMargin(top);
+                readerView.setReaderViewBottomMargin(bottom);
+            }
             CPDFDocument document = fragment.pdfView.getCPdfReaderView().getPDFDocument();
             if (document != null) {
                 fragment.pdfView.enableSliderBar(readerViewConfig.enableSliderBar);
@@ -165,11 +177,18 @@ public class CPDFApplyConfigUtil {
                     }
                 });
             }
-            if (modeConfig.readerOnly) {
-                fragment.flTool.setVisibility(View.GONE);
-                fragment.flBottomToolBar.setVisibility(View.GONE);
-            }
+
         }
+    }
+
+    public void appleUiConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration){
+        ModeConfig modeConfig = configuration.modeConfig;
+        if (modeConfig.readerOnly) {
+            fragment.flTool.setVisibility(View.GONE);
+            fragment.flBottomToolBar.setVisibility(View.GONE);
+        }
+        boolean showMainToolbar = configuration.toolbarConfig.mainToolbarVisible;
+        fragment.flTool.setVisibility(showMainToolbar ? View.VISIBLE : View.GONE);
     }
 
     private void applyAnnotationConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
@@ -242,19 +261,22 @@ public class CPDFApplyConfigUtil {
                             })
             );
         } else {
-            builder.setShape(styleType,
-                    shapeAttr.getBorderColor(),
-                    shapeAttr.getColorAlpha(),
-                    shapeAttr.getFillColor(),
-                    shapeAttr.getColorAlpha(),
+            CAnnotStyle shapeAnnotStyle = new CAnnotStyle(styleType);
+            shapeAnnotStyle.setBorderColor(shapeAttr.getBorderColor());
+            shapeAnnotStyle.setLineColorOpacity(shapeAttr.getColorAlpha());
+            shapeAnnotStyle.setFillColor(shapeAttr.getFillColor());
+            shapeAnnotStyle.setFillColorOpacity(shapeAttr.getColorAlpha());
+            shapeAnnotStyle.setBorderWidth(shapeAttr.getBorderWidth());
+
+            CPDFBorderStyle borderStyle = new CPDFBorderStyle(CPDFBorderStyle.Style.valueOf(shapeBorderStyle.borderStyle.id),
                     shapeAttr.getBorderWidth(),
-                    new CPDFBorderStyle(CPDFBorderStyle.Style.valueOf(shapeBorderStyle.borderStyle.id),
-                            shapeAttr.getBorderWidth(),
-                            new float[]{
-                                    shapeBorderStyle.dashWidth,
-                                    shapeBorderStyle.dashGap,
-                            })
-            );
+                    new float[]{
+                            shapeBorderStyle.dashWidth,
+                            shapeBorderStyle.dashGap,
+                    });
+            shapeAnnotStyle.setBorderStyle(borderStyle);
+            shapeAnnotStyle.setBordEffectType(shapeAttr.getBorderEffectType());
+            builder.setAnnotStyle(shapeAnnotStyle);
         }
     }
 
@@ -362,20 +384,15 @@ public class CPDFApplyConfigUtil {
         switch (configuration.globalConfig.themeMode) {
             case Light:
                 themeId = R.style.ComPDFKit_Theme_Light;
-                CLog.e("ComPDFKit_Tools", "Theme-getThemeId(Context context, CPDFConfiguration configuration) - Use Light Theme");
                 break;
             case Dark:
                 themeId = R.style.ComPDFKit_Theme_Dark;
-                CLog.e("ComPDFKit_Tools", "Theme-getThemeId(Context context, CPDFConfiguration configuration) - Use Dark Theme");
                 break;
             default:
                 if (CViewUtils.isDarkMode(context)) {
                     themeId = R.style.ComPDFKit_Theme_Dark;
-                    CLog.e("ComPDFKit_Tools", "Theme-getThemeId(Context context, CPDFConfiguration configuration) - Follow the system and use the Dark theme");
-
                 } else {
                     themeId = R.style.ComPDFKit_Theme_Light;
-                    CLog.e("ComPDFKit_Tools", "Theme-getThemeId(Context context, CPDFConfiguration configuration) - Follow the system and use the Light theme");
                 }
                 break;
         }

@@ -11,21 +11,20 @@
         android:id="@+id/iv_pdf_sample_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        app:srcCompat="@drawable/ic_fun_samples_pdf"
+        android:layout_marginStart="16dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="16dp"
-        android:visibility="gone"
-        />
+        app:srcCompat="@drawable/ic_fun_samples_pdf" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:padding="4dp"
-        android:background="@drawable/bg_fun_icon"
         android:layout_marginStart="16dp"
+        android:background="@drawable/bg_fun_icon"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,38 +35,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="end"
-        app:constraint_referenced_ids="iv_icon,iv_pdf_sample_icon"
-        />
+        app:constraint_referenced_ids="iv_icon,iv_pdf_sample_icon" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="40dp"
         android:textColor="?android:attr/textColorPrimary"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        android:layout_marginEnd="40dp"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@id/tv_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/barrier"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="Viewer" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_fun_item_new"
+        android:paddingHorizontal="4dp"
+        android:text="@string/tools_new"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintTop_toTopOf="@id/tv_title"
+        app:layout_constraintBottom_toBottomOf="@id/tv_title"
+        app:layout_constraintStart_toEndOf="@id/tv_title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="40dp"
         android:textColor="@color/tools_text_color_disable"
         android:textSize="11sp"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        android:layout_marginEnd="40dp"
         app:layout_constraintStart_toStartOf="@id/tv_title"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         tools:text="The viewer offers various display modes,PDF" />
@@ -80,7 +92,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorOnPrimary"
-         />
+        app:tint="?attr/colorOnPrimary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

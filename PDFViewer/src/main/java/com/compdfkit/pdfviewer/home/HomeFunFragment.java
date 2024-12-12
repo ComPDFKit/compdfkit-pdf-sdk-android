@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,8 +23,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.databinding.FragmentHomeBinding;
 import com.compdfkit.pdfviewer.home.datas.FunDatas;
+import com.compdfkit.pdfviewer.home.samples.SamplesFactory;
 import com.compdfkit.tools.common.pdf.CPDFDocumentActivity;
+import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
+import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
+import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.utils.CPDFCommomUtils;
 
 
@@ -32,6 +38,13 @@ public class HomeFunFragment extends Fragment {
     private CHomeFunListAdapter funListAdapter;
 
     private FragmentHomeBinding binding;
+
+    private ActivityResultLauncher<Void> selectDocumentLauncher = registerForActivityResult(new CSelectPDFDocumentResultContract(), uri -> {
+        if (uri != null) {
+            SamplesFactory factory = new SamplesFactory(this, "", uri);
+            factory.getImpl(HomeFunBean.FunType.Compress).run();
+        }
+    });
 
     @Nullable
     @Override
@@ -81,7 +94,7 @@ public class HomeFunFragment extends Fragment {
                     CPDFCommomUtils.gotoWebsite(getContext(), getString(R.string.tools_compdf_conversion_url), null);
                     break;
                 case Compress:
-                    CPDFCommomUtils.gotoWebsite(getContext(), getString(R.string.tools_contact_sales_url), null);
+                    selectDocumentLauncher.launch(null);
                     break;
                 case Measurement:
                     CPDFCommomUtils.gotoWebsite(getContext(), getString(R.string.tools_contact_sales_url), null);

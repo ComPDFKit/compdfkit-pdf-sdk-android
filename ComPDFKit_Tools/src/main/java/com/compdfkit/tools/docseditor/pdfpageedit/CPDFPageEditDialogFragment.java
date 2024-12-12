@@ -14,9 +14,7 @@ import static com.compdfkit.core.document.CPDFDocument.PDFDocumentError.PDFDocum
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.util.SparseIntArray;
 import android.view.KeyEvent;
 import android.view.View;
@@ -32,6 +30,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CToastUtil;
+import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
@@ -251,13 +250,15 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
                 dialog.show(getChildFragmentManager(), "dialog");
             } else {
                 CThreadPoolUtils.getInstance().executeIO(() -> {
-                    String path = extractPage();
+                    String dir = Environment.DIRECTORY_DOWNLOADS + File.separator + CFileUtils.EXTRACT_FOLDER;
+                    Uri extractPDFUri = extractPage(dir);
+                    String fileName = CUriUtil.getUriFileName(getContext(), extractPDFUri);
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(()->{
-                            if (!TextUtils.isEmpty(path)) {
-                                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", new File(path));
+                            if (extractPDFUri != null) {
+                                CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", extractPDFUri);
                             }
-                            String msg = TextUtils.isEmpty(path) ? getString(R.string.tools_page_edit_extract_fail) : (getString(R.string.tools_page_edit_extract_ok) + " : " + path);
+                            String msg = extractPDFUri == null ? getString(R.string.tools_page_edit_extract_fail) : (getString(R.string.tools_page_edit_extract_ok) + " : " + dir + File.separator + fileName);
                             CToastUtil.showToast(getContext(), msg);
                         });
                     }
@@ -409,33 +410,34 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         return true;
     }
 
-    private String extractPage() {
+    private Uri extractPage(String publicDirectory) {
         if (checkPdfView() == false) {
-            return "";
+            return null;
         }
         SparseIntArray pagesArr = editThumbnailFragment.getSelectPages();
         if (pagesArr == null || pagesArr.size() == 0) {
-            return "";
+            return null;
         }
         boolean res = false;
         int[] pageNum = new int[pagesArr.size()];
         for (int i = 0; i < pagesArr.size(); i++) {
             pageNum[i] = pagesArr.keyAt(i);
         }
-        String filePath = null;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-            filePath =  new File(Environment.getExternalStorageDirectory(),CFileUtils.CACHE_FOLDER + File.separator + getNewFileName(pageNum)).getAbsolutePath();
-        }else {
-            filePath = getContext().getFilesDir().getAbsolutePath() + File.separator + getNewFileName(pageNum);
+        // Downloads/compdfkit/extract/
+
+        Uri saveUri = CUriUtil.createFileUri(getContext(),
+                publicDirectory, getNewFileName(pageNum), "application/pdf");
+        if (saveUri == null) {
+            return null;
         }
         CPDFDocument newDocument = CPDFDocument.createDocument(getContext());
         res = newDocument.importPages(pdfView.getCPdfReaderView().getPDFDocument(), pageNum, 0);
         try {
-            res &= newDocument.saveAs(filePath, false, false, pdfView.isSaveFileExtraFontSubset());
+            res &= newDocument.saveAs(saveUri, false,  pdfView.isSaveFileExtraFontSubset());
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
-        return res == true ? filePath : "";
+        return res ? saveUri : null;
     }
 
     private boolean copyPage() {

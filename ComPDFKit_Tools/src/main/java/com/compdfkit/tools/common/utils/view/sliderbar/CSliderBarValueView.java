@@ -90,4 +90,10 @@ public class CSliderBarValueView extends FrameLayout {
         this.valueUnit = valueUnit;
         setValue(value);
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        textView.setEnabled(enabled);
+    }
 }

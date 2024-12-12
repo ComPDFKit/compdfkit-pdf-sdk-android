@@ -26,25 +26,12 @@
             android:exported="false"
             android:theme="@style/ComPDFKit.Theme.Dark" />
 
-        <service
-            android:name=".common.utils.voice.CMediaPlayService"
-            android:enabled="true"
-            android:exported="false" />
-
         <activity
             android:name=".common.pdf.CPDFDocumentActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:theme="@style/ComPDFKit.Theme.Light"
             android:windowSoftInputMode="adjustPan">
-<!--            <intent-filter tools:ignore="AppLinkUrlError"-->
-<!--                android:scheme="http">-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-<!--                <action android:name="android.intent.action.SEND" />-->
-
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <data android:mimeType="application/pdf" />-->
-<!--            </intent-filter>-->
         </activity>
 
     </application>

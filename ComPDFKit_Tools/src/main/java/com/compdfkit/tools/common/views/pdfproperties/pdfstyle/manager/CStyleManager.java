@@ -256,6 +256,22 @@ public class CStyleManager implements CAnnotStyle.OnAnnotStyleChangeListener {
         updateAnnot();
     }
 
+
+    @Override
+    public void onChangeShapeBordEffectType(CPDFAnnotation.CPDFBorderEffectType type) {
+        updateAnnot();
+    }
+
+    @Override
+    public void onChangeEditTextStrikeThrough(boolean addStrikeThrough) {
+        updateAnnot();
+    }
+
+    @Override
+    public void onChangeEditTextUnderline(boolean addUnderline) {
+        updateAnnot();
+    }
+
     private void updateAnnot() {
         if (styleDialogFragment != null) {
             CAnnotStyle style = styleDialogFragment.getAnnotStyle();

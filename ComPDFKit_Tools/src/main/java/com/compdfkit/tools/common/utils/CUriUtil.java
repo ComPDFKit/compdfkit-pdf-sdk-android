@@ -1,11 +1,14 @@
 package com.compdfkit.tools.common.utils;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -153,5 +156,24 @@ public class CUriUtil {
         data.setData(uri);
         data.putExtra(Intent.EXTRA_SUBJECT, title);
         context.startActivity(Intent.createChooser(data, "select"));
+    }
+
+    public static Uri createFileUri(Context context, String publicDirectory, String fileName, String mimeType) {
+        long currentTime = System.currentTimeMillis() / 1000;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName);
+        contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, mimeType);
+        contentValues.put(MediaStore.Files.FileColumns.DATE_ADDED, currentTime);
+        contentValues.put(MediaStore.Files.FileColumns.DATE_MODIFIED, currentTime);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            contentValues.put(MediaStore.Files.FileColumns.RELATIVE_PATH, publicDirectory);
+            contentValues.put(MediaStore.Files.FileColumns.IS_PENDING, 0);
+            contentValues.put(MediaStore.Files.FileColumns.DATE_TAKEN, currentTime);
+        }else {
+            String path = Environment.getExternalStoragePublicDirectory(publicDirectory).getAbsolutePath() + File.separator + fileName;
+            contentValues.put(MediaStore.Files.FileColumns.DATA, path);
+            new File(path).getParentFile().mkdirs();
+        }
+        return context.getContentResolver().insert(MediaStore.Files.getContentUri("external"), contentValues);
     }
 }

@@ -12,7 +12,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.view.colorpicker.CColorPickerFragment;
 import com.compdfkit.tools.common.utils.view.colorpicker.widget.ColorPickerView;
 import com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar;
@@ -21,15 +20,12 @@ import com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView;
 import com.compdfkit.tools.common.views.pdfproperties.font.CPDFFontView;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleFragmentDatas;
-import com.compdfkit.tools.common.views.pdfproperties.preview.CStylePreviewView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CEditTextProperFragment extends CBasicPropertiesFragment
         implements View.OnClickListener, ColorPickerView.COnColorChangeListener, ColorPickerView.COnColorAlphaChangeListener {
-
-    private CStylePreviewView previewView;
 
     private ColorListView colorListView;
 
@@ -47,6 +43,12 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
 
     private CPDFFontView fontView;
 
+    private AppCompatImageView ivStyleUnderLine;
+    private AppCompatImageView ivStyleRemoveUnderLine;
+
+    private AppCompatImageView ivStyleStrikeLine;
+    private AppCompatImageView ivStyleRemoveStrikeLine;
+
     private List<View> alignmentViews = new ArrayList<>();
 
     @Override
@@ -61,7 +63,6 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tools_edit_text_property_fragment, container, false);
-        previewView = rootView.findViewById(R.id.style_preview);
         colorListView = rootView.findViewById(R.id.border_color_list_view);
         opacitySliderBar = rootView.findViewById(R.id.slider_bar);
         llAlignment = rootView.findViewById(R.id.ll_alignment_type);
@@ -70,9 +71,17 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
         ivAlignmentRight = rootView.findViewById(R.id.iv_alignment_right);
         fontSizeSliderBar = rootView.findViewById(R.id.font_size_slider_bar);
         fontView = rootView.findViewById(R.id.font_view);
+        ivStyleUnderLine = rootView.findViewById(R.id.iv_style_underline);
+        ivStyleRemoveUnderLine = rootView.findViewById(R.id.iv_style_remove_underline);
+        ivStyleStrikeLine = rootView.findViewById(R.id.iv_style_strike_line);
+        ivStyleRemoveStrikeLine = rootView.findViewById(R.id.iv_style_remove_strike_line);
         ivAlignmentLeft.setOnClickListener(this);
         ivAlignmentCenter.setOnClickListener(this);
         ivAlignmentRight.setOnClickListener(this);
+        ivStyleRemoveUnderLine.setOnClickListener(this);
+        ivStyleUnderLine.setOnClickListener(this);
+        ivStyleStrikeLine.setOnClickListener(this);
+        ivStyleRemoveStrikeLine.setOnClickListener(this);
         alignmentViews.add(ivAlignmentLeft);
         alignmentViews.add(ivAlignmentCenter);
         alignmentViews.add(ivAlignmentRight);
@@ -90,12 +99,6 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
         super.onViewCreated(view, savedInstanceState);
         CAnnotStyle annotStyle = viewModel.getStyle();
         if (annotStyle != null) {
-            previewView.setTextColor(annotStyle.getTextColor());
-            previewView.setTextAlignment(annotStyle.getAlignment());
-            previewView.setTextColorOpacity(annotStyle.getTextColorOpacity());
-            previewView.setFontSize(annotStyle.getFontSize());
-            previewView.setFontPsName(annotStyle.getExternFontName());
-
             fontView.initFont(annotStyle.getExternFontName());
 
             colorListView.setSelectColor(annotStyle.getTextColor());
@@ -129,10 +132,6 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
                 setUpdatePropertyType(CAnnotStyle.EditUpdatePropertyType.TextColorOpacity);
                 opacity(progress);
                 setUpdatePropertyType(CAnnotStyle.EditUpdatePropertyType.All);
-            } else {
-                if (previewView != null) {
-                    previewView.setTextColorOpacity(progress);
-                }
             }
         });
         fontSizeSliderBar.setChangeListener((progress, percentageValue, isStop) -> {
@@ -149,7 +148,6 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
             if (viewModel != null) {
                 boolean isBold = CPDFTextAttribute.FontNameHelper.isBold(psName);
                 boolean isItalic = CPDFTextAttribute.FontNameHelper.isItalic(psName);
-                CLog.e("字体", "内容编辑：Font:" + psName + ", isBold:"+ isBold +", isItalic:" + isItalic);
                 setUpdatePropertyType(CAnnotStyle.EditUpdatePropertyType.FontType);
                 viewModel.getStyle().setBold(isBold);
                 viewModel.getStyle().setItalic(isItalic);
@@ -161,7 +159,7 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
 
     @Override
     public void onClick(View v) {
-         if (v.getId() == R.id.iv_alignment_left) {
+        if (v.getId() == R.id.iv_alignment_left) {
             selectAlignmentView(ivAlignmentLeft);
             setAlignment(CAnnotStyle.Alignment.LEFT);
         } else if (v.getId() == R.id.iv_alignment_center) {
@@ -170,6 +168,16 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
         } else if (v.getId() == R.id.iv_alignment_right) {
             selectAlignmentView(ivAlignmentRight);
             setAlignment(CAnnotStyle.Alignment.RIGHT);
+        } else if (v.getId() == R.id.iv_style_underline) {
+            viewModel.getStyle().setEditTextUnderLine(true);
+        } else if (v.getId() == R.id.iv_style_strike_line) {
+            viewModel.getStyle().setEditTextStrikeThrough(true);
+        } else if (v.getId() == R.id.iv_style_remove_underline) {
+            viewModel.getStyle().setEditTextUnderLine(false);
+        } else if (v.getId() == R.id.iv_style_remove_strike_line) {
+            viewModel.getStyle().setEditTextStrikeThrough(false);
+        } else {
+
         }
     }
 
@@ -211,9 +219,6 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
                 colorListView.setSelectColor(textColor);
             }
         }
-        if (previewView != null) {
-            previewView.setTextColor(textColor);
-        }
     }
 
     @Override
@@ -222,30 +227,6 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
             if (colorListView != null) {
                 opacitySliderBar.setProgress(textColorOpacity);
             }
-        }
-        if (previewView != null) {
-            previewView.setTextColorOpacity(textColorOpacity);
-        }
-    }
-
-    @Override
-    public void onChangeAnnotExternFontType(String fontName) {
-        if (previewView != null) {
-            previewView.setFontPsName(fontName);
-        }
-    }
-
-    @Override
-    public void onChangeFontSize(int fontSize) {
-        if (previewView != null) {
-            previewView.setFontSize(fontSize);
-        }
-    }
-
-    @Override
-    public void onChangeTextAlignment(CAnnotStyle.Alignment alignment) {
-        if (previewView != null) {
-            previewView.setTextAlignment(alignment);
         }
     }
 
