@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -40,6 +41,8 @@ public class CVerifyPasswordDialogFragment extends CBasicBottomSheetDialogFragme
     private AppCompatEditText etPassword;
 
     private AppCompatButton btnConfirm;
+
+    private AppCompatImageView ivPwdShow;
 
     private AppCompatTextView tvErrorMsg;
 
@@ -103,10 +106,6 @@ public class CVerifyPasswordDialogFragment extends CBasicBottomSheetDialogFragme
         return false;
     }
 
-    @Override
-    protected int getStyle() {
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
-    }
 
     @Override
     protected int layoutId() {
@@ -120,6 +119,7 @@ public class CVerifyPasswordDialogFragment extends CBasicBottomSheetDialogFragme
         etPassword = rootView.findViewById(R.id.et_password);
         btnConfirm = rootView.findViewById(R.id.btn_confirm);
         tvErrorMsg = rootView.findViewById(R.id.tv_error_msg);
+        ivPwdShow = rootView.findViewById(R.id.iv_pwd_show);
     }
 
     @Override
@@ -148,6 +148,11 @@ public class CVerifyPasswordDialogFragment extends CBasicBottomSheetDialogFragme
         });
         btnConfirm.setOnClickListener(v -> {
             verifyPassword();
+        });
+        ivPwdShow.setOnClickListener(view -> {
+            ivPwdShow.setSelected(!ivPwdShow.isSelected());
+            etPassword.setInputType(ivPwdShow.isSelected() ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            etPassword.setSelection(etPassword.getText().length());
         });
     }
 

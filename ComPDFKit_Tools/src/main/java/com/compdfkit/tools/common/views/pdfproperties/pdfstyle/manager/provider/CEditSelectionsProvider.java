@@ -78,6 +78,8 @@ public class CEditSelectionsProvider implements CStyleProvider {
                         } else if (align == CAnnotStyle.Alignment.RIGHT) {
                             textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignRight);
                         }
+                        pageView.operateEditTextSelect(CPDFPageView.EditTextSelectFuncType.ATTR);
+                        pageView.onUpdateUI(pageView.getPageNum());
                         break;
 
                     case FontType:

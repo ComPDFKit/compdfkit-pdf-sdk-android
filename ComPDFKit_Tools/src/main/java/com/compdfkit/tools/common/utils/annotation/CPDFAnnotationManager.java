@@ -10,7 +10,6 @@
 package com.compdfkit.tools.common.utils.annotation;
 
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -41,6 +40,7 @@ import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFReplyDetailsD
 import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CNoteEditDialog;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.utils.CUriUtil;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.action.CActionEditDialogFragment;
 import com.compdfkit.tools.forms.pdfproperties.option.edit.CFormOptionEditFragment;
 import com.compdfkit.ui.attribute.CPDFFreetextAttr;
@@ -127,9 +127,9 @@ public class CPDFAnnotationManager {
                 page.deleteAnnotation(textAnnotation);
             });
             if (readerView != null && readerView.getContext() != null) {
-                Context context = readerView.getContext();
-                if (context instanceof FragmentActivity) {
-                    editDialog.show(((FragmentActivity) context).getSupportFragmentManager(), "noteEditDialog");
+                FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+                if (fragmentActivity != null) {
+                    editDialog.show(fragmentActivity.getSupportFragmentManager(), "noteEditDialog");
                 }
             }
         }
@@ -222,9 +222,9 @@ public class CPDFAnnotationManager {
             editDialog.dismiss();
         });
         if (readerView != null && readerView.getContext() != null) {
-            Context context = readerView.getContext();
-            if (context instanceof FragmentActivity) {
-                editDialog.show(((FragmentActivity) context).getSupportFragmentManager(), "noteEditDialog");
+            FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+            if (fragmentActivity != null) {
+                editDialog.show(fragmentActivity.getSupportFragmentManager(), "noteEditDialog");
             }
         }
     }

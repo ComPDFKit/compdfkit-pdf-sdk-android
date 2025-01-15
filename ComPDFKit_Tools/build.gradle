@@ -54,8 +54,8 @@ dependencies {
     api project(path:':ComPDFKit_Repo:compdfkit')
     api project(path:':ComPDFKit_Repo:compdfkit-ui')
     // or use
-//    api ('com.compdf:compdfkit:2.2.0')
-//    api ('com.compdf:compdfkit-ui:2.2.0')
+//    api ('com.compdf:compdfkit:2.2.1')
+//    api ('com.compdf:compdfkit-ui:2.2.1')
     api 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     api 'androidx.documentfile:documentfile:1.0.1'

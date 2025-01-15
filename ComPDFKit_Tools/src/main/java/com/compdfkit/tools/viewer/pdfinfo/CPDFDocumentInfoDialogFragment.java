@@ -2,9 +2,7 @@ package com.compdfkit.tools.viewer.pdfinfo;
 
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,16 +12,14 @@ import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.document.CPDFDocumentPermissionInfo;
 import com.compdfkit.core.document.CPDFInfo;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.date.CDateUtil;
-import com.compdfkit.tools.common.utils.dialog.CDialogFragmentUtil;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 
-public class CPDFDocumentInfoDialogFragment extends BottomSheetDialogFragment {
+public class CPDFDocumentInfoDialogFragment extends CBasicBottomSheetDialogFragment {
 
     private CToolBar toolBar;
 
@@ -74,25 +70,22 @@ public class CPDFDocumentInfoDialogFragment extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme));
+    protected float dimAmount() {
+        return CViewUtils.isLandScape(getContext()) ? 0.2F : 0F;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (!CViewUtils.isLandScape(getContext())){
-            CDialogFragmentUtil.setDimAmount(getDialog(), 0F);
-        }
-        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from((View) getView().getParent());
-        CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(getDialog(), behavior);
+    protected boolean fullScreen() {
+        return true;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_pdf_document_info_dialog_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_pdf_document_info_dialog_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         toolBar = rootView.findViewById(R.id.tool_bar);
         toolBar.setBackBtnClickListener(v -> {
             dismiss();
@@ -114,7 +107,11 @@ public class CPDFDocumentInfoDialogFragment extends BottomSheetDialogFragment {
         tvPDFAllowDocumentAssembly = rootView.findViewById(R.id.id_pdf_info_document_assembly);
         tvPDFAllowDocumentCommenting = rootView.findViewById(R.id.id_pdf_info_document_commenting);
         tvPDFAllowDocumentFormFieldEntry = rootView.findViewById(R.id.id_pdf_info_document_form_field_entry);
-        return rootView;
+    }
+
+    @Override
+    protected void onViewCreate() {
+
     }
 
     @Override
@@ -127,8 +124,6 @@ public class CPDFDocumentInfoDialogFragment extends BottomSheetDialogFragment {
             documentInfoBean = getCDocumentInfo(pdfView);
         }
         if (documentInfoBean != null) {
-
-
             tvPDFFileName.setText(documentInfoBean.getFileName());
             tvPDFSize.setText(documentInfoBean.getFileSize());
             tvPDFTitle.setText(documentInfoBean.getTitle());

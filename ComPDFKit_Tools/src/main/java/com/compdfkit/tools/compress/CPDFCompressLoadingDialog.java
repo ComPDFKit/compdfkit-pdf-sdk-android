@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2024 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -15,15 +15,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.DialogFragment;
-import com.compdfkit.core.document.CPDFDocument.CompressListener;
+
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeDialogFragment;
 
 
-public class CPDFCompressLoadingDialog extends DialogFragment {
+public class CPDFCompressLoadingDialog extends CBasicThemeDialogFragment {
 
   private AppCompatTextView tvProgress;
 
@@ -46,19 +48,18 @@ public class CPDFCompressLoadingDialog extends DialogFragment {
     super.onStart();
     if (getDialog() != null) {
       getDialog().setCanceledOnTouchOutside(false);
+      getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
   }
 
-  @Nullable
   @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    if (getDialog() != null){
-      getDialog().getWindow().setBackgroundDrawableResource(R.drawable.tools_dialog_background);
-    }
-    View rootView = LayoutInflater.from(getContext()).inflate(R.layout.tools_compress_loading_dialog, container, false);
+  protected int layoutId() {
+    return R.layout.tools_compress_loading_dialog;
+  }
+
+  @Override
+  protected void onCreateView(View rootView) {
     tvProgress = rootView.findViewById(R.id.tv_progress);
-    return rootView;
   }
 
   @Override

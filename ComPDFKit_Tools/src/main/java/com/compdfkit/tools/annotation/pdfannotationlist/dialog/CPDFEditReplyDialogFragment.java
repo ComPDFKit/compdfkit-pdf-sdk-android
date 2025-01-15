@@ -10,7 +10,9 @@
 package com.compdfkit.tools.annotation.pdfannotationlist.dialog;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -87,10 +89,30 @@ public class CPDFEditReplyDialogFragment extends CBasicBottomSheetDialogFragment
       editText.postDelayed(()->{
         if (replyContentListener != null) {
           String content = TextUtils.isEmpty(editText.getText()) ? "" : editText.getText().toString();
+          if (TextUtils.isEmpty(content)){
+            return;
+          }
           replyContentListener.reply(content);
         }
         dismiss();
       }, 400);
+    });
+    btnDone.setEnabled(false);
+    editText.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        btnDone.setEnabled(!TextUtils.isEmpty(charSequence));
+      }
+
+      @Override
+      public void afterTextChanged(Editable editable) {
+
+      }
     });
   }
 

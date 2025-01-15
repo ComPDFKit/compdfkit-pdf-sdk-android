@@ -14,17 +14,15 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.utils.glide.GlideApp;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
@@ -75,7 +73,7 @@ import java.util.Map;
  * @see CWatermarkView
  *
  */
-public class CWatermarkPageFragment extends Fragment {
+public class CWatermarkPageFragment extends CBasicThemeFragment {
 
     private CWatermarkPageView watermarkPageView;
 
@@ -86,6 +84,10 @@ public class CWatermarkPageFragment extends Fragment {
     private int pageIndex = 0;
 
     private CPDFWatermark watermark;
+
+    private String defaultText;
+
+    private String defaultImagePath;
 
     public static CWatermarkPageFragment newInstance(CWatermarkView.EditType type) {
         Bundle args = new Bundle();
@@ -103,16 +105,26 @@ public class CWatermarkPageFragment extends Fragment {
         this.pageIndex = pageIndex;
     }
 
+    public void setDefaultText(String defaultText) {
+        this.defaultText = defaultText;
+    }
+
+    public void setDefaultImagePath(String defaultImagePath) {
+        this.defaultImagePath = defaultImagePath;
+    }
+
     public void setEditWatermark(CPDFWatermark watermark) {
         this.watermark = watermark;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tools_cpdf_security_watermark_page_fragment, container, false);
-        watermarkPageView = view.findViewById(R.id.watermark_page_view);
-        return view;
+    protected int layoutId() {
+        return R.layout.tools_cpdf_security_watermark_page_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
+        watermarkPageView = rootView.findViewById(R.id.watermark_page_view);
     }
 
     @Override
@@ -127,15 +139,22 @@ public class CWatermarkPageFragment extends Fragment {
                     return;
                 }
                 if (editType == CWatermarkView.EditType.TXT) {
-                    // If it is a text watermark type, a watermark named 'Watermark' will be created by default.
-                    watermarkPageView.createTextWatermark(getString(R.string.tools_default_watermark_text));
+                    if (!TextUtils.isEmpty(defaultText)){
+                        // If it is a text watermark type, a watermark named 'Watermark' will be created by default.
+                        watermarkPageView.createTextWatermark(defaultText);
+                    }else {
+                        // If it is a text watermark type, a watermark named 'Watermark' will be created by default.
+                        watermarkPageView.createTextWatermark(getString(R.string.tools_default_watermark_text));
+                    }
                 } else {
                     watermarkPageView.watermarkView.setWatermarkType(editType);
+                    if (!TextUtils.isEmpty(defaultImagePath)) {
+                        updateImageWatermark(defaultImagePath);
+                    }
                 }
             });
         }
     }
-
 
     /**
      * According to the watermark type,
@@ -210,38 +229,41 @@ public class CWatermarkPageFragment extends Fragment {
             @Override
             public void onChangeImagePath(String imagePath, Uri imageUri) {
                 super.onChangeImagePath(imagePath, imageUri);
-                new SimpleBackgroundTask<Bitmap>(getContext()) {
-
-                    @Override
-                    protected Bitmap onRun() {
-                        try {
-                            Bitmap bitmap = null;
-                            if (!TextUtils.isEmpty(imagePath)) {
-                                bitmap = GlideApp.with(getContext()).asBitmap().load(imagePath).submit(360, 480).get();
-                            } else if (imageUri != null) {
-                                bitmap = GlideApp.with(getContext()).asBitmap().load(imagePath).submit(360, 480).get();
-                            }
-                            return bitmap;
-                        } catch (Exception e) {
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onSuccess(Bitmap result) {
-                        if (result != null) {
-                            if (watermarkPageView.watermarkView.getImageWatermarkBitmap() != null) {
-                                watermarkPageView.watermarkView.setImageBitmap(result);
-                                return;
-                            }
-                            watermarkPageView.createImageWatermark(result);
-                            watermarkPageView.updateTileWatermark();
-                        }
-                    }
-                }.execute();
+                if (!TextUtils.isEmpty(imagePath)){
+                    updateImageWatermark(imagePath);
+                }else {
+                    updateImageWatermark(imageUri.toString());
+                }
             }
         });
         styleDialogFragment.show(getChildFragmentManager(), "styleFragment");
+    }
+
+    private void updateImageWatermark(String image){
+        new SimpleBackgroundTask<Bitmap>(getContext()) {
+
+            @Override
+            protected Bitmap onRun() {
+                try {
+                    Bitmap bitmap = GlideApp.with(getContext()).asBitmap().load(image).submit(360, 480).get();
+                    return bitmap;
+                } catch (Exception e) {
+                }
+                return null;
+            }
+
+            @Override
+            protected void onSuccess(Bitmap result) {
+                if (result != null) {
+                    if (watermarkPageView.watermarkView.getImageWatermarkBitmap() != null) {
+                        watermarkPageView.watermarkView.setImageBitmap(result);
+                        return;
+                    }
+                    watermarkPageView.createImageWatermark(result);
+                    watermarkPageView.updateTileWatermark();
+                }
+            }
+        }.execute();
     }
 
     public boolean hasWatermark() {

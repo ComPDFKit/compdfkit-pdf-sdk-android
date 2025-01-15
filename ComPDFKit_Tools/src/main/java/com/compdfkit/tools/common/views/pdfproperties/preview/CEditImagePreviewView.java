@@ -12,7 +12,6 @@ package com.compdfkit.tools.common.views.pdfproperties.preview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -22,15 +21,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.glide.GlideApp;
 import com.compdfkit.tools.common.utils.glide.transformation.RotateTransformation;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
-
-import java.security.MessageDigest;
 
 public class CEditImagePreviewView extends CBasicAnnotPreviewView {
 

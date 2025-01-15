@@ -21,7 +21,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.interfaces.COnDialogDismissListener;
-import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -49,8 +48,8 @@ public class CSearchSettingsDialog extends CBasicBottomSheetDialogFragment {
     private COnDialogDismissListener dialogDismissListener;
 
     @Override
-    protected int getStyle() {
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Transparent_Theme);
+    protected int themeResId() {
+        return  R.attr.compdfkit_BottomSheetDialog_Transparent_Theme;
     }
 
     @Override

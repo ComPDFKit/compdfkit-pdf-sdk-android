@@ -10,19 +10,14 @@
 package com.compdfkit.tools.viewer.pdfthumbnail;
 
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.util.SparseIntArray;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.adapter.COnRecyclerItemClickListener;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
@@ -30,7 +25,8 @@ import com.compdfkit.tools.docseditor.drag.CProItemTouchHelper;
 import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment;
 import com.compdfkit.tools.viewer.pdfthumbnail.adpater.CPDFEditThumbnailListAdapter;
 
-public class CPDFEditThumbnailFragment extends Fragment {
+public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
+
     private RecyclerView rvThumbnailRecyclerView;
 
     private COnSetPDFDisplayPageIndexListener displayPageIndexListener;
@@ -38,6 +34,7 @@ public class CPDFEditThumbnailFragment extends Fragment {
     private CPDFViewCtrl pdfView;
 
     private CPDFEditThumbnailListAdapter thumbnailListAdapter = null;
+
     private boolean isEdit = false;
 
     private CPDFPageEditDialogFragment pageEditDialogFragment = null;
@@ -93,26 +90,16 @@ public class CPDFEditThumbnailFragment extends Fragment {
                 }
             });
         }
-
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment.
-        View rootView = inflater.inflate(R.layout.tools_bota_thumbnail_list_fragment, container, false);
+    protected void onCreateView(View rootView) {
         rvThumbnailRecyclerView = rootView.findViewById(R.id.rv_thumbnail);
-        return rootView;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
+    protected int layoutId() {
+        return R.layout.tools_bota_thumbnail_list_fragment;
     }
 
     public void initFragment() {

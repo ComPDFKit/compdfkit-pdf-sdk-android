@@ -11,21 +11,18 @@ package com.compdfkit.tools.common.utils.dialog;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeDialogFragment;
 
 
-public class CAlertDialog extends DialogFragment {
+public class CAlertDialog extends CBasicThemeDialogFragment {
 
     public static final String EXTRA_TITLE = "extra_title";
 
@@ -61,27 +58,21 @@ public class CAlertDialog extends DialogFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        int themeId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme);
-        if (themeId == 0){
-            themeId = R.style.ComPDFKit_Theme_Dialog;
-        }
-        setStyle(STYLE_NO_TITLE, themeId);
+    protected int themeResId() {
+        return R.attr.dialogTheme;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getDialog() != null && getDialog().getWindow() != null) {
-            getDialog().getWindow().setBackgroundDrawableResource(R.drawable.tools_dialog_background);
-        }
-        View rootView = inflater.inflate(R.layout.tools_alert_dialog, container,false);
+    protected int layoutId() {
+        return R.layout.tools_alert_dialog;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         tvTitle = rootView.findViewById(R.id.tv_title);
         tvMessage = rootView.findViewById(R.id.tv_message);
         btnCancel = rootView.findViewById(R.id.btn_cancel);
         btnConfirm = rootView.findViewById(R.id.btn_confirm);
-        return rootView;
     }
 
     @Override

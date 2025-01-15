@@ -221,8 +221,9 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                     alertDialog.setConfirmClickListener(v -> {
                         alertDialog.dismiss();
                     });
-                    if (getContext() instanceof FragmentActivity) {
-                        alertDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "alertDialog");
+                    FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+                    if (fragmentActivity != null) {
+                        alertDialog.show(fragmentActivity.getSupportFragmentManager(), "alertDialog");
                     }
                     break;
                 case CANNOT_EDIT:
@@ -317,6 +318,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                 break;
             // If the PDF file requires a password to be opened, do nothing for now.
             case PDFDocumentErrorPassword:
+                FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
                 CVerifyPasswordDialogFragment verifyPasswordDialogFragment;
                 if (pdf instanceof String) {
                     verifyPasswordDialogFragment = CVerifyPasswordDialogFragment.newInstance(cpdfDocument, (String) pdf);
@@ -325,8 +327,8 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                 }
                 verifyPasswordDialogFragment.setDismissListener(() -> {
                     if (getCPdfReaderView().getPDFDocument() == null) {
-                        if (getContext() instanceof FragmentActivity) {
-                            ((FragmentActivity) getContext()).onBackPressed();
+                        if (fragmentActivity != null) {
+                            fragmentActivity.onBackPressed();
                         }
                     }
                 });
@@ -342,8 +344,8 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                         openPdfFinishCallback.onOpenPdfFinishCallback();
                     }
                 });
-                if (getContext() instanceof FragmentActivity) {
-                    verifyPasswordDialogFragment.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "verifyPwdDialog");
+                if (fragmentActivity != null) {
+                    verifyPasswordDialogFragment.show(fragmentActivity.getSupportFragmentManager(), "verifyPwdDialog");
                 }
                 break;
             // For all other errors, do nothing for now.
@@ -353,11 +355,13 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
 
     public void showWritePermissionsDialog(CPDFDocument document) {
-        if (getContext() instanceof FragmentActivity) {
-            Fragment rwPermissionDialog = ((FragmentActivity) getContext()).getSupportFragmentManager().findFragmentByTag("rwPermissionDialog");
-            if (rwPermissionDialog != null && rwPermissionDialog instanceof DialogFragment) {
-                ((DialogFragment) rwPermissionDialog).dismiss();
-            }
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+        if (fragmentActivity == null) {
+            return;
+        }
+        Fragment rwPermissionDialog = fragmentActivity.getSupportFragmentManager().findFragmentByTag("rwPermissionDialog");
+        if (rwPermissionDialog != null && rwPermissionDialog instanceof DialogFragment) {
+            ((DialogFragment) rwPermissionDialog).dismiss();
         }
         CAlertDialog alertDialog = CAlertDialog.newInstance(
                 getContext().getString(R.string.tools_warning),
@@ -379,9 +383,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
             }
             alertDialog.dismiss();
         });
-        if (getContext() instanceof FragmentActivity) {
-            alertDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "rwPermissionDialog");
-        }
+        alertDialog.show(fragmentActivity.getSupportFragmentManager(), "rwPermissionDialog");
     }
 
     public void savePDF(COnSaveCallback callback, COnSaveError error) {
@@ -414,7 +416,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                         if (!success) {
                             document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveNoIncremental, saveFileExtraFontSubset);
                         }
-                        CThreadPoolUtils.getInstance().executeMain(()->{
+                        CThreadPoolUtils.getInstance().executeMain(() -> {
                             if (callback != null) {
                                 callback.callback(document.getAbsolutePath(), document.getUri());
                             }
@@ -617,8 +619,9 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                     cPdfReaderView.setDisplayPageIndex(page - 1, true);
                 }
             });
-            if (getContext() instanceof FragmentActivity) {
-                dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "gotoPageDialog");
+            FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+            if (fragmentActivity != null) {
+                dialog.show(fragmentActivity.getSupportFragmentManager(), "gotoPageDialog");
             }
         });
         pageIndicatorAnimator = ObjectAnimator.ofFloat(indicatorView, "alpha", 0F, 1F);

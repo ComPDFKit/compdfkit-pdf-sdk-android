@@ -10,9 +10,7 @@
 package com.compdfkit.tools.annotation.pdfproperties.pdfstamp;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,14 +29,15 @@ public class CStampStyleFragment extends CBasicPropertiesFragment {
 
     private ViewPager2 viewPager2;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected int layoutId() {
+        return R.layout.tools_properties_stamp_style_fragment;
+    }
 
-        View rootView = inflater.inflate(R.layout.tools_properties_stamp_style_fragment, container, false);
+    @Override
+    protected void onCreateView(View rootView) {
         tabLayout = rootView.findViewById(R.id.tab_layout);
         viewPager2 = rootView.findViewById(R.id.view_pager);
-        return rootView;
     }
 
 

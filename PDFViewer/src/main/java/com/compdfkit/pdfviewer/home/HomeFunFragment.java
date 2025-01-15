@@ -9,6 +9,7 @@
 
 package com.compdfkit.pdfviewer.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,11 +26,8 @@ import com.compdfkit.pdfviewer.databinding.FragmentHomeBinding;
 import com.compdfkit.pdfviewer.home.datas.FunDatas;
 import com.compdfkit.pdfviewer.home.samples.SamplesFactory;
 import com.compdfkit.tools.common.pdf.CPDFDocumentActivity;
-import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
-import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
-import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.utils.CPDFCommomUtils;
 
 
@@ -98,6 +96,9 @@ public class HomeFunFragment extends Fragment {
                     break;
                 case Measurement:
                     CPDFCommomUtils.gotoWebsite(getContext(), getString(R.string.tools_contact_sales_url), null);
+                    break;
+                case FunSample:
+                    startActivity(new Intent(getContext(), FunSamplesActivity.class));
                     break;
                 default:
                     break;

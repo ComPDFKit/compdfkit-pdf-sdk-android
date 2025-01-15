@@ -114,8 +114,8 @@ public class CImportCertificateDigitalDialog extends CBasicBottomSheetDialogFrag
     }
 
     @Override
-    protected int getStyle() {
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Transparent_Theme);
+    protected int themeResId() {
+        return R.attr.compdfkit_BottomSheetDialog_Transparent_Theme;
     }
 
     @Override

@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.activity.CPermissionActivity;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.utils.CLog;
 
 public class CPDFDocumentActivity extends CPermissionActivity {
 
@@ -55,10 +56,10 @@ public class CPDFDocumentActivity extends CPermissionActivity {
         if (configuration == null) {
             configuration = CPDFConfigurationUtils.normalConfig(this, "tools_default_configuration.json");
         }
-        int themeId = CPDFApplyConfigUtil.getInstance().getThemeId(getApplicationContext(), configuration);
+        int themeId = CPDFApplyConfigUtil.getInstance().getGlobalThemeId(getApplicationContext(), configuration);
         setTheme(themeId);
         setContentView(R.layout.tools_pdf_document_activity);
-        if (getIntent() != null) {
+        if (getIntent() != null && getSupportFragmentManager().findFragmentByTag("documentFragment") == null) {
             String password = getIntent().getStringExtra(CPDFDocumentFragment.EXTRA_FILE_PASSWORD);
 
             CPDFDocumentFragment documentFragment;
@@ -73,6 +74,7 @@ public class CPDFDocumentActivity extends CPermissionActivity {
                         password,
                         configuration);
             }
+            int count = getSupportFragmentManager().getFragments().size();
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container_view, documentFragment, "documentFragment")

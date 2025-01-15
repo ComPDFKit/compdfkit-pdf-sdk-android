@@ -11,9 +11,7 @@ package com.compdfkit.tools.annotation.pdfproperties.pdfpic;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -48,10 +46,13 @@ public class CImageStyleFragment extends CBasicPropertiesFragment {
         return new CImageStyleFragment();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_import_image_dialog_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_import_image_dialog_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         ConstraintLayout clFromAlbum = rootView.findViewById(R.id.cl_from_album);
         ConstraintLayout clFromCamera = rootView.findViewById(R.id.cl_from_camera);
         clFromAlbum.setOnClickListener(v -> {
@@ -74,7 +75,6 @@ public class CImageStyleFragment extends CBasicPropertiesFragment {
                 });
             }
         });
-        return rootView;
     }
 
     @Override

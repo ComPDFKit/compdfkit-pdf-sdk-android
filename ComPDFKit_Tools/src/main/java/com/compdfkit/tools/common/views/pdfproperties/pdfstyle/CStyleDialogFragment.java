@@ -9,14 +9,10 @@
 
 package com.compdfkit.tools.common.views.pdfproperties.pdfstyle;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,24 +20,24 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.interfaces.COnDialogDismissListener;
 import com.compdfkit.tools.common.utils.CWrapHeightPageChangeCallback;
 import com.compdfkit.tools.common.utils.dialog.CDialogFragmentUtil;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.basic.CBasicPropertiesFragment;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CStyleDialogFragment extends BottomSheetDialogFragment implements CBasicPropertiesFragment.OnSwitchFragmentListener {
+public class CStyleDialogFragment extends CBasicBottomSheetDialogFragment implements CBasicPropertiesFragment.OnSwitchFragmentListener {
 
     protected ConstraintLayout clToolbar;
 
@@ -106,19 +102,30 @@ public class CStyleDialogFragment extends BottomSheetDialogFragment implements C
     }
 
     @Override
+    protected int getStyle() {
+        return styleUIParams.theme;
+    }
+
+    @Override
+    protected float dimAmount() {
+        if (!CViewUtils.isLandScape(getContext())) {
+            return styleUIParams.dimAmount;
+        } else {
+            return 0.2F;
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from((View) getView().getParent());
-        CDialogFragmentUtil.setDimAmount(getDialog(), styleUIParams.dimAmount);
         if (!CViewUtils.isLandScape(getContext())) {
-            CDialogFragmentUtil.setDimAmount(getDialog(), styleUIParams.dimAmount);
             if (styleUIParams.fillScreenHeight){
                 CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(getDialog(), behavior);
             }else {
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         } else {
-            CDialogFragmentUtil.setDimAmount(getDialog(), 0.4F);
             if (styleUIParams.fillScreenHeight){
                 CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(getDialog(), behavior);
             }
@@ -127,15 +134,17 @@ public class CStyleDialogFragment extends BottomSheetDialogFragment implements C
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView;
+    protected int layoutId() {
         if (styleUIParams.dialogStyleType == CStyleUIParams.DialogStyleType.Dialog) {
-            rootView = inflater.inflate(R.layout.tools_style_dialog_fragment, container, false);
+           return R.layout.tools_style_dialog_fragment;
         }else {
-            rootView = inflater.inflate(R.layout.tools_style_activity_type_dialog_fragment, container, false);
+            return R.layout.tools_style_activity_type_dialog_fragment;
         }
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         ivPreviousFragment = rootView.findViewById(R.id.iv_tool_bar_previous);
         ivClose = rootView.findViewById(R.id.iv_tool_bar_close);
         tvTitle = rootView.findViewById(R.id.tv_tool_bar_title);
@@ -146,12 +155,10 @@ public class CStyleDialogFragment extends BottomSheetDialogFragment implements C
         if (viewModel.getStyle().getType() == CStyleType.ANNOT_STAMP){
             clToolbar.setElevation(0);
         }
-        return rootView;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void onViewCreate() {
         applyStyleUIConfig();
         ivClose.setOnClickListener(v -> {
             dismiss();
@@ -267,10 +274,9 @@ public class CStyleDialogFragment extends BottomSheetDialogFragment implements C
         }
     }
 
-    public void show(Context context){
-        if (context instanceof FragmentActivity){
-            FragmentActivity fragmentActivity = (FragmentActivity) context;
-            show(fragmentActivity.getSupportFragmentManager(), "styleDialogFragment");
+    public void show(@Nullable FragmentManager fragmentManager){
+        if (fragmentManager != null) {
+            show(fragmentManager, "styleDialogFragment");
         }
     }
 

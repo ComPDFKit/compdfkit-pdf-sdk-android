@@ -10,9 +10,7 @@
 package com.compdfkit.tools.annotation.pdfproperties.pdfshape;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,12 +38,14 @@ public class CLineArrowTypeListFragment extends CBasicPropertiesFragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_arrow_list_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_arrow_list_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         rvArrowType = rootView.findViewById(R.id.rv_arrow_type);
-        return rootView;
     }
 
     @Override

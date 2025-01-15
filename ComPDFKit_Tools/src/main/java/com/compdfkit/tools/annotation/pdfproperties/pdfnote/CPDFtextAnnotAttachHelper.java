@@ -3,6 +3,7 @@ package com.compdfkit.tools.annotation.pdfproperties.pdfnote;
 import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.ui.proxy.CPDFTextAnnotImpl;
 import com.compdfkit.ui.proxy.attach.CPDFTextAnnotAttachHelper;
 import com.compdfkit.ui.reader.CPDFReaderView;
@@ -40,8 +41,9 @@ public class CPDFtextAnnotAttachHelper extends CPDFTextAnnotAttachHelper {
             pageView.deleteAnnotation(cpdfTextAnnot);
             editDialog.dismiss();
         });
-        if (readerView.getContext() instanceof FragmentActivity) {
-            editDialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "noteEditDialog");
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        if (fragmentActivity != null) {
+            editDialog.show(fragmentActivity.getSupportFragmentManager(), "noteEditDialog");
         }
     }
 }

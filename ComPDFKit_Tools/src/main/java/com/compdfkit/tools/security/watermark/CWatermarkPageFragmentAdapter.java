@@ -23,10 +23,22 @@ class CWatermarkPageFragmentAdapter extends FragmentStateAdapter {
 
     private int pageIndex = 0;
 
+    private String defaultText;
+
+    private String defaultImagePath;
+
     public CWatermarkPageFragmentAdapter(@NonNull Fragment fragment, CPDFDocument document, int pageIndex) {
         super(fragment);
         this.document = document;
         this.pageIndex = pageIndex;
+    }
+
+    public void setDefaultText(String defaultText) {
+        this.defaultText = defaultText;
+    }
+
+    public void setDefaultImagePath(String defaultImagePath) {
+        this.defaultImagePath = defaultImagePath;
     }
 
     @NonNull
@@ -36,6 +48,11 @@ class CWatermarkPageFragmentAdapter extends FragmentStateAdapter {
                 position == 0 ? CWatermarkView.EditType.TXT : CWatermarkView.EditType.Image);
         pageFragment.setDocument(document);
         pageFragment.setPageIndex(pageIndex);
+        if (position == 0){
+            pageFragment.setDefaultText(defaultText);
+        }else {
+            pageFragment.setDefaultImagePath(defaultImagePath);
+        }
         return pageFragment;
     }
 

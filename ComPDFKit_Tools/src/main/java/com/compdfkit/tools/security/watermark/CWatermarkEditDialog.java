@@ -83,6 +83,12 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
     private boolean saveFileExtraFontSubset = false;
 
+    private String savePath;
+
+    private String defaultText;
+
+    private String defaultImagePath;
+
     protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
 
     public static CWatermarkEditDialog newInstance() {
@@ -94,6 +100,23 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
     public void setDocument(CPDFDocument document) {
         this.document = document;
+    }
+
+    public void setDefaultText(String defaultText) {
+        this.defaultText = defaultText;
+    }
+
+    public void setDefaultImagePath(String defaultImagePath) {
+        this.defaultImagePath = defaultImagePath;
+    }
+
+    /**
+     * If the file save path is not set, clicking [Save] will prompt a dialog for selecting the save path.
+     * If a save path is already set, clicking [Save] will directly save the document to the specified directory.
+     * @param savePath sample: /data/xxx/files/xxx.pdf
+     */
+    public void setSavePath(String savePath) {
+        this.savePath = savePath;
     }
 
     public void setSaveFileExtraFontSubset(boolean saveFileExtraFontSubset) {
@@ -119,14 +142,6 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
         return true;
     }
 
-    @Override
-    protected int getStyle() {
-        int themeId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
-        if (themeId == 0){
-            themeId  = R.style.ComPDFKit_Theme_BottomSheetDialog_Light;
-        }
-        return themeId;
-    }
 
     @Override
     protected float dimAmount() {
@@ -197,6 +212,8 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
     private void initWatermarkContent() {
         int[] tabs = new int[]{R.string.tools_custom_stamp_text, R.string.tools_image};
         watermarkPageFragmentAdapter = new CWatermarkPageFragmentAdapter(this, document, pageIndex);
+        watermarkPageFragmentAdapter.setDefaultText(defaultText);
+        watermarkPageFragmentAdapter.setDefaultImagePath(defaultImagePath);
         viewPager2.setAdapter(watermarkPageFragmentAdapter);
         viewPager2.setUserInputEnabled(false);
         viewPager2.setOffscreenPageLimit(2);
@@ -228,51 +245,57 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
         });
     }
 
+    private void saveTask(String savePath){
+        Fragment fragment = getChildFragmentManager().findFragmentByTag("f" + tabLayout.getSelectedTabPosition());
+        CLoadingDialog loadingDialog = CLoadingDialog.newInstance();
+        loadingDialog.show(getChildFragmentManager(), "saveDialog");
+        if (fragment != null && fragment instanceof CWatermarkPageFragment) {
+            new SimpleBackgroundTask<String>(getContext()) {
+
+                @Override
+                protected String onRun() {
+                    try {
+                        boolean success = ((CWatermarkPageFragment) fragment).applyWatermark();
+                        if (!success) {
+                            return null;
+                        }
+                        boolean result = document.saveAs(savePath, false, false, saveFileExtraFontSubset);
+                        return result ? savePath : null;
+                    } catch (Exception e) {
+
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onSuccess(String result) {
+                    if (loadingDialog != null) {
+                        loadingDialog.dismiss();
+                    }
+                    if (document.shouleReloadDocument()) {
+                        document.reload();
+                    }
+                    if (completeListener != null) {
+                        completeListener.complete(result);
+                    }
+                }
+            }.execute();
+        }
+    }
     private void save() {
+        if (!TextUtils.isEmpty(savePath)){
+            saveTask(savePath);
+            return;
+        }
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(dirPath, getString(R.string.tools_saving_path), getString(R.string.tools_okay));
         directoryDialog.setSelectFolderListener(dir -> {
             File file = new File(dir, CFileUtils.getFileNameNoExtension(document.getFileName()) + getString(R.string.tools_watermark_suffix));
             File pdfFile = CFileUtils.renameNameSuffix(file);
-            Fragment fragment = getChildFragmentManager().findFragmentByTag("f" + tabLayout.getSelectedTabPosition());
-            CLoadingDialog loadingDialog = CLoadingDialog.newInstance();
-            loadingDialog.show(getChildFragmentManager(), "saveDialog");
-            if (fragment != null && fragment instanceof CWatermarkPageFragment) {
-                new SimpleBackgroundTask<String>(getContext()) {
-
-                    @Override
-                    protected String onRun() {
-                        try {
-                            boolean success = ((CWatermarkPageFragment) fragment).applyWatermark();
-                            if (!success) {
-                                return null;
-                            }
-                            boolean result = document.saveAs(pdfFile.getAbsolutePath(), false, false, saveFileExtraFontSubset);
-                            return result ? pdfFile.getAbsolutePath() : null;
-                        } catch (Exception e) {
-
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onSuccess(String result) {
-                        if (loadingDialog != null) {
-                            loadingDialog.dismiss();
-                        }
-                        if (document.shouleReloadDocument()) {
-                            document.reload();
-                        }
-                        if (completeListener != null) {
-                            completeListener.complete(result);
-                        }
-                    }
-                }.execute();
-            }
+            saveTask(pdfFile.getAbsolutePath());
         });
         directoryDialog.show(getChildFragmentManager(), "dirDialog");
     }
-
 
     private void initDocument(String filePath, Uri uri) {
         CPDFDocument document = new CPDFDocument(getContext());

@@ -3,7 +3,6 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-
     }
 }
 dependencyResolutionManagement {
@@ -11,8 +10,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
-
     }
 }
 rootProject.name = "compdfkit_android_demo"

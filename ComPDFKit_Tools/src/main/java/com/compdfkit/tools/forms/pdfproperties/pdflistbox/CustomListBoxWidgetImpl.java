@@ -13,6 +13,7 @@ package com.compdfkit.tools.forms.pdfproperties.pdflistbox;
 import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.core.annotation.form.CPDFListboxWidget;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.forms.pdfproperties.option.select.CFormOptionSelectDialogFragment;
 import com.compdfkit.ui.proxy.form.CPDFListboxWidgetImpl;
 
@@ -28,9 +29,9 @@ public class CustomListBoxWidgetImpl extends CPDFListboxWidgetImpl {
             cpdfListboxWidget.updateAp();
             refresh();
         });
-        if (readerView.getContext() instanceof FragmentActivity) {
-            FragmentActivity activity = (FragmentActivity) readerView.getContext();
-            selectDialogFragment.show(activity.getSupportFragmentManager(), "optionDialogFragment");
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        if (fragmentActivity != null) {
+            selectDialogFragment.show(fragmentActivity.getSupportFragmentManager(), "optionDialogFragment");
         }
     }
 }

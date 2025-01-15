@@ -12,8 +12,6 @@ package com.compdfkit.tools.common.contextmenu.impl;
 
 import android.view.View;
 
-import androidx.fragment.app.FragmentActivity;
-
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuInkProvider;
@@ -37,8 +35,8 @@ public class CInkContextMenuView implements ContextMenuInkProvider {
             CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(annotStyle);
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
             styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
-            if (helper.getReaderView().getContext() instanceof FragmentActivity) {
-                styleDialogFragment.show(((FragmentActivity) helper.getReaderView().getContext()).getSupportFragmentManager(), "noteEditDialog");
+            if (helper.getFragmentManager() != null) {
+                styleDialogFragment.show(helper.getFragmentManager(), "noteEditDialog");
             }
             helper.dismissContextMenu();
         });

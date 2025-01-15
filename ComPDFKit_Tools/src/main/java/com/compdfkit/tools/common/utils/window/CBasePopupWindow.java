@@ -1,7 +1,6 @@
 package com.compdfkit.tools.common.utils.window;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +9,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupWindow;
+
+import androidx.fragment.app.FragmentActivity;
+
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 public abstract class CBasePopupWindow extends PopupWindow implements View.OnClickListener {
     private final static String TAG = "BasePopupWindow";
@@ -23,7 +26,8 @@ public abstract class CBasePopupWindow extends PopupWindow implements View.OnCli
         super(context);
 
         this.mContext = context;
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = CViewUtils.getThemeLayoutInflater(mContext);
+//        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContentView = setLayout(mInflater);
         if (mContentView == null) {
             return;
@@ -70,7 +74,7 @@ public abstract class CBasePopupWindow extends PopupWindow implements View.OnCli
 
     @Override
     public void dismiss() {
-        changeWindowAlpha((Activity) mContext, 1.0f);
+        changeWindowAlpha(mContext, 1.0f);
         super.dismiss();
     }
 
@@ -79,7 +83,11 @@ public abstract class CBasePopupWindow extends PopupWindow implements View.OnCli
         super.showAtLocation(parent, gravity, x, y);
     }
 
-    public void changeWindowAlpha(Activity activity, float alpha) {
+    public void changeWindowAlpha(Context context, float alpha) {
+        FragmentActivity activity = CViewUtils.getFragmentActivity(context);
+        if (activity == null) {
+            return;
+        }
         WindowManager.LayoutParams lp = activity.getWindow()
                 .getAttributes();
         lp.alpha = alpha;

@@ -60,6 +60,7 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSelectConten
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSoundContentProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuStampProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuTextFieldProvider;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.security.encryption.CInputOwnerPwdDialog;
 import com.compdfkit.tools.viewer.contextmenu.CopyContextMenuView;
@@ -359,8 +360,8 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
         ownerPwdDialog.setCancelClickListener(v -> {
             ownerPwdDialog.dismiss();
         });
-        if (getReaderView().getContext() instanceof FragmentActivity) {
-            ownerPwdDialog.show(((FragmentActivity) getReaderView().getContext()).getSupportFragmentManager(), "ownerPasswordDialog");
+        if (getFragmentManager() != null) {
+            ownerPwdDialog.show(getFragmentManager(), "ownerPasswordDialog");
         }
     }
 
@@ -374,8 +375,9 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
     }
 
     public FragmentManager getFragmentManager(){
-        if (context instanceof FragmentActivity){
-            return ((FragmentActivity) context).getSupportFragmentManager();
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(context);
+        if (fragmentActivity != null){
+            return fragmentActivity.getSupportFragmentManager();
         } else {
             return null;
         }

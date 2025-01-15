@@ -22,7 +22,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,9 +56,6 @@ public class CFormToolbar extends FrameLayout {
     private CPDFViewCtrl pdfView;
 
     private LinearLayout llFormTool;
-
-    private FragmentManager fragmentManager;
-
     private COnFormChangeListener onFormChangeListener;
 
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -114,10 +110,6 @@ public class CFormToolbar extends FrameLayout {
         if (ivUndo != null) {
             ivUndo.setEnabled(undoManager.canUndo());
         }
-    }
-
-    public void setFragmentManager(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
     }
 
     private void switchFormType(CFormToolBean bean) {

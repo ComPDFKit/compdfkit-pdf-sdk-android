@@ -8,6 +8,7 @@
     <attr name="compdfkit_HeadItem_BackgroundColor" format="color" tools:ignore="ResourceName"/>
     <attr name="compdfkit_tabLayoutStyle" format="reference" tools:ignore="ResourceName"/>
     <attr name="compdfkit_textColorPrimaryNoEnable" format="color" tools:ignore="ResourceName"/>
+    <attr name="compdfkit_DisplaySettingStyle" format="reference" tools:ignore="ResourceName"/>
 
     <style name="ComPDFKit.Theme" parent="Theme.MaterialComponents.NoActionBar.Bridge" tools:ignore="ResourceName">
         <item name="colorPrimary">@color/tools_color_primary</item>
@@ -48,9 +49,11 @@
         <item name="compdfkit_BottomSheetDialog_Theme">@style/ComPDFKit.Theme.BottomSheetDialog.Light</item>
         <item name="compdfkit_HeadItem_BackgroundColor">@color/tools_reader_setting_head_bg_color</item>
         <item name="compdfkit_PDFStyleDialog_ContentColor">@color/tools_style_content_bg</item>
+        <item name="compdfkit_DisplaySettingStyle">@style/ComPDFKit.Theme.BottomSheetDialog.Light.SettingsDialog</item>
+    </style>
+    <style name="ToolsAppThemeTest" parent="Theme.AppCompat.DayNight.NoActionBar">
 
     </style>
-
     <style name="ComPDFKit.Theme.Light" tools:ignore="ResourceName">
     </style>
 
@@ -90,6 +93,7 @@
         <item name="compdfkit_BottomSheetDialog_Theme">@style/ComPDFKit.Theme.BottomSheetDialog.Dark</item>
         <item name="compdfkit_HeadItem_BackgroundColor">@color/tools_dark_reader_setting_head_bg_color</item>
         <item name="compdfkit_PDFStyleDialog_ContentColor">@color/tools_dark_style_content_bg</item>
+        <item name="compdfkit_DisplaySettingStyle">@style/ComPDFKit.Theme.BottomSheetDialog.Dark.SettingsDialog</item>
 
     </style>
 
@@ -150,6 +154,7 @@
         <item name="compdfkit_textColorPrimaryNoEnable">@color/tools_icon_enable_color</item>
         <item name="android:colorControlActivated">@color/tools_color_accent</item>
         <item name="colorControlActivated">@color/tools_color_accent</item>
+        <item name="colorOnPrimary">@color/tools_dark_on_primary</item>
 
     </style>
 
@@ -206,6 +211,8 @@
         <item name="compdfkit_BottomSheetDialog_CloseIcon">@drawable/tools_ic_grey_oval_close_dark</item>
         <item name="colorControlActivated">@color/tools_dark_color_accent</item>
         <item name="colorControlNormal">?attr/colorOnPrimary</item>
+        <item name="colorOnPrimary">@color/tools_dark_on_primary</item>
+
     </style>
 
     <style name="ComPDFKit.Theme.BottomSheetDialog.Light.Transparent" tools:ignore="ResourceName">
@@ -232,6 +239,7 @@
     <style name="ComPDFKit.Theme.Dialog" parent="Theme.AppCompat.Light.Dialog" tools:ignore="ResourceName">
         <item name="android:windowNoTitle">true</item>
         <item name="windowNoTitle">true</item>
+        <item name="colorOnPrimary">@color/tools_on_primary</item>
         <item name="android:colorAccent">@color/tools_color_accent</item>
         <item name="colorPrimary">@color/tools_color_primary</item>
         <item name="colorPrimaryContainer">@color/tools_color_accent</item>
@@ -244,17 +252,21 @@
         <item name="android:textColorHint">@color/tools_text_color_hint</item>
         <item name="switchStyle">@style/ComPDFKit.Theme.SwitchCompat</item>
         <item name="seekBarStyle">@style/ComPDFKit.Theme.SeekBar</item>
+        <item name="compdfkit_textColorPrimaryNoEnable">@color/tools_icon_enable_color</item>
+
     </style>
 
     <style name="ComPDFKit.Theme.Dialog.Dark" tools:ignore="ResourceName">
         <item name="android:colorAccent">@color/tools_dark_color_accent</item>
         <item name="colorPrimary">@color/tools_dark_color_primary</item>
+        <item name="colorOnPrimary">@color/tools_dark_on_primary</item>
         <item name="colorPrimaryContainer">@color/tools_dark_color_accent</item>
         <item name="colorSecondary">@color/tools_dark_secondary</item>
         <item name="colorAccent">@color/tools_dark_color_accent</item>
         <item name="android:colorBackground">@color/tools_dark_color_background</item>
         <item name="android:textColorPrimary">@color/tools_dark_text_color_primary</item>
         <item name="android:textColorSecondary">@color/tools_dark_text_color_secondary</item>
+        <item name="compdfkit_textColorPrimaryNoEnable">@color/tools_dark_icon_enable_color</item>
 
     </style>
 

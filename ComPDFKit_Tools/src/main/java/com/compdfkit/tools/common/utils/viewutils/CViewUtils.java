@@ -21,6 +21,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -30,7 +32,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
+import androidx.fragment.app.FragmentActivity;
 
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.google.android.material.shape.MaterialShapeDrawable;
 
 public class CViewUtils {
@@ -162,5 +166,33 @@ public class CViewUtils {
 
     public static int getColor(int color,@IntRange(from = 0, to = 255) int alpha){
         return Color.argb(alpha,Color.red(color),Color.green(color),Color.blue(color));
+    }
+
+    public static @Nullable FragmentActivity getFragmentActivity(Context context) {
+        if (context instanceof FragmentActivity){
+            return (FragmentActivity) context;
+        }
+        Context baseContext = (context instanceof ContextThemeWrapper)
+                ? ((ContextThemeWrapper) context).getBaseContext()
+                : context;
+        if (baseContext instanceof FragmentActivity){
+            return (FragmentActivity) baseContext;
+        }else {
+            return null;
+        }
+    }
+
+    public static int getThemeStyle(Context context, int themeResId){
+        int themeId = CPDFApplyConfigUtil.getInstance().getGlobalThemeId();
+        Resources.Theme mTheme = context.getResources().newTheme();
+        mTheme.applyStyle(themeId, true);
+        return CViewUtils.getThemeAttrResourceId(mTheme, themeResId);
+    }
+
+    public static LayoutInflater getThemeLayoutInflater(Context context){
+        int themeId = CPDFApplyConfigUtil.getInstance().getGlobalThemeId();
+        Context wrapper = new ContextThemeWrapper(context, themeId);
+        LayoutInflater themedInflater = LayoutInflater.from(context).cloneInContext(wrapper);
+        return themedInflater;
     }
 }

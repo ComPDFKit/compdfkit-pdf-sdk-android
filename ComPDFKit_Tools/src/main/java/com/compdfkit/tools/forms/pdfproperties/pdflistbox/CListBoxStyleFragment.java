@@ -11,9 +11,7 @@ package com.compdfkit.tools.forms.pdfproperties.pdflistbox;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,10 +48,13 @@ public class CListBoxStyleFragment extends CBasicPropertiesFragment implements V
 
     private CPDFFontView fontView;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_list_box_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_list_box_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         textFieldsView = rootView.findViewById(R.id.text_field_view);
         borderColorListView = rootView.findViewById(R.id.border_color_list_view);
         backgroundColorListView = rootView.findViewById(R.id.background_color_list_view);
@@ -61,7 +62,6 @@ public class CListBoxStyleFragment extends CBasicPropertiesFragment implements V
         fontView = rootView.findViewById(R.id.font_view);
         fontSizeSliderBar = rootView.findViewById(R.id.font_size_slider_bar);
         hideFormSwitch = rootView.findViewById(R.id.switch_hide_form);
-        return rootView;
     }
 
     @Override

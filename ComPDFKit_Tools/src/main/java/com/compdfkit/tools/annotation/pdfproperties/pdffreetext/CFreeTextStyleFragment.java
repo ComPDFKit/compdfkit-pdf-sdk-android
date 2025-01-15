@@ -11,9 +11,7 @@ package com.compdfkit.tools.annotation.pdfproperties.pdffreetext;
 
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -56,10 +54,13 @@ public class CFreeTextStyleFragment extends CBasicPropertiesFragment implements 
 
     private List<View> alignmentViews = new ArrayList<>();
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_free_text_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_free_text_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         previewView = rootView.findViewById(R.id.style_preview);
         colorListView = rootView.findViewById(R.id.border_color_list_view);
         opacitySliderBar = rootView.findViewById(R.id.slider_bar);
@@ -75,7 +76,6 @@ public class CFreeTextStyleFragment extends CBasicPropertiesFragment implements 
         alignmentViews.add(ivAlignmentLeft);
         alignmentViews.add(ivAlignmentCenter);
         alignmentViews.add(ivAlignmentRight);
-        return rootView;
     }
 
     @Override
@@ -114,14 +114,27 @@ public class CFreeTextStyleFragment extends CBasicPropertiesFragment implements 
                 colorPickerFragment.setColorAlphaChangeListener(this);
             });
         });
-        opacitySliderBar.setChangeListener((progress, percentageValue, isStop) -> opacity(progress));
+        opacitySliderBar.setChangeListener((progress, percentageValue, isStop) -> {
+            if (isStop) {
+                opacity(progress);
+            }else {
+                if (previewView != null) {
+                    previewView.setTextColorOpacity(progress);
+                }
+            }
+        });
         fontSizeSliderBar.setChangeListener((progress, percentageValue, isStop) -> {
-            if (viewModel != null) {
-                viewModel.getStyle().setFontSize(progress);
+            if (isStop){
+                if (viewModel != null) {
+                    viewModel.getStyle().setFontSize(progress);
+                }
+            }else {
+                if (previewView != null) {
+                    previewView.setFontSize(progress);
+                }
             }
         });
         viewModel.addStyleChangeListener(this);
-
         fontView.setFontChangeListener(psName -> {
             if (viewModel != null) {
                 viewModel.getStyle().setExternFontName(psName);

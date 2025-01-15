@@ -14,11 +14,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -35,6 +38,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.dialog.CEditDialog;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.security.watermark.pdfproperties.CPageRange;
 
 import java.util.ArrayList;
@@ -153,14 +157,19 @@ public class CWatermarkPageView extends FrameLayout {
             if (watermarkView.getWatermarkType() != CWatermarkView.EditType.TXT) {
                 return;
             }
-            CEditDialog editDialog = CEditDialog.newInstance(getContext().getString(R.string.tools_text_watermark), watermarkView.getText());
+            Bundle bundle = new Bundle();
+            bundle.putString(CEditDialog.EXTRA_TITLE, getContext().getString(R.string.tools_text_watermark));
+            bundle.putString(CEditDialog.EXTRA_EDIT_TEXT_INFO, watermarkView.getText());
+            bundle.putInt(CEditDialog.EXTRA_IME_OPTIONS, EditorInfo.IME_ACTION_DONE);
+            CEditDialog editDialog = CEditDialog.newInstance(bundle);
             editDialog.setHint(getContext().getString(R.string.tools_type_your_watermark_text_here));
             editDialog.setEditListener(text -> {
-                watermarkView.setText(text);
+                watermarkView.setText(text.replaceAll("\n", ""));
                 editDialog.dismiss();
             });
-            if (getContext() instanceof FragmentActivity) {
-                editDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "editDialog");
+            FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+            if (fragmentActivity != null) {
+                editDialog.show(fragmentActivity.getSupportFragmentManager(), "editDialog");
             }
         });
     }

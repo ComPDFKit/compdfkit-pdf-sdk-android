@@ -20,6 +20,7 @@ import com.compdfkit.core.signature.CPDFSignature;
 import com.compdfkit.core.signature.CPDFX509;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CToastUtil;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.signature.CertificateDigitalDatas;
@@ -36,14 +37,14 @@ public class CDigitalSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
 
     @Override
     public void onSignatureWidgetFocused(CPDFSignatureWidget cpdfSignatureWidget) {
-
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
         CPDFSignature signature = readerView.getPDFDocument().getPdfSignature(cpdfSignatureWidget);
         if (signature != null && signature.isDigitalSigned()) {
             CertDigitalSignInfoDialog signInfoDialog = CertDigitalSignInfoDialog.newInstance();
             signInfoDialog.setDocument(readerView.getPDFDocument());
             signInfoDialog.setPDFSignature(signature);
-            if (readerView.getContext() instanceof FragmentActivity) {
-                signInfoDialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "signInfoDialog");
+            if (fragmentActivity != null) {
+                signInfoDialog.show(fragmentActivity.getSupportFragmentManager(), "signInfoDialog");
             }
             return;
         }
@@ -66,20 +67,20 @@ public class CDigitalSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                     directoryDialog.setSelectFolderListener(dir -> {
                         signDocument(cpdfSignatureWidget, config, location, reason, certFilePath, certPassword, dir);
                     });
-                    if (readerView.getContext() instanceof FragmentActivity) {
-                        directoryDialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "selectFolderDialog");
+                    if (fragmentActivity != null) {
+                        directoryDialog.show(fragmentActivity.getSupportFragmentManager(), "selectFolderDialog");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 dialog.dismiss();
             });
-            if (readerView.getContext() instanceof FragmentActivity) {
-                previewDialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "digitalSignPreviewDialog");
+            if (fragmentActivity != null) {
+                previewDialog.show(fragmentActivity.getSupportFragmentManager(), "digitalSignPreviewDialog");
             }
         });
-        if (readerView.getContext() instanceof FragmentActivity) {
-            dialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "styleDialog");
+        if (fragmentActivity != null) {
+            dialog.show(fragmentActivity.getSupportFragmentManager(), "styleDialog");
         }
     }
 

@@ -6,7 +6,7 @@
     android:layout_gravity="center">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="?android:attr/colorBackground"
+        android:background="@drawable/tools_dialog_background"
         android:layout_width="@dimen/tools_dialog_layout_width"
         android:layout_height="wrap_content"
         android:paddingTop="24dp"

@@ -69,7 +69,7 @@ public class CAddCustomStampActivity extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(CPDFApplyConfigUtil.getInstance().getThemeId());
+        setTheme(CPDFApplyConfigUtil.getInstance().getGlobalThemeId(this, CPDFApplyConfigUtil.getInstance().getConfiguration()));
         setContentView(R.layout.tools_properties_stamp_style_add_custom_activity);
         cToolBar = findViewById(R.id.tool_bar);
         stampTextView = findViewById(R.id.stamp_text_view);

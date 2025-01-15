@@ -120,12 +120,6 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
         }
         return dialog;
     }
-
-    @Override
-    protected int getStyle() {
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
-    }
-
     @Override
     protected boolean fullScreen() {
         return true;

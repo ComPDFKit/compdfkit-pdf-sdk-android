@@ -2,12 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
   android:gravity="center_horizontal"
   >
 
   <LinearLayout
+      android:background="@drawable/tools_dialog_background"
     android:layout_width="175dp"
     android:layout_height="172dp"
     android:layout_gravity="center"
@@ -31,7 +32,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="16dp"
       android:text="@string/compressing_"
-      android:textColor="@android:color/white"
+      android:textColor="?android:attr/textColorPrimary"
       android:textSize="14sp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -42,10 +43,8 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
-      android:textColor="@android:color/white"
+        android:textColor="?android:attr/textColorPrimary"
       tools:text="2/35" />
-
-
   </LinearLayout>
 
 </FrameLayout>

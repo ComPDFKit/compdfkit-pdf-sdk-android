@@ -12,9 +12,7 @@ package com.compdfkit.tools.annotation.pdfproperties.pdfstamp;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -58,10 +56,13 @@ public class CStampCustomFragment extends CBasicPropertiesFragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_stamp_custom_list_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_stamp_custom_list_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         FloatingActionButton fabAdd = rootView.findViewById(R.id.fab_add_custom_stamp);
         rvCustomStamp = rootView.findViewById(R.id.rv_custom_stamp);
         fabAdd.setOnClickListener(v -> {
@@ -85,7 +86,6 @@ public class CStampCustomFragment extends CBasicPropertiesFragment {
             });
             addStampDialog.show(getChildFragmentManager(), "addStampDialog");
         });
-        return rootView;
     }
 
     @Override

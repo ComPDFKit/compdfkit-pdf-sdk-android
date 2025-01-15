@@ -9,14 +9,14 @@
 
 package com.compdfkit.tools.security.encryption;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,14 +24,13 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeDialogFragment;
 
 
-public class CInputOwnerPwdDialog extends DialogFragment {
+public class CInputOwnerPwdDialog extends CBasicThemeDialogFragment {
 
     public static final String EXTRA_TITLE = "extra_title";
 
@@ -71,22 +70,31 @@ public class CInputOwnerPwdDialog extends DialogFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme));
+    protected int themeResId() {
+        return R.attr.dialogTheme;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_cpdf_security_input_owner_pwd_dialog, container, false);
+    public void onStart() {
+        super.onStart();
+        if (getDialog() != null) {
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+    }
+
+    @Override
+    protected int layoutId() {
+        return R.layout.tools_cpdf_security_input_owner_pwd_dialog;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         etPassword = rootView.findViewById(R.id.et_password);
         btnCancel = rootView.findViewById(R.id.btn_cancel);
         btnConfirm = rootView.findViewById(R.id.btn_confirm);
         ivPasswordVisible = rootView.findViewById(R.id.iv_input_visible);
         tvPasswordError = rootView.findViewById(R.id.tv_pwd_error);
         tvTitle = rootView.findViewById(R.id.tv_title);
-        return rootView;
     }
 
     @Override

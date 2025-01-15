@@ -44,11 +44,11 @@ import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 
-import java.util.Arrays;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 

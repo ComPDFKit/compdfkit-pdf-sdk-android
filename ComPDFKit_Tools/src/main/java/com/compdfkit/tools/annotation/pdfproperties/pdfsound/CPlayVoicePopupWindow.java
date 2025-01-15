@@ -138,8 +138,9 @@ public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPla
             @Override
             protected Boolean doInBackground(Void... voids) {
                 while (true) {
-                    if (mContext instanceof FragmentActivity) {
-                        ((FragmentActivity) mContext).runOnUiThread(() -> {
+                    FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(mContext);
+                    if (fragmentActivity != null) {
+                        fragmentActivity.runOnUiThread(() -> {
                             if (mediaPlayManager != null && mediaPlayManager.getMediaPlayer() != null) {
                                 tvTimeStart.setText(convert(mediaPlayManager.getMediaPlayer().getCurrentPosition()) + "");
                             }
@@ -163,8 +164,9 @@ public class CPlayVoicePopupWindow extends CBasePopupWindow implements CMediaPla
         mediaPlayManager.setPlayFile(voicePath);
         mediaPlayManager.mediaStart();
         startUpdateTask();
-        if (mContext instanceof FragmentActivity) {
-            ((FragmentActivity) mContext).runOnUiThread(() -> {
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(mContext);
+        if (fragmentActivity != null) {
+            fragmentActivity.runOnUiThread(() -> {
                 showAtLocation(rootView, Gravity.BOTTOM, 0, CViewUtils.getActionBarSize(rootView.getContext()) + CDimensUtils.dp2px(rootView.getContext(), 32));
             });
         }

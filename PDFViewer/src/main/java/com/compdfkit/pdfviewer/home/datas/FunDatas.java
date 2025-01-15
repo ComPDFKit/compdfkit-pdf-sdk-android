@@ -43,9 +43,9 @@ public class FunDatas {
                 new HomeFunBean(context, HomeFunBean.FunType.Conversion, R.drawable.ic_fun_conversion, R.string.tools_fun_conversion, R.string.tools_fun_conversion_desc),
                 new HomeFunBean(context, HomeFunBean.FunType.Compress, R.drawable.ic_fun_compress, R.string.tools_fun_compress, R.string.tools_fun_compress_desc, true),
                 new HomeFunBean(context, HomeFunBean.FunType.Measurement, R.drawable.ic_fun_mesurement, R.string.tools_fun_measurement, R.string.tools_fun_measurement_desc),
+//                new HomeFunBean(context, HomeFunBean.FunType.FunSample, R.drawable.ic_fun_document_editor, R.string.tools_fun_document_editor, R.string.tools_fun_document_editor_desc),
                 HomeFunBean.head(context, R.string.tools_click_to_open_process),
-                HomeFunBean.assetsFile(context, "ComPDFKit_Sample_File_Android.pdf", context.getString(R.string.tools_compdfkit_sample_file_android))
-        );
+                HomeFunBean.assetsFile(context, "ComPDFKit_Sample_File_Android.pdf", "ComPDFKit_Sample_File_Android.pdf"));
     }
 
 

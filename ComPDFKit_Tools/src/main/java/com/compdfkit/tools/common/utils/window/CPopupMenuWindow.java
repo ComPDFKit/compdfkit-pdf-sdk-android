@@ -22,6 +22,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 
 public class CPopupMenuWindow extends CBasePopupWindow {
@@ -56,7 +57,7 @@ public class CPopupMenuWindow extends CBasePopupWindow {
     }
 
     public void addItem(@DrawableRes int iconResId, @StringRes int stringResId, View.OnClickListener clickListener){
-        View itemView = LayoutInflater.from(mContext).inflate(R.layout.tools_menu_window_item, null);
+        View itemView = CViewUtils.getThemeLayoutInflater(mContext).inflate(R.layout.tools_menu_window_item, null);
         AppCompatImageView ivIcon = itemView.findViewById(R.id.iv_menu_icon);
         AppCompatTextView tvTitle = itemView.findViewById(R.id.tv_menu_title);
         ivIcon.setImageResource(iconResId);
@@ -77,7 +78,7 @@ public class CPopupMenuWindow extends CBasePopupWindow {
     }
 
     public void addItem(@StringRes int stringResId,boolean enable, View.OnClickListener clickListener){
-        View itemView = LayoutInflater.from(mContext).inflate(R.layout.tools_menu_window_item, null);
+        View itemView = CViewUtils.getThemeLayoutInflater(mContext).inflate(R.layout.tools_menu_window_item, null);
         AppCompatImageView ivIcon = itemView.findViewById(R.id.iv_menu_icon);
         AppCompatTextView tvTitle = itemView.findViewById(R.id.tv_menu_title);
         ivIcon.setVisibility(View.GONE);

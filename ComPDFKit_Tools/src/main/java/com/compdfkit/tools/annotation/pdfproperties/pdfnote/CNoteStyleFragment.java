@@ -11,9 +11,7 @@ package com.compdfkit.tools.annotation.pdfproperties.pdfnote;
 
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,15 +45,17 @@ public class CNoteStyleFragment extends CBasicPropertiesFragment
         return new CNoteStyleFragment();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_note_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_note_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         colorListView = rootView.findViewById(R.id.color_list_view);
         stylePreviewView = rootView.findViewById(R.id.style_preview);
         stylePreviewView.setAnnotType(CStyleType.ANNOT_TEXT);
         stylePreviewView.setColor(viewModel.getStyle().getColor());
-        return rootView;
     }
 
     @Override

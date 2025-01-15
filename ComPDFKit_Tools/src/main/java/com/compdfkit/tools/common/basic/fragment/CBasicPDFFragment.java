@@ -13,9 +13,7 @@ package com.compdfkit.tools.common.basic.fragment;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
-
-import androidx.documentfile.provider.DocumentFile;
-import androidx.fragment.app.FragmentActivity;
+import android.view.View;
 
 import com.compdfkit.core.annotation.CPDFLinkAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAnnotation;
@@ -23,6 +21,7 @@ import com.compdfkit.core.annotation.form.CPDFComboboxWidget;
 import com.compdfkit.core.annotation.form.CPDFListboxWidget;
 import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
 import com.compdfkit.core.document.CPDFDocument;
+import com.compdfkit.core.edit.CPDFEditManager;
 import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdflink.CLinkAnnotAttachHelper;
@@ -37,9 +36,10 @@ import com.compdfkit.tools.common.contextmenu.impl.CSearchReplaceContextMenuView
 import com.compdfkit.tools.common.contextmenu.impl.CSignatureContextMenuView;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CLog;
-import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
+import com.compdfkit.tools.common.views.pdfbota.CPDFBOTA;
+import com.compdfkit.tools.common.views.pdfbota.CPDFBotaDialogFragment;
+import com.compdfkit.tools.common.views.pdfbota.CPDFBotaFragmentTabs;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment;
@@ -49,8 +49,11 @@ import com.compdfkit.tools.forms.pdfproperties.pdfsign.CustomSignatureWidgetImpl
 import com.compdfkit.tools.viewer.contextmenu.CopyContextMenuView;
 import com.compdfkit.tools.viewer.pdfdisplaysettings.CPDFDisplaySettingDialogFragment;
 import com.compdfkit.tools.viewer.pdfinfo.CPDFDocumentInfoDialogFragment;
+import com.compdfkit.tools.viewer.pdfsearch.CSearchReplaceToolbar;
+import com.compdfkit.ui.reader.CPDFReaderView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class CBasicPDFFragment extends CPermissionFragment {
 
@@ -117,14 +120,14 @@ public class CBasicPDFFragment extends CPermissionFragment {
                 .registImpl(CPDFSignatureWidget.class, CustomSignatureWidgetImpl.class);
     }
 
-    protected void showDisplaySettings(CPDFViewCtrl pdfView) {
+    public void showDisplaySettings(CPDFViewCtrl pdfView) {
         pdfView.exitEditMode();
         CPDFDisplaySettingDialogFragment displaySettingDialogFragment = CPDFDisplaySettingDialogFragment.newInstance();
         displaySettingDialogFragment.initWithPDFView(pdfView);
         displaySettingDialogFragment.show(getChildFragmentManager(), "displaySettingsDialog");
     }
 
-    protected void showDocumentInfo(CPDFViewCtrl pdfView) {
+    public void showDocumentInfo(CPDFViewCtrl pdfView) {
         pdfView.exitEditMode();
         CPDFDocumentInfoDialogFragment infoDialogFragment = CPDFDocumentInfoDialogFragment.newInstance();
         infoDialogFragment.initWithPDFView(pdfView);
@@ -132,7 +135,9 @@ public class CBasicPDFFragment extends CPermissionFragment {
     }
 
     protected void sharePDF(CPDFViewCtrl pdfView) {
+        curEditMode = pdfView.getCPdfReaderView().getLoadType();
         pdfView.savePDF((filePath, pdfUri) -> {
+            restoreEdit(pdfView,true);
             if (pdfUri != null && pdfUri.toString().startsWith("content://")){
                 CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", pdfUri);
                 return;
@@ -148,7 +153,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
                 }
             }
         }, e -> {
-
+            restoreEdit(pdfView,true);
             CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
             if (document == null){
                 return;
@@ -172,7 +177,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
         });
     }
 
-    public void showPageEdit(CPDFViewCtrl pdfView, boolean enterEdit, CPDFPageEditDialogFragment.OnBackLisener backListener) {
+    protected void showPageEdit(CPDFViewCtrl pdfView, boolean enterEdit, CPDFPageEditDialogFragment.OnBackLisener backListener) {
         curEditMode = pdfView.getCPdfReaderView().getLoadType();
         pdfView.exitEditMode();
         pdfView.getCPdfReaderView().getContextMenuShowListener().dismissContextMenu();
@@ -183,16 +188,23 @@ public class CBasicPDFFragment extends CPermissionFragment {
         pageEditDialogFragment.show(getChildFragmentManager(), "pageEditDialogFragment");
     }
 
+    protected void restoreEdit(CPDFViewCtrl pdfView, boolean isEditMode) {
+        if (curEditMode > CPDFEditPage.LoadNone && isEditMode) {
+            CPDFEditManager editManager = pdfView.getCPdfReaderView().getEditManager();
+            if (!editManager.isEditMode()) {
+                editManager.beginEdit(curEditMode);
+            }
+        }
+    }
+
     private CLoadingDialog loadingDialog;
 
     protected void showLoadingDialog() {
         if (loadingDialog != null && loadingDialog.isVisible()) {
             loadingDialog.dismiss();
         }
-        if (getContext() instanceof FragmentActivity) {
-            loadingDialog = CLoadingDialog.newInstance();
-            loadingDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "loadingDialog");
-        }
+        loadingDialog = CLoadingDialog.newInstance();
+        loadingDialog.show(getChildFragmentManager(), "loadingDialog");
     }
 
     protected void dismissLoadingDialog() {
@@ -200,4 +212,6 @@ public class CBasicPDFFragment extends CPermissionFragment {
             loadingDialog.dismiss();
         }
     }
+
+
 }

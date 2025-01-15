@@ -14,8 +14,6 @@ import android.graphics.PointF;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.fragment.app.FragmentActivity;
-
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuLongPressProvider;
@@ -86,8 +84,8 @@ public class CLongPressContextMenuView implements ContextMenuLongPressProvider {
     private CStyleDialogFragment showAnnotStyleFragment(CPDFContextMenuHelper helper, CStyleType type){
         CStyleManager styleManager = new CStyleManager(helper.getReaderView());
         CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(styleManager.getStyle(type));
-        if (helper.getReaderView().getContext() instanceof FragmentActivity) {
-            styleDialogFragment.show(((FragmentActivity) helper.getReaderView().getContext()).getSupportFragmentManager(), "styleDialog");
+        if (helper.getFragmentManager() != null) {
+            styleDialogFragment.show(helper.getFragmentManager(), "styleDialog");
         }
         return styleDialogFragment;
     }

@@ -10,21 +10,18 @@
 package com.compdfkit.tools.signature.importcert.create;
 
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeDialogFragment;
 
-public class CSelectSignTypeDialog extends DialogFragment implements View.OnClickListener {
+public class CSelectSignTypeDialog extends CBasicThemeDialogFragment implements View.OnClickListener {
 
     public enum SignatureType{
 
@@ -44,25 +41,32 @@ public class CSelectSignTypeDialog extends DialogFragment implements View.OnClic
         return fragment;
     }
 
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme));
+    protected int themeResId() {
+        return R.attr.dialogTheme;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getDialog() != null && getDialog().getWindow() != null) {
-            getDialog().getWindow().setBackgroundDrawableResource(R.drawable.tools_dialog_background);
+    protected int layoutId() {
+        return R.layout.tools_sign_select_sign_type_dialog;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getDialog()!=null) {
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-        View view = inflater.inflate(R.layout.tools_sign_select_sign_type_dialog, container, false);
-        rgType = view.findViewById(R.id.rg_type);
-        AppCompatButton btnCancel = view.findViewById(R.id.btn_cancel);
-        AppCompatButton btnDone = view.findViewById(R.id.btn_confirm);
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
+        rgType = rootView.findViewById(R.id.rg_type);
+        AppCompatButton btnCancel = rootView.findViewById(R.id.btn_cancel);
+        AppCompatButton btnDone = rootView.findViewById(R.id.btn_confirm);
         btnCancel.setOnClickListener(this);
         btnDone.setOnClickListener(this);
-        return view;
     }
 
     @Override

@@ -16,9 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,7 +24,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +35,7 @@ import com.compdfkit.tools.annotation.pdfannotationlist.bean.CPDFAnnotListItem;
 import com.compdfkit.tools.annotation.pdfannotationlist.data.CPDFAnnotDatas;
 import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFEditReplyDialogFragment;
 import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFReplyDetailsDialogFragment;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
@@ -54,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CPDFAnnotationListFragment extends Fragment {
+public class CPDFAnnotationListFragment extends CBasicThemeFragment {
 
     private RecyclerView rvAnnotation;
 
@@ -111,14 +109,17 @@ public class CPDFAnnotationListFragment extends Fragment {
         this.pdfView = pdfView;
     }
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_bota_annotation_list_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_bota_annotation_list_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         rvAnnotation = rootView.findViewById(R.id.rv_annotation);
         clEmptyView = rootView.findViewById(R.id.cl_annot_empty_view);
         progressBar = rootView.findViewById(R.id.progress_bar);
-        return rootView;
     }
 
     @Override

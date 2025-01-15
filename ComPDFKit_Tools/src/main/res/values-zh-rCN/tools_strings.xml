@@ -117,6 +117,7 @@
     <string name="tools_fill_color">填充颜色</string>
     <string name="tools_text_color">文字颜色</string>
     <string name="tools_dashed_setting">线型</string>
+    <string name="tools_dashed_spacing">虚线</string>
     <string name="tools_annot_start_line_style">线头</string>
     <string name="tools_annot_tail_line_style">线尾</string>
 
@@ -406,6 +407,7 @@
     <string name="tools_digital_signature_detail">数字签名详细信息</string>
     <string name="tools_digital_create_error">失败</string>
     <string name="tools_digital_sign_success">签名成功</string>
+    <string name="tools_digital_sign_failures">签名失败</string>
     <string name="tools_cert_is_trusted_to">本证书信任于：</string>
     <string name="tools_trusted_1">签名文档或数据</string>
     <string name="tools_trusted_2">验证文档</string>

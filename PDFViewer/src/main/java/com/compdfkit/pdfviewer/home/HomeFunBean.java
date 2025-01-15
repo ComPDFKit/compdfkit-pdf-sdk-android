@@ -22,6 +22,8 @@ public class HomeFunBean {
 
     public enum FunType {
 
+        FunSample,
+
         SamplePDF,
 
         Viewer,

@@ -3,7 +3,6 @@ package com.compdfkit.tools.common.utils.threadpools;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -94,22 +93,10 @@ public class CThreadPoolUtils {
      * @param command The command to execute.
      */
     public void executeMain(final Runnable command) {
-        poolExecutor.execute(()-> handler.post(command));
+        handler.post(command);
     }
 
     public void executeIO(final Runnable command) {
         poolExecutor.execute(command);
-    }
-
-
-    /**
-     * Executes a list of commands in the thread pool.
-     *
-     * @param commands The list of commands to execute.
-     */
-    public void executeMain(final List<Runnable> commands) {
-        for (Runnable command : commands) {
-            poolExecutor.execute(command);
-        }
     }
 }

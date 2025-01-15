@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.compdfkit.pdfviewer",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 1018,
+      "versionName": "2.2.1",
+      "outputFile": "PDFViewer-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

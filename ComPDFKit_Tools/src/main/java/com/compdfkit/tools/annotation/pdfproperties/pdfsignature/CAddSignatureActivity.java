@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdfsignature.data.CSignatureDatas;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.utils.dialog.CImportImageDialogFragment;
 import com.compdfkit.tools.common.utils.image.CImageUtil;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
@@ -97,8 +98,7 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int themeId = getIntent().getIntExtra(EXTRA_THEME_ID, R.style.ComPDFKit_Theme_Light);
-        setTheme(themeId);
+        setTheme(CPDFApplyConfigUtil.getInstance().getGlobalThemeId(this, CPDFApplyConfigUtil.getInstance().getConfiguration()));
         int screenOrientation = getIntent().getIntExtra(EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setRequestedOrientation(screenOrientation);
         setContentView(R.layout.tools_properties_signature_style_add_activity);

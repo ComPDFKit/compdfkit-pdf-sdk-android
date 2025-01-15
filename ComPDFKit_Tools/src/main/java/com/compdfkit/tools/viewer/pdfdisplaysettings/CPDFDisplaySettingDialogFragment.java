@@ -10,29 +10,24 @@
 package com.compdfkit.tools.viewer.pdfdisplaysettings;
 
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.core.content.ContextCompat;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.dialog.CDialogFragmentUtil;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.ui.reader.CPDFReaderView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class CPDFDisplaySettingDialogFragment extends BottomSheetDialogFragment
+public class CPDFDisplaySettingDialogFragment extends CBasicBottomSheetDialogFragment
         implements RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
 
     private CToolBar toolBar;
@@ -75,18 +70,11 @@ public class CPDFDisplaySettingDialogFragment extends BottomSheetDialogFragment
         this.pdfView = pdfView;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        int themeId = R.style.ComPDFKit_Theme_BottomSheetDialog_Light_SettingsDialog;
-        int isLightThemeValue = CViewUtils.getThemeAttrData(getContext().getTheme(), R.attr.isLightTheme);
-        boolean isDarkTheme = isLightThemeValue == 0;
-        if (isDarkTheme){
-            themeId = R.style.ComPDFKit_Theme_BottomSheetDialog_Dark_SettingsDialog;
-        }
-        setStyle(STYLE_NORMAL, themeId);
-    }
 
+    @Override
+    protected int themeResId() {
+        return R.attr.compdfkit_DisplaySettingStyle;
+    }
 
     @Override
     public void onStart() {
@@ -98,10 +86,14 @@ public class CPDFDisplaySettingDialogFragment extends BottomSheetDialogFragment
         CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(getDialog(), behavior);
     }
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_display_settings_dialog_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_display_settings_dialog_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         toolBar = rootView.findViewById(R.id.tool_bar);
         toolBar.setBackBtnClickListener(v -> dismiss());
         readerModeRadioGroup = rootView.findViewById(R.id.radio_group_reader_mode);
@@ -118,12 +110,11 @@ public class CPDFDisplaySettingDialogFragment extends BottomSheetDialogFragment
         rbDarkMode = rootView.findViewById(R.id.r_btn_dark_mode);
         rbSepiaMode = rootView.findViewById(R.id.r_btn_sepia_mode);
         rbResedaMode = rootView.findViewById(R.id.r_btn_reseda_mode);
-        return rootView;
     }
 
+
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void onViewCreate() {
         if (pdfView != null) {
             com.compdfkit.ui.reader.CPDFReaderView readerView = pdfView.getCPdfReaderView();
             if (readerView.isDoublePageMode()) {

@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
@@ -21,6 +20,7 @@ import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
 import com.compdfkit.core.annotation.form.CPDFWidget;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CPropertiesFragmentBean;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleViewModel;
@@ -28,7 +28,7 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleViewModel;
 import java.util.Map;
 
 
-public abstract class CBasicPropertiesFragment extends Fragment implements CAnnotStyle.OnAnnotStyleChangeListener {
+public abstract class CBasicPropertiesFragment extends CBasicThemeFragment implements CAnnotStyle.OnAnnotStyleChangeListener {
 
     protected CStyleViewModel viewModel;
 

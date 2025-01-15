@@ -11,8 +11,6 @@ package com.compdfkit.tools.common.contextmenu.impl;
 
 import android.view.View;
 
-import androidx.fragment.app.FragmentActivity;
-
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuPushButtonProvider;
@@ -33,9 +31,8 @@ public class CPushButtonContextMenuView implements ContextMenuPushButtonProvider
         ContextMenuView menuView = new ContextMenuView(pageView.getContext());
         menuView.addItem(R.string.tools_options, v -> {
             CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
-            if (helper.getReaderView().getContext() instanceof FragmentActivity){
-                FragmentActivity activity = (FragmentActivity) helper.getReaderView().getContext();
-                annotationManager.showPushButtonActionDialog(activity.getSupportFragmentManager(),
+            if (helper.getFragmentManager() != null){
+                annotationManager.showPushButtonActionDialog(helper.getFragmentManager(),
                         helper.getReaderView(), pushbuttonWidgetImpl, pageView);
             }
             helper.dismissContextMenu();
@@ -46,7 +43,7 @@ public class CPushButtonContextMenuView implements ContextMenuPushButtonProvider
             CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
             styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
-            styleDialogFragment.show(helper.getReaderView().getContext());
+            styleDialogFragment.show(helper.getFragmentManager());
             helper.dismissContextMenu();
         });
         menuView.addItem(R.string.tools_delete, v -> {

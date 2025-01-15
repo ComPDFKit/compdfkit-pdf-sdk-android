@@ -6,7 +6,7 @@
     style="@style/tools_pdf_reader_mode_radio_button_style"
     tools:drawableStart="@drawable/tools_ic_preview_settings"
     tools:text="@string/tools_pdf_viewer_mode"
-    android:textColor="?android:attr/textColorPrimary"
-    >
+    tools:checked="true"
+    android:textColor="?android:attr/textColorPrimary">
 
 </androidx.appcompat.widget.AppCompatRadioButton>

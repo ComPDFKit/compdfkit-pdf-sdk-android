@@ -17,7 +17,6 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.widget.AppCompatButton;
@@ -26,7 +25,6 @@ import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.compdfkit.core.document.CPDFDocument;
-import com.compdfkit.core.document.CPDFDocument.CompressListener;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CFileUtils;
@@ -42,7 +40,6 @@ import com.compdfkit.tools.common.utils.viewutils.EditTextUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
-import com.compdfkit.ui.reader.CPDFReaderView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -105,15 +102,6 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
     this.document = document;
   }
 
-  @Override
-  protected int getStyle() {
-    int styleId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(),
-        R.attr.compdfkit_BottomSheetDialog_Theme);
-    if (styleId == 0) {
-      styleId = R.style.ComPDFKit_Theme_BottomSheetDialog_Light_Transparent;
-    }
-    return styleId;
-  }
 
   @Override
   protected float dimAmount() {

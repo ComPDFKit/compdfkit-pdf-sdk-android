@@ -13,9 +13,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -72,10 +70,13 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
 
     private List<View> alignmentViews = new ArrayList<>();
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_text_fields_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_text_fields_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         textFieldsView = rootView.findViewById(R.id.text_field_view);
         borderColorListView = rootView.findViewById(R.id.border_color_list_view);
         backgroundColorListView = rootView.findViewById(R.id.background_color_list_view);
@@ -95,7 +96,6 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
         alignmentViews.add(ivAlignmentLeft);
         alignmentViews.add(ivAlignmentCenter);
         alignmentViews.add(ivAlignmentRight);
-        return rootView;
     }
 
     @Override

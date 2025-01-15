@@ -1,9 +1,7 @@
 package com.compdfkit.tools.contenteditor.pdfproperties;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -61,8 +59,13 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
         super.onStart();
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_edit_text_property_fragment, container, false);
+    @Override
+    protected int layoutId() {
+        return R.layout.tools_edit_text_property_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         colorListView = rootView.findViewById(R.id.border_color_list_view);
         opacitySliderBar = rootView.findViewById(R.id.slider_bar);
         llAlignment = rootView.findViewById(R.id.ll_alignment_type);
@@ -85,7 +88,6 @@ public class CEditTextProperFragment extends CBasicPropertiesFragment
         alignmentViews.add(ivAlignmentLeft);
         alignmentViews.add(ivAlignmentCenter);
         alignmentViews.add(ivAlignmentRight);
-        return rootView;
     }
 
     private void setUpdatePropertyType(CAnnotStyle.EditUpdatePropertyType type) {

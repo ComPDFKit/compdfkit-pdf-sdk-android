@@ -13,6 +13,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import androidx.fragment.app.FragmentActivity;
+
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+
 import java.lang.ref.WeakReference;
 
 
@@ -30,7 +34,13 @@ public abstract class SimpleBackgroundTask<T> extends AsyncTask<Void, Void, T> {
 
     @Override
     protected void onPostExecute(T t) {
-        Activity activity = (Activity) weakActivity.get();
+        Activity activity = null;
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(weakActivity.get());
+        if ( weakActivity.get() instanceof Activity){
+            activity = (Activity) weakActivity.get();
+        } else if (fragmentActivity != null) {
+            activity = CViewUtils.getFragmentActivity(weakActivity.get());
+        }
         if ((null == activity) || activity.isFinishing() || activity.isDestroyed()) {
             cancel(true);
             return;

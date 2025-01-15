@@ -11,29 +11,33 @@ package com.compdfkit.tools.common.utils.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeDialogFragment;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 
-public class CEditDialog extends DialogFragment {
+public class CEditDialog extends CBasicThemeDialogFragment {
 
     public static final String EXTRA_EDIT_TEXT_INFO = "extra_edit_text_info";
 
     public static final String EXTRA_TITLE = "extra_dialog_title";
+
+    public static final String EXTRA_IME_OPTIONS = "extra_ime_options";
 
     private AppCompatTextView tvTitle;
 
@@ -48,38 +52,38 @@ public class CEditDialog extends DialogFragment {
     private String hintText;
 
     public static CEditDialog newInstance(String title, String editTextInfo) {
-        CEditDialog dialog = new CEditDialog();
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_TITLE, title);
         bundle.putString(EXTRA_EDIT_TEXT_INFO, editTextInfo);
+        return newInstance(bundle);
+    }
+
+    public static CEditDialog newInstance(Bundle bundle) {
+        CEditDialog dialog = new CEditDialog();
         dialog.setArguments(bundle);
         return dialog;
     }
 
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        int themeId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme);
-        if (themeId == 0){
-            themeId = R.style.ComPDFKit_Theme_Dialog;
-        }
-        setStyle(STYLE_NO_TITLE, themeId);
+    protected int layoutId() {
+        return R.layout.tools_bota_bookmark_input_dialog;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        if (getDialog() != null) {
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_bota_bookmark_input_dialog, container, false);
+    protected void onCreateView(View rootView) {
         editText = rootView.findViewById(R.id.tv_message);
         tvTitle = rootView.findViewById(R.id.tv_title);
         btnCancel = rootView.findViewById(R.id.btn_cancel);
         btnAdd = rootView.findViewById(R.id.btn_add);
-        return rootView;
     }
 
     @Override
@@ -88,8 +92,14 @@ public class CEditDialog extends DialogFragment {
         if (getArguments() != null) {
             String defaultTitle = getArguments().getString(EXTRA_EDIT_TEXT_INFO);
             String title = getArguments().getString(EXTRA_TITLE, "");
+            int imeOptions = getArguments().getInt(EXTRA_IME_OPTIONS, EditorInfo.IME_ACTION_UNSPECIFIED);
+            editText.setImeOptions(imeOptions);
+            if (imeOptions != EditorInfo.IME_ACTION_UNSPECIFIED){
+                editText.setSingleLine(true);
+            }
             editText.setText(defaultTitle);
             editText.setSelection(defaultTitle.length());
+
             tvTitle.setText(title);
         }
         if (!TextUtils.isEmpty(hintText)) {

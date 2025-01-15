@@ -11,15 +11,13 @@ package com.compdfkit.tools.viewer.pdfbookmark;
 
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,9 +26,11 @@ import com.compdfkit.core.document.CPDFBookmark;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.utils.TTimeUtil;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.dialog.CEditDialog;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.viewer.pdfbookmark.adapter.CPDFBookmarkListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,7 +38,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CPDFBookmarkFragment extends Fragment {
+public class CPDFBookmarkFragment extends CBasicThemeFragment {
 
     private RecyclerView rvPdfBookmark;
 
@@ -60,14 +60,16 @@ public class CPDFBookmarkFragment extends Fragment {
         this.pdfView = pdfView;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_bota_bookmark_list_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_bota_bookmark_list_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         rvPdfBookmark = rootView.findViewById(R.id.rv_pdf_bookmark);
         btnAddBookmark = rootView.findViewById(R.id.flbtn_add_bookmark);
         clEmptyView = rootView.findViewById(R.id.cl_bookmarks_empty_view);
-        return rootView;
     }
 
     public void setPDFDisplayPageIndexListener(COnSetPDFDisplayPageIndexListener displayPageIndexListener) {
@@ -98,7 +100,10 @@ public class CPDFBookmarkFragment extends Fragment {
                 }
                 editBookmarkDialog.dismiss();
             });
-            editBookmarkDialog.show(getChildFragmentManager(), "editBookmarkDialog");
+            FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+            if (fragmentActivity != null){
+                editBookmarkDialog.show(fragmentActivity.getSupportFragmentManager(), "editBookmarkDialog");
+            }
         });
         rvPdfBookmark.setLayoutManager(new LinearLayoutManager(getContext()));
         rvPdfBookmark.setAdapter(bookmarkListAdapter);
@@ -124,7 +129,10 @@ public class CPDFBookmarkFragment extends Fragment {
                 }
                 editBookmarkDialog.dismiss();
             });
-            editBookmarkDialog.show(getChildFragmentManager(), "editBookmarkDialog");
+            FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+            if (fragmentActivity != null){
+                editBookmarkDialog.show(fragmentActivity.getSupportFragmentManager(), "editBookmarkDialog");
+            }
         });
     }
 

@@ -126,10 +126,11 @@ public class CSliderBar extends FrameLayout implements SeekBar.OnSeekBarChangeLi
     }
 
     public void setProgress(int progress) {
+        progress -= sliderBarMinValue;
         if (progress > sliderBarMaxValue){
             progress = sliderBarMaxValue;
         }
-        progress = Math.max(sliderBarMinValue, progress);
+//        progress = Math.max(sliderBarMinValue, progress);
         this.seekBar.setProgress(progress);
         updateSeekBarValue(progress,false);
     }

@@ -23,7 +23,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,8 +66,6 @@ public class CAnnotationToolbar extends FrameLayout {
     public CPDFAnnotationToolListAdapter toolListAdapter;
 
     private CPDFViewCtrl pdfView;
-
-    private FragmentManager fragmentManager;
 
     private COnAnnotationChangeListener annotationChangeListener;
 
@@ -120,10 +118,6 @@ public class CAnnotationToolbar extends FrameLayout {
 //        redoUndoManager();
     }
 
-    public void setFragmentManager(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
-    }
-
     private void showAnnotStyleDialog() {
         CViewUtils.hideKeyboard(this);
         CStyleManager styleManager = new CStyleManager(pdfView);
@@ -157,7 +151,10 @@ public class CAnnotationToolbar extends FrameLayout {
                 }
             }
         });
-        dialogFragment.show(fragmentManager, "annotStyleDialogFragment");
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+        if (fragmentActivity != null) {
+            dialogFragment.show(fragmentActivity.getSupportFragmentManager(), "annotStyleDialogFragment");
+        }
     }
 
     private void switchAnnotationType(CAnnotToolBean bean) {

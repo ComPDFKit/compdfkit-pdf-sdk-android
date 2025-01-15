@@ -10,13 +10,7 @@
 package com.compdfkit.tools.common.utils.view.colorpicker;
 
 import android.graphics.Color;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.view.colorpicker.widget.ColorPickerView;
@@ -39,10 +33,13 @@ public class CColorPickerFragment extends CBasicPropertiesFragment {
 
     private ColorPickerView.COnColorAlphaChangeListener colorAlphaChangeListener;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_color_pick_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_color_pick_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         colorPickerView = rootView.findViewById(R.id.color_picker_view);
         colorPickerView.initColor(mSetColor, mSetColorOpacity);
         colorPickerView.setColorChangeListener(color -> {
@@ -55,7 +52,6 @@ public class CColorPickerFragment extends CBasicPropertiesFragment {
                 colorAlphaChangeListener.opacity(opacity);
             }
         });
-        return rootView;
     }
 
     @Override

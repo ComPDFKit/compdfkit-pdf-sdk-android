@@ -11,9 +11,7 @@ package com.compdfkit.tools.security.watermark.pdfproperties;
 
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -55,10 +53,13 @@ public class CWatermarkTextStyleFragment extends CBasicPropertiesFragment implem
 
     private AppCompatImageView ivLocationBottom;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_cpdf_security_watermark_text_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_cpdf_security_watermark_text_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         colorListView = rootView.findViewById(R.id.border_color_list_view);
         opacitySliderBar = rootView.findViewById(R.id.slider_bar);
         fontSizeSliderBar = rootView.findViewById(R.id.font_size_slider_bar);
@@ -69,7 +70,6 @@ public class CWatermarkTextStyleFragment extends CBasicPropertiesFragment implem
         ivLocationBottom = rootView.findViewById(R.id.iv_location_bottom);
         ivLocationTop.setOnClickListener(this);
         ivLocationBottom.setOnClickListener(this);
-        return rootView;
     }
 
     @Override

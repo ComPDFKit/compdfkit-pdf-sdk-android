@@ -29,7 +29,6 @@ import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment
 import com.compdfkit.tools.common.interfaces.COnDialogDismissListener;
 import com.compdfkit.tools.common.utils.date.CDateUtil;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
-import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.signature.CertificateDigitalDatas;
 import com.compdfkit.tools.signature.bean.CPDFSignatureStatusInfo;
 
@@ -71,8 +70,8 @@ public class CertDigitalSignInfoDialog extends CBasicBottomSheetDialogFragment i
     }
 
     @Override
-    protected int getStyle() {
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Transparent_Theme);
+    protected int themeResId() {
+        return R.attr.compdfkit_BottomSheetDialog_Transparent_Theme;
     }
 
     @Override

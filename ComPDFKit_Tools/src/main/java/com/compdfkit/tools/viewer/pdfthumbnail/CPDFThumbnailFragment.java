@@ -13,18 +13,16 @@ package com.compdfkit.tools.viewer.pdfthumbnail;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
@@ -61,7 +59,7 @@ import com.compdfkit.tools.viewer.pdfthumbnail.adpater.CPDFThumbnailListAdapter;
  * @see CPDFWrapper#fromFile(String)
  * @see CPDFWrapper#fromUri(Uri)
  */
-public class CPDFThumbnailFragment extends Fragment {
+public class CPDFThumbnailFragment extends CBasicThemeFragment {
 
     private RecyclerView rvThumbnailRecyclerView;
 
@@ -93,13 +91,14 @@ public class CPDFThumbnailFragment extends Fragment {
         super.onStart();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment.
-        View rootView = inflater.inflate(R.layout.tools_bota_thumbnail_list_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_bota_thumbnail_list_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         rvThumbnailRecyclerView = rootView.findViewById(R.id.rv_thumbnail);
-        return rootView;
     }
 
     @Override

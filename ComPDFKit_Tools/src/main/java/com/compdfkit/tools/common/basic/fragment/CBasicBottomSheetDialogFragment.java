@@ -10,9 +10,11 @@
 package com.compdfkit.tools.common.basic.fragment;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +37,12 @@ public abstract class CBasicBottomSheetDialogFragment extends BottomSheetDialogF
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int styleId = getStyle();
+        int styleId = CViewUtils.getThemeStyle(getContext(), themeResId());
         if (styleId != 0){
-            setStyle(STYLE_NORMAL, getStyle());
+            setStyle(STYLE_NORMAL, styleId);
         }
     }
+
 
     @Override
     public void onStart() {
@@ -59,7 +62,9 @@ public abstract class CBasicBottomSheetDialogFragment extends BottomSheetDialogF
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(layoutId(), container, false);
+        themedContext = new ContextThemeWrapper(getContext(), getStyle());
+        LayoutInflater themedInflater = inflater.cloneInContext(themedContext);
+        View view = themedInflater.inflate(layoutId(), container, false);
         onCreateView(view);
         return view;
     }
@@ -73,7 +78,18 @@ public abstract class CBasicBottomSheetDialogFragment extends BottomSheetDialogF
     protected abstract @LayoutRes int layoutId();
 
     protected int getStyle(){
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
+        return CViewUtils.getThemeStyle(getContext(), themeResId());
+    }
+
+    protected int themeResId(){
+        return R.attr.compdfkit_BottomSheetDialog_Theme;
+    }
+    protected Context themedContext;
+
+    @Nullable
+    @Override
+    public Context getContext() {
+        return themedContext != null ? themedContext : super.getContext();
     }
 
     protected boolean fullScreen(){

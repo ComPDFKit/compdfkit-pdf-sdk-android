@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:background="?android:attr/colorBackground"
     android:layout_gravity="center">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/tools_dialog_layout_width"
         android:layout_height="wrap_content"
         android:paddingTop="24dp"
+        android:background="@drawable/tools_dialog_background"
         android:paddingBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -90,14 +90,14 @@
                 style="@style/ComPDFKit.Theme.Dialog.Button"
                 android:background="@drawable/tools_common_btn_corner_ripple"
                 android:text="@string/tools_cancel"
-                tools:textColor="@color/tools_normal_btn_text_color" />
+                android:textColor="@color/tools_normal_btn_text_color" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_confirm"
                 style="@style/ComPDFKit.Theme.Dialog.Button"
                 android:background="@drawable/tools_common_btn_corner_ripple"
                 android:text="@string/tools_okay"
-                tools:textColor="@color/tools_normal_btn_text_color" />
+                android:textColor="@color/tools_normal_btn_text_color" />
 
         </LinearLayout>
 

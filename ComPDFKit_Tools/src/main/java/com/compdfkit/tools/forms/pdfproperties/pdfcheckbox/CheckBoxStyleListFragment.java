@@ -10,9 +10,7 @@
 package com.compdfkit.tools.forms.pdfproperties.pdfcheckbox;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,12 +37,14 @@ public class CheckBoxStyleListFragment extends CBasicPropertiesFragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_checkbox_style_list_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_checkbox_style_list_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         rvCheckBox = rootView.findViewById(R.id.rv_check_box);
-        return rootView;
     }
 
     @Override

@@ -75,7 +75,6 @@ public class CPDFToolBar extends FrameLayout {
     private LinkedHashSet<CPreviewMode> previewModes = new LinkedHashSet<>();
 
     private CPreviewMode currentPreviewMode = CPreviewMode.Viewer;
-
     private CModeSwitchDialogFragment.OnPreviewModeChangeListener changeListener;
 
     public CPDFToolBar(@NonNull Context context) {
@@ -91,6 +90,7 @@ public class CPDFToolBar extends FrameLayout {
         initToolBar(context, attrs);
     }
 
+
     private void initToolBar(Context context, @Nullable AttributeSet attrs) {
         LayoutInflater.from(getContext()).inflate(R.layout.tools_cpdf_tool_bar, this);
         ConstraintLayout clMainToolbar = findViewById(R.id.cl_pdf_root_tool_bar);
@@ -104,8 +104,9 @@ public class CPDFToolBar extends FrameLayout {
                 CViewUtils.hideKeyboard(this);
                 CModeSwitchDialogFragment fragment = CModeSwitchDialogFragment.newInstance(previewModes, currentPreviewMode);
                 fragment.setSwitchModeListener(changeListener);
-                if (getContext() instanceof FragmentActivity) {
-                    fragment.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "modeSwitchDialogFragment");
+                FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+                if (fragmentActivity != null) {
+                    fragment.show(fragmentActivity.getSupportFragmentManager(), "modeSwitchDialogFragment");
                 }
             }
         });

@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,6 @@ import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
@@ -137,7 +137,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     private View blockView;
 
-    private OnBackPressedCallback onBackPressedCallback;
+    public OnBackPressedCallback onBackPressedCallback;
 
     private CPopupMenuWindow menuWindow;
 
@@ -205,29 +205,31 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     pdfView.savePDF((filePath, pdfUri) -> {
                         try {
                             requireActivity().onBackPressed();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                         }
                     }, e -> {
                         e.printStackTrace();
                         try {
                             requireActivity().onBackPressed();
-                        }catch (Exception e1){
+                        } catch (Exception ignored) {
 
                         }
                     });
                 }
             }
         };
+
         requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //Extract PDF files from the Android assets folder
         parseConfiguration();
-        getContext().getTheme().applyStyle(CPDFApplyConfigUtil.getInstance().getThemeId(getContext(), cpdfConfiguration), true);
-        View rootView = inflater.inflate(R.layout.tools_pdf_document_fragment, container, false);
+        int themeId = CPDFApplyConfigUtil.getInstance().getGlobalThemeId(getContext(), cpdfConfiguration);
+        Context wrapper = new ContextThemeWrapper(getContext(), themeId);
+        LayoutInflater themedInflater = inflater.cloneInContext(wrapper);
+        View rootView = themedInflater.inflate(R.layout.tools_pdf_document_fragment, container, false);
         clRoot = rootView.findViewById(R.id.cl_root);
         pdfView = rootView.findViewById(R.id.pdf_view);
         flTool = rootView.findViewById(R.id.fl_tool);
@@ -305,8 +307,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     //Use the CFillScreenManager.class to manage fullscreen switching.
                     screenManager.fillScreenChange();
                     CPDFReaderView readerView = pdfView.getCPdfReaderView();
-                    if (!readerView.isContinueMode() && CViewUtils.isLandScape(getContext()) && !readerView.isVerticalMode()){
-                        readerView.postDelayed(()->{
+                    if (!readerView.isContinueMode() && CViewUtils.isLandScape(getContext()) && !readerView.isVerticalMode()) {
+                        readerView.postDelayed(() -> {
                             readerView.setScale(1F);
                         }, 200);
                     }
@@ -403,60 +405,17 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                         break;
                     case Thumbnail:
                         pdfToolBar.addAction(R.drawable.tools_ic_thumbnail, v -> {
-                            showPageEdit(pdfView, false, () -> restoreEdit());
-//                            CLog.e("ComPDFKit", "hasChanged:" + pdfView.getCPdfReaderView().getPDFDocument().hasChanges());
+                            showPageEdit(false);
                         });
                         break;
                     case Search:
                         pdfToolBar.addAction(R.drawable.tools_ic_search, v -> {
-                            if (pdfView.getCPdfReaderView().getEditManager().isEditMode()) {
-                                curEditMode = pdfView.getCPdfReaderView().getLoadType();
-                            } else {
-                                curEditMode = CPDFEditPage.LoadNone;
-                            }
-                            pdfView.exitEditMode();
-                            pdfToolBar.setVisibility(View.GONE);
-                            CSearchReplaceToolbar.ViewType viewType = pdfView.getCPdfReaderView().getViewMode() == CPDFReaderView.ViewMode.PDFEDIT
-                                    ? CSearchReplaceToolbar.ViewType.SearchReplace : CSearchReplaceToolbar.ViewType.Search;
-                            onBackPressedCallback.setEnabled(true);
-                            pdfSearchToolBarView.setViewType(viewType);
-                            pdfSearchToolBarView.setVisibility(View.VISIBLE);
-                            pdfSearchToolBarView.showKeyboard();
-                            if (viewType == CSearchReplaceToolbar.ViewType.SearchReplace) {
-                                screenManager.fillScreenManager.removeToolView(flBottomToolBar);
-                                screenManager.fillScreenManager.hideFromBottom(flBottomToolBar, 200);
-                            }
+                            showSearch();
                         });
                         break;
                     case Bota:
                         pdfToolBar.addAction(R.drawable.tools_ic_bookmark, v -> {
-                            pdfView.getCPdfReaderView().removeAllAnnotFocus();
-                            if (pdfView.getCPdfReaderView().getEditManager().isEditMode()) {
-                                curEditMode = pdfView.getCPdfReaderView().getLoadType();
-                            } else {
-                                curEditMode = CPDFEditPage.LoadNone;
-                            }
-                            pdfView.exitEditMode();
-                            ArrayList<CPDFBotaFragmentTabs> tabs = new ArrayList<>();
-                            CPDFBotaFragmentTabs annotationTab = new CPDFBotaFragmentTabs(CPDFBOTA.ANNOTATION, getString(R.string.tools_annotations));
-                            CPDFBotaFragmentTabs outlineTab = new CPDFBotaFragmentTabs(CPDFBOTA.OUTLINE, getString(R.string.tools_outlines));
-                            CPDFBotaFragmentTabs bookmarkTab = new CPDFBotaFragmentTabs(CPDFBOTA.BOOKMARKS, getString(R.string.tools_bookmarks));
-                            if (pdfToolBar.getMode() == CPreviewMode.Viewer) {
-                                tabs.add(outlineTab);
-                                tabs.add(bookmarkTab);
-                            } else {
-                                tabs.add(outlineTab);
-                                tabs.add(bookmarkTab);
-                                tabs.add(annotationTab);
-                                if (pdfToolBar.getMode() == CPreviewMode.Annotation) {
-                                    annotationTab.setDefaultSelect(true);
-                                }
-                            }
-                            CPDFBotaDialogFragment dialogFragment = CPDFBotaDialogFragment.newInstance();
-                            dialogFragment.initWithPDFView(pdfView);
-                            dialogFragment.setBotaDialogTabs(tabs);
-                            dialogFragment.setDismissListener(this::restoreEdit);
-                            dialogFragment.show(getChildFragmentManager(), "annotationList");
+                            showBOTA();
                         });
                         break;
                     case Menu:
@@ -489,7 +448,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     protected void initAnnotToolbar() {
         annotationToolbar.initWithPDFView(pdfView);
-        annotationToolbar.setFragmentManager(getChildFragmentManager());
         annotationToolbar.setAnnotationChangeListener(type -> {
             screenManager.changeWindowStatus(type);
             //You are required to grant recording permission when selecting voice notes
@@ -507,12 +465,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             }
         });
         inkCtrlView.initWithPDFView(pdfView);
-        inkCtrlView.setFragmentManager(getChildFragmentManager());
     }
 
     protected void initFormToolbar() {
         formToolBar.initWithPDFView(pdfView);
-        formToolBar.setFragmentManager(getChildFragmentManager());
     }
 
     protected void initSearchBar() {
@@ -532,13 +488,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         });
     }
 
-    private void restoreEdit(){
-        if (curEditMode > CPDFEditPage.LoadNone && pdfToolBar.getMode() == CPreviewMode.Edit) {
-            CPDFEditManager editManager = pdfView.getCPdfReaderView().getEditManager();
-            if (!editManager.isEditMode()) {
-                editManager.beginEdit(curEditMode);
-            }
-        }
+    private void restoreEdit() {
+        restoreEdit(pdfView,pdfToolBar.getMode() == CPreviewMode.Edit);
     }
 
     protected void initEditBar() {
@@ -551,12 +502,11 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(ContextCompat.getColor(getContext(), R.color.tools_color_accent_50));
-
         CPDFEditConfig editConfig = pdfView.getCPdfReaderView()
                 .getEditManager()
                 .getEditConfigBuilder()
                 .setScreenshotRectColor(Color.TRANSPARENT)
-                .setScreenshotBorderColor(ContextCompat.getColor(getContext(), R.color.tools_color_accent))
+                .setScreenshotBorderColor(ContextCompat.getColor(getContext(), R.color.tools_dark_color_accent))
                 .setScreenshotBorderDash(new float[]{8.0F, 4F})
                 .setFormPreviewPaint(paint)
                 .setRotateAnnotationDrawableRes(R.drawable.tools_rotate)
@@ -615,53 +565,16 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                         menuWindow.addItem(R.drawable.tools_ic_preview_settings, R.string.tools_view_setting, v1 -> showDisplaySettings(pdfView));
                         break;
                     case DocumentEditor:
-                        menuWindow.addItem(R.drawable.tools_page_edit, R.string.tools_page_edit_toolbar_title, v1 -> showPageEdit(pdfView, true, () -> {
-                            if (curEditMode > CPDFEditPage.LoadNone && pdfToolBar.getMode() == CPreviewMode.Edit) {
-                                CPDFEditManager editManager = pdfView.getCPdfReaderView().getEditManager();
-                                if (!editManager.isEditMode()) {
-                                    editManager.beginEdit(curEditMode);
-                                }
-                            }
-                        }));
+                        menuWindow.addItem(R.drawable.tools_page_edit, R.string.tools_page_edit_toolbar_title, v1 -> showPageEdit(true));
                         break;
                     case Security:
                         menuWindow.addItem(R.drawable.tools_ic_add_security, R.string.tools_security, v1 -> {
-                            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-                            if (document == null) {
-                                return;
-                            }
-                            if (document.getPermissions() == CPDFDocument.PDFDocumentPermissions.PDFDocumentPermissionsUser) {
-                                CInputOwnerPwdDialog inputOwnerPwdDialog = CInputOwnerPwdDialog.newInstance();
-                                inputOwnerPwdDialog.setDocument(document);
-                                inputOwnerPwdDialog.setCancelClickListener(v2 -> inputOwnerPwdDialog.dismiss());
-                                inputOwnerPwdDialog.setConfirmClickListener(ownerPassword -> {
-                                    document.reload(ownerPassword);
-                                    showSettingEncryptionDialog();
-                                    inputOwnerPwdDialog.dismiss();
-                                });
-                                inputOwnerPwdDialog.show(getChildFragmentManager(), "inputPasswordDialog");
-                                return;
-                            }
-                            showSettingEncryptionDialog();
+                            showSecurityDialog();
                         });
                         break;
                     case Watermark:
                         menuWindow.addItem(R.drawable.tools_ic_add_watermark, R.string.tools_watermark, v1 -> {
-                            CWatermarkEditDialog watermarkEditDialog = CWatermarkEditDialog.newInstance();
-                            watermarkEditDialog.setDocument(pdfView.getCPdfReaderView().getPDFDocument());
-                            watermarkEditDialog.setSaveFileExtraFontSubset(pdfView.isSaveFileExtraFontSubset());
-                            watermarkEditDialog.setPageIndex(pdfView.currentPageIndex);
-                            watermarkEditDialog.setCompleteListener((pdfFile) -> {
-                                pdfView.getCPdfReaderView().reloadPages();
-                                watermarkEditDialog.dismiss();
-                                if (TextUtils.isEmpty(pdfFile)) {
-                                    CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_failed);
-                                    return;
-                                }
-                                pdfView.openPDF(pdfFile);
-                                CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_success);
-                            });
-                            watermarkEditDialog.show(getChildFragmentManager(), "watermarkEditDialog");
+                            showAddWatermarkDialog();
                         });
                         break;
                     case DocumentInfo:
@@ -696,37 +609,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                         break;
                     case Flattened:
                         menuWindow.addItem(R.drawable.tools_ic_flattened, R.string.tools_flattened, v1 -> {
-                            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
-                                multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
-                                    if (CPermissionUtil.hasStoragePermissions(getContext())) {
-                                        pdfView.savePDF((filePath, pdfUri) -> flattenedPdf(), e -> flattenedPdf());
-                                    } else {
-                                        if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                            CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
-                                        }
-                                    }
-                                });
-                            } else {
-                                pdfView.savePDF((filePath, pdfUri) -> flattenedPdf(), e -> flattenedPdf());
-                            }
+                            showFlattenedDialog();
                         });
                         break;
                     case Snip:
                         menuWindow.addItem(R.drawable.tools_ic_snap, R.string.tools_snap, v -> {
-                            CPDFReaderView readerView = pdfView.getCPdfReaderView();
-                            readerView.removeAllAnnotFocus();
-                            if (readerView.getContextMenuShowListener() != null) {
-                                readerView.getContextMenuShowListener().dismissContextMenu();
-                            }
-                            for (int i = 0; i < readerView.getChildCount(); i++) {
-                                CPDFPageView view = (CPDFPageView) readerView.getChildAt(i);
-                                view.clearScreenShotRect();
-                            }
-                            onBackPressedCallback.setEnabled(true);
-                            // enter fill screen mode
-                            screenManager.fillScreenChange();
-                            // enter screenshot mode , Please select the screenshot area in the reader view
-                            readerView.setTouchMode(CPDFReaderView.TouchMode.SCREENSHOT);
+                            enterSnipMode();
                         });
                         break;
                     default:
@@ -893,21 +781,167 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         CPDFReaderView readerView = pdfView.getCPdfReaderView();
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             pdfSearchToolBarView.showSearchReplaceContextMenu();
-            if (pageSameWidth && !readerView.isContinueMode()){
+            if (pageSameWidth && !readerView.isContinueMode()) {
                 readerView.setPageSameWidth(false);
                 readerView.invalidateAllChildren();
             }
         } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             pdfSearchToolBarView.showSearchReplaceContextMenu();
-            if (!readerView.isContinueMode()){
+            if (!readerView.isContinueMode()) {
                 readerView.setPageSameWidth(pageSameWidth);
                 readerView.invalidateAllChildren();
             }
         }
     }
 
-    public void exitScreenShot(){
+    public void exitScreenShot() {
         CPDFReaderView readerView = pdfView.getCPdfReaderView();
+        if (readerView.getContextMenuShowListener() != null) {
+            readerView.getContextMenuShowListener().dismissContextMenu();
+        }
+        for (int i = 0; i < readerView.getChildCount(); i++) {
+            CPDFPageView view = (CPDFPageView) readerView.getChildAt(i);
+            view.clearScreenShotRect();
+        }
+        CPDFReaderView.ViewMode viewMode = readerView.getViewMode();
+        if (viewMode == CPDFReaderView.ViewMode.PDFEDIT) {
+            readerView.setTouchMode(CPDFReaderView.TouchMode.EDIT);
+            CPDFEditManager editManager = readerView.getEditManager();
+            if (editManager != null && !editManager.isEditMode()) {
+                editManager.enable();
+                editManager.beginEdit(CPDFEditPage.LoadTextImage | CPDFEditPage.LoadPath);
+            }
+        } else {
+            readerView.setTouchMode(CPDFReaderView.TouchMode.BROWSE);
+        }
+        screenManager.fillScreenChange();
+    }
+
+    public void showSearch() {
+        if (pdfView.getCPdfReaderView().getEditManager().isEditMode()) {
+            curEditMode = pdfView.getCPdfReaderView().getLoadType();
+        } else {
+            curEditMode = CPDFEditPage.LoadNone;
+        }
+        pdfView.exitEditMode();
+        pdfToolBar.setVisibility(View.GONE);
+        CSearchReplaceToolbar.ViewType viewType = pdfView.getCPdfReaderView().getViewMode() == CPDFReaderView.ViewMode.PDFEDIT
+                ? CSearchReplaceToolbar.ViewType.SearchReplace : CSearchReplaceToolbar.ViewType.Search;
+        onBackPressedCallback.setEnabled(true);
+        pdfSearchToolBarView.setViewType(viewType);
+        pdfSearchToolBarView.setVisibility(View.VISIBLE);
+        pdfSearchToolBarView.showKeyboard();
+        if (viewType == CSearchReplaceToolbar.ViewType.SearchReplace) {
+            screenManager.fillScreenManager.removeToolView(flBottomToolBar);
+            screenManager.fillScreenManager.hideFromBottom(flBottomToolBar, 200);
+        }
+    }
+
+    public void showBOTA(){
+        pdfView.getCPdfReaderView().removeAllAnnotFocus();
+        if (pdfView.getCPdfReaderView().getEditManager().isEditMode()) {
+            curEditMode = pdfView.getCPdfReaderView().getLoadType();
+        } else {
+            curEditMode = CPDFEditPage.LoadNone;
+        }
+        pdfView.exitEditMode();
+        ArrayList<CPDFBotaFragmentTabs> tabs = new ArrayList<>();
+        CPDFBotaFragmentTabs annotationTab = new CPDFBotaFragmentTabs(CPDFBOTA.ANNOTATION, getString(R.string.tools_annotations));
+        CPDFBotaFragmentTabs outlineTab = new CPDFBotaFragmentTabs(CPDFBOTA.OUTLINE, getString(R.string.tools_outlines));
+        CPDFBotaFragmentTabs bookmarkTab = new CPDFBotaFragmentTabs(CPDFBOTA.BOOKMARKS, getString(R.string.tools_bookmarks));
+
+        tabs.add(outlineTab);
+        tabs.add(bookmarkTab);
+        tabs.add(annotationTab);
+        if (pdfToolBar.getMode() == CPreviewMode.Annotation) {
+            annotationTab.setDefaultSelect(true);
+        }
+
+        CPDFBotaDialogFragment dialogFragment = CPDFBotaDialogFragment.newInstance();
+        dialogFragment.initWithPDFView(pdfView);
+        dialogFragment.setBotaDialogTabs(tabs);
+        dialogFragment.setDismissListener(this::restoreEdit);
+        dialogFragment.show(getChildFragmentManager(), "annotationList");
+    }
+
+    public void showPageEdit(boolean enterEditMode){
+        showPageEdit(pdfView, enterEditMode, this::restoreEdit);
+    }
+
+    public void showSecurityDialog(){
+        CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+        if (document == null) {
+            return;
+        }
+        if (document.getPermissions() == CPDFDocument.PDFDocumentPermissions.PDFDocumentPermissionsUser) {
+            CInputOwnerPwdDialog inputOwnerPwdDialog = CInputOwnerPwdDialog.newInstance();
+            inputOwnerPwdDialog.setDocument(document);
+            inputOwnerPwdDialog.setCancelClickListener(v2 -> inputOwnerPwdDialog.dismiss());
+            inputOwnerPwdDialog.setConfirmClickListener(ownerPassword -> {
+                document.reload(ownerPassword);
+                showSettingEncryptionDialog();
+                inputOwnerPwdDialog.dismiss();
+            });
+            inputOwnerPwdDialog.show(getChildFragmentManager(), "inputPasswordDialog");
+            return;
+        }
+        showSettingEncryptionDialog();
+    }
+
+    public void showAddWatermarkDialog(){
+        CWatermarkEditDialog watermarkEditDialog = CWatermarkEditDialog.newInstance();
+        watermarkEditDialog.setDocument(pdfView.getCPdfReaderView().getPDFDocument());
+        watermarkEditDialog.setSaveFileExtraFontSubset(pdfView.isSaveFileExtraFontSubset());
+        watermarkEditDialog.setPageIndex(pdfView.currentPageIndex);
+        watermarkEditDialog.setCompleteListener((pdfFile) -> {
+            pdfView.getCPdfReaderView().reloadPages();
+            watermarkEditDialog.dismiss();
+            if (TextUtils.isEmpty(pdfFile)) {
+                CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_failed);
+                return;
+            }
+            pdfView.openPDF(pdfFile);
+            CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_success);
+        });
+        watermarkEditDialog.show(getChildFragmentManager(), "watermarkEditDialog");
+    }
+
+    public void showFlattenedDialog(){
+        if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+            multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
+                if (CPermissionUtil.hasStoragePermissions(getContext())) {
+                    pdfView.savePDF((filePath, pdfUri) -> flattenedPdf(), e -> flattenedPdf());
+                } else {
+                    if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
+                    }
+                }
+            });
+        } else {
+            pdfView.savePDF((filePath, pdfUri) -> flattenedPdf(), e -> flattenedPdf());
+        }
+    }
+
+    public void enterSnipMode(){
+        CPDFReaderView readerView = pdfView.getCPdfReaderView();
+        readerView.removeAllAnnotFocus();
+        if (readerView.getContextMenuShowListener() != null) {
+            readerView.getContextMenuShowListener().dismissContextMenu();
+        }
+        for (int i = 0; i < readerView.getChildCount(); i++) {
+            CPDFPageView view = (CPDFPageView) readerView.getChildAt(i);
+            view.clearScreenShotRect();
+        }
+        onBackPressedCallback.setEnabled(true);
+        // enter fill screen mode
+        screenManager.fillScreenChange();
+        // enter screenshot mode , Please select the screenshot area in the reader view
+        readerView.setTouchMode(CPDFReaderView.TouchMode.SCREENSHOT);
+    }
+
+    public void exitSnipMode(){
+        CPDFReaderView readerView = pdfView.getCPdfReaderView();
+        readerView.removeAllAnnotFocus();
         if (readerView.getContextMenuShowListener() != null) {
             readerView.getContextMenuShowListener().dismissContextMenu();
         }

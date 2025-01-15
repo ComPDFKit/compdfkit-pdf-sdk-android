@@ -12,9 +12,7 @@ package com.compdfkit.tools.annotation.pdfproperties.pdfstamp;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,12 +36,14 @@ public class CStampStandardFragment extends CBasicPropertiesFragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_stamp_standard_list_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_stamp_standard_list_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         rvStandardStamp = rootView.findViewById(R.id.rv_standard_stamp);
-        return rootView;
     }
 
     @Override

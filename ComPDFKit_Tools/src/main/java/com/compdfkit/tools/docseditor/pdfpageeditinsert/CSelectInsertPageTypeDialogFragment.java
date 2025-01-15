@@ -57,12 +57,9 @@ public class CSelectInsertPageTypeDialogFragment extends CBasicBottomSheetDialog
         if (getArguments() != null) {
             String blankPageTitle = getArguments().getString(EXTRA_CREATE_BLANK_PAGE_ITEM_TITLE, getString(R.string.tools_blank_page));
             String pdfPageTitle = getArguments().getString(EXTRA_INSERT_PDF_PAGE_ITEM_TITLE, getString(R.string.tools_pdf_page));
-
             tvBlankPage.setText(blankPageTitle);
             tvOpenDocument.setText(pdfPageTitle);
-
         }
-
     }
 
     @Override

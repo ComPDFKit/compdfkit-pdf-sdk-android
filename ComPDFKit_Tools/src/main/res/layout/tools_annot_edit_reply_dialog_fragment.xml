@@ -24,7 +24,7 @@
             android:background="@drawable/tools_properties_signature_add_sign"
             android:minWidth="70dp"
             android:text="@string/tools_page_edit_toolbar_done"
-            android:textColor="?attr/colorAccent"
+            android:textColor="@color/tools_normal_btn_text_color"
             android:textSize="16sp" />
 
     </com.compdfkit.tools.common.views.CToolBar>

@@ -145,8 +145,9 @@ public class CRecordVoicePopupWindow extends CBasePopupWindow {
         long startTime = System.currentTimeMillis();
         isRecording = recorderManager.startRecord();
         recorderManager.setDbCallback((voice, time)-> {
-            if (mContext instanceof FragmentActivity) {
-                ((FragmentActivity) mContext).runOnUiThread(()->{
+            FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(mContext);
+            if (fragmentActivity != null) {
+                fragmentActivity.runOnUiThread(()->{
                     totalTime = time - startTime;
                     if (isRecording) {
                         long uitime = totalTime - (pauseTime > 0 ? stopCountTime : 0);

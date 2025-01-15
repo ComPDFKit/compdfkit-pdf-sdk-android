@@ -11,9 +11,7 @@ package com.compdfkit.tools.annotation.pdfproperties.pdflnk;
 
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,15 +41,17 @@ public class CInkStyleFragment extends CBasicPropertiesFragment implements Color
         return new CInkStyleFragment();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_ink_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_ink_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         colorListView = rootView.findViewById(R.id.color_list_view);
         stylePreviewView = rootView.findViewById(R.id.style_preview);
         colorOpacitySliderBar = rootView.findViewById(R.id.slider_bar);
         borderWidthSliderBar = rootView.findViewById(R.id.slider_bar_border_width);
-        return rootView;
     }
 
     @Override

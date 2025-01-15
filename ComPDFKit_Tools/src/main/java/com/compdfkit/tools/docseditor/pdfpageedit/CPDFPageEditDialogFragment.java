@@ -22,7 +22,6 @@ import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.page.CPDFPage;
@@ -82,9 +81,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
                 verifyPasswordDialogFragment.setVerifyCompleteListener(document -> {
                     replacePage(selectDocument);
                 });
-                if (getContext() instanceof FragmentActivity) {
-                    verifyPasswordDialogFragment.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "verifyPwdDialog");
-                }
+                verifyPasswordDialogFragment.show(getChildFragmentManager(), "verifyPwdDialog");
             }
         }
     });
@@ -122,8 +119,8 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
     }
 
     @Override
-    protected int getStyle() {
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Theme);
+    protected int themeResId() {
+        return R.attr.compdfkit_BottomSheetDialog_Theme;
     }
 
     @Override

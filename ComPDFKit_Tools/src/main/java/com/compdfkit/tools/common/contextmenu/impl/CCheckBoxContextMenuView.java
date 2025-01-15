@@ -34,7 +34,7 @@ public class CCheckBoxContextMenuView implements ContextMenuCheckBoxProvider {
             CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
             styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
-            styleDialogFragment.show(helper.getReaderView().getContext());
+            styleDialogFragment.show(helper.getFragmentManager());
             helper.dismissContextMenu();
         });
         menuView.addItem(R.string.tools_delete, v -> {

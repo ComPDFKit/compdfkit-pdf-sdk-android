@@ -10,9 +10,13 @@
 package com.compdfkit.tools.common.utils.image;
 
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CUriUtil;
@@ -129,6 +133,24 @@ public class CBitmapUtil {
             FileInputStream fileInputStream = new FileInputStream(path);
             Bitmap bitmap = BitmapFactory.decodeStream(fileInputStream);
             int degrees = CUriUtil.getBitmapDegree(path);
+            if (degrees > 0){
+                Matrix matrix = new Matrix();
+                matrix.setRotate(degrees);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            }
+            return bitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Bitmap decodeBitmap(Context context, Uri uri)  {
+        try {
+            ContentResolver contentResolver = context.getContentResolver();
+            ParcelFileDescriptor parcelFileDescriptor = contentResolver.openFileDescriptor(uri, "r");
+            Bitmap bitmap = BitmapFactory.decodeFileDescriptor(parcelFileDescriptor.getFileDescriptor());
+            int degrees = CUriUtil.getBitmapDegree(context, uri);
             if (degrees > 0){
                 Matrix matrix = new Matrix();
                 matrix.setRotate(degrees);

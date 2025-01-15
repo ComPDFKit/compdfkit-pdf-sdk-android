@@ -122,13 +122,12 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="?attr/colorOnPrimary"
 
                     />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -144,7 +143,7 @@
             app:layout_goneMarginBottom="8dp"
             app:tools_value_unit="pt"
             app:tools_slider_bar_value_show_type="source"
-            android:title="@string/tools_dashed_setting" />
+            android:title="@string/tools_dashed_spacing" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

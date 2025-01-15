@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class ReaderViewConfig implements Serializable {

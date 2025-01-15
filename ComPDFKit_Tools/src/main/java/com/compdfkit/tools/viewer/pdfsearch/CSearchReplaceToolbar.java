@@ -27,7 +27,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CToastUtil;
@@ -72,7 +71,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *      searchToolBarView.setViewType(viewType);
  * }
  * </pre>
- *
+ * <p>
  * Please see the default search function:
  * <br>
  * <pre>
@@ -85,7 +84,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * }
  * <br>
  * </pre>
- *
+ * <p>
  * Please check for content editing, search and replacement
  * <pre>
  * {@code
@@ -97,6 +96,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * }
  *
  * </pre>
+ *
  * @see CPDFSearch
  * @see CViewerSearchImpl
  * @see ContentEditorSearchImpl
@@ -221,21 +221,21 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 clReplaceLayout.setVisibility(tab.getPosition() == 1 ? VISIBLE : GONE);
-                if (viewType == ViewType.SearchReplace){
-                    if (tab.getPosition() == 1){
+                if (viewType == ViewType.SearchReplace) {
+                    if (tab.getPosition() == 1) {
                         ivSearchList.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         ivSearchList.setVisibility(groupSearchAfter.getVisibility());
                     }
                 }
                 CPDFReaderView readerView = pdfView.getCPdfReaderView();
                 if (viewType == ViewType.SearchReplace && tabLayout.getSelectedTabPosition() == 1) {
-                    if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator){
+                    if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator) {
                         ((ContentEditorSearchReplaceDecorator) cpdfSearch).setShowSearchReplaceContextMenu(true);
                     }
                     readerView.showSearchReplaceContextMenu();
                 } else {
-                    if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator){
+                    if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator) {
                         ((ContentEditorSearchReplaceDecorator) cpdfSearch).setShowSearchReplaceContextMenu(false);
                     }
                     if (readerView.getContextMenuShowListener() != null) {
@@ -311,7 +311,7 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
             cpdfSearch.searchForward();
         } else if (v.getId() == R.id.iv_search_list) {
             hideKeyboard();
-            if (viewType == ViewType.SearchReplace){
+            if (viewType == ViewType.SearchReplace) {
                 if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator) {
                     ((ContentEditorSearchReplaceDecorator) cpdfSearch).recordSelectIndex();
                 }
@@ -329,8 +329,8 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
         } else if (v.getId() == R.id.btn_replace_all) {
             hideKeyboard();
             showLoadingDialog();
-            if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator){
-                ((ContentEditorSearchReplaceDecorator) cpdfSearch).replaceAll(etReplace.getText().toString(), ()->{
+            if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator) {
+                ((ContentEditorSearchReplaceDecorator) cpdfSearch).replaceAll(etReplace.getText().toString(), () -> {
                     dismissLoadingDialog();
                 });
             }
@@ -380,7 +380,7 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
             boolean hasResult = list.size() > 0;
             groupSearchBefore.setVisibility(hasResult ? GONE : VISIBLE);
             groupSearchAfter.setVisibility(hasResult ? VISIBLE : GONE);
-            if (tabLayout.getSelectedTabPosition() == 1){
+            if (tabLayout.getSelectedTabPosition() == 1) {
                 ivSearchList.setVisibility(View.GONE);
             }
             if (hasResult) {
@@ -414,7 +414,7 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
                 if (searchCount == 1) {
                     List<CSearchTextInfo> list = new ArrayList<>();
                     CSearchTextInfo textInfo = cpdfSearch.searchFirst(keywords, ignoreCase, wholeWordsOnly);
-                    if (textInfo != null){
+                    if (textInfo != null) {
                         list.add(textInfo);
                     }
                     return list;
@@ -434,52 +434,50 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
         };
         searchTask.execute();
     }
+
     boolean tempIgnoreCase;
     boolean tempWholeWordsOnly;
+
     private void showSearchSetting() {
-        FragmentManager fragmentManager = null;
-        if (getContext() instanceof FragmentActivity) {
-            fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+        if (fragmentActivity == null) {
+            return;
         }
-        if (fragmentManager != null) {
-            tempIgnoreCase = ignoreCase;
-            tempWholeWordsOnly = wholeWordsOnly;
-            CSearchSettingsDialog settingsDialog = CSearchSettingsDialog.newInstance(ignoreCase, wholeWordsOnly);
-            settingsDialog.setIgnoreCaseCheckedChangeListener((buttonView, isChecked) -> {
-                tempIgnoreCase = isChecked;
-                CToastUtil.showLongToast(getContext(), R.string.tools_effective_immediately_after_setting);
-            });
-            settingsDialog.setWholeWordsOnlyCheckedChangeListener((buttonView, isChecked) -> {
-                tempWholeWordsOnly = isChecked;
-                CToastUtil.showLongToast(getContext(), R.string.tools_effective_immediately_after_setting);
-            });
-            settingsDialog.setDialogDismissListener(()-> {
-                if (ignoreCase != tempIgnoreCase || wholeWordsOnly != tempWholeWordsOnly){
-                    ignoreCase = tempIgnoreCase;
-                    wholeWordsOnly = tempWholeWordsOnly;
-                    cancelTask();
-                    resetSearch();
-                }
-            });
-            settingsDialog.show(fragmentManager, "searchSettingDialog");
-        }
+        tempIgnoreCase = ignoreCase;
+        tempWholeWordsOnly = wholeWordsOnly;
+        CSearchSettingsDialog settingsDialog = CSearchSettingsDialog.newInstance(ignoreCase, wholeWordsOnly);
+        settingsDialog.setIgnoreCaseCheckedChangeListener((buttonView, isChecked) -> {
+            tempIgnoreCase = isChecked;
+            CToastUtil.showLongToast(getContext(), R.string.tools_effective_immediately_after_setting);
+        });
+        settingsDialog.setWholeWordsOnlyCheckedChangeListener((buttonView, isChecked) -> {
+            tempWholeWordsOnly = isChecked;
+            CToastUtil.showLongToast(getContext(), R.string.tools_effective_immediately_after_setting);
+        });
+        settingsDialog.setDialogDismissListener(() -> {
+            if (ignoreCase != tempIgnoreCase || wholeWordsOnly != tempWholeWordsOnly) {
+                ignoreCase = tempIgnoreCase;
+                wholeWordsOnly = tempWholeWordsOnly;
+                cancelTask();
+                resetSearch();
+            }
+        });
+        settingsDialog.show(fragmentActivity.getSupportFragmentManager(), "searchSettingDialog");
     }
 
     private void showSearchList(List<CSearchTextInfo> list) {
-        FragmentManager fragmentManager = null;
-        if (getContext() instanceof FragmentActivity) {
-            fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+        if (fragmentActivity == null) {
+            return;
         }
-        if (fragmentManager != null) {
-            CSearchResultDialogFragment searchResultDialog = new CSearchResultDialogFragment();
-            searchResultDialog.show(fragmentManager, "searchResultDialogFragment");
-            searchResultDialog.setSearchTextInfos(list);
-            searchResultDialog.setOnClickSearchItemListener(clickItem -> {
-                searchResultDialog.dismiss();
-                pdfView.getCPdfReaderView().setDisplayPageIndex(clickItem.page);
-                cpdfSearch.select(clickItem.page, clickItem.textRangeIndex);
-            });
-        }
+        CSearchResultDialogFragment searchResultDialog = new CSearchResultDialogFragment();
+        searchResultDialog.show(fragmentActivity.getSupportFragmentManager(), "searchResultDialogFragment");
+        searchResultDialog.setSearchTextInfos(list);
+        searchResultDialog.setOnClickSearchItemListener(clickItem -> {
+            searchResultDialog.dismiss();
+            pdfView.getCPdfReaderView().setDisplayPageIndex(clickItem.page);
+            cpdfSearch.select(clickItem.page, clickItem.textRangeIndex);
+        });
     }
 
     private void resetSearch() {
@@ -502,23 +500,24 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
         }
     }
 
-    private void showLoadingDialog(){
-        if (loadingDialog != null && loadingDialog.isVisible()){
+    private void showLoadingDialog() {
+        if (loadingDialog != null && loadingDialog.isVisible()) {
             loadingDialog.dismiss();
         }
-        if (getContext() instanceof FragmentActivity){
-            if (pdfView == null || pdfView.getCPdfReaderView() == null){
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+        if (fragmentActivity != null) {
+            if (pdfView == null || pdfView.getCPdfReaderView() == null) {
                 return;
             }
             if (pdfView.getCPdfReaderView().getPDFDocument().getPageCount() < 40) {
                 return;
             }
             loadingDialog = CLoadingDialog.newInstance();
-            loadingDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "loadingDialog");
+            loadingDialog.show(fragmentActivity.getSupportFragmentManager(), "loadingDialog");
         }
     }
 
-    private void dismissLoadingDialog(){
+    private void dismissLoadingDialog() {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
@@ -533,8 +532,8 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
     }
 
 
-    public void showSearchReplaceContextMenu(){
-        if (viewType == ViewType.SearchReplace && tabLayout.getSelectedTabPosition() == 1){
+    public void showSearchReplaceContextMenu() {
+        if (viewType == ViewType.SearchReplace && tabLayout.getSelectedTabPosition() == 1) {
             if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator) {
                 ((ContentEditorSearchReplaceDecorator) cpdfSearch).showSearchReplaceContextMenu();
             }

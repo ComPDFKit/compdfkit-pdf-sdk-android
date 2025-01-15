@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.compdfkit.core.annotation.CPDFImageScaleType;
 import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
 import com.compdfkit.tools.common.utils.image.CBitmapUtil;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -47,8 +48,9 @@ public class CustomSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                 }
             }
         });
-        if (readerView.getContext() instanceof FragmentActivity) {
-            styleDialogFragment.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "styleDialog");
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        if (fragmentActivity != null) {
+            styleDialogFragment.show(fragmentActivity.getSupportFragmentManager(), "styleDialog");
         }
     }
 }

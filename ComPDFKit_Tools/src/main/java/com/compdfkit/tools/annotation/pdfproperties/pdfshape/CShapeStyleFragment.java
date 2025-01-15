@@ -12,9 +12,7 @@ package com.compdfkit.tools.annotation.pdfproperties.pdfshape;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
@@ -69,10 +67,13 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
         return new CShapeStyleFragment();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_shape_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_shape_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         borderColorListView = rootView.findViewById(R.id.border_color_list_view);
         fillColorListView = rootView.findViewById(R.id.fill_color_list_view);
         stylePreviewView = rootView.findViewById(R.id.style_preview);
@@ -85,7 +86,6 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
         tailLinePreview = rootView.findViewById(R.id.preview_tail_line);
         clShapeStyle = rootView.findViewById(R.id.cl_shape_style);
         shapeStyleSpinner = rootView.findViewById(R.id.spinner_bord_effect_type);
-        return rootView;
     }
 
     @Override

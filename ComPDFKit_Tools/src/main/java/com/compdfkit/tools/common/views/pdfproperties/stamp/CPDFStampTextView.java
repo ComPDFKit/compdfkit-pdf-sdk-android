@@ -138,11 +138,11 @@ public class CPDFStampTextView extends View {
      */
     private final int[] COLOR_WHITE = new int[]{0xFFE9E9EB, Color.BLACK, Color.BLACK};
 
-    private final int[] COLOR_GREEN = new int[]{0xffCFE0C7, 0xff325413, 0xff567335};
+    private final int[] COLOR_GREEN = new int[]{0xffCFE0C7, 0xff406B21, 0xff567335};
 
-    private final int[] COLOR_RED = new int[]{0xffFEC7C7, 0xff77140b, 0xff8c3022};
+    private final int[] COLOR_RED = new int[]{0xffFEC7C7, 0xff910F05, 0xff8c3022};
 
-    private final int[] COLOR_BLUE = new int[]{0xffCBCFE2, 0xff09144a, 0xff313968};
+    private final int[] COLOR_BLUE = new int[]{0xffCBCFE2, 0xff172663, 0xff313968};
 
     public CPDFStampTextView(Context context) {
         this(context, null);

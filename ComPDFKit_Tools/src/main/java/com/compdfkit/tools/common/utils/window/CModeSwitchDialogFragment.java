@@ -23,7 +23,6 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
-import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.color.MaterialColors;
@@ -84,8 +83,8 @@ public class CModeSwitchDialogFragment extends CBasicBottomSheetDialogFragment
     }
 
     @Override
-    protected int getStyle() {
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Transparent_Theme);
+    protected int themeResId() {
+        return R.attr.compdfkit_BottomSheetDialog_Transparent_Theme;
     }
 
     @Override
@@ -223,7 +222,8 @@ public class CModeSwitchDialogFragment extends CBasicBottomSheetDialogFragment
     private void setRadioButtonInfo(AppCompatRadioButton item, @StringRes int titleResId, @DrawableRes int startDrawableResId){
         item.setText(titleResId);
         Drawable startDrawable = ContextCompat.getDrawable(getContext(), startDrawableResId);
-        DrawableCompat.setTint(startDrawable, MaterialColors.getColor(getContext(), R.attr.colorOnPrimary, Color.BLACK));
+        int startDrawableColor = MaterialColors.getColor(getContext(), R.attr.colorOnPrimary, Color.BLACK);
+        DrawableCompat.setTint(startDrawable, startDrawableColor);
         DrawableCompat.setTintMode(startDrawable, PorterDuff.Mode.SRC_ATOP);
         Drawable endDrawable = ContextCompat.getDrawable(getContext(), R.drawable.tools_reader_settings_page_mode_radio_button);
         item.setCompoundDrawablesWithIntrinsicBounds(startDrawable, null,endDrawable,null);

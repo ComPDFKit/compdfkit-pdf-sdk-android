@@ -40,7 +40,6 @@ import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.view.CEditText;
-import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
 import com.compdfkit.tools.signature.CertificateDigitalDatas;
 import com.compdfkit.tools.signature.importcert.create.adapter.CountryReginSpinnerAdapter;
@@ -110,8 +109,8 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
     }
 
     @Override
-    protected int getStyle() {
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Transparent_Theme);
+    protected int themeResId() {
+        return R.attr.compdfkit_BottomSheetDialog_Transparent_Theme;
     }
 
     @NonNull

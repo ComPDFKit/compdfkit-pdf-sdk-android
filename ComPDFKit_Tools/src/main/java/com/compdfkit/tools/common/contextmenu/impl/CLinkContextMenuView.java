@@ -24,6 +24,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuLinkProvider;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.action.CActionEditDialogFragment;
 import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
 import com.compdfkit.ui.proxy.CPDFLinkAnnotImpl;
@@ -111,8 +112,9 @@ public class CLinkContextMenuView implements ContextMenuLinkProvider {
                 }
             }
         });
-        if (readerView.getContext() instanceof FragmentActivity) {
-            linkStyleDialogFragment.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "linkDialog");
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        if (fragmentActivity != null) {
+            linkStyleDialogFragment.show(fragmentActivity.getSupportFragmentManager(), "linkDialog");
         }
     }
 }

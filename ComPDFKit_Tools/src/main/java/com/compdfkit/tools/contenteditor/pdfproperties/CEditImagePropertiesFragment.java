@@ -10,9 +10,7 @@
 package com.compdfkit.tools.contenteditor.pdfproperties;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -52,20 +50,20 @@ public class CEditImagePropertiesFragment extends CBasicPropertiesFragment imple
         }
     });
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_edit_image_property_dialog, container, false);
-        initView(rootView);
-        return rootView;
+    protected int layoutId() {
+        return R.layout.tools_edit_image_property_dialog;
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void initView(View mContentView) {
+    @Override
+    protected void onCreateView(View mContentView) {
         stylePreviewView = mContentView.findViewById(R.id.style_preview);
         rlLeftRotate = mContentView.findViewById(R.id.rl_left_rotate);
         rlRightRotate = mContentView.findViewById(R.id.rl_right_rotate);

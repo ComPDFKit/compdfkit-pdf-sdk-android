@@ -13,9 +13,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -52,14 +50,16 @@ public class CSignatureStyleFragment extends CBasicPropertiesFragment {
     });
     private CSignatureListAdapter signatureListAdapter;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_signature_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_signature_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         rvSignature = rootView.findViewById(R.id.rv_signature);
         fabAddSignature = rootView.findViewById(R.id.fab_add_signature);
         clEmptyView = rootView.findViewById(R.id.cl_empty_view);
-        return rootView;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CSignatureStyleFragment extends CBasicPropertiesFragment {
         fabAddSignature.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), CAddSignatureActivity.class);
             intent.putExtra(CAddSignatureActivity.EXTRA_SCREEN_ORIENTATION, CViewUtils.isLandScape(getContext())?ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            intent.putExtra(CAddSignatureActivity.EXTRA_THEME_ID, CPDFApplyConfigUtil.getInstance().getThemeId());
+            intent.putExtra(CAddSignatureActivity.EXTRA_THEME_ID, CPDFApplyConfigUtil.getInstance().getGlobalThemeId());
             addSignatureLauncher.launch(intent);
         });
         signatureListAdapter = new CSignatureListAdapter();

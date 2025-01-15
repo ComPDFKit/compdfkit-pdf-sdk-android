@@ -15,6 +15,7 @@
         android:layout_marginEnd="16dp"
         app:srcCompat="@drawable/tools_bord_effect_type_solid"
         android:padding="8dp"
+        app:tint="?attr/colorOnPrimary"
         />
 
 </LinearLayout>

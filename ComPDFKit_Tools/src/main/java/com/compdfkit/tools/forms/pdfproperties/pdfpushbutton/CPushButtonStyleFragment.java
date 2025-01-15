@@ -13,9 +13,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,10 +53,13 @@ public class CPushButtonStyleFragment extends CBasicPropertiesFragment implement
 
     private CPDFFontView fontView;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_push_button_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_push_button_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         textFieldsView = rootView.findViewById(R.id.text_field_view);
         etBtnText = rootView.findViewById(R.id.et_btn_text);
         borderColorListView = rootView.findViewById(R.id.border_color_list_view);
@@ -67,7 +68,6 @@ public class CPushButtonStyleFragment extends CBasicPropertiesFragment implement
         fontSizeSliderBar = rootView.findViewById(R.id.font_size_slider_bar);
         fontView = rootView.findViewById(R.id.font_view);
         hideFormSwitch = rootView.findViewById(R.id.switch_hide_form);
-        return rootView;
     }
 
     @Override

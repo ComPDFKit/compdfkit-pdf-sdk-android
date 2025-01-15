@@ -17,9 +17,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -28,15 +26,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeDialogFragment;
 import com.compdfkit.tools.common.interfaces.COnDialogDismissListener;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 
-public class CNoteEditDialog extends DialogFragment {
+public class CNoteEditDialog extends CBasicThemeDialogFragment {
 
     public static final String EXTRA_NOTE_CONTENT = "extra_note_content";
 
@@ -86,14 +84,16 @@ public class CNoteEditDialog extends DialogFragment {
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_note_edit_dialog, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_note_edit_dialog;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         ivSave = rootView.findViewById(R.id.id_note_save);
         ivDelete = rootView.findViewById(R.id.id_note_delete);
         etContent  = rootView.findViewById(R.id.id_note_content);
-        return rootView;
     }
 
     @Override

@@ -11,9 +11,7 @@ package com.compdfkit.tools.forms.pdfproperties.pdfcheckbox;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,10 +51,13 @@ public class CheckBoxStyleFragment extends CBasicPropertiesFragment implements V
 
     private AppCompatImageView ivCheckBox;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_check_box_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_check_box_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         textFieldsView = rootView.findViewById(R.id.text_field_view);
         borderColorListView = rootView.findViewById(R.id.border_color_list_view);
         backgroundColorListView = rootView.findViewById(R.id.background_color_list_view);
@@ -65,7 +66,6 @@ public class CheckBoxStyleFragment extends CBasicPropertiesFragment implements V
         presetSelectSwitch = rootView.findViewById(R.id.switch_preset_to_selected);
         clCheckBoxItem = rootView.findViewById(R.id.cl_check_box_type_item);
         ivCheckBox = rootView.findViewById(R.id.iv_check_box);
-        return rootView;
     }
 
     @Override

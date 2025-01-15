@@ -18,9 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -44,8 +45,6 @@ public class CInkCtrlView extends FrameLayout implements View.OnClickListener {
     private AppCompatImageView ivRedo;
 
     private CPDFViewCtrl pdfView;
-
-    private FragmentManager fragmentManager;
 
     public CInkCtrlView(@NonNull Context context) {
         this(context, null);
@@ -130,13 +129,10 @@ public class CInkCtrlView extends FrameLayout implements View.OnClickListener {
                 ivSetting.setSelected(false);
             });
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
-            if (fragmentManager != null) {
-                styleDialogFragment.show(fragmentManager, "annotStyleDialogFragment");
+            FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+            if (fragmentActivity != null) {
+                styleDialogFragment.show(fragmentActivity.getSupportFragmentManager(), "annotStyleDialogFragment");
             }
         }
-    }
-
-    public void setFragmentManager(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
     }
 }

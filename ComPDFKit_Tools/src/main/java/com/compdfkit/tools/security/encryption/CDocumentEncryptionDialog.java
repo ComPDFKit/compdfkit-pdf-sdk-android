@@ -404,9 +404,7 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
                     result = document.saveAs(filePath, false, false, saveFileExtraFontSubset);
                 }
                 boolean shouleReloadDocument = document.shouleReloadDocument();
-                CLog.e("ComPDFKit", "是否需要重新加载文档：" + shouleReloadDocument);
                 if (shouleReloadDocument) {
-                    CLog.e("ComPDFKit", "重新加载文档---");
                     document.reload();
                 }
                 if (getActivity() != null) {

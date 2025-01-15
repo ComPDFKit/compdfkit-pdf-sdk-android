@@ -45,16 +45,16 @@ public class CStyleUIParams implements Serializable {
         params.dimAmount = 0.2F;
         params.backgroundDrawable = R.drawable.tools_annot_style_dialog_window_bg;
         params.dialogStyleType = DialogStyleType.Dialog;
-        params.theme = params.getStyleTheme(context, R.attr.compdfkit_BottomSheetDialog_Transparent_Theme, R.style.ComPDFKit_Theme_BottomSheetDialog_Light_Transparent);
+        params.theme = CViewUtils.getThemeStyle(context, R.attr.compdfkit_BottomSheetDialog_Transparent_Theme);
         if (styleType == CStyleType.ANNOT_STAMP || styleType == CStyleType.ANNOT_SIGNATURE || styleType == CStyleType.FORM_SIGNATURE_FIELDS){
             params.fillScreenHeight = true;
-            params.theme = params.getStyleTheme(context, R.attr.compdfkit_BottomSheetDialog_Theme, R.style.ComPDFKit_Theme_BottomSheetDialog_Light);
+            params.theme = CViewUtils.getThemeStyle(context, R.attr.compdfkit_BottomSheetDialog_Theme);
             params.dialogStyleType = CStyleUIParams.DialogStyleType.Activity;
             params.dimAmount = 0F;
         }
         if (styleType == CStyleType.ANNOT_PIC){
             params.showToolbar = false;
-            params.theme = params.getStyleTheme(context, R.attr.compdfkit_BottomSheetDialog_Theme, R.style.ComPDFKit_Theme_BottomSheetDialog_Light);
+            params.theme = CViewUtils.getThemeStyle(context, R.attr.compdfkit_BottomSheetDialog_Theme);
         }
         return params;
     }

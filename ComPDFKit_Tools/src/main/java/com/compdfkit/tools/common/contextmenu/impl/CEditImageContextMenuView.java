@@ -20,6 +20,7 @@ import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts;
 import com.compdfkit.tools.common.utils.dialog.CImportImageDialogFragment;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -45,8 +46,9 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
             styleManager.setDialogHeightCallback(dialogFragment, helper.getReaderView());
             if (helper != null && helper.getReaderView() != null && helper.getReaderView().getContext() != null) {
                 Context context = helper.getReaderView().getContext();
-                if (context instanceof FragmentActivity) {
-                    dialogFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "noteEditDialog");
+                FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(context);
+                if (fragmentActivity != null) {
+                    dialogFragment.show(fragmentActivity.getSupportFragmentManager(), "noteEditDialog");
                 }
             }
             helper.dismissContextMenu();

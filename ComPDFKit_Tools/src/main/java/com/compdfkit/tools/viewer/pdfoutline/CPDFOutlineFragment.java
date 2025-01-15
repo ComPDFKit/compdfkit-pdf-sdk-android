@@ -11,18 +11,16 @@ package com.compdfkit.tools.viewer.pdfoutline;
 
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.viewer.pdfoutline.adapter.COutlineListAdapter;
@@ -32,7 +30,7 @@ import com.compdfkit.tools.viewer.pdfoutline.data.COutlineDatas;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CPDFOutlineFragment extends Fragment {
+public class CPDFOutlineFragment extends CBasicThemeFragment {
 
     /**
      * Outline maximum expansion level
@@ -67,14 +65,15 @@ public class CPDFOutlineFragment extends Fragment {
         this.pdfView = pdfView;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment.
-        View rootView = inflater.inflate(R.layout.tools_bota_outline_list_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_bota_outline_list_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         rvOutlineRecyclerView = rootView.findViewById(R.id.rv_outline);
         clEmptyView = rootView.findViewById(R.id.cl_outline_empty_view);
-        return rootView;
     }
 
     @Override

@@ -1,19 +1,27 @@
 package com.compdfkit.tools.common.utils;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.core.content.FileProvider;
+
+import com.compdfkit.tools.R;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.List;
 
 public class CFileUtils {
 
@@ -48,13 +57,13 @@ public class CFileUtils {
     public static final String EXTRACT_FOLDER = "compdfkit/extract";
 
     public static String getAssetsTempFile(Context context, String assetsName, String saveName) {
-        String path =  context.getCacheDir().getAbsolutePath();
+        String path = context.getCacheDir().getAbsolutePath();
         copyFileFromAssets(context, assetsName, path, saveName, false);
         return path + "/" + saveName;
     }
 
     public static String getAssetsTempFile(Context context, String assetsName, String saveName, boolean overwrite) {
-        String path =  context.getCacheDir().getAbsolutePath();
+        String path = context.getCacheDir().getAbsolutePath();
         copyFileFromAssets(context, assetsName, path, saveName, overwrite);
         return path + "/" + saveName;
     }
@@ -300,12 +309,12 @@ public class CFileUtils {
     }
 
     public static void notifyMediaStore(Context context, String filePath) {
-        try{
+        try {
             Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             Uri uri = Uri.fromFile(new File(filePath));
             intent.setData(uri);
             context.sendBroadcast(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -317,12 +326,12 @@ public class CFileUtils {
         return intent;
     }
 
-    public static void takeUriPermission(Context context, Uri uri){
-        try{
+    public static void takeUriPermission(Context context, Uri uri) {
+        try {
             context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             context.grantUriPermission(context.getPackageName(), uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -358,7 +367,7 @@ public class CFileUtils {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] { split[1] };
+                final String[] selectionArgs = new String[]{split[1]};
                 filePath = getDataColumn(context, contentUri, selection, selectionArgs);
             }
         } else if ("content".equalsIgnoreCase(uri.getScheme())) {
@@ -370,7 +379,7 @@ public class CFileUtils {
 
     private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         String filePath = null;
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = null;
 
         try {
@@ -395,6 +404,7 @@ public class CFileUtils {
         }
         return getFileNameNoExtension(file.getPath());
     }
+
     public static String getFileNameNoExtension(final String filePath) {
         if (isSpace(filePath)) {
             return filePath;
@@ -445,7 +455,7 @@ public class CFileUtils {
     }
 
 
-    public static String fileSizeFormat(long fileSize){
+    public static String fileSizeFormat(long fileSize) {
         final long MB = 1024 * 1024;
         final int KB = 1024;
         float size;
@@ -469,15 +479,15 @@ public class CFileUtils {
         InputStreamReader isr = null;
         BufferedReader br = null;
 
-        StringBuffer sb =  new StringBuffer();
-        try{
+        StringBuffer sb = new StringBuffer();
+        try {
             inputStream = assetManager.open(fileName);
             isr = new InputStreamReader(inputStream);
             br = new BufferedReader(isr);
 
             sb.append(br.readLine());
             String line = null;
-            while((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
                 sb.append("\n" + line);
             }
 
@@ -517,7 +527,7 @@ public class CFileUtils {
         }
     }
 
-    public static  boolean deleteSingleFile(String filePath$Name) {
+    public static boolean deleteSingleFile(String filePath$Name) {
         File file = new File(filePath$Name);
         // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
         if (file.exists() && file.isFile()) {
@@ -531,7 +541,7 @@ public class CFileUtils {
         }
     }
 
-    public static  boolean deleteDirectory(String filePath) {
+    public static boolean deleteDirectory(String filePath) {
         // 如果dir不以文件分隔符结尾，自动添加文件分隔符
         if (!filePath.endsWith(File.separator))
             filePath = filePath + File.separator;
@@ -546,8 +556,7 @@ public class CFileUtils {
                 flag = deleteSingleFile(file.getAbsolutePath());
                 if (!flag)
                     break;
-            }
-            else if (file.isDirectory()) {
+            } else if (file.isDirectory()) {
                 flag = deleteDirectory(file
                         .getAbsolutePath());
                 if (!flag)
@@ -561,6 +570,73 @@ public class CFileUtils {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static void startPrint(Context context, String filePath, Uri uri) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("application/pdf");
+            intent.setPackage("com.android.bips");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            if (uri != null && uri.toString().startsWith("content://")) {
+                intent.setData(uri);
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
+                context.startActivity(intent);
+                return;
+            }
+            String externalStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            if (!TextUtils.isEmpty(filePath)) {
+                if (filePath.startsWith(context.getCacheDir().getAbsolutePath()) ||
+                        filePath.startsWith(context.getFilesDir().getAbsolutePath())) {
+                    Uri uri1 = getUriBySystem(context, new File(filePath));
+                    intent.setData(uri1);
+                    intent.putExtra(Intent.EXTRA_STREAM, uri1);
+                } else if (filePath.startsWith(externalStoragePath)) {
+                    Uri uri2 = CFileUtils.getUriBySystem(context, new File(filePath));
+                    intent.setData(uri2);
+                    intent.putExtra(Intent.EXTRA_STREAM, uri2);
+                }
+            }
+            context.startActivity(intent);
+        } catch (Exception e) {
+
+        }
+    }
+
+    public static void copyAssetsDirToPhone(Activity activity, String assetsPath, String outPutParentDir){
+        try {
+            String[] fileList = activity.getAssets().list(assetsPath);
+            if(fileList.length>0) {//如果是目录
+                File file=new File(outPutParentDir+ File.separator+assetsPath);
+                file.mkdirs();//如果文件夹不存在，则递归
+                for (String fileName:fileList){
+                    assetsPath=assetsPath+File.separator+fileName;
+
+                    copyAssetsDirToPhone(activity,assetsPath, outPutParentDir);
+
+                    assetsPath=assetsPath.substring(0,assetsPath.lastIndexOf(File.separator));
+                    Log.e("oldPath",assetsPath);
+                }
+            } else {//如果是文件
+                InputStream inputStream=activity.getAssets().open(assetsPath);
+                File file=new File(outPutParentDir+ File.separator+assetsPath);
+                Log.i("copyAssets2Phone","file:"+file);
+                if(!file.exists() || file.length()==0) {
+                    FileOutputStream fos=new FileOutputStream(file);
+                    int len=-1;
+                    byte[] buffer=new byte[1024];
+                    while ((len=inputStream.read(buffer))!=-1){
+                        fos.write(buffer,0,len);
+                    }
+                    fos.flush();
+                    inputStream.close();
+                    fos.close();
+                } else {
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

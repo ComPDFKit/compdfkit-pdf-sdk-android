@@ -17,6 +17,7 @@ import com.compdfkit.core.document.CPDFDestination;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.document.action.CPDFGoToAction;
 import com.compdfkit.core.document.action.CPDFUriAction;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.action.CActionEditDialogFragment;
 import com.compdfkit.ui.proxy.attach.CPDFLinkAnnotAttachHelper;
 
@@ -75,8 +76,9 @@ public class CLinkAnnotAttachHelper extends CPDFLinkAnnotAttachHelper {
                 }
             }
         });
-        if (readerView.getContext() instanceof FragmentActivity) {
-            linkStyleDialogFragment.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "linkDialog");
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        if (fragmentActivity != null) {
+            linkStyleDialogFragment.show(fragmentActivity.getSupportFragmentManager(), "linkDialog");
         }
     }
 }

@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 
 
 /**

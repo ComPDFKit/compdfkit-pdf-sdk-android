@@ -16,9 +16,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
@@ -26,14 +24,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.basic.fragment.CBasicThemeDialogFragment;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 
-public class CGotoPageDialog extends DialogFragment {
+public class CGotoPageDialog extends CBasicThemeDialogFragment {
 
     public static final String EXTRA_EDIT_HINT_TEXT = "extra_edit_hint_text";
 
@@ -60,32 +58,24 @@ public class CGotoPageDialog extends DialogFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        int themeId = CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.dialogTheme);
-        if (themeId == 0){
-            themeId = R.style.ComPDFKit_Theme_Dialog;
-        }
-        setStyle(STYLE_NO_TITLE,themeId);
+    protected int themeResId() {
+        return R.attr.dialogTheme;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    protected int layoutId() {
+        return R.layout.tools_bota_bookmark_input_dialog;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected void onCreateView(View rootView) {
         if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setBackgroundDrawableResource(R.drawable.tools_dialog_background);
         }
-        View rootView = inflater.inflate(R.layout.tools_bota_bookmark_input_dialog, container, false);
         editText = rootView.findViewById(R.id.tv_message);
         tvTitle = rootView.findViewById(R.id.tv_title);
         btnCancel = rootView.findViewById(R.id.btn_cancel);
         btnAdd = rootView.findViewById(R.id.btn_add);
-        return rootView;
     }
 
     @Override

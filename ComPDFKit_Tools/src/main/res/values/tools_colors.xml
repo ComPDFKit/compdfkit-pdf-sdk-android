@@ -22,6 +22,7 @@
     <color name="tools_text_color_primary">#43474D</color>
     <color name="tools_text_color_secondary">#666666</color>
     <color name="tools_text_color_hint">#CCCCCC</color>
+    <color name="tools_text_color_hint_2">#CCF1F1F1</color>
     <color name="tools_text_color_primary_inverse">#FFFFFF</color>
     <color name="tools_text_color_disable">#999999</color>
     <color name="tools_page_indicator_bg_color">#CC000000</color>

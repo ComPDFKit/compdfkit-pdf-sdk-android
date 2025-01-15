@@ -11,9 +11,7 @@ package com.compdfkit.tools.annotation.pdfproperties.pdfmarkup;
 
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,14 +38,16 @@ public class CMarkupStyleFragment extends CBasicPropertiesFragment implements Co
         return new CMarkupStyleFragment();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_properties_markup_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_properties_markup_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         colorListView = rootView.findViewById(R.id.color_list_view);
         colorOpacitySliderBar = rootView.findViewById(R.id.slider_bar);
         previewView = rootView.findViewById(R.id.style_preview);
-        return rootView;
     }
 
     @Override

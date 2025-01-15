@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.compdfkit.core.annotation.CPDFTextAttribute;
@@ -55,8 +54,8 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
             styleManager.setDialogHeightCallback(dialogFragment, helper.getReaderView());
             if (helper != null && helper.getReaderView() != null && helper.getReaderView().getContext() != null) {
                 Context context = helper.getReaderView().getContext();
-                if (context instanceof FragmentActivity) {
-                    dialogFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "noteEditDialog");
+                if (helper.getFragmentManager() != null) {
+                    dialogFragment.show(helper.getFragmentManager(), "noteEditDialog");
                 }
                 helper.dismissContextMenu();
             }
@@ -200,8 +199,8 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
             CAnnotStyle annotStyle = styleManager.getStyle(CStyleType.EDIT_TEXT);
             CStyleDialogFragment dialogFragment = CStyleDialogFragment.newInstance(annotStyle);
             styleManager.setAnnotStyleFragmentListener(dialogFragment);
-            if (helper.getReaderView().getContext() instanceof FragmentActivity) {
-                dialogFragment.show(((FragmentActivity) helper.getReaderView().getContext()).getSupportFragmentManager(), "noteEditDialog");
+            if (helper.getFragmentManager() != null) {
+                dialogFragment.show(helper.getFragmentManager(), "noteEditDialog");
             }
             helper.dismissContextMenu();
         });

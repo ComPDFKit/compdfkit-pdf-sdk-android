@@ -25,6 +25,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.image.CBitmapUtil;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -63,6 +64,7 @@ public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
 
     @Override
     public void onSignatureWidgetFocused(CPDFSignatureWidget cpdfSignatureWidget) {
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
         if (!cpdfSignatureWidget.isSigned()) {
 
             if (getCurrentMode() != CPreviewMode.Signature) {
@@ -81,8 +83,8 @@ public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                     fillDigitalSign(cpdfSignatureWidget);
                 }
             });
-            if (readerView.getContext() instanceof FragmentActivity) {
-                signTypeDialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "selectSignType");
+            if (fragmentActivity != null) {
+                signTypeDialog.show(fragmentActivity.getSupportFragmentManager(), "selectSignType");
             }
             return;
         }
@@ -128,8 +130,9 @@ public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                 }
             }
         });
-        if (readerView.getContext() instanceof FragmentActivity) {
-            styleDialogFragment.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "styleDialog");
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        if (fragmentActivity != null) {
+            styleDialogFragment.show(fragmentActivity.getSupportFragmentManager(), "styleDialog");
         }
     }
 
@@ -153,20 +156,23 @@ public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                     directoryDialog.setSelectFolderListener(dir -> {
                         sigitalSignatureDocument(cpdfSignatureWidget, config, location, reason, certFilePath, certPassword, dir);
                     });
-                    if (readerView.getContext() instanceof FragmentActivity) {
-                        directoryDialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "selectFolderDialog");
+                    FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+                    if (fragmentActivity != null) {
+                        directoryDialog.show(fragmentActivity.getSupportFragmentManager(), "selectFolderDialog");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 dialog.dismiss();
             });
-            if (readerView.getContext() instanceof FragmentActivity) {
-                previewDialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "digitalSignPreviewDialog");
+            FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+            if (fragmentActivity != null) {
+                previewDialog.show(fragmentActivity.getSupportFragmentManager(), "digitalSignPreviewDialog");
             }
         });
-        if (readerView.getContext() instanceof FragmentActivity) {
-            dialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "styleDialog");
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        if (fragmentActivity != null) {
+            dialog.show(fragmentActivity.getSupportFragmentManager(), "styleDialog");
         }
     }
 
@@ -178,8 +184,9 @@ public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
         CertDigitalSignInfoDialog signInfoDialog = CertDigitalSignInfoDialog.newInstance();
         signInfoDialog.setDocument(readerView.getPDFDocument());
         signInfoDialog.setPDFSignature(signature);
-        if (readerView.getContext() instanceof FragmentActivity) {
-            signInfoDialog.show(((FragmentActivity) readerView.getContext()).getSupportFragmentManager(), "signInfoDialog");
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        if (fragmentActivity != null) {
+            signInfoDialog.show(fragmentActivity.getSupportFragmentManager(), "signInfoDialog");
         }
     }
 
@@ -219,7 +226,8 @@ public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                 pdfView.openPDF(saveFile.getAbsolutePath());
             }
         } else {
-            CToastUtil.showToast(readerView.getContext(), "Signature Fail");
+            cpdfSignatureWidget.resetForm();
+            CToastUtil.showToast(readerView.getContext(), readerView.getContext().getString(R.string.tools_digital_sign_failures));
         }
     }
 

@@ -54,11 +54,11 @@ public class CFormOptionSelectDialogFragment extends CBasicBottomSheetDialogFrag
         this.pdfWidgetItems = pdfWidgetItems;
     }
 
-    @Override
-    protected int getStyle() {
-        return CViewUtils.getThemeAttrResourceId(getContext().getTheme(), R.attr.compdfkit_BottomSheetDialog_Transparent_Theme);
-    }
 
+    @Override
+    protected int themeResId() {
+        return R.attr.compdfkit_BottomSheetDialog_Transparent_Theme;
+    }
 
     @Override
     public void onStart() {

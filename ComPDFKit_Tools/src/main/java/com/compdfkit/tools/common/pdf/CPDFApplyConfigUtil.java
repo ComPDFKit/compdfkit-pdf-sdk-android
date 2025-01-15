@@ -38,7 +38,6 @@ import com.compdfkit.tools.common.pdf.config.forms.FormsListBoxAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsPushButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsRadioButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsTextFieldAttr;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
@@ -46,6 +45,7 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.ui.reader.CPDFReaderView;
+
 import java.util.ArrayList;
 
 public class CPDFApplyConfigUtil {
@@ -67,12 +67,15 @@ public class CPDFApplyConfigUtil {
         return configuration;
     }
 
-    public int getThemeId() {
+    public int getGlobalThemeId() {
         if (themeId == 0){
-            CLog.e("主题", "getThemeId() - themeId=0 使用默认Light主题");
             themeId = R.style.ComPDFKit_Theme_Light;
         }
         return themeId;
+    }
+
+    private void setGlobalThemeId(int themeId){
+        this.themeId = themeId;
     }
 
     public void applyConfiguration(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
@@ -168,14 +171,7 @@ public class CPDFApplyConfigUtil {
                 }
             } else {
                 fragment.setPreviewMode(CPreviewMode.Viewer);
-                fragment.showPageEdit(fragment.pdfView, true, () -> {
-                    if (fragment.curEditMode > CPDFEditPage.LoadNone && fragment.pdfToolBar.getMode() == CPreviewMode.Edit) {
-                        CPDFEditManager editManager = fragment.pdfView.getCPdfReaderView().getEditManager();
-                        if (!editManager.isEditMode()) {
-                            editManager.beginEdit(fragment.curEditMode);
-                        }
-                    }
-                });
+                fragment.showPageEdit(true);
             }
 
         }
@@ -380,7 +376,7 @@ public class CPDFApplyConfigUtil {
         }
     }
 
-    public int getThemeId(Context context, CPDFConfiguration configuration){
+    public int getGlobalThemeId(Context context, CPDFConfiguration configuration){
         switch (configuration.globalConfig.themeMode) {
             case Light:
                 themeId = R.style.ComPDFKit_Theme_Light;

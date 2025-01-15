@@ -12,9 +12,7 @@ package com.compdfkit.tools.security.watermark.pdfproperties;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -68,10 +66,13 @@ public class CWatermarkImageStyleFragment extends CBasicPropertiesFragment imple
         }
     });
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tools_cpdf_security_watermark_image_style_fragment, container, false);
+    protected int layoutId() {
+        return R.layout.tools_cpdf_security_watermark_image_style_fragment;
+    }
+
+    @Override
+    protected void onCreateView(View rootView) {
         opacitySliderBar = rootView.findViewById(R.id.slider_bar);
         swTile = rootView.findViewById(R.id.sw_tile);
         pageRangeSpinner = rootView.findViewById(R.id.spinner_page_range);
@@ -83,7 +84,6 @@ public class CWatermarkImageStyleFragment extends CBasicPropertiesFragment imple
         ivLocationBottom.setOnClickListener(this);
         ivFromAlbum.setOnClickListener(this);
         ivFromCamera.setOnClickListener(this);
-        return rootView;
     }
 
     @Override
