@@ -16,6 +16,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:theme="@style/ComPDFKit.Theme.Light"
+            tools:replace="android:theme"
             android:windowSoftInputMode="adjustPan">
             <intent-filter tools:ignore="AppLinkUrlError"
                 android:scheme="http">

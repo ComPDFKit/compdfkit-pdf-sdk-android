@@ -11,6 +11,8 @@ package com.compdfkit.tools.common.utils.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -66,7 +68,13 @@ public class CGotoPageDialog extends CBasicThemeDialogFragment {
     protected int layoutId() {
         return R.layout.tools_bota_bookmark_input_dialog;
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getDialog() != null) {
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+    }
     @Override
     protected void onCreateView(View rootView) {
         if (getDialog() != null && getDialog().getWindow() != null) {

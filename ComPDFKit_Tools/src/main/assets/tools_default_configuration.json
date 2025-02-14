@@ -264,6 +264,9 @@
   },
   "global" : {
     "themeMode" : "system",
-    "fileSaveExtraFontSubset" : true
+    "fileSaveExtraFontSubset" : true,
+    "watermark": {
+      "saveAsNewFile" : true
+    }
   }
 }

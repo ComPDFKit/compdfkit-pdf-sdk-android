@@ -95,19 +95,21 @@ public class DocumentSaveExtraFontSubsetTest extends PDFSamples {
 
         // Define the font, font size, and text color
 //        String fontName = "Arial";
-        String fontName = "DancingScript";
+        String fontName = "Arial";
         int fontSize = 30;
         int textColor = Color.RED;
 
         // Create a new text area
         CPDFEditTextArea editTextArea = cpdfEditPage.createNewTextArea(rect, fontName, fontSize, textColor, 255, false, false, CPDFEditTextArea.PDFEditAlignType.PDFEditAlignLeft);
-        // Get the start and end positions for text insertion
-        CPDFEditCharItem begin = editTextArea.getBeginCharPlace();
-        CPDFEditCharItem end = editTextArea.getEndCharPlace();
-        outputListener.println("Insert text on the first page: " + content);
-        // Insert the content into the text area
-        editTextArea.insertTextRange(begin.getPlace(), end.getPlace(), content);
-        cpdfEditPage.endEdit();
+        if (editTextArea != null) {
+            // Get the start and end positions for text insertion
+            CPDFEditCharItem begin = editTextArea.getBeginCharPlace();
+            CPDFEditCharItem end = editTextArea.getEndCharPlace();
+            outputListener.println("Insert text on the first page: " + content);
+            // Insert the content into the text area
+            editTextArea.insertTextRange(begin.getPlace(), end.getPlace(), content);
+            cpdfEditPage.endEdit();
+        }
 
     }
 

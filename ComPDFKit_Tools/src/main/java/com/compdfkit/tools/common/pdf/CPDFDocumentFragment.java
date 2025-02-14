@@ -489,7 +489,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     }
 
     private void restoreEdit() {
-        restoreEdit(pdfView,pdfToolBar.getMode() == CPreviewMode.Edit);
+        restoreEdit(pdfView, pdfToolBar.getMode() == CPreviewMode.Edit);
     }
 
     protected void initEditBar() {
@@ -837,7 +837,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         }
     }
 
-    public void showBOTA(){
+    public void showBOTA() {
         pdfView.getCPdfReaderView().removeAllAnnotFocus();
         if (pdfView.getCPdfReaderView().getEditManager().isEditMode()) {
             curEditMode = pdfView.getCPdfReaderView().getLoadType();
@@ -864,11 +864,11 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         dialogFragment.show(getChildFragmentManager(), "annotationList");
     }
 
-    public void showPageEdit(boolean enterEditMode){
+    public void showPageEdit(boolean enterEditMode) {
         showPageEdit(pdfView, enterEditMode, this::restoreEdit);
     }
 
-    public void showSecurityDialog(){
+    public void showSecurityDialog() {
         CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
         if (document == null) {
             return;
@@ -888,25 +888,34 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         showSettingEncryptionDialog();
     }
 
-    public void showAddWatermarkDialog(){
+    public void showAddWatermarkDialog() {
+        showAddWatermarkDialog(cpdfConfiguration.globalConfig.watermark.saveAsNewFile);
+    }
+
+    public void showAddWatermarkDialog(boolean saveAsNewFile) {
         CWatermarkEditDialog watermarkEditDialog = CWatermarkEditDialog.newInstance();
         watermarkEditDialog.setDocument(pdfView.getCPdfReaderView().getPDFDocument());
         watermarkEditDialog.setSaveFileExtraFontSubset(pdfView.isSaveFileExtraFontSubset());
         watermarkEditDialog.setPageIndex(pdfView.currentPageIndex);
-        watermarkEditDialog.setCompleteListener((pdfFile) -> {
-            pdfView.getCPdfReaderView().reloadPages();
+        watermarkEditDialog.setSaveAsNewFile(saveAsNewFile);
+        watermarkEditDialog.setCompleteListener((saveAsNewFile1, pdfFile) -> {
             watermarkEditDialog.dismiss();
+            CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_success);
+            if (!saveAsNewFile1) {
+                pdfView.getCPdfReaderView().reloadPages();
+                return;
+            }
+            pdfView.getCPdfReaderView().reloadPages();
             if (TextUtils.isEmpty(pdfFile)) {
                 CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_failed);
                 return;
             }
             pdfView.openPDF(pdfFile);
-            CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_success);
         });
         watermarkEditDialog.show(getChildFragmentManager(), "watermarkEditDialog");
     }
 
-    public void showFlattenedDialog(){
+    public void showFlattenedDialog() {
         if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
             multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
                 if (CPermissionUtil.hasStoragePermissions(getContext())) {
@@ -922,7 +931,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         }
     }
 
-    public void enterSnipMode(){
+    public void enterSnipMode() {
         CPDFReaderView readerView = pdfView.getCPdfReaderView();
         readerView.removeAllAnnotFocus();
         if (readerView.getContextMenuShowListener() != null) {
@@ -939,7 +948,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         readerView.setTouchMode(CPDFReaderView.TouchMode.SCREENSHOT);
     }
 
-    public void exitSnipMode(){
+    public void exitSnipMode() {
         CPDFReaderView readerView = pdfView.getCPdfReaderView();
         readerView.removeAllAnnotFocus();
         if (readerView.getContextMenuShowListener() != null) {
@@ -950,14 +959,14 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             view.clearScreenShotRect();
         }
         CPDFReaderView.ViewMode viewMode = readerView.getViewMode();
-        if(viewMode == CPDFReaderView.ViewMode.PDFEDIT){
+        if (viewMode == CPDFReaderView.ViewMode.PDFEDIT) {
             readerView.setTouchMode(CPDFReaderView.TouchMode.EDIT);
             CPDFEditManager editManager = readerView.getEditManager();
             if (editManager != null && !editManager.isEditMode()) {
                 editManager.enable();
                 editManager.beginEdit(CPDFEditPage.LoadTextImage | CPDFEditPage.LoadPath);
             }
-        }else {
+        } else {
             readerView.setTouchMode(CPDFReaderView.TouchMode.BROWSE);
         }
         screenManager.fillScreenChange();

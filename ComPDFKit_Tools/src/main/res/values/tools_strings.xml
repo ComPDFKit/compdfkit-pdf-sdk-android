@@ -546,5 +546,6 @@
     <string name="tools_compressed_successfully">Compressed successfully!</string>
     <string name="compressing_">Compressing&#8230;</string>
 
-
+    <string name="tools_print_systemversion_not_support">Printer feature supports Android System 4.4 at least. Please upgrade your system.</string>
+    <string name="tools_print_not_working">Printer is not available.</string>
 </resources>

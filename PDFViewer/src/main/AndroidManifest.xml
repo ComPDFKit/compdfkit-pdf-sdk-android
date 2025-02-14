@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,6 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/ComPDFKit.Theme.PDFViewer"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".home.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -33,8 +35,14 @@
 
 <!--        <meta-data-->
 <!--            android:name="compdfkit_key"-->
-<!--            android:value="vWG81pDfg5Ojm9ycyAHoBf6Qb/yT4YuLPM521RVvGf8yhKFjx+KH12mgD+E64Snkacdj2aqW8P3Uk9kEjk9OfgvHtozTmo+zqbVIygogMpz9RvhZO/IdEE3jhQWkISSI+N2D2XyGtu1M8o2mLpceugjCrTphVTMW1tBNIFAlynGyIVXu5+2konU4Hh9V9nJtQzpGD2Ew1VWvcklNST1e2UgTaTa+C5fkHpc3vC9PlPj3wTMxORp6BGqdj45SV3G4N0PuCG5V4B1laeQbsAAIY1SKzY1fCE7G7iJCGJ8dJoZ5n6PzHVn1BkXR6UdsI9x1fw+ckJsStMpgWHAeLX9GTmu0lH1oY17eVN2TRW5amzrVRSqpTOyx2LGvW1Ilra90nzlp2dEBHH+rU3Jo93jy94eWecFWMwgKBD5sABvhJFteiZTpP6NufkmmJm5UhS1bbWwQ3416ecpKs8D9TAlLLO+rbIocuxdoPE2dxWFYLq6zF8kJV3z7dKYtAwQKdoQiS08ryGXVZybCx2GjZp97I7zNemiorRWKQUrxpNk0vCLwL1yz7NzjlB6YQ8UxvmTkX/GU7T7Ubg9LoyZuVo4tLHLplMSlHIcA4guqZL7JbQ6/jomhcJGFpGo+X7tbrCvMTnbvjZoxJRlcNN1+9x100WEfF4A2XbJZEjcpxV9tk1rTt+jS8dkX803ij16yHI1THSycP2aKkWjgDAsAUt98KCUHLaZi4F73ifo4l7JQoj0MxqN2wuiDb2PRCz4539YtkdVIZEXZTwWHfrGGmBtk3eTjulgN6KX4N8Zl8HTm1QDd0eY4XLXdZrWhe9nc1DGvLY1gsBg7f03Pf+Ch9WtB1I5hPMBVEyy26KZtF484aCb9XagMRnF+iot0GttPzd+uPWA4icpbsc75X0fCRahxJTWAXtYCUc/pCTm54v24bIoq3Zxj1lx7tKDtad8Ou3diwfFGTMtsMs+ga7i5gUny3WSd1idswHBlZEZh4+h7L6QgFnxa20xs3LwkoQTfhr6nZgjh0SZri4haYRMpOBtGEdSntVKJv2Vka7yk0uAGQ9GincrC/EqOa0HVmqcVvf3E3S6Mb4qT4xeOVeKWTCeJpKWznHb57bcaXEe18jn7YpE2l1oio78O3ElTVCvjufcILgQ8c4Bt5yXCNSZoIQsS3ge+rhLMiBMMhVVVZQm05qf1ku8hc0JT8C2n1OAx6ouQRTvhnA9CqXO+obtoFKSODA==" />-->
+<!--            android:value="c4r34cNxld6pdUSsM2EgGQ9purMEZN7JuumHbNx9w+OJ6lYqF7WRYAFV0jvA5CEEX7J1+wGrF68mo8YP3qL5b6lmS60TMw2/wJ+TPtmeKkJMRMaiQ2nF2pwSevBj2HIHbnTLfr2btYHL/TRKFbfG0SUp/tZVjUwOC91rcrlaLkThWpc13/3SOi/34uHyjQszJ6PmDeg8X+qxfNheOBX/JZofPOjKpWpAAXXKT9kgtbZKKc6VAmMPAdRth7FnJjPieXkHkvW3fX2kNcgX6cb8IBnu/7Q3C4776P6IVIQKlDItMGNJIV7IPMADRnsLMqdC9FZcF3mV0laocg8qlFuKdmu0lH1oY17eVN2TRW5amzrVRSqpTOyx2LGvW1Ilra90nzlp2dEBHH+rU3Jo93jy94eWecFWMwgKBD5sABvhJFteiZTpP6NufkmmJm5UhS1bbWwQ3416ecpKs8D9TAlLLO+rbIocuxdoPE2dxWFYLq6zF8kJV3z7dKYtAwQKdoQiS08ryGXVZybCx2GjZp97I7zNemiorRWKQUrxpNk0vCLwL1yz7NzjlB6YQ8UxvmTkX/GU7T7Ubg9LoyZuVo4tLHLplMSlHIcA4guqZL7JbQ6/jomhcJGFpGo+X7tbrCvMTnbvjZoxJRlcNN1+9x100WEfF4A2XbJZEjcpxV9tk1rTt+jS8dkX803ij16yHI1THSycP2aKkWjgDAsAUt98KL+h4U+jgXH+NDKksS1nHNjVoJYvPaW7TLcBzT0GegIgNKELjvoahi+wfYUt79velJ1uEBhEcnvnIjlShtHdqKbE/lMbb2sG0lJnFUhViYIpkjXvy5b9ucuZfz1pm7f173QY75AXVUGgMkMI0XuV2tjDFnThFHtTgDnaOzHyyOwRiOuiM74ieBmwFqkOo4SQtUrUWPDK459l8FoqAa8XlJoWZXcbU1OotvnT9I1MMGTsC2l+b6sDxoJ4wc1wj9IhAmx7tmXnQyD/0q8NOKUk9E1AtfrYSdkTjCzdEI1HZ08LcyYnRNJNARTHNh8okrNDwA4seKyLl/XIfxmIx7IaLGx0VavXDAus9AAd+knf5we5iXWY7SJO2ZrxRJgotLWE/jY7Pg8FofBwr9sBt/VEJDcb1pbHKvag2rGKlyAigV4KkFoi+kJdO9xKXMBDKAZnsA==" />-->
 
+<!--        <provider-->
+<!--          android:name="com.compdfkit.core.document.CPDFSdkInitProvider"-->
+<!--          android:authorities="${applicationId}.tpdfsdkinitprovider"-->
+<!--          android:multiprocess="true"-->
+<!--          tools:node="remove"-->
+<!--          android:exported="false"/>-->
     </application>
 
 </manifest>

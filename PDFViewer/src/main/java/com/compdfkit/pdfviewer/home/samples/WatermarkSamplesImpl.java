@@ -74,7 +74,7 @@ public class WatermarkSamplesImpl extends OpenPDFSamplesImpl {
                 watermarkEditDialog.setDocument(document);
                 watermarkEditDialog.setSaveFileExtraFontSubset(SettingDatas.isExtraFontSet(fragment.getContext()));
                 watermarkEditDialog.setPageIndex(0);
-                watermarkEditDialog.setCompleteListener(pdfFile -> {
+                watermarkEditDialog.setCompleteListener((saveAsNewFile, pdfFile) -> {
                     watermarkEditDialog.dismiss();
                     if (TextUtils.isEmpty(pdfFile)){
                         CToastUtil.showLongToast(fragment.getContext(), R.string.tools_watermark_add_failed);

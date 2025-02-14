@@ -89,6 +89,8 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
     private String defaultImagePath;
 
+    private boolean saveAsNewFile = true;
+
     protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
 
     public static CWatermarkEditDialog newInstance() {
@@ -108,6 +110,10 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
     public void setDefaultImagePath(String defaultImagePath) {
         this.defaultImagePath = defaultImagePath;
+    }
+
+    public void setSaveAsNewFile(boolean saveAsNewFile) {
+        this.saveAsNewFile = saveAsNewFile;
     }
 
     /**
@@ -188,6 +194,14 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
                     return;
                 }
             }
+            if (!saveAsNewFile){
+                boolean success = ((CWatermarkPageFragment) fragment).applyWatermark();
+                if (completeListener != null) {
+                    completeListener.complete(false, null);
+                }
+                return;
+            }
+
             if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
                 multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
                     if (CPermissionUtil.hasStoragePermissions(getContext())) {
@@ -276,7 +290,7 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
                         document.reload();
                     }
                     if (completeListener != null) {
-                        completeListener.complete(result);
+                        completeListener.complete(true, result);
                     }
                 }
             }.execute();
@@ -339,6 +353,6 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
     }
 
     public interface CEditCompleteListener {
-        void complete(String pdfFile);
+        void complete(boolean saveAsNewFile, String pdfFile);
     }
 }

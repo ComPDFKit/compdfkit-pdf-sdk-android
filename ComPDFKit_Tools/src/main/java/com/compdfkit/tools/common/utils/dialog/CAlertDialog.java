@@ -9,6 +9,8 @@
 
 package com.compdfkit.tools.common.utils.dialog;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -66,7 +68,13 @@ public class CAlertDialog extends CBasicThemeDialogFragment {
     protected int layoutId() {
         return R.layout.tools_alert_dialog;
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getDialog() != null) {
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+    }
     @Override
     protected void onCreateView(View rootView) {
         tvTitle = rootView.findViewById(R.id.tv_title);

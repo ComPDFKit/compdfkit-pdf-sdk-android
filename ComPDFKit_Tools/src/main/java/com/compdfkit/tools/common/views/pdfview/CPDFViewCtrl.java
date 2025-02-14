@@ -294,7 +294,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         });
     }
 
-    private void setPDFDocument(CPDFDocument cpdfDocument, Object pdf, CPDFDocument.PDFDocumentError error, COnOpenPdfFinishCallback openPdfFinishCallback) {
+    public void setPDFDocument(CPDFDocument cpdfDocument, Object pdf, CPDFDocument.PDFDocumentError error, COnOpenPdfFinishCallback openPdfFinishCallback) {
         CLog.e("ComPDFKit", "CPDFViewCtrl-openPDF:" + error.name());
         // Switch on the result of the open method to handle the different possible outcomes.
         switch (error) {

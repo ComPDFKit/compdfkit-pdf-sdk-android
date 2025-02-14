@@ -9,6 +9,8 @@
 
 package com.compdfkit.tools.common.utils.dialog;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 
@@ -39,6 +41,7 @@ public class CLoadingDialog extends CBasicThemeDialogFragment {
         setCancelable(false);
         if (getDialog() != null) {
             getDialog().setCanceledOnTouchOutside(false);
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }
 

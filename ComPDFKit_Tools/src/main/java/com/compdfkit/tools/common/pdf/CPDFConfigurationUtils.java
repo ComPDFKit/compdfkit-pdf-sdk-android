@@ -728,6 +728,10 @@ public class CPDFConfigurationUtils {
         globalConfig.themeMode = GlobalConfig.CThemeMode.fromString(jsonObject.optString("themeMode", "light"));
         globalConfig.fileSaveExtraFontSubset = jsonObject.optBoolean("fileSaveExtraFontSubset", true);
 
+        JSONObject watermark = jsonObject.optJSONObject("watermark");
+        if (watermark != null){
+            globalConfig.watermark.saveAsNewFile = watermark.optBoolean("saveAsNewFile",true);
+        }
         return globalConfig;
     }
 }

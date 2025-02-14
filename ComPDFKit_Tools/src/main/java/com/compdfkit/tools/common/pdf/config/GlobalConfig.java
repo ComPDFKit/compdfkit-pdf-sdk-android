@@ -33,4 +33,6 @@ public class GlobalConfig  implements Serializable {
      */
     public boolean fileSaveExtraFontSubset = true;
 
+    public CPDFWatermarkConfig watermark = new CPDFWatermarkConfig();
+
 }

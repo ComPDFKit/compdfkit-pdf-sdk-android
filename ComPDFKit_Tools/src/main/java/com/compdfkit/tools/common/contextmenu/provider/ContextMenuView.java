@@ -60,4 +60,16 @@ public class ContextMenuView extends LinearLayout {
         }
         return this;
     }
+
+    public ContextMenuView addItem(String title, OnClickListener clickListener){
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.tools_context_menu_item_layout, null);
+        AppCompatTextView textView = (AppCompatTextView) view;
+        textView.setId(View.generateViewId());
+        textView.setText(title);
+        textView.setOnClickListener(clickListener);
+        if (llContent != null) {
+            llContent.addView(view);
+        }
+        return this;
+    }
 }

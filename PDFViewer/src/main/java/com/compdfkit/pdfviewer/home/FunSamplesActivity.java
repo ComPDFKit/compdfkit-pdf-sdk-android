@@ -84,7 +84,7 @@ public class FunSamplesActivity extends AppCompatActivity implements View.OnClic
 //        editDialog.setSavePath(saveFile.getAbsolutePath());
 //        editDialog.setDefaultText("ComPDFKit");
 //                editDialog.setDefaultImagePath("xxx.png");
-        editDialog.setCompleteListener(pdfFile -> {
+        editDialog.setCompleteListener((saveAsNewFile, pdfFile) -> {
             if (!TextUtils.isEmpty(pdfFile)){
                 openPDF(pdfFile);
             }

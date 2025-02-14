@@ -75,6 +75,8 @@ public class CAddStampSwichDialogFragment  extends CBasicBottomSheetDialogFragme
         });
         ivAddTextStamp.setOnClickListener(addTextStampClickListener);
         ivAddImageStamp.setOnClickListener(addImageStampClickListener);
+        rootView.findViewById(R.id.tv_add_text_stamp).setOnClickListener(addTextStampClickListener);
+        rootView.findViewById(R.id.tv_add_image_stamp).setOnClickListener(addImageStampClickListener);
         rootView.findViewById(R.id.cl_rootView).setOnClickListener(v -> dismiss());
         fabAnim(true);
     }
