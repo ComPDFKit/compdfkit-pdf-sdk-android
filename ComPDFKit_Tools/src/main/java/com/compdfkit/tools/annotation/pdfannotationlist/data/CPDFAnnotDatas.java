@@ -211,8 +211,28 @@ public class CPDFAnnotDatas {
         return result;
     }
 
+    public static boolean exportWidgets(CPDFDocument document, String saveDir, String saveName){
+        File dirFile = new File(saveDir);
+        File saveFile = new File(dirFile, saveName+"_widgets.xfdf");
+        saveFile = CFileUtils.renameNameSuffix(saveFile);
+        if (dirFile.isDirectory() && !dirFile.exists()){
+            dirFile.mkdirs();
+        }
+        File cacheFile = new File(document.getContext().getCacheDir(), "widgetExportCache");
+        cacheFile.mkdirs();
+        CLog.e("ComPDFKit", "Widgets export path:" + saveFile.getAbsolutePath());
+        boolean result = document.exportWidgets(saveFile.getAbsolutePath(), cacheFile.getAbsolutePath());
+        if (result){
+            CFileUtils.notifyMediaStore(document.getContext(), saveFile.getAbsolutePath());
+        }
+        return result;
+    }
 
-
+    public static boolean importWidgets(CPDFDocument document, String importFilePath){
+        File cacheFile = new File(document.getContext().getCacheDir(), "widgetsExportCache");
+        cacheFile.mkdirs();
+        return document.importWidgets(importFilePath, cacheFile.getAbsolutePath());
+    }
     /**
      * Import annotations in xfdf file
      * @param document the document

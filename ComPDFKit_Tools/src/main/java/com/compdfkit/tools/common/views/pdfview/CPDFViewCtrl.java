@@ -595,7 +595,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
             return;
         }
         removeView(indicatorView);
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         layoutParams.startToStart = LayoutParams.PARENT_ID;
         layoutParams.endToEnd = LayoutParams.PARENT_ID;
         layoutParams.bottomToBottom = LayoutParams.PARENT_ID;

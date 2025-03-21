@@ -158,7 +158,6 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
 
     @Override
     public View getEditTextAreaContentView(CPDFPageView cpdfPageView, LayoutInflater layoutInflater, CPDFEditSelections cpdfEditSelections) {
-        this.cpdfEditSelections = cpdfEditSelections;
         if (helperParams.editTextProvider != null){
             return helperParams.editTextProvider.createEditTextAreaContentView(this, cpdfPageView, cpdfEditSelections);
         }
@@ -191,7 +190,6 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
 
     @Override
     public  View getEditSelectTextContentView(CPDFPageView pageView, LayoutInflater layoutInflater, CPDFEditSelections selections) {
-        cpdfEditSelections = selections;
         if (helperParams.editTextProvider != null) {
             return helperParams.editTextProvider.createEditSelectTextContentView(this, pageView, selections);
         }
@@ -208,8 +206,6 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
 
     @Override
     public View getEditImageAreaContentView(final CPDFPageView pageView, LayoutInflater layoutInflater, RectF area) {
-        this.pageView = pageView;
-        cpdfEditSelections = null;
         if (helperParams.editImageProvider != null) {
             return helperParams.editImageProvider.createEditImageAreaContentView(this, pageView,area);
         }
@@ -217,18 +213,16 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
     }
 
     @Override
-    public View getEditPathAreaContentView(final CPDFPageView pageView, LayoutInflater layoutInflater) {
-        this.pageView = pageView;
+    public View getEditPathAreaContentView(CPDFPageView pageView,
+        LayoutInflater layoutInflater) {
         if (helperParams.editPathProvider != null) {
             return helperParams.editPathProvider.createEditPathAreaContentView(this, pageView, null);
         }
-        return super.getEditImageAreaContentView(pageView, layoutInflater, null);
+        return super.getEditPathAreaContentView(pageView, layoutInflater);
     }
 
     @Override
     public View getCropImageAreaContentView(final CPDFPageView pageView, LayoutInflater layoutInflater) {
-        this.pageView = pageView;
-        cpdfEditSelections = null;
         if (helperParams.editImageProvider != null) {
             return helperParams.editImageProvider.createGetCropImageAreaContentView(this, pageView);
         }

@@ -9,14 +9,13 @@
 
 package com.compdfkit.tools.viewer.pdfthumbnail.adpater;
 
+import android.content.res.Configuration;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -24,12 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
+import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 
 /**
  * PDF thumbnail list adapter, displays the thumbnail of each page of a PDF file,
@@ -56,37 +54,16 @@ public class CPDFThumbnailListAdapter extends RecyclerView.Adapter<CPDFThumbnail
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CPDFThumbnailItemViewHolder holder, int position) {
+    public void onBindViewHolder(
+            @NonNull CPDFThumbnailItemViewHolder holder, int position) {
+
+        int[] size = calculateItemSize(holder, holder.getAdapterPosition());
 
         Glide.with(holder.itemView.getContext())
-                .load(CPDFWrapper.fromDocument(cPdfDocument, position))
+                .load(CPDFWrapper.fromDocument(cPdfDocument, holder.getAdapterPosition()))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        RectF rectF = cPdfDocument.pageAtIndex(position).getSize();
-                        float itemWidth = holder.clItem.getMeasuredWidth();
-                        float itemHeight = holder.clItem.getMeasuredHeight();
-
-                        float imageWidth = itemWidth;
-                        float imageHeight = ((float)imageWidth / (float) rectF.width()) * rectF.height();
-
-                        if (imageHeight > itemHeight){
-                            imageHeight = itemHeight;
-                            imageWidth = (imageHeight / rectF.height()) * rectF.width();
-                        }
-                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.clThumbnail.getLayoutParams();
-                        layoutParams.width = (int) imageWidth;
-                        layoutParams.height = (int) imageHeight;
-                        holder.clThumbnail.setLayoutParams(layoutParams);
-                        holder.ivThumbnailImage.setImageDrawable(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
+                .override(size[0], size[1])
+                .into(holder.ivThumbnailImage);
 
         holder.tvPageIndex.setText(String.valueOf(holder.getAdapterPosition() + 1));
         holder.tvPageIndex.setSelected(holder.getAdapterPosition() == currentPageIndex);
@@ -97,6 +74,37 @@ public class CPDFThumbnailListAdapter extends RecyclerView.Adapter<CPDFThumbnail
             }
         });
 
+    }
+
+    public static final int SPAN = 6;
+
+    private int[] calculateItemSize(CPDFThumbnailItemViewHolder holder, int position) {
+        boolean isPortrait = holder.itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        int spanSize = isPortrait ? 2 : 1;
+        int screenWidth = CDimensUtils.getScreenWidth(holder.itemView.getContext());
+        if (spanSize == 1) {
+            screenWidth = CDimensUtils.dp2px(holder.itemView.getContext(), 600);
+        }
+        int itemWidth = screenWidth / (SPAN / spanSize);
+        int itemMarginHorizontal = CDimensUtils.dp2px(holder.itemView.getContext(), 4) * 2;
+        itemWidth -= itemMarginHorizontal;
+
+        RectF rectF = cPdfDocument.pageAtIndex(position).getSize();
+        float itemHeight = itemWidth * (134F / 104F);
+
+        float imageWidth = itemWidth;
+        float imageHeight = ((float) imageWidth / (float) rectF.width()) * rectF.height();
+
+        if (imageHeight > itemHeight) {
+            imageHeight = itemHeight;
+            imageWidth = (imageHeight / rectF.height()) * rectF.width();
+        }
+        ConstraintLayout.LayoutParams layoutParams =
+                (ConstraintLayout.LayoutParams) holder.clThumbnail.getLayoutParams();
+        layoutParams.width = (int) imageWidth;
+        layoutParams.height = (int) imageHeight;
+        holder.clThumbnail.setLayoutParams(layoutParams);
+        return new int[]{(int) imageWidth, (int) imageHeight};
     }
 
 

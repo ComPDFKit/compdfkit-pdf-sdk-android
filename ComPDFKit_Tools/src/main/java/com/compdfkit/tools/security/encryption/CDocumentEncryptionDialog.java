@@ -275,6 +275,8 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
     }
 
     private void initPermissionInfo() {
+        ivUserPwdVisible.setEnabled(false);
+        ivOwnerPwdVisible.setEnabled(false);
         if (document == null){
             dismiss();
             return;
@@ -286,12 +288,16 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
                 etOwnerPassword.setText(password);
                 swOwnerPassword.setChecked(true);
                 etOwnerPassword.setEnabled(true);
+                ivOwnerPwdVisible.setEnabled(true);
                 swUserPassword.setChecked(true);
                 etUserPassword.setEnabled(true);
+                ivUserPwdVisible.setEnabled(true);
             }else {
                 etUserPassword.setText(password);
                 swUserPassword.setChecked(true);
                 etUserPassword.setEnabled(true);
+                ivUserPwdVisible.setEnabled(true);
+                ivOwnerPwdVisible.setEnabled(false);
             }
         }
         CPDFDocument tempDocument = new CPDFDocument(getContext());
@@ -304,6 +310,7 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
         if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess  && tempDocument.isEncrypted()){
             swUserPassword.setChecked(false);
             etUserPassword.setEnabled(false);
+            ivUserPwdVisible.setEnabled(false);
         }
         tempDocument.close();
         updateEncryptionLevelStatus();

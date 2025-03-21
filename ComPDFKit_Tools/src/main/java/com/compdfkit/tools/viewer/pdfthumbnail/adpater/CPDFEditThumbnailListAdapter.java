@@ -49,13 +49,10 @@ public class CPDFEditThumbnailListAdapter
 
     private OnPageEditListener onPageEditListener = null;
 
-    private int[] itemSize = new int[2];
-
     public CPDFEditThumbnailListAdapter(CPDFDocument cPdfDocument, int currentPageIndex) {
         this.cPdfDocument = cPdfDocument;
         this.currentPageIndex = currentPageIndex;
     }
-
 
     @NonNull
     @Override
@@ -102,10 +99,10 @@ public class CPDFEditThumbnailListAdapter
     public void onBindViewHolder(
             @NonNull CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder holder, int position) {
 
-        int[] size = calculateItemSize(holder, position);
+        int[] size = calculateItemSize(holder, holder.getAdapterPosition());
 
         Glide.with(holder.itemView.getContext())
-                .load(CPDFWrapper.fromDocument(cPdfDocument, position))
+                .load(CPDFWrapper.fromDocument(cPdfDocument, holder.getAdapterPosition()))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .override(size[0], size[1])
                 .into(holder.ivThumbnailImage);

@@ -55,6 +55,8 @@ import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
+import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts.RequestType;
+import com.compdfkit.tools.common.utils.activitycontracts.CImageResultLauncher;
 import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
@@ -183,6 +185,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             pdfView.openPDF(uri, null, () -> editToolBar.setEditMode(false));
         }
     });
+
+    private CImageResultLauncher imageResultLauncher = new CImageResultLauncher(this);
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -324,8 +328,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         });
         pdfView.getCPdfReaderView().setPdfAddAnnotCallback((cpdfPageView, cpdfBaseAnnot) -> {
             CPDFAnnotation annotation = cpdfBaseAnnot.onGetAnnotation();
-            annotation.setTitle(cpdfConfiguration.annotationsConfig.annotationAuthor);
-            annotation.updateAp();
+            if (annotation.getType() != CPDFAnnotation.Type.WIDGET) {
+                annotation.setTitle(cpdfConfiguration.annotationsConfig.annotationAuthor);
+                annotation.updateAp();
+            }
 
             // Annotation creation completed listener, you can use cpdfBaseAnnot.getAnnotType() to determine the type of the added annotation
             if (cpdfBaseAnnot instanceof CPDFListboxWidgetImpl) {
@@ -535,6 +541,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 styleDialogFragment.show(getChildFragmentManager(), "textPropertyDialogFragment");
                 menuHelper.dismissContextMenu();
             }
+        });
+        pdfView.getCPdfReaderView().setSelectImageCallback(() -> {
+            imageResultLauncher.launch(RequestType.PHOTO_ALBUM,
+                    result -> pdfView.getCPdfReaderView().addEditImage(result));
         });
     }
 
