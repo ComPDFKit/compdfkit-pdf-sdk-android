@@ -535,4 +535,11 @@
     <string name="compressing_">正在压缩&#8230;</string>
     <string name="tools_print_systemversion_not_support">打印功能支持4.4以上安卓系统，请升级您的系统。</string>
     <string name="tools_print_not_working">打印机不可用。</string>
+
+    <string name="tools_sign">开始签名</string>
+    <string name="tools_exit_save_tips_1">当前文档已被修改，退出后是否保留更改？</string>
+    <string name="tools_keep_editing">继续编辑</string>
+    <string name="tools_yes">是</string>
+    <string name="tools_no">否</string>
+
 </resources>

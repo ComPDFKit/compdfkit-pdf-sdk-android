@@ -24,6 +24,24 @@ public class GlobalConfig  implements Serializable {
         }
     }
 
+    public enum CSignatureType{
+        Manual,
+
+        Digital,
+
+        Electronic;
+
+        public static CSignatureType fromString(String str) {
+            try {
+                String firstLetter = str.substring(0, 1).toUpperCase();
+                String result = firstLetter + str.substring(1);
+                return CSignatureType.valueOf(result);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+    }
+
     public CThemeMode themeMode  = CThemeMode.Light;
 
     /**
@@ -34,5 +52,9 @@ public class GlobalConfig  implements Serializable {
     public boolean fileSaveExtraFontSubset = true;
 
     public CPDFWatermarkConfig watermark = new CPDFWatermarkConfig();
+
+    public CSignatureType signatureType = CSignatureType.Manual;
+
+    public boolean enableExitSaveTips = true;
 
 }

@@ -41,6 +41,7 @@ public class CAnnotationToolDatas {
         list.add(new CAnnotToolBean(CAnnotationType.INK, R.drawable.tools_ic_annotation_ink,
                 R.drawable.tools_ic_annotation_ink_dark, inkStyle.getColor(), inkStyle.getOpacity()));
 
+        list.add(new CAnnotToolBean(CAnnotationType.INK_ERASER, R.drawable.tools_ic_eraser));
         list.add(new CAnnotToolBean(CAnnotationType.CIRCLE, R.drawable.tools_ic_annotation_shape_circular));
         list.add(new CAnnotToolBean(CAnnotationType.SQUARE, R.drawable.tools_ic_annotation_shape_rectangle));
         list.add(new CAnnotToolBean(CAnnotationType.ARROW, R.drawable.tools_ic_annotation_shape_arrow));

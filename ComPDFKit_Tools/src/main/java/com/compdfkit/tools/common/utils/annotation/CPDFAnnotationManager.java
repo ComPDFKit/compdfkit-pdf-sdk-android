@@ -64,6 +64,7 @@ public class CPDFAnnotationManager {
             freetextAnnotation.setFreetextAlignment(freetextAttr.getAlignment());
             freetextAnnotation.setAlpha(freetextAnnotation.getAlpha());
             freetextAnnotation.setContent(content);
+            freetextAnnotation.setBorderWidth(0);
             PointF freeTextPointF = new PointF();
             TMathUtils.scalePointF(pointF, freeTextPointF, pageView.getScaleValue());
             RectF area = CPDFTextUtils.measureTextArea(pageView,
@@ -90,6 +91,7 @@ public class CPDFAnnotationManager {
             freetextAnnotation.setFreetextAlignment(freetextAttr.getAlignment());
             freetextAnnotation.setAlpha(freetextAnnotation.getAlpha());
             freetextAnnotation.setContent("");
+            freetextAnnotation.setBorderWidth(0);
             RectF area = new RectF(pointF.x, pointF.y, pointF.x, pointF.y);
             area = page.convertRectToPage(readerView.isCropMode(), page.getSize().width(), page.getSize().height(), area);
             freetextAnnotation.setRect(area);

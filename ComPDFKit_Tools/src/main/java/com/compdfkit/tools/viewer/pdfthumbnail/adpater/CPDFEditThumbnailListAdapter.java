@@ -29,6 +29,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.docseditor.drag.CDefaultItemTouchHelpCallback;
 
 import java.util.ArrayList;
@@ -66,10 +67,16 @@ public class CPDFEditThumbnailListAdapter
     public static final int SPAN = 6;
 
     private int[] calculateItemSize(CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder holder, int position) {
-        boolean isPortrait = holder.itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-        int spanSize = isPortrait ? 2 : 1;
-        int screenWidth = CDimensUtils.getScreenWidth(holder.itemView.getContext());
-        if (spanSize == 1) {
+        boolean isLandScape = CViewUtils.isLandScape(holder.itemView.getContext());
+        boolean isPad = CViewUtils.isPad(holder.itemView.getContext());
+        int spanSize = isLandScape ? 1 : 2;
+        int screenWidth;
+        if (isPad){
+            screenWidth = CDimensUtils.dp2px(holder.itemView.getContext(), 640);
+        }else {
+            screenWidth = CDimensUtils.getScreenWidth(holder.itemView.getContext());
+        }
+        if (spanSize == 1 && !isPad) {
             screenWidth = CDimensUtils.dp2px(holder.itemView.getContext(), 600);
         }
         int itemWidth = screenWidth / (SPAN / spanSize);

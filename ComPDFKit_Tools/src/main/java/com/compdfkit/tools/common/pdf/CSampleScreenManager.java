@@ -9,6 +9,8 @@
 
 package com.compdfkit.tools.common.pdf;
 
+import static android.view.View.GONE;
+
 import android.view.View;
 
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -24,7 +26,7 @@ public class CSampleScreenManager {
 
     public CFillScreenManager fillScreenManager = new CFillScreenManager();
 
-    private boolean isFillScreen;
+    public boolean isFillScreen;
 
     private ConstraintSet constraintSet = new ConstraintSet();
 
@@ -46,29 +48,29 @@ public class CSampleScreenManager {
         }else if (mode == CPreviewMode.Annotation){
             fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
             documentFragment.annotationToolbar.setVisibility(View.VISIBLE);
-            documentFragment.editToolBar.setVisibility(View.GONE);
-            documentFragment.formToolBar.setVisibility(View.GONE);
-            documentFragment.signatureToolBar.setVisibility(View.GONE);
+            documentFragment.editToolBar.setVisibility(GONE);
+            documentFragment.formToolBar.setVisibility(GONE);
+            documentFragment.signatureToolBar.setVisibility(GONE);
             constraintSetUtils.showFromBottom(constraintSet, documentFragment.flBottomToolBar);
         } else if (mode == CPreviewMode.Edit) {
             fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
-            documentFragment.annotationToolbar.setVisibility(View.GONE);
+            documentFragment.annotationToolbar.setVisibility(GONE);
             documentFragment.editToolBar.setVisibility(View.VISIBLE);
-            documentFragment.formToolBar.setVisibility(View.GONE);
-            documentFragment.signatureToolBar.setVisibility(View.GONE);
+            documentFragment.formToolBar.setVisibility(GONE);
+            documentFragment.signatureToolBar.setVisibility(GONE);
             constraintSetUtils.showFromBottom(constraintSet, documentFragment.flBottomToolBar);
         } else if (mode == CPreviewMode.Form){
             fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
-            documentFragment.annotationToolbar.setVisibility(View.GONE);
-            documentFragment.editToolBar.setVisibility(View.GONE);
+            documentFragment.annotationToolbar.setVisibility(GONE);
+            documentFragment.editToolBar.setVisibility(GONE);
             documentFragment.formToolBar.setVisibility(View.VISIBLE);
-            documentFragment.signatureToolBar.setVisibility(View.GONE);
+            documentFragment.signatureToolBar.setVisibility(GONE);
             constraintSetUtils.showFromBottom(constraintSet, documentFragment.flBottomToolBar);
         } else if (mode == CPreviewMode.Signature){
             fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
-            documentFragment.annotationToolbar.setVisibility(View.GONE);
-            documentFragment.editToolBar.setVisibility(View.GONE);
-            documentFragment.formToolBar.setVisibility(View.GONE);
+            documentFragment.annotationToolbar.setVisibility(GONE);
+            documentFragment.editToolBar.setVisibility(GONE);
+            documentFragment.formToolBar.setVisibility(GONE);
             documentFragment.signatureToolBar.setVisibility(View.VISIBLE);
             constraintSetUtils.showFromBottom(constraintSet, documentFragment.flBottomToolBar);
         }
@@ -77,28 +79,27 @@ public class CSampleScreenManager {
 
     public void changeWindowStatus(CAnnotationType type){
         if (type == CAnnotationType.INK){
-            fillScreenChange();
+            fillScreenManager.hideFromTop(documentFragment.flTool, 100);
             fillScreenManager.bindTopToolView(documentFragment.inkCtrlView);
             documentFragment.inkCtrlView.setVisibility(View.VISIBLE);
         }else {
-            if (isFillScreen){
-                fillScreenChange();
+            if (documentFragment.flTool.getVisibility() == GONE){
+                fillScreenManager.showFromTop(documentFragment.flTool, 100);
             }
-            documentFragment.inkCtrlView.setVisibility(View.GONE);
+            documentFragment.inkCtrlView.setVisibility(GONE);
             fillScreenManager.removeToolView(documentFragment.inkCtrlView);
         }
     }
 
     public void changeWindowStatus(CPDFAnnotation.Type pdfType){
         if (pdfType == CPDFAnnotation.Type.INK){
-            fillScreenChange();
-            fillScreenManager.hideFromTop(documentFragment.pdfToolBar, 200);
-            fillScreenManager.hideFromBottom(documentFragment.flBottomToolBar, 200);
+            fillScreenManager.hideFromTop(documentFragment.flTool, 100);
+            fillScreenManager.hideFromBottom(documentFragment.flBottomToolBar, 100);
         }else {
-            if (isFillScreen) {
-                fillScreenChange();
+            if (documentFragment.flTool.getVisibility() == GONE){
+                fillScreenManager.showFromTop(documentFragment.flTool, 100);
             }
-            documentFragment.inkCtrlView.setVisibility(View.GONE);
+            documentFragment.inkCtrlView.setVisibility(GONE);
             fillScreenManager.removeToolView(documentFragment.inkCtrlView);
         }
     }

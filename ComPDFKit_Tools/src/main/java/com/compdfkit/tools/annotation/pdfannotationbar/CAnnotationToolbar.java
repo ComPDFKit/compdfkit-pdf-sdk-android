@@ -48,6 +48,7 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleUIParams;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.ui.proxy.attach.IInkDrawCallback;
+import com.compdfkit.ui.reader.CPDFReaderView;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -108,14 +109,15 @@ public class CAnnotationToolbar extends FrameLayout {
         this.pdfView.addOnPDFFocusedTypeChangeListener(type -> {
             if (type == CPDFAnnotation.Type.UNKNOWN) {
                 if (toolListAdapter.hasSelectAnnotType()) {
-                    toolListAdapter.selectByType(CAnnotationType.UNKNOWN);
+                    if (toolListAdapter.getCurrentAnnotType() != CAnnotationType.INK_ERASER){
+                        toolListAdapter.selectByType(CAnnotationType.UNKNOWN);
+                    }
                     if (ivSetting != null) {
                         ivSetting.setEnabled(toolListAdapter.annotEnableSetting());
                     }
                 }
             }
         });
-//        redoUndoManager();
     }
 
     private void showAnnotStyleDialog() {
@@ -138,7 +140,6 @@ public class CAnnotationToolbar extends FrameLayout {
             public void onChangeOpacity(int opacity) {
                 super.onChangeOpacity(opacity);
                 toolListAdapter.updateItemColorOpacity(toolListAdapter.getCurrentAnnotType(), opacity);
-
             }
         });
         dialogFragment.setStyleDialogDismissListener(() -> {
@@ -163,16 +164,13 @@ public class CAnnotationToolbar extends FrameLayout {
         }
         if (!bean.isSelect()) {
             pdfView.resetAnnotationType();
-            pdfView.getCPdfReaderView().getInkDrawHelper().onClean();
+            pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
             if (annotationChangeListener != null) {
                 annotationChangeListener.change(CAnnotationType.UNKNOWN);
             }
             return;
         }
-        if (bean.getType() != CAnnotationType.INK) {
-            pdfView.getCPdfReaderView().getInkDrawHelper().onClean();
-            pdfView.getCPdfReaderView().getInkDrawHelper().setMode(IInkDrawCallback.Mode.DRAW);
-        }
+        pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
         pdfView.getCPdfReaderView().removeAllAnnotFocus();
         switch (bean.getType()) {
             case TEXT:
@@ -181,6 +179,10 @@ public class CAnnotationToolbar extends FrameLayout {
             case INK:
                 pdfView.changeAnnotationType(CPDFAnnotation.Type.INK);
                 pdfView.getCPdfReaderView().getInkDrawHelper().setEffect(IInkDrawCallback.Effect.NORMAL);
+                break;
+            case INK_ERASER:
+                pdfView.resetAnnotationType();
+                pdfView.getCPdfReaderView().setTouchMode(CPDFReaderView.TouchMode.ERASE_INK);
                 break;
             case ARROW: {
                 pdfView.changeAnnotationType(CPDFAnnotation.Type.LINE);
@@ -256,6 +258,9 @@ public class CAnnotationToolbar extends FrameLayout {
 
     public void updateItemColor() {
         if (pdfView == null) {
+            return;
+        }
+        if (toolListAdapter == null || toolListAdapter.list.isEmpty()){
             return;
         }
         CStyleManager styleManager = new CStyleManager(pdfView);
@@ -400,5 +405,6 @@ public class CAnnotationToolbar extends FrameLayout {
         }
         toolListAdapter.setList(list);
     }
+
 
 }

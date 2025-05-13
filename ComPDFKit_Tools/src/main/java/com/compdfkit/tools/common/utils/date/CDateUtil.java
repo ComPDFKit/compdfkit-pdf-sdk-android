@@ -12,6 +12,8 @@ package com.compdfkit.tools.common.utils.date;
 
 import android.text.TextUtils;
 
+import com.compdfkit.core.common.CPDFDate;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +46,27 @@ public class CDateUtil {
             return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
         }catch (Exception e){
             return inputDate;
+        }
+    }
+
+    public static long transformToTimestamp(CPDFDate pdfDate) {
+        try{
+            String inputDate = CPDFDate.toStandardDate(pdfDate);
+            if (TextUtils.isEmpty(inputDate) || inputDate.length() < 16) {
+                return 0;
+            }
+            String year = inputDate.substring(2, 6);
+            String month = inputDate.substring(6, 8);
+            String day = inputDate.substring(8, 10);
+            String hour = inputDate.substring(10, 12);
+            String minute = inputDate.substring(12, 14);
+            String second = inputDate.substring(14, 16);
+            String timeStr =  year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = inputFormat.parse(timeStr);
+            return date.getTime();
+        }catch (Exception e){
+            return 0;
         }
     }
 

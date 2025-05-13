@@ -232,6 +232,7 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
     @Override
     public void onClick(View v) {
         if (v.getId() == toolBar.getIvToolBarBackBtn().getId()) {
+            CViewUtils.hideKeyboard(getDialog());
             dismiss();
         } else if (v.getId() == R.id.btn_done) {
             CViewUtils.hideKeyboard(getDialog());

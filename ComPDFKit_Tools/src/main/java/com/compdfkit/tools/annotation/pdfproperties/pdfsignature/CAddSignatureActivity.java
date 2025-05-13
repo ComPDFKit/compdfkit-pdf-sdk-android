@@ -206,7 +206,7 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
             ivNone.setVisibility(showNoneType ? View.VISIBLE : View.GONE);
         }
         hideTypeface = getIntent().getBooleanExtra(EXTRA_HIDE_TYPEFACE, false);
-        fontView.initFont("Nimbus Sans");
+        fontView.initFont("Helvetica");
     }
 
     private void switchTab(int selectPosition) {
@@ -303,7 +303,7 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
                 savePath = CSignatureDatas.saveSignatureBitmap(this, resultBitmap);
             } else if (ivAddTextSignature.isSelected()) {
                 if (editText.getText() != null && editText.getText().length() > 0) {
-                    Bitmap resultBitmap = CImageUtil.getViewBitmap(editText);
+                    Bitmap resultBitmap = CImageUtil.convertLongTextToBitmap(editText);
                     savePath = CSignatureDatas.saveSignatureBitmap(this, resultBitmap);
                 } else {
                     savePath = null;

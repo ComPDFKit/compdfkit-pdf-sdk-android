@@ -46,6 +46,7 @@ import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment;
 import com.compdfkit.tools.forms.pdfproperties.pdfcombobox.CustomComboBoxWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdflistbox.CustomListBoxWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdfsign.CustomSignatureWidgetImpl;
+import com.compdfkit.tools.forms.pdfproperties.pdfsign.SignatureWidgetImpl;
 import com.compdfkit.tools.viewer.contextmenu.CopyContextMenuView;
 import com.compdfkit.tools.viewer.pdfdisplaysettings.CPDFDisplaySettingDialogFragment;
 import com.compdfkit.tools.viewer.pdfinfo.CPDFDocumentInfoDialogFragment;
@@ -60,6 +61,8 @@ public class CBasicPDFFragment extends CPermissionFragment {
     protected CPDFConfiguration cpdfConfiguration;
 
     public int curEditMode = CPDFEditPage.LoadNone;
+
+    private CPDFPageEditDialogFragment.COnEnterBackPressedListener pageEditDialogOnBackListener;
 
 
     protected void resetContextMenu(CPDFViewCtrl pdfView, CPreviewMode mode) {
@@ -117,7 +120,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
                 // Register the CustomListBoxWidgetImpl.class to implement a custom dropdown options popup.
                 .registImpl(CPDFListboxWidget.class, CustomListBoxWidgetImpl.class)
                 // Register the CustomSignatureWidgetImpl.class to implement a custom dropdown options popup.
-                .registImpl(CPDFSignatureWidget.class, CustomSignatureWidgetImpl.class);
+                .registImpl(CPDFSignatureWidget.class, SignatureWidgetImpl.class);
     }
 
     public void showDisplaySettings(CPDFViewCtrl pdfView) {
@@ -177,6 +180,12 @@ public class CBasicPDFFragment extends CPermissionFragment {
         });
     }
 
+
+    public void setPageEditDialogOnBackListener(
+            CPDFPageEditDialogFragment.COnEnterBackPressedListener pageEditDialogOnBackListener) {
+        this.pageEditDialogOnBackListener = pageEditDialogOnBackListener;
+    }
+
     protected void showPageEdit(CPDFViewCtrl pdfView, boolean enterEdit, CPDFPageEditDialogFragment.OnBackLisener backListener) {
         curEditMode = pdfView.getCPdfReaderView().getLoadType();
         pdfView.exitEditMode();
@@ -185,6 +194,11 @@ public class CBasicPDFFragment extends CPermissionFragment {
         pageEditDialogFragment.initWithPDFView(pdfView);
         pageEditDialogFragment.setEnterEdit(enterEdit);
         pageEditDialogFragment.setOnBackListener(backListener);
+        pageEditDialogFragment.setOnEnterBackPressedListener(()->{
+            if (pageEditDialogOnBackListener != null) {
+                pageEditDialogOnBackListener.onEnterBackPressed();
+            }
+        });
         pageEditDialogFragment.show(getChildFragmentManager(), "pageEditDialogFragment");
     }
 

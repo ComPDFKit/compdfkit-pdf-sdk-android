@@ -136,6 +136,7 @@ public class CPDFDisplaySettingDialogFragment extends CBasicBottomSheetDialogFra
             initThemes(readerView);
         }
 
+        updateContinueStatus();
         swIsContinue.setOnCheckedChangeListener(this);
         swIsCropMode.setOnCheckedChangeListener(this);
 
@@ -169,24 +170,29 @@ public class CPDFDisplaySettingDialogFragment extends CBasicBottomSheetDialogFra
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setDoublePageMode(false);
                 pdfView.getCPdfReaderView().setCoverPageMode(false);
+                updateContinueStatus();
             }
         } else if (checkedId == R.id.r_btn_double_page) {
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setDoublePageMode(true);
                 pdfView.getCPdfReaderView().setCoverPageMode(false);
+                updateContinueStatus();
             }
         } else if (checkedId == R.id.r_btn_cover_double_page) {
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setDoublePageMode(true);
                 pdfView.getCPdfReaderView().setCoverPageMode(true);
+                updateContinueStatus();
             }
         } else if (checkedId == R.id.r_btn_vertical ){
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setVerticalMode(true);
+                updateContinueStatus();
             }
         } else if (checkedId == R.id.r_btn_horizontal) {
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setVerticalMode(false);
+                updateContinueStatus();
             }
         }
     }
@@ -201,6 +207,15 @@ public class CPDFDisplaySettingDialogFragment extends CBasicBottomSheetDialogFra
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setCropMode(isChecked);
             }
+        }
+    }
+
+    private void updateContinueStatus(){
+        if (rbHorizontal.isChecked() && (rbDoublePage.isChecked() || rbCoverDoublePage.isChecked())){
+            swIsContinue.setChecked(false);
+            swIsContinue.setEnabled(false);
+        }else {
+            swIsContinue.setEnabled(true);
         }
     }
 

@@ -23,6 +23,8 @@ import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
+import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.glide.GlideApp;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
@@ -130,6 +132,15 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        try {
+            CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
+            if (configuration != null){
+                int outsideColor = configuration.globalConfig.watermark.getOutsideBackgroundColor();
+                view.setBackgroundColor(outsideColor);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         watermarkPageView.setDocument(document, pageIndex);
         if (getArguments() != null) {
             editType = CWatermarkView.EditType.valueOf(getArguments().getString("edit_type", CWatermarkView.EditType.TXT.name()));

@@ -12,7 +12,14 @@ package com.compdfkit.tools.common.utils.image;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.view.View;
+import android.widget.EditText;
+
 
 import com.compdfkit.tools.common.utils.CFileUtils;
 
@@ -27,6 +34,33 @@ public class CImageUtil {
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
         return CBitmapUtil.cropTransparent(bitmap);
+    }
+
+    public static Bitmap convertLongTextToBitmap(EditText editText) {
+        String text = editText.getText().toString();
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextSize(editText.getTextSize());
+        paint.setColor(editText.getCurrentTextColor());
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTypeface(editText.getTypeface());
+        int width = editText.getWidth() - editText.getPaddingLeft() - editText.getPaddingRight();
+
+        StaticLayout staticLayout = new StaticLayout(
+                text, new TextPaint(paint), width,
+                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        int height = staticLayout.getHeight(); // 获取所有行的总高度
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.TRANSPARENT); // 设定背景色（可修改）
+
+        float centerX = width / 2f;
+
+        canvas.save();
+        canvas.translate(centerX, 0);
+        staticLayout.draw(canvas);
+        canvas.restore();
+        return bitmap;
     }
 
     public static String saveBitmap(Context context, String fileName, Bitmap bitmap){

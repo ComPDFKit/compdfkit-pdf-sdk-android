@@ -21,6 +21,7 @@ public enum CAnnotationType {
     SQUIGGLY,
     STRIKEOUT,
     INK,
+    INK_ERASER,
     CIRCLE,
     SQUARE,
     ARROW,

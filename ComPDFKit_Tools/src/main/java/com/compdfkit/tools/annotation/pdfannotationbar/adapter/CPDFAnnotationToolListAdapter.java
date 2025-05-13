@@ -148,14 +148,27 @@ public class CPDFAnnotationToolListAdapter extends CBaseQuickAdapter<CAnnotToolB
         return CAnnotationType.UNKNOWN;
     }
 
+    public CAnnotToolBean getSelectItem() {
+        for (CAnnotToolBean cAnnotToolBean : list) {
+            if (cAnnotToolBean.isSelect()) {
+                return cAnnotToolBean;
+            }
+        }
+        return null;
+    }
+
+
+
     public boolean annotEnableSetting() {
         CAnnotationType type = getCurrentAnnotType();
+        CAnnotToolBean item = getSelectItem();
         return type != CAnnotationType.SIGNATURE &&
                 type != CAnnotationType.STAMP &&
                 type != CAnnotationType.PIC &&
                 type != CAnnotationType.LINK &&
                 type != CAnnotationType.SOUND &&
-                type != CAnnotationType.UNKNOWN;
+                type != CAnnotationType.UNKNOWN &&
+                type != CAnnotationType.INK_ERASER;
     }
 
     public void updateItemColor(CAnnotationType type,@ColorInt int color) {

@@ -143,7 +143,6 @@ public class CPDFApplyConfigUtil {
                 int right = margins.get(2);
                 int bottom = margins.get(3);
                 readerView.setReaderViewHorizontalMargin(left, right);
-                readerView.setFixReaderViewHorizontalMargin(false);
                 readerView.setReaderViewTopMargin(top);
                 readerView.setReaderViewBottomMargin(bottom);
             }

@@ -12,6 +12,7 @@ package com.compdfkit.tools.docseditor.pdfpageedit;
 import static com.compdfkit.core.document.CPDFDocument.PDFDocumentError.PDFDocumentErrorPassword;
 import static com.compdfkit.core.document.CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -57,6 +58,8 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
     private CPageEditToolBar editToolBar;
 
     private OnBackLisener onBackLisener = null;
+
+    private COnEnterBackPressedListener onEnterBackPressedListener;
 
     private CPDFEditThumbnailFragment editThumbnailFragment;
 
@@ -161,6 +164,28 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
 
             }
         });
+        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent keyEvent) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP){
+                    if (editThumbnailFragment.isEdit()) {
+                        editThumbnailFragment.setEdit(false);
+                        toolBar.showEditButton(true);
+                        toolBar.showSelectButton(false);
+                        toolBar.showDoneButton(false);
+                        editToolBar.setVisibility(View.GONE);
+                        return true;
+                    } else {
+                        if (onEnterBackPressedListener != null) {
+                            onEnterBackPressedListener.onEnterBackPressed();
+                        }
+                        dismiss();
+                        return false;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -196,6 +221,9 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
                 toolBar.showDoneButton(false);
                 editToolBar.setVisibility(View.GONE);
             } else {
+                if (onEnterBackPressedListener != null) {
+                    onEnterBackPressedListener.onEnterBackPressed();
+                }
                 dismiss();
             }
         });
@@ -586,6 +614,14 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         }
     }
 
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        if (onEnterBackPressedListener != null) {
+            onEnterBackPressedListener.onEnterBackPressed();
+        }
+    }
+
     public void setHasEdit(boolean edit) {
         hasEdit = edit;
     }
@@ -594,7 +630,15 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         this.onBackLisener = listener;
     }
 
+    public void setOnEnterBackPressedListener(COnEnterBackPressedListener onEnterBackPressedListener) {
+        this.onEnterBackPressedListener = onEnterBackPressedListener;
+    }
+
     public interface OnBackLisener {
         void onBack();
+    }
+
+    public interface COnEnterBackPressedListener {
+        void onEnterBackPressed();
     }
 }

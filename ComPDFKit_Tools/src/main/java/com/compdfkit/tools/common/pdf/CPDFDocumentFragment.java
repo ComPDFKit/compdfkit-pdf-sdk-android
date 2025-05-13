@@ -53,6 +53,7 @@ import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts.RequestType;
@@ -60,6 +61,7 @@ import com.compdfkit.tools.common.utils.activitycontracts.CImageResultLauncher;
 import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
+import com.compdfkit.tools.common.utils.dialog.CExitTipsDialog;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
@@ -145,6 +147,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     private CPDFDocumentFragmentInitListener initListener;
 
+    public CFillScreenChangeListener fillScreenChangeListener;
+
     public static CPDFDocumentFragment newInstance(String filePath, String password, CPDFConfiguration configuration) {
         Bundle args = new Bundle();
         args.putString(EXTRA_FILE_PATH, filePath);
@@ -204,26 +208,56 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     exitScreenShot();
                     return;
                 }
-                onBackPressedCallback.setEnabled(false);
-                if (pdfView != null) {
-                    pdfView.savePDF((filePath, pdfUri) -> {
-                        try {
-                            requireActivity().onBackPressed();
-                        } catch (Exception e) {
-                        }
-                    }, e -> {
-                        e.printStackTrace();
-                        try {
-                            requireActivity().onBackPressed();
-                        } catch (Exception ignored) {
-
-                        }
-                    });
+                boolean hasChanges = pdfView.getCPdfReaderView().getPDFDocument().hasChanges();
+                boolean enableExitSaveTips = cpdfConfiguration.globalConfig.enableExitSaveTips;
+                if (!hasChanges){
+                    onBackPressedCallback.setEnabled(false);
+                    requireActivity().onBackPressed();
+                    return;
                 }
+                if (!enableExitSaveTips){
+                    onBackPressedCallback.setEnabled(false);
+                    saveAndExit();
+                    return;
+                }
+                CExitTipsDialog exitTipsDialog = CExitTipsDialog.newInstance();
+                exitTipsDialog.setCancelClickListener(v -> {
+                    onBackPressedCallback.setEnabled(false);
+                    exitTipsDialog.dismiss();
+                    requireActivity().onBackPressed();
+                });
+                exitTipsDialog.setCancelable(false);
+                exitTipsDialog.setConfirmClickListener(v -> {
+                    exitTipsDialog.dismiss();
+                    onBackPressedCallback.setEnabled(false);
+                    saveAndExit();
+                });
+                exitTipsDialog.setContinueClickListener(v -> {
+                    onBackPressedCallback.setEnabled(true);
+                    exitTipsDialog.dismiss();
+                });
+                exitTipsDialog.show(getChildFragmentManager(), "exitTipsDialog");
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+    }
+
+    private void saveAndExit(){
+        if (pdfView != null) {
+            pdfView.savePDF((filePath, pdfUri) -> {
+                try {
+                    requireActivity().onBackPressed();
+                } catch (Exception e) {
+                }
+            }, e -> {
+                e.printStackTrace();
+                try {
+                    requireActivity().onBackPressed();
+                } catch (Exception ignored) {
+
+                }
+            });
+        }
     }
 
     @Nullable
@@ -316,6 +350,9 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                             readerView.setScale(1F);
                         }, 200);
                     }
+                    if (fillScreenChangeListener != null) {
+                        fillScreenChangeListener.fillScreenChange(screenManager.isFillScreen);
+                    }
                 }
             }
 
@@ -366,7 +403,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         formToolBar.reset();
         signatureToolBar.reset();
         resetContextMenu(pdfView, mode);
-        SignatureWidgetImpl.previewMode = mode;
         CPDFEditManager editManager = readerView.getEditManager();
         if (mode == CPreviewMode.Edit) {
             readerView.setViewMode(CPDFReaderView.ViewMode.PDFEDIT);
@@ -469,6 +505,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     });
                 }
             }
+
         });
         inkCtrlView.initWithPDFView(pdfView);
     }
@@ -759,14 +796,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         documentEncryptionDialog.show(getChildFragmentManager(), "documentEncryption");
     }
 
-    @Override
-    protected void registerFormHelper(CPDFViewCtrl pdfView) {
-        super.registerFormHelper(pdfView);
-        pdfView.getCPdfReaderView().getAnnotImplRegistry()
-                // Register the CustomSignatureWidgetImpl.class to implement a custom dropdown options popup.
-                .registImpl(CPDFSignatureWidget.class, SignatureWidgetImpl.class);
-    }
-
     protected void parseConfiguration() {
         if (getArguments() != null && getArguments().containsKey(EXTRA_CONFIGURATION)) {
             if (Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_TIRAMISU) {
@@ -910,17 +939,15 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         watermarkEditDialog.setSaveAsNewFile(saveAsNewFile);
         watermarkEditDialog.setCompleteListener((saveAsNewFile1, pdfFile) -> {
             watermarkEditDialog.dismiss();
-            CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_success);
-            if (!saveAsNewFile1) {
-                pdfView.getCPdfReaderView().reloadPages();
-                return;
-            }
             pdfView.getCPdfReaderView().reloadPages();
             if (TextUtils.isEmpty(pdfFile)) {
                 CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_failed);
                 return;
             }
-            pdfView.openPDF(pdfFile);
+            CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_success);
+            if (saveAsNewFile1) {
+                pdfView.openPDF(pdfFile);
+            }
         });
         watermarkEditDialog.show(getChildFragmentManager(), "watermarkEditDialog");
     }
@@ -1009,7 +1036,15 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         this.initListener = initListener;
     }
 
+    public void setFillScreenChangeListener(CFillScreenChangeListener fillScreenChangeListener) {
+        this.fillScreenChangeListener = fillScreenChangeListener;
+    }
+
     public interface CPDFDocumentFragmentInitListener {
         void compile(CPDFViewCtrl pdfView);
+    }
+
+    public interface CFillScreenChangeListener {
+        void fillScreenChange(boolean fillScreen);
     }
 }

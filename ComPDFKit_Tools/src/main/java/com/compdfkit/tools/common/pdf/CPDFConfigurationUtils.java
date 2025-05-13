@@ -218,6 +218,9 @@ public class CPDFConfigurationUtils {
                     case "ink":
                         annotationTypes.add(CAnnotationType.INK);
                         break;
+                    case "ink_eraser":
+                        annotationTypes.add(CAnnotationType.INK_ERASER);
+                        break;
                     case "square":
                         annotationTypes.add(CAnnotationType.SQUARE);
                         break;
@@ -727,11 +730,14 @@ public class CPDFConfigurationUtils {
         }
         globalConfig.themeMode = GlobalConfig.CThemeMode.fromString(jsonObject.optString("themeMode", "light"));
         globalConfig.fileSaveExtraFontSubset = jsonObject.optBoolean("fileSaveExtraFontSubset", true);
-
+        globalConfig.enableExitSaveTips = jsonObject.optBoolean("enableExitSaveTips", true);
         JSONObject watermark = jsonObject.optJSONObject("watermark");
         if (watermark != null){
             globalConfig.watermark.saveAsNewFile = watermark.optBoolean("saveAsNewFile",true);
+            globalConfig.watermark.outsideBackgroundColor = watermark.optString("outsideBackgroundColor", "");
         }
+
+        globalConfig.signatureType = GlobalConfig.CSignatureType.fromString(jsonObject.optString("signatureType", "manual"));
         return globalConfig;
     }
 }

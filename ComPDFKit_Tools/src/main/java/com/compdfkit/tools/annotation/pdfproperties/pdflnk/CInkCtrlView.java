@@ -18,9 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.pdf.CPDFDocumentFragment;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -127,11 +129,25 @@ public class CInkCtrlView extends FrameLayout implements View.OnClickListener {
             CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
             styleDialogFragment.setStyleDialogDismissListener(()->{
                 ivSetting.setSelected(false);
+                changeAnnotToolbarInkColor();
             });
             styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
             FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
             if (fragmentActivity != null) {
                 styleDialogFragment.show(fragmentActivity.getSupportFragmentManager(), "annotStyleDialogFragment");
+            }
+        }
+    }
+
+    private void changeAnnotToolbarInkColor(){
+        CPDFReaderView readerView = pdfView.getCPdfReaderView();
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        if (fragmentActivity != null){
+            Fragment fragment = fragmentActivity.getSupportFragmentManager()
+                    .findFragmentByTag("documentFragment");
+            if (fragment != null && fragment instanceof CPDFDocumentFragment){
+                CPDFDocumentFragment documentFragment = (CPDFDocumentFragment) fragment;
+                documentFragment.annotationToolbar.updateItemColor();
             }
         }
     }
