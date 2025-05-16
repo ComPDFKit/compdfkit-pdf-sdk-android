@@ -6,11 +6,11 @@
 
 # Table of Content
 
-- [Related](#%20Related)
-- [Requirements](#%20Requirements)
-- [How to Make an Android PDF Viewer in Java](#%20How%20to%20Make%20an%20Android%20PDF%20Viewer%20in%20Java)
-- [Supports](#%20Support)
-- [License](#%20License) 
+- [Related](#related)
+- [Requirements](#requirements)
+- [How to Make an Android PDF Viewer in Java](#how-to-make-an-android-pdf-viewer-in-java)
+- [Supports](#support)
+- [License](#license) 
 
 
 # Related
