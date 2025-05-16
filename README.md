@@ -4,16 +4,22 @@
 
 [ComPDFKit API](https://api.compdf.com/api/pricing) allows you to get 1000 files processing monthly now! Just [sign up](https://api.compdf.com/signup) for a free trial and enjoy comprehensive PDF functions.
 
+# Table of Content
+
+- [Related](#%20Related)
+- [Requirements](#%20Requirements)
+- [How to Make an Android PDF Viewer in Java](#%20How%20to%20Make%20an%20Android%20PDF%20Viewer%20in%20Java)
+- [Supports](#%20Support)
+- [License](#%20License) 
+
 
 # Related
 
-- [ComPDFKit PDF Library for iOS](https://github.com/ComPDFKit/PDF-SDK-iOS)
-
-- ComPDFKit PDF SDK - [Flutter Library](https://pub.dev/packages/compdfkit_flutter)
-
-- ComPDFKit PDF SDK - [React Native Library](https://www.compdf.com/react-native)
-
-- [How to Build an Android PDF Viewer or Editor in Kotlin](https://www.compdf.com/blog/build-an-android-pdf-viewer-or-editor-in-kotlin)
+- [ComPDFKit PDF SDK for Android Documentation Guide](https://www.compdf.com/guides/pdf-sdk/android/overview)
+- [ComPDFKit PDF Library for iOS](https://github.com/ComPDFKit/compdfkit-pdf-sdk-ios-swift)
+- [How to Build an Android PDF Viewer or Editor in Java](https://www.compdf.com/blog/build-an-android-pdf-viewer-or-editor-in-java)
+- [Code Samples for Android](https://www.compdf.com/guides/pdf-sdk/android/examples) 
+- [ComPDF API Reference](https://api.compdf.com/api-reference/overview)
 
 
 # Get Started
@@ -54,7 +60,9 @@ If you don't have any devices configured, then you need to either connect a devi
 
 This section will help you quickly get started with ComPDFKit PDF SDK to make an Android app in Java with step-by-step instructions. Through the following steps, you will get a simple application that can display the contents of a specified PDF file.
 
+### Video Guide:Build an Android PDF Editor in Java
 
+[![image-youtube-20250515](image-android/image-youtube-20250515.png)](https://youtu.be/SgBidb_eYjA?si=_UX7oECMc7NvC_nv)
 
 ### Create a New Project
 
