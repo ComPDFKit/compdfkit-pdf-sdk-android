@@ -1,8 +1,8 @@
 # Introduction
 
-[ComPDFKit](https://www.compdf.com/) PDF SDK is a powerful PDF library for developers to add robust PDF functionality to their applications, which ships with simple-to-use Java APIs to offer document viewing, creation, searching, annotation, and editing. With this SDK, even developers with limited knowledge of PDF can quickly build a professional PDF viewer with just a few lines of code on the Android platform.
-
-[ComPDFKit API](https://api.compdf.com/api/pricing) allows you to get 1000 files processing monthly now! Just [sign up](https://api.compdf.com/signup) for a free trial and enjoy comprehensive PDF functions.
+ComPDFKit PDF SDK for Android is developed and maintained by [ComPDF](https://www.compdf.com/), enabling developers to quickly and seamlessly integrate advanced PDF functionalities—such as viewing, editing, annotating, and signing—into any Android application.
+The ComPDFKit Android PDF Library provides an easy-to-use Java API that allows direct access to a wide range of PDF features without the need for complex configurations. By [registering for a free ComPDF API account](https://api.compdf.com/signup), developers can process up to 1,000 PDF files monthly.
+More Information can be found at: [https://www.compdf.com/guides/pdf-sdk/android/overview](https://www.compdf.com/guides/pdf-sdk/android/overview)
 
 # Table of Content
 
@@ -22,58 +22,35 @@
 - [ComPDF API Reference](https://api.compdf.com/api-reference/overview)
 
 
-# Get Started
-
-[ComPDFKit SDK for Android](https://www.compdf.com/android) is a [powerful PDF SDK](https://www.compdf.com/pdf-sdk) that is easy to be embedded in any Android application with a few lines of Java code. The following sections introduce the requirements, the structure of the installation package, and how to make an Android PDF Reader in Java with ComPDFKit PDF SDK. Now, start to take a few minutes to build your Android PDF Viewer.
-
-
-## Requirements
+# Requirements
 
 [ComPDFKit Android PDF SDK](https://www.compdf.com/guides/pdf-sdk/android/overview) supports Android devices running API level 19 or newer and targets the latest stable Android 4.4 or later. In addition, it requires applications to be built with Java 8 language features enabled.
 
 - Android Studio 3.2 or newer (support AndroidX).
 - Project specifications.
-    - A `minSdkVersion` of `19` or higher.  
-    - A `compileSdkVersion` of `30` or higher.  
-    - A `targetSdkVersion` of `34` or higher.  
-    - Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
+  - A `minSdkVersion` of `19` or higher.  
+  - A `compileSdkVersion` of `30` or higher.  
+  - A `targetSdkVersion` of `34` or higher.  
+  - Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
 
-## How to Run a Demo
-
-ComPDFKit PDF SDK for Android provides multiple demos in Java for developers to learn how to call the SDK on Android. You can find them in the ***"Samples"*** folder. In this guide, we take ***"PDFViewer"*** as an example to show how to run it on Android.
-
-1. Import the ***"Samples"*** project on Android Studio.
-2. In the toolbar, select ***"PDFViewer"*** from the run configurations drop-down menu.
-3. From the target device drop-down menu, select the device that you want to run ***"PDFViewer"*** on.
-
-4. Click **Run**.
-
-If you don't have any devices configured, then you need to either connect a device via USB or create an AVD to use the Android Emulator.
-
-<img src="./image-android/2.4.png" alt="2.4" width="70%" height="70%" />
-
-**Note:** *This is a demo project, presenting completed [ComPDFKit PDF SDK](https://compdf.com/pdf-sdk/) functions. The functions might be different based on the license you have purchased. Please check that the functions you choose work fine in this demo project.*
-
-
-
-## How to Make an Android PDF Viewer in Java
+# How to Make an Android PDF Viewer in Java
 
 This section will help you quickly get started with ComPDFKit PDF SDK to make an Android app in Java with step-by-step instructions. Through the following steps, you will get a simple application that can display the contents of a specified PDF file.
 
-### Video Guide:Build an Android PDF Editor in Java
+## Video Guide:Build an Android PDF Editor in Java
 
 [![image-youtube-20250515](image-android/image-youtube-20250515.png)](https://youtu.be/SgBidb_eYjA?si=_UX7oECMc7NvC_nv)
 
-### Create a New Project
+## Create a New Project
 
 1. Use Android Studio to create a Phone & Tablet project. Here we create a **No Activity** project.
 
 <img src="./image-android/create_project.png" alt="create_project" width="60%" height="60%" />
 
 
-### Installation
+## Installation
 
-#### Integrate With Gradle
+### Integrate With Gradle
 
 1. Open the `settings.gradle` file located in your project's root directory and add the `mavenCentral` repository:
 
@@ -116,7 +93,7 @@ dependencies {
 ```
 
 
-#### Integrate Manually
+### Integrate Manually
 
 1. Copy ***"ComPDFKit.aar"*** and ***"ComPDFKit-UI.aar"*** to the ***"libs"*** directory of the **app**.
 
@@ -165,7 +142,7 @@ dependencies {
 
 
 
-### Apply the License Key
+## Apply the License Key
 
 
 Add this license in the **AndroidManifest.xml** of the main module. In version **1.13.0**, we introduced a brand-new online authentication license scheme for ComPDFKit SDK. By default, the SDK performs online authentication. If you are using a version prior to **1.13.0**, please refer to the following example to configure the SDK for offline authentication mode:<br/>
@@ -204,7 +181,7 @@ CPDFSdk.init(context, "your compdfkit license");
 
 
 
-### Add Proguard Rules
+## Add Proguard Rules
 
 In the `proguard-rules.pro` file, please add the obfuscation configuration information for `compdfkit` as follows:
 
@@ -215,7 +192,7 @@ In the `proguard-rules.pro` file, please add the obfuscation configuration infor
 
 
 
-### Display a PDF Document
+## Display a PDF Document
 
 1. Copy a PDF document into the **assets** directory of your Android project. For example, import the file ***"Quick Start Guide.pdf"*** to the path **src/main/assets**.
 
@@ -469,14 +446,9 @@ public class MainActivity extends AppCompatActivity {
 
 Now, with the help of ComPDFKit, you can get a simple application to display a PDF file.
 
-
-# Examples
-
-There are many samples in the [**samples**](./samples) folder that demonstrate the main features of the [ComPDFKit API](https://api.compdf.com/) and how to use them, such as adding watermarks, comments, forms, etc. to PDFs. You can copy the code, add it to your project and run it directly. Or, you can get our [code examples for Android](https://www.compdf.com/guides/pdf-sdk/android/examples). To learn more about the ComPDFKit API, please visit our [API Reference](https://developers.compdf.com/guides/pdf-sdk/android/api-reference/index).
-
 # Support
 
-[ComPDFKit]((https://www.compdf.com)) has a professional R&D team that produces comprehensive technical documentation and guides to help developers. Also, you can get an immediate response when reporting your problems to our support team.
+ComPDF offers professional technical support and 5*24 responsive service.
 
 - For detailed information, please visit our [Guides](https://www.compdf.com/guides/pdf-sdk/android/overview) page.
 
@@ -484,18 +456,11 @@ There are many samples in the [**samples**](./samples) folder that demonstrate t
 
 - For technical assistance, please reach out to our [Technical Support](https://www.compdf.com/support).
 
-- To get more details and an accurate quote, please contact our [Sales Team](https://compdf.com/contact-us).
+- To get more details and an accurate quote, please contact our [Sales Team](https://compdf.com/contact-us) or [Send an Email](mailto:support@compdf.com) to us.
 
 
 
 
 # License
 
-ComPDFKit PDF SDK supports flexible licensing options, please contact [our sales team](mailto:support@compdf.com) to know more. Each license is only valid for one application ID in development mode.  However, any documents, sample code, or source code distribution from the released package of ComPDFKit PDF SDK to any third party is prohibited.
-
-
-
-# Note
-
-We are glad to announce that you can register a ComPDFKit API account for a [free trial](https://api.compdf.com/api/pricing) to process 1000 documents per month for free.
-
+ComPDF offers developers a [30-day free trial license](https://www.compdf.com/pricing) for free testing your Android projects. Additionally, you'll have access to a fully-featured product with no limitations on file or user count. 
