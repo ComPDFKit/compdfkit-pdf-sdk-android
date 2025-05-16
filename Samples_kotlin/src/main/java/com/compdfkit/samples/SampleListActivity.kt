@@ -14,6 +14,7 @@ import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.compdfkit.core.document.CPDFAbility
 import com.compdfkit.samples.util.FileUtils
 
 class SampleListActivity : AppCompatActivity() {
@@ -21,6 +22,7 @@ class SampleListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample_list)
+        CPDFAbility.checkLicenseAllAbility()
         val file = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
         file?.let {
             FileUtils.deleteFile(it)
