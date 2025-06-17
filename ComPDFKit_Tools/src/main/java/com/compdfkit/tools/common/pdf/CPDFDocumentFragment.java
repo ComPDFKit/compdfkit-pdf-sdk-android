@@ -208,7 +208,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     exitScreenShot();
                     return;
                 }
-                boolean hasChanges = pdfView.getCPdfReaderView().getPDFDocument().hasChanges();
+                CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+                boolean hasChanges = document != null && document.hasChanges();
                 boolean enableExitSaveTips = cpdfConfiguration.globalConfig.enableExitSaveTips;
                 if (!hasChanges){
                     onBackPressedCallback.setEnabled(false);
