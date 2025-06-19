@@ -70,10 +70,9 @@ public class CEditImagePreviewView extends CBasicAnnotPreviewView {
     @Override
     public void setRotationAngle(float angle) {
         if (imageView != null) {
-            if (angle < 0) {
-                rotationAngle -= Math.abs(angle);
-            } else {
-                rotationAngle += angle;
+            rotationAngle = (rotationAngle + angle) % 360;
+            if (rotationAngle < 0) {
+                rotationAngle += 360;
             }
             reloadBitmap();
         }

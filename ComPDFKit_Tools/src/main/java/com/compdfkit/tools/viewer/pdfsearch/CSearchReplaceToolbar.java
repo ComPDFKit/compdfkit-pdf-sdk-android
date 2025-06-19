@@ -481,11 +481,19 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
     }
 
     private void resetSearch() {
-        if (cpdfSearch != null) {
-            cpdfSearch.resetSearch();
+        try {
+            if (cpdfSearch != null) {
+                cpdfSearch.resetSearch();
+            }
+            if (groupSearchBefore != null) {
+                groupSearchBefore.setVisibility(VISIBLE);
+            }
+            if (groupSearchAfter != null) {
+                groupSearchAfter.setVisibility(GONE);
+            }
+        }catch (Exception e){
+
         }
-        groupSearchBefore.setVisibility(VISIBLE);
-        groupSearchAfter.setVisibility(GONE);
     }
 
     public void showKeyboard() {

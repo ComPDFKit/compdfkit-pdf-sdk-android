@@ -10,6 +10,7 @@
 package com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider;
 
 import android.content.Context;
+import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import com.compdfkit.core.edit.CPDFEditImageArea;
 import com.compdfkit.core.edit.CPDFEditTextArea;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CToastUtil;
+import com.compdfkit.tools.common.utils.image.CImageUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.ui.edit.CPDFEditSelections;
@@ -168,8 +170,7 @@ public class CEditSelectionsProvider implements CStyleProvider {
                                 String sdPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
                                 File file = new File(sdPath, "ComPDFKit" + File.separator + System.currentTimeMillis() + ".png");
                                 pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.EXTRACT_IMAGE, file.getAbsolutePath());
-                                MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                                        file.getAbsolutePath(), file.getName(), "description");
+                                CImageUtil.scanFile(context, file.getAbsolutePath(),"image/png");
                             }
                         }catch (Exception e){
                             CToastUtil.showLongToast(pageView.getContext(), R.string.tools_page_edit_extract_fail);

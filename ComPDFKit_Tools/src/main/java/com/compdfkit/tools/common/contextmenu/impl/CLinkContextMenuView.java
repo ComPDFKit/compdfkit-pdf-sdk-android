@@ -24,6 +24,8 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuLinkProvider;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
+import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.action.CActionEditDialogFragment;
 import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
@@ -31,19 +33,38 @@ import com.compdfkit.ui.proxy.CPDFLinkAnnotImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
 
+import java.util.List;
+import java.util.Map;
+
 public class CLinkContextMenuView implements ContextMenuLinkProvider {
 
     @Override
     public View createLinkContentView(CPDFContextMenuHelper helper, CPDFPageView pageView, CPDFLinkAnnotImpl linkAnnotImpl) {
         ContextMenuView menuView = new ContextMenuView(pageView.getContext());
-        menuView.addItem(R.string.tools_edit, v -> {
-            showEditDialog(helper.getReaderView(), pageView, linkAnnotImpl);
-            helper.dismissContextMenu();
-        });
-        menuView.addItem(R.string.tools_delete, v -> {
-            pageView.deleteAnnotation((CPDFBaseAnnotImpl)linkAnnotImpl);
-            helper.dismissContextMenu();
-        });
+
+        Map<String, List<ContextMenuConfig.ContextMenuActionItem>> annotationModeConfig = CPDFApplyConfigUtil.getInstance().getAnnotationModeContextMenuConfig();
+        List<ContextMenuConfig.ContextMenuActionItem> linkContent = annotationModeConfig.get("linkContent");
+
+        if (linkContent == null) {
+            return menuView;
+        }
+
+        for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : linkContent) {
+            switch (contextMenuActionItem.key) {
+                case "edit":
+                    menuView.addItem(R.string.tools_edit, v -> {
+                        showEditDialog(helper.getReaderView(), pageView, linkAnnotImpl);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "delete":
+                    menuView.addItem(R.string.tools_delete, v -> {
+                        pageView.deleteAnnotation((CPDFBaseAnnotImpl)linkAnnotImpl);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+            }
+        }
         return menuView;
     }
 

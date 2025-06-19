@@ -15,6 +15,8 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuListBoxProvider;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
+import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -23,36 +25,55 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleMan
 import com.compdfkit.ui.proxy.form.CPDFListboxWidgetImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
 
+import java.util.List;
+import java.util.Map;
+
 
 public class CListBoxContextMenuView implements ContextMenuListBoxProvider {
 
     @Override
     public View createListBoxContentView(CPDFContextMenuHelper helper, CPDFPageView pageView, CPDFListboxWidgetImpl listBoxWidgetImpl) {
         ContextMenuView menuView = new ContextMenuView(pageView.getContext());
-        menuView.addItem(R.string.tools_options, v -> {
-            CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
-            if (helper.getFragmentManager() != null) {
-                annotationManager.showFormListEditFragment(
-                        helper.getFragmentManager(),
-                        listBoxWidgetImpl,
-                        pageView,
-                        false);
+
+        Map<String, List<ContextMenuConfig.ContextMenuActionItem>> formModeConfig = CPDFApplyConfigUtil.getInstance().getFormsModeContextMenuConfig();
+        List<ContextMenuConfig.ContextMenuActionItem> listBoxContent = formModeConfig.get("listBox");
+        if (listBoxContent == null) {
+            return menuView;
+        }
+        for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : listBoxContent) {
+            switch (contextMenuActionItem.key) {
+                case "options":
+                    menuView.addItem(R.string.tools_options, v -> {
+                        CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
+                        if (helper.getFragmentManager() != null) {
+                            annotationManager.showFormListEditFragment(
+                                    helper.getFragmentManager(),
+                                    listBoxWidgetImpl,
+                                    pageView,
+                                    true);
+                        }
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "properties":
+                    menuView.addItem(R.string.tools_context_menu_properties, v -> {
+                        CStyleManager styleManager = new CStyleManager(listBoxWidgetImpl, pageView);
+                        CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_LIST_BOX);
+                        CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
+                        styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
+                        styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
+                        styleDialogFragment.show(helper.getFragmentManager());
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "delete":
+                    menuView.addItem(R.string.tools_delete, v -> {
+                        pageView.deleteAnnotation(listBoxWidgetImpl);
+                        helper.dismissContextMenu();
+                    });
+                    break;
             }
-            helper.dismissContextMenu();
-        });
-        menuView.addItem(R.string.tools_context_menu_properties, v -> {
-            CStyleManager styleManager = new CStyleManager(listBoxWidgetImpl, pageView);
-            CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_LIST_BOX);
-            CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
-            styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
-            styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
-            styleDialogFragment.show(helper.getFragmentManager());
-            helper.dismissContextMenu();
-        });
-        menuView.addItem(R.string.tools_delete, v -> {
-            pageView.deleteAnnotation(listBoxWidgetImpl);
-            helper.dismissContextMenu();
-        });
+        }
         return menuView;
     }
 }

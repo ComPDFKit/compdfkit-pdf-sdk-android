@@ -412,9 +412,12 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                             saveFileExtraFontSubset = cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
                         }
                         CLog.e("ComPDFKit", "save pdf extra font subset:" + saveFileExtraFontSubset);
-                        boolean success = document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental, saveFileExtraFontSubset);
-                        if (!success) {
-                            document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveNoIncremental, saveFileExtraFontSubset);
+                        document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental, saveFileExtraFontSubset);
+                        if (document.shouleReloadDocument()) {
+                            document.reload();
+                            CThreadPoolUtils.getInstance().executeMain(()->{
+                                cPdfReaderView.reloadPages();
+                            });
                         }
                         CThreadPoolUtils.getInstance().executeMain(() -> {
                             if (callback != null) {

@@ -41,7 +41,7 @@ import java.util.List;
 
 
 public class CAddCustomStampActivity extends AppCompatActivity implements View.OnClickListener {
-
+    public static final String EXTRA_THEME_ID = "extra_theme_id";
     private CToolBar cToolBar;
 
     private CPDFStampTextView stampTextView;
@@ -69,7 +69,12 @@ public class CAddCustomStampActivity extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(CPDFApplyConfigUtil.getInstance().getGlobalThemeId(this, CPDFApplyConfigUtil.getInstance().getConfiguration()));
+        if (getIntent().hasExtra(EXTRA_THEME_ID)) {
+            int themeId = getIntent().getIntExtra(EXTRA_THEME_ID, CPDFApplyConfigUtil.getInstance().getGlobalThemeId());
+            setTheme(themeId);
+        } else {
+            setTheme(CPDFApplyConfigUtil.getInstance().getGlobalThemeId());
+        }
         setContentView(R.layout.tools_properties_stamp_style_add_custom_activity);
         cToolBar = findViewById(R.id.tool_bar);
         stampTextView = findViewById(R.id.stamp_text_view);

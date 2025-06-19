@@ -12,20 +12,25 @@ package com.compdfkit.tools.common.contextmenu.provider;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.utils.view.CFlowLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContextMenuMultipleLineView extends LinearLayout {
     Context mContext;
-    List<ContextMenuView> lineList = new ArrayList<>();
+
+    CFlowLayout flowLayout;
+
     ContextMenuView secondView = null;
     public ContextMenuMultipleLineView(Context context) {
         this(context, null);
@@ -40,21 +45,19 @@ public class ContextMenuMultipleLineView extends LinearLayout {
         mContext = context;
         setOrientation(LinearLayout.VERTICAL);
         setBackgroundResource(R.drawable.tools_context_menu_window);
+        LayoutInflater.from(context).inflate(R.layout.tools_context_menu_mulit_line_root_layout, this);
+        flowLayout = findViewById(R.id.flow_layout);
     }
 
-    public void setLineNumber(int number) {
-        for (int i = 0 ; i < number; i++) {
-            ContextMenuView view = new ContextMenuView(mContext);
-            lineList.add(view);
-            addView(view);
+    public ContextMenuMultipleLineView addItem(@StringRes int titleRes, OnClickListener clickListener) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.tools_context_menu_item_layout, null);
+        AppCompatTextView textView = (AppCompatTextView) view;
+        textView.setId(View.generateViewId());
+        textView.setText(titleRes);
+        textView.setOnClickListener(clickListener);
+        if (flowLayout != null) {
+            flowLayout.addView(view);
         }
-    }
-
-    public ContextMenuMultipleLineView addItem(@StringRes int titleRes, int lineIndex, OnClickListener clickListener) {
-        if (lineIndex >= lineList.size()) {
-            return this;
-        }
-        lineList.get(lineIndex).addItem(titleRes, clickListener);
         return this;
     }
 
@@ -62,7 +65,7 @@ public class ContextMenuMultipleLineView extends LinearLayout {
         ContextMenuView view = new ContextMenuView(mContext);
         addView(view);
         secondView = view;
-        secondView.setGravity(Gravity.CENTER_VERTICAL);
+        secondView.setGravity(Gravity.CENTER);
         secondView.setVisibility(View.GONE);
     }
 
@@ -83,9 +86,7 @@ public class ContextMenuMultipleLineView extends LinearLayout {
         if (secondView == null) {
             return;
         }
-        for (int i = 0; i < lineList.size(); i++) {
-            lineList.get(i).setVisibility(show == true ? View.GONE : View.VISIBLE);
-        }
-        secondView.setVisibility(show == true ? View.VISIBLE : View.GONE);
+        flowLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+        secondView.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 }

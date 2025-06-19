@@ -21,10 +21,15 @@ import com.compdfkit.tools.annotation.pdfproperties.pdfsound.CRecordVoicePopupWi
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSoundContentProvider;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
+import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.ui.proxy.CPDFSoundAnnotImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
+
+import java.util.List;
+import java.util.Map;
 
 public class CSoundContextMenuView implements ContextMenuSoundContentProvider {
 
@@ -32,56 +37,80 @@ public class CSoundContextMenuView implements ContextMenuSoundContentProvider {
     @Override
     public View createSoundContentView(CPDFContextMenuHelper helper, CPDFPageView pageView, CPDFSoundAnnotImpl soundAnnotImpl) {
         ContextMenuView menuView = new ContextMenuView(helper.getReaderView().getContext());
-        CPDFSoundAnnotation soundAnnotation = soundAnnotImpl.onGetAnnotation();
-        menuView.addItem(R.string.tools_reply, v -> {
-            new CPDFAnnotationManager().showAddReplyDialog(pageView, soundAnnotImpl, helper, true);
-            helper.dismissContextMenu();
-        });
-        menuView.addItem(R.string.tools_view_reply, v -> {
-            new CPDFAnnotationManager().showReplyDetailsDialog(pageView, soundAnnotImpl, helper);
-            helper.dismissContextMenu();
-        });
-        if (soundAnnotation.isRecorded()) {
-            menuView.addItem(R.string.tools_play, v -> {
-                new SimpleBackgroundTask<String>(helper.getReaderView().getContext()) {
-                    @Override
-                    protected String onRun() {
-                        Context context = helper.getReaderView().getContext();
-                        return soundAnnotation.loadSoundSource(context.getCacheDir().getAbsolutePath(), String.valueOf(System.currentTimeMillis()));
-                    }
 
-                    @Override
-                    protected void onSuccess(String result) {
-                        if (!TextUtils.isEmpty(result)) {
-                            helper.dismissContextMenu();
-                            Context context = helper.getReaderView().getContext();
-                            CPlayVoicePopupWindow playVoicePopupWindow = new CPlayVoicePopupWindow(context, helper.getReaderView());
-                            playVoicePopupWindow.setVoicePath(result);
-                            playVoicePopupWindow.show();
-                        }
-                    }
-                }.execute();
-            });
-        } else {
-            menuView.addItem(R.string.tools_record, v -> {
-                helper.setPopupWindowDismissListener(null);
-                helper.dismissContextMenu();
-                CRecordVoicePopupWindow voicePopupWindow = new CRecordVoicePopupWindow(pageView.getContext(),
-                        helper.getReaderView(), helper.getReaderView().getReaderAttribute().getAnnotAttribute(), soundAnnotation);
-                voicePopupWindow.setRecordDoneCallback((done, path) -> {
-                    if (done) {
-                        soundAnnotation.setSoundPath(path);
-                        soundAnnotImpl.onUpdateSoundIcon();
-                        pageView.invalidate();
-                    }
-                });
-                voicePopupWindow.show();
-            });
+        CPDFSoundAnnotation soundAnnotation = soundAnnotImpl.onGetAnnotation();
+
+        Map<String, List<ContextMenuConfig.ContextMenuActionItem>> annotationModeConfig = CPDFApplyConfigUtil.getInstance().getAnnotationModeContextMenuConfig();
+        List<ContextMenuConfig.ContextMenuActionItem> soundContent = annotationModeConfig.get("soundContent");
+
+        if (soundContent == null) {
+            return menuView;
         }
-        menuView.addItem(R.string.tools_delete, v -> {
-            pageView.deleteAnnotation(soundAnnotImpl);
-            helper.dismissContextMenu();
-        });
+
+        for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : soundContent) {
+            switch (contextMenuActionItem.key) {
+                case "reply":
+                    menuView.addItem(R.string.tools_reply, v -> {
+                        new CPDFAnnotationManager().showAddReplyDialog(pageView, soundAnnotImpl, helper, true);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "viewReply":
+                    menuView.addItem(R.string.tools_view_reply, v -> {
+                        new CPDFAnnotationManager().showReplyDetailsDialog(pageView, soundAnnotImpl, helper);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "play":
+                    if (soundAnnotation.isRecorded()) {
+                        menuView.addItem(R.string.tools_play, v -> {
+                            new SimpleBackgroundTask<String>(helper.getReaderView().getContext()) {
+                                @Override
+                                protected String onRun() {
+                                    Context context = helper.getReaderView().getContext();
+                                    return soundAnnotation.loadSoundSource(context.getCacheDir().getAbsolutePath(), String.valueOf(System.currentTimeMillis()));
+                                }
+
+                                @Override
+                                protected void onSuccess(String result) {
+                                    if (!TextUtils.isEmpty(result)) {
+                                        helper.dismissContextMenu();
+                                        Context context = helper.getReaderView().getContext();
+                                        CPlayVoicePopupWindow playVoicePopupWindow = new CPlayVoicePopupWindow(context, helper.getReaderView());
+                                        playVoicePopupWindow.setVoicePath(result);
+                                        playVoicePopupWindow.show();
+                                    }
+                                }
+                            }.execute();
+                        });
+                    }
+                    break;
+                case "record":
+                    if (!soundAnnotation.isRecorded()){
+                        menuView.addItem(R.string.tools_record, v -> {
+                            helper.setPopupWindowDismissListener(null);
+                            helper.dismissContextMenu();
+                            CRecordVoicePopupWindow voicePopupWindow = new CRecordVoicePopupWindow(pageView.getContext(),
+                                    helper.getReaderView(), helper.getReaderView().getReaderAttribute().getAnnotAttribute(), soundAnnotation);
+                            voicePopupWindow.setRecordDoneCallback((done, path) -> {
+                                if (done) {
+                                    soundAnnotation.setSoundPath(path);
+                                    soundAnnotImpl.onUpdateSoundIcon();
+                                    pageView.invalidate();
+                                }
+                            });
+                            voicePopupWindow.show();
+                        });
+                    }
+                    break;
+                case "delete":
+                    menuView.addItem(R.string.tools_delete, v -> {
+                        pageView.deleteAnnotation(soundAnnotImpl);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+            }
+        }
         return menuView;
     }
 }

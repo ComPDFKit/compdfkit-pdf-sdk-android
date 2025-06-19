@@ -22,3 +22,4 @@ compdfkit-mavencentral.gradle
 compdfkit-tools-mavencentral.gradle
 compdfkit-ui-mavencentral.gradle
 maven.properties
+/*/release

@@ -22,6 +22,7 @@ import com.compdfkit.core.edit.CPDFEditTextArea;
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
+import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.pdf.config.FormsConfig;
 import com.compdfkit.tools.common.pdf.config.GlobalConfig;
 import com.compdfkit.tools.common.pdf.config.ModeConfig;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class CPDFConfigurationUtils {
 
@@ -73,6 +75,7 @@ public class CPDFConfigurationUtils {
             configuration.formsConfig = parseFormsConfig(rootJsonObject.optJSONObject("formsConfig"));
             configuration.readerViewConfig = parseReaderViewConfig(rootJsonObject.optJSONObject("readerViewConfig"));
             configuration.globalConfig = parseGlobalConfig(rootJsonObject.optJSONObject("global"));
+            configuration.contextMenuConfig = parseContextMenuConfig(rootJsonObject.optJSONObject("contextMenuConfig"));
             return configuration;
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,6 +136,7 @@ public class CPDFConfigurationUtils {
         }
         toolbarConfig.availableMenus = menuActionList;
         toolbarConfig.mainToolbarVisible = jsonObject.optBoolean("mainToolbarVisible", true);
+        toolbarConfig.annotationToolbarVisible = jsonObject.optBoolean("annotationToolbarVisible", true);
         return toolbarConfig;
     }
 
@@ -740,4 +744,9 @@ public class CPDFConfigurationUtils {
         globalConfig.signatureType = GlobalConfig.CSignatureType.fromString(jsonObject.optString("signatureType", "manual"));
         return globalConfig;
     }
+
+    private static ContextMenuConfig parseContextMenuConfig(@Nullable JSONObject jsonObject) {
+        return ContextMenuConfig.fromJson(jsonObject);
+    }
+
 }

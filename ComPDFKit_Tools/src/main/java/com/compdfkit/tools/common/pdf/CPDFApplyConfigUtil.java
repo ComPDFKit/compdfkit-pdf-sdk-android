@@ -25,6 +25,7 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
+import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.pdf.config.ModeConfig;
 import com.compdfkit.tools.common.pdf.config.ReaderViewConfig;
 import com.compdfkit.tools.common.pdf.config.annot.AnnotFreetextAttr;
@@ -47,6 +48,9 @@ import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.ui.reader.CPDFReaderView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CPDFApplyConfigUtil {
 
@@ -67,15 +71,15 @@ public class CPDFApplyConfigUtil {
         return configuration;
     }
 
+    public void setConfiguration(CPDFConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     public int getGlobalThemeId() {
         if (themeId == 0){
             themeId = R.style.ComPDFKit_Theme_Light;
         }
         return themeId;
-    }
-
-    private void setGlobalThemeId(int themeId){
-        this.themeId = themeId;
     }
 
     public void applyConfiguration(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
@@ -183,7 +187,9 @@ public class CPDFApplyConfigUtil {
             fragment.flBottomToolBar.setVisibility(View.GONE);
         }
         boolean showMainToolbar = configuration.toolbarConfig.mainToolbarVisible;
-        fragment.flTool.setVisibility(showMainToolbar ? View.VISIBLE : View.GONE);
+        fragment.flTool.setVisibility(showMainToolbar && !modeConfig.readerOnly ? View.VISIBLE : View.GONE);
+        boolean showAnnotationToolbar = configuration.toolbarConfig.annotationToolbarVisible;
+        fragment.annotationToolbar.setVisibility(showAnnotationToolbar && !modeConfig.readerOnly ? View.VISIBLE : View.GONE);
     }
 
     private void applyAnnotationConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
@@ -357,24 +363,6 @@ public class CPDFApplyConfigUtil {
         builder.init(fragment.pdfView, true);
     }
 
-    private void applyGlobalConfig(Context context, CPDFConfiguration configuration) {
-        switch (configuration.globalConfig.themeMode) {
-            case Light:
-                themeId = R.style.ComPDFKit_Theme_Light;
-                break;
-            case Dark:
-                themeId = R.style.ComPDFKit_Theme_Dark;
-                break;
-            default:
-                if (CViewUtils.isDarkMode(context)) {
-                    themeId = R.style.ComPDFKit_Theme_Dark;
-                } else {
-                    themeId = R.style.ComPDFKit_Theme_Light;
-                }
-                break;
-        }
-    }
-
     public int getGlobalThemeId(Context context, CPDFConfiguration configuration){
         switch (configuration.globalConfig.themeMode) {
             case Light:
@@ -393,4 +381,54 @@ public class CPDFApplyConfigUtil {
         }
         return themeId;
     }
+
+    public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getGlobalContextMenuConfig() {
+        if (configuration == null){
+            return new HashMap<>();
+        }
+        ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
+        return contextMenuConfig.global;
+    }
+
+    public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getViewModeContextMenuConfig() {
+        if (configuration == null){
+            return new HashMap<>();
+        }
+        ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
+        return contextMenuConfig.viewMode;
+    }
+
+    public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getAnnotationModeContextMenuConfig() {
+        if (configuration == null){
+            return new HashMap<>();
+        }
+        ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
+        return contextMenuConfig.annotationMode;
+    }
+
+    public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getContentEditorModeContextMenuConfig() {
+        if (configuration == null){
+            return new HashMap<>();
+        }
+        ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
+        return contextMenuConfig.contentEditorMode;
+    }
+
+    public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getFormsModeContextMenuConfig() {
+        if (configuration == null){
+            return new HashMap<>();
+        }
+        ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
+        return contextMenuConfig.formMode;
+    }
+
+    public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getSignatureModeContextMenuConfig() {
+        if (configuration == null){
+            return new HashMap<>();
+        }
+        ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
+        return contextMenuConfig.signatureMode;
+    }
+
+
 }

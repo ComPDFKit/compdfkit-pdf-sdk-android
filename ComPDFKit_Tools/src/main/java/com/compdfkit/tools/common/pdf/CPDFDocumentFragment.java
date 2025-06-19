@@ -35,11 +35,12 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
-import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditConfig;
 import com.compdfkit.core.edit.CPDFEditManager;
@@ -47,13 +48,11 @@ import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfannotationbar.CAnnotationToolbar;
-import com.compdfkit.tools.annotation.pdfproperties.pdflnk.CInkCtrlView;
 import com.compdfkit.tools.common.basic.fragment.CBasicPDFFragment;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts.RequestType;
@@ -81,7 +80,6 @@ import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.tools.contenteditor.CEditToolbar;
 import com.compdfkit.tools.forms.pdfformbar.CFormToolbar;
-import com.compdfkit.tools.forms.pdfproperties.pdfsign.SignatureWidgetImpl;
 import com.compdfkit.tools.security.encryption.CDocumentEncryptionDialog;
 import com.compdfkit.tools.security.encryption.CInputOwnerPwdDialog;
 import com.compdfkit.tools.security.watermark.CWatermarkEditDialog;
@@ -92,6 +90,7 @@ import com.compdfkit.tools.signature.info.signlist.CPDFCertDigitalSignListDialog
 import com.compdfkit.tools.signature.verify.CVerifySignStatusView;
 import com.compdfkit.tools.viewer.pdfsearch.CSearchReplaceToolbar;
 import com.compdfkit.ui.contextmenu.IContextMenuShowListener;
+import com.compdfkit.ui.proxy.attach.IInkDrawCallback;
 import com.compdfkit.ui.proxy.form.CPDFComboboxWidgetImpl;
 import com.compdfkit.ui.proxy.form.CPDFListboxWidgetImpl;
 import com.compdfkit.ui.proxy.form.CPDFPushbuttonWidgetImpl;
@@ -125,8 +124,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     public CSearchReplaceToolbar pdfSearchToolBarView;
 
-    public CInkCtrlView inkCtrlView;
-
     public CVerifySignStatusView signStatusView;
 
     public FrameLayout flBottomToolBar;
@@ -140,6 +137,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     public CSignatureToolBar signatureToolBar;
 
     private View blockView;
+
+    private AppCompatImageView ivTouchBrowse;
+
+    private CardView cardTouchBrowse;
 
     public OnBackPressedCallback onBackPressedCallback;
 
@@ -208,9 +209,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     exitScreenShot();
                     return;
                 }
+                pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
+
                 CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
                 boolean hasChanges = document != null && document.hasChanges();
                 boolean enableExitSaveTips = cpdfConfiguration.globalConfig.enableExitSaveTips;
+
                 if (!hasChanges){
                     onBackPressedCallback.setEnabled(false);
                     requireActivity().onBackPressed();
@@ -274,7 +278,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         flTool = rootView.findViewById(R.id.fl_tool);
         pdfToolBar = rootView.findViewById(R.id.pdf_tool_bar);
         pdfSearchToolBarView = rootView.findViewById(R.id.search_toolbar_view);
-        inkCtrlView = rootView.findViewById(R.id.ink_ctrl_view);
         signStatusView = rootView.findViewById(R.id.sign_status_view);
         flBottomToolBar = rootView.findViewById(R.id.fl_bottom_tool_bar);
         annotationToolbar = rootView.findViewById(R.id.annotation_tool_bar);
@@ -282,6 +285,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         formToolBar = rootView.findViewById(R.id.form_tool_bar);
         signatureToolBar = rootView.findViewById(R.id.signature_tool_bar);
         blockView = rootView.findViewById(R.id.block_view);
+        ivTouchBrowse = rootView.findViewById(R.id.iv_touch_browse);
+        cardTouchBrowse = rootView.findViewById(R.id.card_ink_touch_browse);
         CPDFApplyConfigUtil.getInstance().appleUiConfig(this, cpdfConfiguration);
         return rootView;
     }
@@ -325,13 +330,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         pdfView.getCPdfReaderView().setMinScaleEnable(false);
         registerAnnotHelper(pdfView);
         registerFormHelper(pdfView);
-        pdfView.addOnPDFFocusedTypeChangeListener(type -> {
-            if (type != CPDFAnnotation.Type.INK) {
-                if (inkCtrlView.getVisibility() == View.VISIBLE) {
-                    screenManager.changeWindowStatus(type);
-                }
-            }
-        });
         pdfView.addReaderViewCallback(new CPDFIReaderViewCallback() {
             @Override
             public void onTapMainDocArea() {
@@ -340,6 +338,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     return;
                 }
                 if (pdfView.getCPdfReaderView().getTouchMode() == CPDFReaderView.TouchMode.SCREENSHOT) {
+                    return;
+                }
+                if (ivTouchBrowse.getVisibility() == VISIBLE && ivTouchBrowse.isSelected()) {
+                    return;
+                }
+                if (annotationToolbar.toolListAdapter.getCurrentAnnotType() == CAnnotationType.INK) {
                     return;
                 }
                 if (!cpdfConfiguration.modeConfig.readerOnly) {
@@ -434,7 +438,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             }
         }
     }
-
     protected void initToolBarView() {
         pdfToolBar.setPreviewModeChangeListener(this::setPreviewMode);
         if (cpdfConfiguration != null) {
@@ -506,9 +509,22 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     });
                 }
             }
-
+            if (type == CAnnotationType.INK){
+                screenManager.constraintShow(cardTouchBrowse);
+            }else {
+                screenManager.constraintHide(cardTouchBrowse);
+                ivTouchBrowse.setSelected(false);
+            }
         });
-        inkCtrlView.initWithPDFView(pdfView);
+        ivTouchBrowse.setOnClickListener(view -> {
+            ivTouchBrowse.setSelected(!ivTouchBrowse.isSelected());
+            pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
+            if (ivTouchBrowse.isSelected()){
+                pdfView.getCPdfReaderView().getInkDrawHelper().setMode(IInkDrawCallback.Mode.VIEW);
+            } else {
+                pdfView.getCPdfReaderView().getInkDrawHelper().setMode(IInkDrawCallback.Mode.DRAW);
+            }
+        });
     }
 
     protected void initFormToolbar() {

@@ -123,11 +123,11 @@ public class CEditImagePropertiesFragment extends CBasicPropertiesFragment imple
         int id = view.getId();
         if (id == R.id.rl_left_rotate) {
             if (viewModel != null) {
-                viewModel.getStyle().setRotationAngle(-90);
+                viewModel.getStyle().setRotationAngle(90);
             }
         } else if (id == R.id.rl_right_rotate) {
             if (viewModel != null) {
-                viewModel.getStyle().setRotationAngle(90);
+                viewModel.getStyle().setRotationAngle(-90);
             }
         } else if (id == R.id.iv_horizontal_mirror) {
             if (viewModel != null) {

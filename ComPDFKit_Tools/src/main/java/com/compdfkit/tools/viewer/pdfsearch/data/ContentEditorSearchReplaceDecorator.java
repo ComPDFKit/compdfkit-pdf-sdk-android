@@ -70,7 +70,9 @@ public class ContentEditorSearchReplaceDecorator extends CPDFSearchDecorator {
 
     @Override
     public void resetSearch() {
-        search.resetSearch();
+        if (search != null) {
+            search.resetSearch();
+        }
     }
 
     @Override

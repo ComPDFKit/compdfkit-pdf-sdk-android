@@ -164,10 +164,10 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
 
             }
         });
-        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent keyEvent) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP){
+        if (getDialog() != null) {
+            getDialog().setCanceledOnTouchOutside(false);
+            getDialog().setOnKeyListener((dialogInterface, keyCode, keyEvent) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
                     if (editThumbnailFragment.isEdit()) {
                         editThumbnailFragment.setEdit(false);
                         toolBar.showEditButton(true);
@@ -184,8 +184,8 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
                     }
                 }
                 return false;
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -279,7 +279,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
                     Uri extractPDFUri = extractPage(dir);
                     String fileName = CUriUtil.getUriFileName(getContext(), extractPDFUri);
                     if (getActivity() != null) {
-                        getActivity().runOnUiThread(()->{
+                        getActivity().runOnUiThread(() -> {
                             if (extractPDFUri != null) {
                                 CFileUtils.shareFile(getContext(), getString(R.string.tools_share_to), "application/pdf", extractPDFUri);
                             }
@@ -376,7 +376,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         insertDialogFragment.show(getChildFragmentManager(), "insert page");
     }
 
-    private void showInsertPDFPageDialog(CPDFDocument document){
+    private void showInsertPDFPageDialog(CPDFDocument document) {
         CInsertPdfPageDialogFragment pdfPageDialogFragment = CInsertPdfPageDialogFragment.newInstance();
         pdfPageDialogFragment.initWithPDFView(pdfView);
         pdfPageDialogFragment.setInsertDocument(document);
@@ -458,7 +458,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         CPDFDocument newDocument = CPDFDocument.createDocument(getContext());
         res = newDocument.importPages(pdfView.getCPdfReaderView().getPDFDocument(), pageNum, 0);
         try {
-            res &= newDocument.saveAs(saveUri, false,  pdfView.isSaveFileExtraFontSubset());
+            res &= newDocument.saveAs(saveUri, false, pdfView.isSaveFileExtraFontSubset());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -493,7 +493,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
                 document.addPage(pageList.get(i), pagesArr.keyAt(pagesArr.size() - 1) + 1);
             }
             if (getActivity() != null) {
-                getActivity().runOnUiThread(()->{
+                getActivity().runOnUiThread(() -> {
                     pdfView.getCPdfReaderView().reloadPages();
                 });
             }
@@ -600,9 +600,10 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         if (checkPdfView()) {
             CPDFReaderView readerView = pdfView.getCPdfReaderView();
             if (hasEdit) {
-                readerView.reloadPages(refreshHQApList);
-                readerView.setDisplayPageIndex(pdfView.currentPageIndex);
                 int pageCount = readerView.getPDFDocument().getPageCount();
+                int jumpIndex = pdfView.currentPageIndex >= pageCount ? pageCount - 1 : pdfView.currentPageIndex;
+                readerView.reloadPages(refreshHQApList);
+                readerView.setDisplayPageIndex(jumpIndex);
                 pdfView.slideBar.setPageCount(pageCount);
                 pdfView.slideBar.requestLayout();
                 pdfView.indicatorView.setTotalPage(pageCount);

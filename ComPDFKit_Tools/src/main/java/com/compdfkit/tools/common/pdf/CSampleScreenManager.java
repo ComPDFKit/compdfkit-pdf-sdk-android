@@ -16,6 +16,7 @@ import android.view.View;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
+import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.animation.CFillScreenManager;
 import com.compdfkit.tools.common.utils.animation.ConstraintSetUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
@@ -47,7 +48,9 @@ public class CSampleScreenManager {
             constraintSetUtils.hideFromBottom(constraintSet, documentFragment.flBottomToolBar);
         }else if (mode == CPreviewMode.Annotation){
             fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
-            documentFragment.annotationToolbar.setVisibility(View.VISIBLE);
+            CPDFConfiguration configuration = documentFragment.pdfView.getCPDFConfiguration();
+            boolean visible = configuration.toolbarConfig.annotationToolbarVisible;
+            documentFragment.annotationToolbar.setVisibility(visible ? View.VISIBLE : GONE);
             documentFragment.editToolBar.setVisibility(GONE);
             documentFragment.formToolBar.setVisibility(GONE);
             documentFragment.signatureToolBar.setVisibility(GONE);
@@ -80,14 +83,10 @@ public class CSampleScreenManager {
     public void changeWindowStatus(CAnnotationType type){
         if (type == CAnnotationType.INK){
             fillScreenManager.hideFromTop(documentFragment.flTool, 100);
-            fillScreenManager.bindTopToolView(documentFragment.inkCtrlView);
-            documentFragment.inkCtrlView.setVisibility(View.VISIBLE);
         }else {
             if (documentFragment.flTool.getVisibility() == GONE){
                 fillScreenManager.showFromTop(documentFragment.flTool, 100);
             }
-            documentFragment.inkCtrlView.setVisibility(GONE);
-            fillScreenManager.removeToolView(documentFragment.inkCtrlView);
         }
     }
 
@@ -99,8 +98,6 @@ public class CSampleScreenManager {
             if (documentFragment.flTool.getVisibility() == GONE){
                 fillScreenManager.showFromTop(documentFragment.flTool, 100);
             }
-            documentFragment.inkCtrlView.setVisibility(GONE);
-            fillScreenManager.removeToolView(documentFragment.inkCtrlView);
         }
     }
 

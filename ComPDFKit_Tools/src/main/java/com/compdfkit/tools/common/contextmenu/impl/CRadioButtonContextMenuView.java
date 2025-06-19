@@ -15,6 +15,8 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuRadioButtonProvider;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
+import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -22,25 +24,41 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleMan
 import com.compdfkit.ui.proxy.form.CPDFRadiobuttonWidgetImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
 
+import java.util.List;
+import java.util.Map;
+
 
 public class CRadioButtonContextMenuView implements ContextMenuRadioButtonProvider {
 
     @Override
     public View createRadioButtonContentView(CPDFContextMenuHelper helper, CPDFPageView pageView, CPDFRadiobuttonWidgetImpl radiobuttonWidgetImpl) {
         ContextMenuView menuView = new ContextMenuView(pageView.getContext());
-        menuView.addItem(R.string.tools_context_menu_properties, v -> {
-            CStyleManager styleManager = new CStyleManager(radiobuttonWidgetImpl, pageView);
-            CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_RADIO_BUTTON);
-            CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
-            styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
-            styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
-            styleDialogFragment.show(helper.getFragmentManager());
-            helper.dismissContextMenu();
-        });
-        menuView.addItem(R.string.tools_delete, v -> {
-            pageView.deleteAnnotation(radiobuttonWidgetImpl);
-            helper.dismissContextMenu();
-        });
+        Map<String, List<ContextMenuConfig.ContextMenuActionItem>> formModeConfig = CPDFApplyConfigUtil.getInstance().getFormsModeContextMenuConfig();
+        List<ContextMenuConfig.ContextMenuActionItem> radioButtonContent = formModeConfig.get("radioButton");
+        if (radioButtonContent == null) {
+            return menuView;
+        }
+        for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : radioButtonContent) {
+            switch (contextMenuActionItem.key) {
+                case "properties":
+                    menuView.addItem(R.string.tools_context_menu_properties, v -> {
+                        CStyleManager styleManager = new CStyleManager(radiobuttonWidgetImpl, pageView);
+                        CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_RADIO_BUTTON);
+                        CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
+                        styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
+                        styleManager.setDialogHeightCallback(styleDialogFragment, helper.getReaderView());
+                        styleDialogFragment.show(helper.getFragmentManager());
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "delete":
+                    menuView.addItem(R.string.tools_delete, v -> {
+                        pageView.deleteAnnotation(radiobuttonWidgetImpl);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+            }
+        }
         return menuView;
     }
 }

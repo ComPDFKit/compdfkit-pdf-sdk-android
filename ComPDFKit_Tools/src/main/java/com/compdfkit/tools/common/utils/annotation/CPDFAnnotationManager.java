@@ -62,7 +62,7 @@ public class CPDFAnnotationManager {
             attribute.setFontSize(attribute.getFontSize() / pageView.getScaleValue());
             freetextAnnotation.setFreetextDa(attribute);
             freetextAnnotation.setFreetextAlignment(freetextAttr.getAlignment());
-            freetextAnnotation.setAlpha(freetextAnnotation.getAlpha());
+            freetextAnnotation.setAlpha(freetextAttr.getAlpha());
             freetextAnnotation.setContent(content);
             freetextAnnotation.setBorderWidth(0);
             PointF freeTextPointF = new PointF();

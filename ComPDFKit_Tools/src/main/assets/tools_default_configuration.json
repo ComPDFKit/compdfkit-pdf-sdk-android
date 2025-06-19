@@ -12,6 +12,7 @@
   },
   "toolbarConfig": {
     "mainToolbarVisible" : true,
+    "annotationToolbarVisible" : true,
     "androidAvailableActions": [
       "thumbnail",
       "search",
@@ -272,5 +273,182 @@
     },
     "signatureType": "manual",
     "enableExitSaveTips" : true
+  },
+  "contextMenuConfig" : {
+    "global": {
+      "screenshot" : [
+        { "key": "exit" },
+        { "key": "share" }
+      ]
+    },
+    "viewMode": {
+      "textSelect": [
+        { "key": "copy" }
+      ]
+    },
+    "annotationMode": {
+      "textSelect": [
+        { "key": "copy" },
+        { "key": "highlight" },
+        { "key": "underline" },
+        { "key": "strikeout" },
+        { "key": "squiggly" }
+      ],
+      "longPressContent": [
+        { "key": "paste" },
+        { "key": "note" },
+        { "key": "textBox" },
+        { "key": "stamp" },
+        { "key": "image" }
+      ],
+      "markupContent": [
+        { "key": "properties" },
+        { "key": "note" },
+        { "key": "reply" },
+        { "key": "viewReply" },
+        { "key": "delete" }
+      ],
+      "soundContent": [
+        { "key": "reply" },
+        { "key": "viewReply" },
+        { "key": "play" },
+        { "key": "record" },
+        { "key": "delete" }
+      ],
+      "inkContent": [
+        { "key": "properties" },
+        { "key": "note" },
+        { "key": "reply" },
+        { "key": "viewReply" },
+        { "key": "delete" }
+      ],
+      "shapeContent": [
+        { "key": "properties" },
+        { "key": "note" },
+        { "key": "reply" },
+        { "key": "viewReply" },
+        { "key": "delete" }
+      ],
+      "freeTextContent": [
+        { "key": "properties" },
+        { "key": "edit" },
+        { "key": "reply" },
+        { "key": "viewReply" },
+        { "key": "delete" }
+      ],
+      "signStampContent": [
+        { "key": "signHere" },
+        { "key": "delete" },
+        { "key": "rotate" }
+      ],
+      "stampContent": [
+        { "key": "note" },
+        { "key": "reply" },
+        { "key": "viewReply" },
+        { "key": "delete" },
+        { "key": "rotate" }
+      ],
+      "linkContent": [
+        { "key": "edit" },
+        { "key": "delete" }
+      ]
+    },
+    "contentEditorMode": {
+      "editTextAreaContent" : [
+        { "key": "properties" },
+        { "key": "edit" },
+        { "key": "cut" },
+        { "key": "copy" },
+        { "key": "delete" }
+      ],
+      "editSelectTextContent": [
+        { "key": "properties" },
+        {
+          "key": "opacity",
+          "subItems": ["25%", "50%", "75%", "100%"]
+        },
+        { "key": "cut" },
+        { "key": "copy" },
+        { "key": "delete" }
+      ],
+      "editTextContent": [
+        { "key": "select" },
+        { "key": "selectAll" },
+        { "key": "paste" }
+      ],
+      "imageAreaContent": [
+        { "key": "properties" },
+        { "key": "rotateLeft" },
+        { "key": "rotateRight" },
+        { "key": "replace" },
+        { "key": "export" },
+        {
+          "key": "opacity",
+          "subItems": ["25%", "50%", "75%", "100%"]
+        },
+        { "key": "flipHorizontal" },
+        { "key": "flipVertical" },
+        { "key": "crop" },
+        { "key": "delete" },
+        { "key": "copy" },
+        { "key": "cut" }
+      ],
+      "imageCropMode": [
+        { "key": "done" },
+        { "key": "cancel" }
+      ],
+      "editPathContent": [
+        { "key": "delete" }
+      ],
+      "longPressWithEditTextMode" : [
+        { "key" : "addText"},
+        { "key" : "paste"},
+        { "key" : "keepSourceFormatingPaste"}
+      ],
+      "longPressWithEditImageMode" : [
+        { "key" : "addImages"},
+        { "key" : "paste"}
+      ],
+      "longPressWithAllMode" : [
+        { "key" : "paste"},
+        { "key" : "keepSourceFormatingPaste"}
+      ],
+      "searchReplace": [
+        { "key": "replace" }
+      ]
+    },
+    "formMode": {
+      "textField": [
+        { "key": "properties" },
+        { "key": "delete" }
+      ],
+      "checkBox": [
+        { "key": "properties" },
+        { "key": "delete" }
+      ],
+      "radioButton": [
+        { "key": "properties" },
+        { "key": "delete" }
+      ],
+      "listBox": [
+        { "key": "options" },
+        { "key": "properties" },
+        { "key": "delete" }
+      ],
+      "comboBox": [
+        { "key": "options" },
+        { "key": "properties" },
+        { "key": "delete" }
+      ],
+      "signatureField": [
+        { "key": "startToSign" },
+        { "key": "delete" }
+      ],
+      "pushButton" : [
+        { "key": "options"},
+        { "key": "properties"},
+        { "key": "delete"}
+      ]
+    }
   }
 }

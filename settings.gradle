@@ -3,6 +3,8 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
+        mavenLocal()
     }
 }
 dependencyResolutionManagement {
@@ -10,9 +12,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
+        mavenLocal()
     }
 }
-rootProject.name = "compdfkit_android_demo"
+rootProject.name = "compdfki_demo_android"
 include ':PDFViewer'
 include ':ComPDFKit_Tools'
 include ':ComPDFKit_Repo:compdfkit'

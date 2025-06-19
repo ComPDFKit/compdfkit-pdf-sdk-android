@@ -98,7 +98,12 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(CPDFApplyConfigUtil.getInstance().getGlobalThemeId(this, CPDFApplyConfigUtil.getInstance().getConfiguration()));
+        if (getIntent().hasExtra(EXTRA_THEME_ID)) {
+            int themeId = getIntent().getIntExtra(EXTRA_THEME_ID, CPDFApplyConfigUtil.getInstance().getGlobalThemeId());
+            setTheme(themeId);
+        } else {
+            setTheme(CPDFApplyConfigUtil.getInstance().getGlobalThemeId());
+        }
         int screenOrientation = getIntent().getIntExtra(EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setRequestedOrientation(screenOrientation);
         setContentView(R.layout.tools_properties_signature_style_add_activity);

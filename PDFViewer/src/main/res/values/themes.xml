@@ -3,8 +3,13 @@
 
 
     <style name="ComPDFKit.Theme.PDFViewer" parent="ComPDFKit.Theme.Light">
+        <item name="buttonStyle">@style/ComPDFKit.Theme.ButtonLight</item>
+    </style>
+
+    <style name="ComPDFKit.Theme.ButtonLight" parent="Widget.AppCompat.Button.Borderless">
 
     </style>
+
 
     <style name="LaunchTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Show a splash screen on the activity. Automatically removed when

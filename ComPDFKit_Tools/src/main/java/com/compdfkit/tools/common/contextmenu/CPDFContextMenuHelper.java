@@ -60,6 +60,9 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSelectConten
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSoundContentProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuStampProvider;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuTextFieldProvider;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
+import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.security.encryption.CInputOwnerPwdDialog;
@@ -81,6 +84,9 @@ import com.compdfkit.ui.proxy.form.CPDFRadiobuttonWidgetImpl;
 import com.compdfkit.ui.proxy.form.CPDFTextWidgetImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
+
+import java.util.List;
+import java.util.Map;
 
 
 public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {

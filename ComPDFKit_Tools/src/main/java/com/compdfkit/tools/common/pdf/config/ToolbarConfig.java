@@ -86,6 +86,8 @@ public class ToolbarConfig implements Serializable {
     }
     public boolean mainToolbarVisible = true;
 
+    public boolean annotationToolbarVisible = true;
+
     public List<ToolbarAction> androidAvailableActions;
 
     public List<MenuAction> availableMenus;

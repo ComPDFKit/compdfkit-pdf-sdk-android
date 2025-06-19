@@ -30,6 +30,8 @@ public class CPDFConfiguration implements Serializable {
 
     public GlobalConfig globalConfig = new GlobalConfig();
 
+    public ContextMenuConfig contextMenuConfig = new ContextMenuConfig();
+
     @NonNull
     @Override
     public String toString() {
@@ -67,6 +69,16 @@ public class CPDFConfiguration implements Serializable {
 
         public Builder setFormsConfig(FormsConfig formsConfig){
             configuration.formsConfig = formsConfig;
+            return this;
+        }
+
+        public Builder setGlobalConfig(GlobalConfig globalConfig){
+            configuration.globalConfig = globalConfig;
+            return this;
+        }
+
+        public Builder setContextMenuConfig(ContextMenuConfig contextMenuConfig){
+            configuration.contextMenuConfig = contextMenuConfig;
             return this;
         }
 

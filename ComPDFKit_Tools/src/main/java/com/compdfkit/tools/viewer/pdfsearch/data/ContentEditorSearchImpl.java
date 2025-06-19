@@ -111,7 +111,10 @@ public class ContentEditorSearchImpl implements CPDFSearch {
     @Override
     public void resetSearch() {
         if (readerView != null) {
-            readerView.getEditTextSearchReplace().clear();
+            CPDFEditTextSearchReplace editTextSearchReplace = readerView.getEditTextSearchReplace();
+            if (editTextSearchReplace != null){
+                editTextSearchReplace.clear();;
+            }
             readerView.invalidateAllChildren();
             if (readerView.getContextMenuShowListener() != null) {
                 readerView.getContextMenuShowListener().dismissContextMenu();

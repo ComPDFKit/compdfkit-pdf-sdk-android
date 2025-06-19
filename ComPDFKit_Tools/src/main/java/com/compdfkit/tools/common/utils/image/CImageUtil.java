@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaScannerConnection;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -76,6 +77,21 @@ public class CImageUtil {
         }else {
             return null;
         }
+    }
+
+    public static void scanFile(Context context, String filePath, String mineType) {
+        try {
+            MediaScannerConnection.scanFile(
+                    context,
+                    new String[]{filePath},
+                    new String[]{mineType},
+                    (path, uri) -> {
+                    }
+            );
+        } catch (Exception e) {
+
+        }
+
     }
 
 

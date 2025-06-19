@@ -55,16 +55,12 @@ public class FunSamplesActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btn_add_watermark:
-                showAddWatermarkDialog();
-                break;
-            case R.id.btn_encryption:
-                encryption();
-                break;
-            case R.id.btn_compress:
-                compressDialog();
-                break;
+        if (view.getId() == R.id.btn_add_watermark){
+            showAddWatermarkDialog();
+        } else if (view.getId() == R.id.btn_encryption){
+            encryption();
+        } else if (view.getId() == R.id.btn_compress){
+            compressDialog();
         }
     }
 
