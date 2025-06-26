@@ -18,12 +18,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.transition.TransitionManager;
 
+import com.bumptech.glide.Glide;
 import com.compdfkit.core.document.CPDFSdk;
 import com.compdfkit.core.signature.CPDFDigitalSigConfig;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.date.CDateUtil;
-import com.compdfkit.tools.common.utils.glide.GlideApp;
 import com.compdfkit.tools.common.utils.image.CImageUtil;
 
 import java.io.File;
@@ -213,7 +213,7 @@ public class CDigitalSignStylePreviewView extends FrameLayout {
 
     private void update() {
         if (!TextUtils.isEmpty(signImagePath)) {
-            GlideApp.with(getContext())
+            Glide.with(getContext())
                     .load(signImagePath)
                     .into(ivSignImage);
         }

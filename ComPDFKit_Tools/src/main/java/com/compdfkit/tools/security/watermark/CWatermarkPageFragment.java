@@ -19,13 +19,13 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
-import com.compdfkit.tools.common.utils.glide.GlideApp;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CBasicOnStyleChangeListener;
@@ -256,7 +256,7 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
             @Override
             protected Bitmap onRun() {
                 try {
-                    Bitmap bitmap = GlideApp.with(getContext()).asBitmap().load(image).submit(360, 480).get();
+                    Bitmap bitmap = Glide.with(getContext()).asBitmap().load(image).submit(360, 480).get();
                     return bitmap;
                 } catch (Exception e) {
                 }

@@ -31,6 +31,7 @@ import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
+import com.compdfkit.tools.common.utils.glide.CPDFGlideInitializer;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
@@ -166,6 +167,7 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
         viewPager2 = rootView.findViewById(R.id.view_pager2);
         tabLayout = rootView.findViewById(R.id.tab_layout);
         rootView.findViewById(R.id.iv_watermark_setting).setOnClickListener(this);
+        CPDFGlideInitializer.register(getContext());
     }
 
     @Override

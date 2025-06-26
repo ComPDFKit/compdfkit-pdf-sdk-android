@@ -12,6 +12,7 @@ package com.compdfkit.pdfviewer.home;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,11 +51,8 @@ public class HomeActivity extends AppCompatActivity {
         String savePath = new File(getFilesDir(), "extraFonts/").getAbsolutePath();
         CFileUtils.copyAssetsDirToPhone(this, "extraFonts", getFilesDir().getAbsolutePath());
         CPDFSdk.setImportFontDir(savePath, true);
-        CPDFSdk.init(this, "DrThSLolukp6imgZ180g1cCUsPi8mnlKOr7Rz1M5c6NieAfsnMRGnumMfsnDoGyLnQ5ahTG/vSaGoA9m1FKdBFD+DV9mJ1nDd3cO0GqCE8lz002aEQDECyv0ijIYY/K9nkOCcYafEwP/6132hvZznhgjCYO6ufZ3U2OwENTvtdYzjJE35wK3stutkW8vByv/6467Ftr7XK9dv4S8Uz8QGBLgwbnCItft3IZy89PzBotQ+P0vDpg2zyoXpKHOTMV4na2ufYIauRHfoEYVrIjWij9mGjW0C2ftlF8cbHFlELnwjaUoqB3jUuyeH+8knDg92ZNA7JawRrLVPcEt8l3Ybmu0lH1oY17eVN2TRW5amzrVRSqpTOyx2LGvW1Ilra90nzlp2dEBHH+rU3Jo93jy94eWecFWMwgKBD5sABvhJFteiZTpP6NufkmmJm5UhS1bbWwQ3416ecpKs8D9TAlLLO+rbIocuxdoPE2dxWFYLq6zF8kJV3z7dKYtAwQKdoQiS08ryGXVZybCx2GjZp97I7zNemiorRWKQUrxpNk0vCLwL1yz7NzjlB6YQ8UxvmTkX/GU7T7Ubg9LoyZuVo4tLHLplMSlHIcA4guqZL7JbQ6/jomhcJGFpGo+X7tbrCvMTnbvjZoxJRlcNN1+9x100WEfF4A2XbJZEjcpxV9tk1rTt+jS8dkX803ij16yHI1THSycP2aKkWjgDAsAUt98KL+h4U+jgXH+NDKksS1nHNjVoJYvPaW7TLcBzT0GegIgpTh5HPGjhSvenazoxqM0TOvMPAhaQ6RtZ1Wp6INATJOKAjBXtE4qe9DPFrxmGF01lgJPavrrCEVoCQiYVQj5qvOhF3RP2QxPdZt/1H0VGl4jd0Nb1ZbDw227AfQ/+gGTGXgSQYB0vVI/KTagFaYgUBp6B/639EtPQpmebumbmvo5CAP8fDG/RKTCtIAmCc3FPRQJBXaX5m/KSrUACn4sAJV4KtBmCBOaX+VeVpfEg9JnTqT8siIh9UZEyD9ih8UBHl7MavztRB0suiGb+hG16Yog00Ovn2+qGQ7tn66udqLi9BW8ZK+bYnI3Y/ZFSq+p0QWW6oSaLEyLBQjJgNj5HQOORLVDVRgL5Gz51Pop1diuVZc9YGH5UF+TEOwtJaKQ7Q/t7iPRD903qgUbM7Kc3GuUipwBHyDlEHhLZlNQ3HtYBFvpGrZVUwOye+ta37rum9zAMtbJlKonzz4DAZXXabgUqdyq9c/2GD0pXaG8cKITmHl9XD0XazcflDnliRNi", true, new CPDFSdk.OnVerifyLicenseListener() {
-            @Override
-            public void onVerifyEnd(int i, String s) {
-                CPDFAbility.checkLicenseAllAbility();
-            }
+        CPDFSdk.initWithPath(this, "assets://license_key_android.xml", (verifyCode, verifyMsg) -> {
+            Log.e("ComPDFKit", "verifyCode: " + verifyCode + ", verifyMsg: " + verifyMsg);
         });
     }
 

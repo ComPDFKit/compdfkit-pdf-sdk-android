@@ -62,6 +62,7 @@ import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 import com.compdfkit.tools.common.utils.dialog.CExitTipsDialog;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
+import com.compdfkit.tools.common.utils.glide.CPDFGlideInitializer;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.utils.window.CPopupMenuWindow;
@@ -180,11 +181,13 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 readerView.getContextMenuShowListener().dismissContextMenu();
             }
             CFileUtils.takeUriPermission(getContext(), uri);
+            pdfView.getCPdfReaderView().getUndoManager().clearHistory();
+            setPreviewMode(cpdfConfiguration.modeConfig.initialViewMode);
             pdfView.resetAnnotationType();
             formToolBar.reset();
             editToolBar.resetStatus();
             signatureToolBar.reset();
-            setPreviewMode(cpdfConfiguration.modeConfig.initialViewMode);
+            annotationToolbar.reset();
             screenManager.changeWindowStatus(cpdfConfiguration.modeConfig.initialViewMode);
             screenManager.constraintHide(signStatusView);
             pdfView.openPDF(uri, null, () -> editToolBar.setEditMode(false));
@@ -273,6 +276,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         Context wrapper = new ContextThemeWrapper(getContext(), themeId);
         LayoutInflater themedInflater = inflater.cloneInContext(wrapper);
         View rootView = themedInflater.inflate(R.layout.tools_pdf_document_fragment, container, false);
+        CPDFGlideInitializer.register(getContext());
         clRoot = rootView.findViewById(R.id.cl_root);
         pdfView = rootView.findViewById(R.id.pdf_view);
         flTool = rootView.findViewById(R.id.fl_tool);

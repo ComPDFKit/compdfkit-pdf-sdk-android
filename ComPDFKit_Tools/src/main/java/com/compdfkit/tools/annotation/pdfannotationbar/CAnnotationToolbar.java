@@ -60,10 +60,13 @@ public class CAnnotationToolbar extends FrameLayout {
 
     private RecyclerView rvAnnotationList;
 
+    @Nullable
     private AppCompatImageView ivSetting;
 
+    @Nullable
     private AppCompatImageView ivUndo;
 
+    @Nullable
     private AppCompatImageView ivRedo;
 
     public CPDFAnnotationToolListAdapter toolListAdapter;
@@ -145,8 +148,12 @@ public class CAnnotationToolbar extends FrameLayout {
         this.undoManagerType = undoManagerType;
         if (undoManagerType == UndoManagerType.InkUndo) {
             CPDFReaderView.TInkDrawHelper helper = pdfView.getCPdfReaderView().getInkDrawHelper();
-            ivUndo.setEnabled(helper.canUndo());
-            ivRedo.setEnabled(helper.canRedo());
+            if (ivUndo != null) {
+                ivUndo.setEnabled(helper.canUndo());
+            }
+            if (ivRedo != null) {
+                ivRedo.setEnabled(helper.canRedo());
+            }
         } else {
             CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
             if (ivRedo != null) {
@@ -509,5 +516,9 @@ public class CAnnotationToolbar extends FrameLayout {
         toolListAdapter.setList(list);
     }
 
-
+    public void reset() {
+        toolListAdapter.selectByType(CAnnotationType.UNKNOWN);
+        rvAnnotationList.scrollToPosition(0);
+        redoUndoManager();
+    }
 }

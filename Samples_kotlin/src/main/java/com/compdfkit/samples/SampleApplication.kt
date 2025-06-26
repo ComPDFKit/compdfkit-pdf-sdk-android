@@ -9,6 +9,8 @@
 package com.compdfkit.samples
 
 import android.app.Application
+import android.util.Log
+import com.compdfkit.core.document.CPDFSdk
 import com.compdfkit.samples.samples.AnnotationImportExportTest
 import com.compdfkit.samples.samples.AnnotationReplyTest
 import com.compdfkit.samples.samples.AnnotationTest
@@ -40,6 +42,12 @@ class SampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        CPDFSdk.initWithPath(this, "assets://license_key_android.xml") { verifyCode, verifyMsg ->
+            Log.e(
+                "ComPDFKit---",
+                "verifyCode: $verifyCode, verifyMsg: $verifyMsg"
+            )
+        }
         samplesList.clear()
         samplesList.add(DigitalSignaturesTest())
         samplesList.add(BookmarkTest())

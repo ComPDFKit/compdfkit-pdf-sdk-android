@@ -21,9 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.compdfkit.tools.R;
-import com.compdfkit.tools.common.utils.glide.GlideApp;
 import com.compdfkit.tools.common.utils.glide.transformation.RotateTransformation;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 
@@ -106,7 +106,7 @@ public class CEditImagePreviewView extends CBasicAnnotPreviewView {
 
     private void reloadBitmap() {
         if (bitmap != null) {
-            GlideApp.with(this)
+            Glide.with(this)
                     .load(bitmap)
                     .apply(RequestOptions.bitmapTransform(new RotateTransformation(rotationAngle)))
                     .into(imageView);

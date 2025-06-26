@@ -11,7 +11,9 @@ package com.compdfkit.samples;
 
 
 import android.app.Application;
+import android.util.Log;
 
+import com.compdfkit.core.document.CPDFSdk;
 import com.compdfkit.samples.samples.AnnotationImportExportTest;
 import com.compdfkit.samples.samples.AnnotationReplyTest;
 import com.compdfkit.samples.samples.AnnotationTest;
@@ -54,6 +56,9 @@ public class SampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         application = this;
+        CPDFSdk.initWithPath(this, "assets://license_key_android.xml", (verifyCode, verifyMsg) -> {
+            Log.e("ComPDFKit---", "verifyCode: " + verifyCode + ", verifyMsg: " + verifyMsg);
+        });
         samplesList.clear();
         samplesList.add(new DocumentSaveExtraFontSubsetTest());
         samplesList.add(new DigitalSignaturesTest());

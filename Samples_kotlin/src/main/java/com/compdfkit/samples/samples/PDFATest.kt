@@ -9,7 +9,6 @@
 package com.compdfkit.samples.samples
 
 import com.compdfkit.core.document.CPDFDocument
-import com.compdfkit.core.document.CPDFDocument.PDFDocumentError
 import com.compdfkit.samples.PDFSamples
 import com.compdfkit.samples.R
 import com.compdfkit.samples.util.FileUtils.getAssetsTempFile
@@ -37,18 +36,13 @@ class PDFATest : PDFSamples() {
         printDividingLine()
         outputListener?.println("Samples 1 : convert to pdf A1a")
         val document = CPDFDocument(context())
-        val error = document.open(getAssetsTempFile(context(), "CommonFivePage.pdf"))
-        if (error == PDFDocumentError.PDFDocumentErrorSuccess){
-            document.convertType(CPDFDocument.PDFDocumentType.PDFTypeA1a)
-            val file = File(outputDir(),
+        document.open(getAssetsTempFile(context(), "CommonFivePage.pdf"))
+        document.convertType(CPDFDocument.PDFDocumentType.PDFTypeA1a)
+        val file = File(outputDir(),
                 "PDFATest/PDFA1aTest.pdf")
-
-            saveSamplePDF(document, file, true)
-            outputListener?.println("Convert to PDF/A-1a done")
-            outputListener?.println("Done. Result saved in PDFA1aTest.pdf")
-        }else{
-            outputListener?.println("open document error:${error.name}")
-        }
+        saveSamplePDF(document, file, true)
+        outputListener?.println("Convert to PDF/A-1a done")
+        outputListener?.println("Done. Result saved in PDFA1aTest.pdf")
         printDividingLine()
     }
 

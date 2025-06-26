@@ -57,5 +57,5 @@ dependencies {
     api project(path: ':ComPDFKit_Tools')
 
     // or
-//  implementation ('com.compdf:compdfkit-tools:2.4.1')
+//  implementation ('com.compdf:compdfkit-tools:2.4.3')
 }

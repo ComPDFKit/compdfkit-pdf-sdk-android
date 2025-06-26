@@ -612,16 +612,12 @@ public class CFileUtils {
                 file.mkdirs();//如果文件夹不存在，则递归
                 for (String fileName:fileList){
                     assetsPath=assetsPath+File.separator+fileName;
-
                     copyAssetsDirToPhone(activity,assetsPath, outPutParentDir);
-
                     assetsPath=assetsPath.substring(0,assetsPath.lastIndexOf(File.separator));
-                    Log.e("oldPath",assetsPath);
                 }
             } else {//如果是文件
                 InputStream inputStream=activity.getAssets().open(assetsPath);
                 File file=new File(outPutParentDir+ File.separator+assetsPath);
-                Log.i("copyAssets2Phone","file:"+file);
                 if(!file.exists() || file.length()==0) {
                     FileOutputStream fos=new FileOutputStream(file);
                     int len=-1;

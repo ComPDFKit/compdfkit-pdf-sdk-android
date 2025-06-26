@@ -22,6 +22,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfannotationlist.CPDFAnnotationListFragment;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.utils.glide.CPDFGlideInitializer;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.pdfbota.adapter.CBotaViewPagerAdapter;
@@ -86,6 +87,7 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
 
     @Override
     protected void onCreateView(View rootView) {
+        CPDFGlideInitializer.register(getContext());
         tabLayout = rootView.findViewById(R.id.tab_layout);
         viewPager2 = rootView.findViewById(R.id.view_pager);
         toolBar = rootView.findViewById(R.id.tool_bar);

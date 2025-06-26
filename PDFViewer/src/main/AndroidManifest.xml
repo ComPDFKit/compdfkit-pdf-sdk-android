@@ -32,17 +32,12 @@
         <activity
             android:name=".home.SettingActivity"
             android:exported="false" />
-
-<!--        <meta-data-->
-<!--            android:name="compdfkit_key"-->
-<!--            android:value="c4r34cNxld6pdUSsM2EgGQ9purMEZN7JuumHbNx9w+OJ6lYqF7WRYAFV0jvA5CEEX7J1+wGrF68mo8YP3qL5b6lmS60TMw2/wJ+TPtmeKkJMRMaiQ2nF2pwSevBj2HIHbnTLfr2btYHL/TRKFbfG0SUp/tZVjUwOC91rcrlaLkThWpc13/3SOi/34uHyjQszJ6PmDeg8X+qxfNheOBX/JZofPOjKpWpAAXXKT9kgtbZKKc6VAmMPAdRth7FnJjPieXkHkvW3fX2kNcgX6cb8IBnu/7Q3C4776P6IVIQKlDItMGNJIV7IPMADRnsLMqdC9FZcF3mV0laocg8qlFuKdmu0lH1oY17eVN2TRW5amzrVRSqpTOyx2LGvW1Ilra90nzlp2dEBHH+rU3Jo93jy94eWecFWMwgKBD5sABvhJFteiZTpP6NufkmmJm5UhS1bbWwQ3416ecpKs8D9TAlLLO+rbIocuxdoPE2dxWFYLq6zF8kJV3z7dKYtAwQKdoQiS08ryGXVZybCx2GjZp97I7zNemiorRWKQUrxpNk0vCLwL1yz7NzjlB6YQ8UxvmTkX/GU7T7Ubg9LoyZuVo4tLHLplMSlHIcA4guqZL7JbQ6/jomhcJGFpGo+X7tbrCvMTnbvjZoxJRlcNN1+9x100WEfF4A2XbJZEjcpxV9tk1rTt+jS8dkX803ij16yHI1THSycP2aKkWjgDAsAUt98KL+h4U+jgXH+NDKksS1nHNjVoJYvPaW7TLcBzT0GegIgNKELjvoahi+wfYUt79velJ1uEBhEcnvnIjlShtHdqKbE/lMbb2sG0lJnFUhViYIpkjXvy5b9ucuZfz1pm7f173QY75AXVUGgMkMI0XuV2tjDFnThFHtTgDnaOzHyyOwRiOuiM74ieBmwFqkOo4SQtUrUWPDK459l8FoqAa8XlJoWZXcbU1OotvnT9I1MMGTsC2l+b6sDxoJ4wc1wj9IhAmx7tmXnQyD/0q8NOKUk9E1AtfrYSdkTjCzdEI1HZ08LcyYnRNJNARTHNh8okrNDwA4seKyLl/XIfxmIx7IaLGx0VavXDAus9AAd+knf5we5iXWY7SJO2ZrxRJgotLWE/jY7Pg8FofBwr9sBt/VEJDcb1pbHKvag2rGKlyAigV4KkFoi+kJdO9xKXMBDKAZnsA==" />-->
-
-<!--        <provider-->
-<!--          android:name="com.compdfkit.core.document.CPDFSdkInitProvider"-->
-<!--          android:authorities="${applicationId}.tpdfsdkinitprovider"-->
-<!--          android:multiprocess="true"-->
-<!--          tools:node="remove"-->
-<!--          android:exported="false"/>-->
+        <provider
+          android:name="com.compdfkit.core.document.CPDFSdkInitProvider"
+          android:authorities="${applicationId}.tpdfsdkinitprovider"
+          android:multiprocess="true"
+          tools:node="remove"
+          android:exported="false"/>
     </application>
 
 </manifest>

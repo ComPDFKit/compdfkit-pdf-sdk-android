@@ -43,6 +43,7 @@ import com.compdfkit.tools.common.views.pdfbota.CPDFBotaFragmentTabs;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment;
+import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment.OnBackLisener;
 import com.compdfkit.tools.forms.pdfproperties.pdfcombobox.CustomComboBoxWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdflistbox.CustomListBoxWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdfsign.CustomSignatureWidgetImpl;
