@@ -57,4 +57,6 @@ public class GlobalConfig  implements Serializable {
 
     public boolean enableExitSaveTips = true;
 
+    public CPDFThumbnailConfig thumbnail = new CPDFThumbnailConfig();
+
 }

@@ -51,6 +51,7 @@ import com.compdfkit.tools.annotation.pdfannotationbar.CAnnotationToolbar;
 import com.compdfkit.tools.common.basic.fragment.CBasicPDFFragment;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.pdf.config.CPDFThumbnailConfig;
 import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
@@ -455,7 +456,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                         break;
                     case Thumbnail:
                         pdfToolBar.addAction(R.drawable.tools_ic_thumbnail, v -> {
-                            showPageEdit(false);
+                            CPDFThumbnailConfig thumbnailConfig = cpdfConfiguration.globalConfig.thumbnail;
+                            showPageEdit(false, thumbnailConfig.editMode);
                         });
                         break;
                     case Search:
@@ -633,7 +635,9 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                         menuWindow.addItem(R.drawable.tools_ic_preview_settings, R.string.tools_view_setting, v1 -> showDisplaySettings(pdfView));
                         break;
                     case DocumentEditor:
-                        menuWindow.addItem(R.drawable.tools_page_edit, R.string.tools_page_edit_toolbar_title, v1 -> showPageEdit(true));
+                        menuWindow.addItem(R.drawable.tools_page_edit, R.string.tools_page_edit_toolbar_title, v1 -> {
+                            showPageEdit(true, true);
+                        });
                         break;
                     case Security:
                         menuWindow.addItem(R.drawable.tools_ic_add_security, R.string.tools_security, v1 -> {
@@ -924,8 +928,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         dialogFragment.show(getChildFragmentManager(), "annotationList");
     }
 
-    public void showPageEdit(boolean enterEditMode) {
-        showPageEdit(pdfView, enterEditMode, this::restoreEdit);
+    public void showPageEdit(boolean enterEditMode, boolean enableEditMode) {
+        showPageEdit(pdfView, enterEditMode, enableEditMode, this::restoreEdit);
     }
 
     public void showSecurityDialog() {

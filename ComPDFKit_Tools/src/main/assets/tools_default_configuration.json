@@ -271,6 +271,11 @@
       "saveAsNewFile" : true,
       "outsideBackgroundColor" : ""
     },
+    "thumbnail": {
+      "title" : "",
+      "backgroundColor": "",
+      "editMode" : true
+    },
     "signatureType": "manual",
     "enableExitSaveTips" : true
   },

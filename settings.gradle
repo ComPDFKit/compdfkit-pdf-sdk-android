@@ -16,7 +16,7 @@ dependencyResolutionManagement {
         mavenLocal()
     }
 }
-rootProject.name = "compdfki_demo_android"
+rootProject.name = "compdfkit_demo_android"
 include ':PDFViewer'
 include ':ComPDFKit_Tools'
 include ':ComPDFKit_Repo:compdfkit'

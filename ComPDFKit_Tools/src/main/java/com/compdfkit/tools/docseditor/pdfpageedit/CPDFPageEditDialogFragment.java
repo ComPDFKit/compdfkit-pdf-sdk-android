@@ -14,8 +14,10 @@ import static com.compdfkit.core.document.CPDFDocument.PDFDocumentError.PDFDocum
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.SparseIntArray;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,6 +30,10 @@ import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
+import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.pdf.config.CPDFThumbnailConfig;
+import com.compdfkit.tools.common.pdf.config.GlobalConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.CUriUtil;
@@ -66,6 +72,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
     private boolean hasEdit = false;
 
     private boolean enterEdit = false;
+    private boolean enableEditMode = true;
     private List<Integer> refreshHQApList = new ArrayList<>();
 
     private ActivityResultLauncher<Intent> replaceSelectDocumentLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -119,6 +126,10 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
 
     public void setEnterEdit(boolean enterEdit) {
         this.enterEdit = enterEdit;
+    }
+
+    public void setEnableEditMode(boolean enableEditMode) {
+        this.enableEditMode = enableEditMode;
     }
 
     @Override
@@ -197,10 +208,26 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
     protected void onCreateView(View rootView) {
         toolBar = rootView.findViewById(R.id.tool_bar);
         editToolBar = rootView.findViewById(R.id.tool_page_edit_bar);
+        try {
+            CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
+            if (configuration != null){
+                CPDFThumbnailConfig thumbnailConfig = configuration.globalConfig.thumbnail;
+                if (!TextUtils.isEmpty(thumbnailConfig.backgroundColor)){
+                    int bgColor = Color.parseColor(thumbnailConfig.backgroundColor);
+                    rootView.setBackgroundColor(bgColor);
+                }
+                if (!TextUtils.isEmpty(thumbnailConfig.title)) {
+                    toolBar.setTitle(thumbnailConfig.title);
+                }
+            }
+        }catch (Exception e){
+
+        }
         this.editThumbnailFragment = (CPDFEditThumbnailFragment) getChildFragmentManager().findFragmentById(R.id.id_edit_thumbnail_fragment);
         if (this.editThumbnailFragment != null) {
             editThumbnailFragment.setCPDFPageEditDialogFragment(this);
-            editThumbnailFragment.setEdit(enterEdit);
+            editThumbnailFragment.setEdit(enableEditMode && enterEdit);
+            editThumbnailFragment.setEnableEditMode(enableEditMode);
         }
 
         editThumbnailFragment.setPDFDisplayPageIndexListener(pageIndex -> {
@@ -245,7 +272,8 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         toolBar.setOnSelectAllCallback((select) -> {
             editThumbnailFragment.setSelectAll(select);
         });
-        if (enterEdit) {
+        toolBar.showEditButton(enableEditMode);
+        if (enableEditMode && enterEdit) {
             toolBar.enterEditMode();
         }
         editToolBar.setInsertPageListener(v -> {

@@ -740,6 +740,12 @@ public class CPDFConfigurationUtils {
             globalConfig.watermark.saveAsNewFile = watermark.optBoolean("saveAsNewFile",true);
             globalConfig.watermark.outsideBackgroundColor = watermark.optString("outsideBackgroundColor", "");
         }
+        JSONObject thumbnailJsonObject = jsonObject.optJSONObject("thumbnail");
+        if (thumbnailJsonObject != null) {
+            globalConfig.thumbnail.title = thumbnailJsonObject.optString("title", "");
+            globalConfig.thumbnail.backgroundColor = thumbnailJsonObject.optString("backgroundColor", "");
+            globalConfig.thumbnail.editMode = thumbnailJsonObject.optBoolean("editMode", true);
+        }
 
         globalConfig.signatureType = GlobalConfig.CSignatureType.fromString(jsonObject.optString("signatureType", "manual"));
         return globalConfig;

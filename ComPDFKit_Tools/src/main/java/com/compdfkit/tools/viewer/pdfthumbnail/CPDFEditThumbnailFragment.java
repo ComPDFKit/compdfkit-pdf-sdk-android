@@ -37,6 +37,8 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
 
     private boolean isEdit = false;
 
+    private boolean enableEditMode = true;
+
     private CPDFPageEditDialogFragment pageEditDialogFragment = null;
 
     public static final int UPDATE_TYPE_ROTATE = 1;
@@ -72,6 +74,10 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
             thumbnailListAdapter.setItemClick(pdfView.currentPageIndex);
             thumbnailListAdapter.notifyDataSetChanged();
         }
+    }
+
+    public void setEnableEditMode(boolean enableEditMode) {
+        this.enableEditMode = enableEditMode;
     }
 
     public boolean isEdit() {
@@ -140,7 +146,7 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
             });
             CProItemTouchHelper itemTouchHelper = new CProItemTouchHelper(thumbnailListAdapter);
             itemTouchHelper.attachToRecyclerView(rvThumbnailRecyclerView);
-            itemTouchHelper.setDragEnable(true);
+            itemTouchHelper.setDragEnable(enableEditMode);
             itemTouchHelper.setSwapEnable(false);
             itemTouchHelper.setSwipeEnable(false);
         }

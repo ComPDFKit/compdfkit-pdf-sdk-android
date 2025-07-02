@@ -174,7 +174,7 @@ public class CPDFApplyConfigUtil {
                 }
             } else {
                 fragment.setPreviewMode(CPreviewMode.Viewer);
-                fragment.showPageEdit(true);
+                fragment.showPageEdit(true, true);
             }
 
         }
