@@ -33,7 +33,6 @@ import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.CPDFThumbnailConfig;
-import com.compdfkit.tools.common.pdf.config.GlobalConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.CUriUtil;
@@ -530,7 +529,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
                 updatePags[i] = i + pagesArr.keyAt(pagesArr.size() - 1) + 1;
             }
             editThumbnailFragment.setSelectPages(updatePags);
-            //hasEdit = true;
+            hasEdit = true;
         }
         return true;
     }
@@ -646,6 +645,18 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
+        if (checkPdfView()) {
+            CPDFReaderView readerView = pdfView.getCPdfReaderView();
+            if (hasEdit) {
+                int pageCount = readerView.getPDFDocument().getPageCount();
+                int jumpIndex = pdfView.currentPageIndex >= pageCount ? pageCount - 1 : pdfView.currentPageIndex;
+                readerView.reloadPages(refreshHQApList);
+                readerView.setDisplayPageIndex(jumpIndex);
+                pdfView.slideBar.setPageCount(pageCount);
+                pdfView.slideBar.requestLayout();
+                pdfView.indicatorView.setTotalPage(pageCount);
+            }
+        }
         if (onEnterBackPressedListener != null) {
             onEnterBackPressedListener.onEnterBackPressed();
         }

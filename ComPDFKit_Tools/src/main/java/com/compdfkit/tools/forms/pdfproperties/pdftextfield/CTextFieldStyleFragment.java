@@ -11,9 +11,14 @@ package com.compdfkit.tools.forms.pdfproperties.pdftextfield;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputFilter.LengthFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.InputDevice;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -24,6 +29,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.view.colorpicker.CColorPickerFragment;
 import com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar;
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.common.utils.viewutils.EditTextUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView;
 import com.compdfkit.tools.common.views.pdfproperties.basic.CBasicPropertiesFragment;
 import com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView;
@@ -96,6 +103,14 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
         alignmentViews.add(ivAlignmentLeft);
         alignmentViews.add(ivAlignmentCenter);
         alignmentViews.add(ivAlignmentRight);
+        etDefaultValue.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN &&
+                (event.getSource() & InputDevice.SOURCE_MOUSE) == InputDevice.SOURCE_MOUSE &&
+                (event.getButtonState() & MotionEvent.BUTTON_PRIMARY) != 0) {
+                etDefaultValue.requestFocus();
+            }
+            return false;
+        });
     }
 
     @Override
@@ -111,6 +126,7 @@ public class CTextFieldStyleFragment extends CBasicPropertiesFragment implements
             hideFormSwitch.setChecked(annotStyle.isHideForm());
             multiLineSwitch.setChecked(annotStyle.isFormMultiLine());
             etDefaultValue.setText(annotStyle.getFormDefaultValue());
+            etDefaultValue.setFilters(new InputFilter[]{ EditTextUtils.emojiFilter() });
             switch (annotStyle.getAlignment()) {
                 case LEFT:
                 case UNKNOWN:

@@ -11,6 +11,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
         android:scrollbarThumbHorizontal="@drawable/tools_bg_scroll_bar_thumb"
         >
         <LinearLayout

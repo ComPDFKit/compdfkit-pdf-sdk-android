@@ -13,6 +13,7 @@
   "toolbarConfig": {
     "mainToolbarVisible" : true,
     "annotationToolbarVisible" : true,
+    "showInkToggleButton": true,
     "androidAvailableActions": [
       "thumbnail",
       "search",
@@ -262,7 +263,8 @@
     "pageSpacing": 10,
     "margins" : [0,0,0,0],
     "pageScale": 1.0,
-    "pageSameWidth": true
+    "pageSameWidth": true,
+    "enableMinScale": true
   },
   "global" : {
     "themeMode" : "system",
@@ -277,7 +279,8 @@
       "editMode" : true
     },
     "signatureType": "manual",
-    "enableExitSaveTips" : true
+    "enableExitSaveTips" : true,
+    "enableErrorTips" : true
   },
   "contextMenuConfig" : {
     "global": {

@@ -74,7 +74,7 @@ public class CPDFFormToolListAdapter extends CBaseQuickAdapter<CFormToolBean, CB
         if (item.isSelect()) {
             holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tools_annot_icon_select_color)));
         } else {
-            holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(MaterialColors.getColor(context, R.attr.colorOnPrimary, ContextCompat.getColor(context, R.color.tools_text_color_primary))));
+            holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnPrimary, ContextCompat.getColor(context, R.color.tools_text_color_primary))));
         }
     }
 

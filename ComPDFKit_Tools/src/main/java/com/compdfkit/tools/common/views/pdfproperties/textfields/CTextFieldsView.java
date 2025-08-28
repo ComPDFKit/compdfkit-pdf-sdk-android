@@ -11,10 +11,13 @@ package com.compdfkit.tools.common.views.pdfproperties.textfields;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.InputDevice;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -23,6 +26,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnTextChangedListener;
+import com.compdfkit.tools.common.utils.viewutils.EditTextUtils;
 
 
 public class CTextFieldsView extends FrameLayout {
@@ -47,6 +51,7 @@ public class CTextFieldsView extends FrameLayout {
     private void initView(Context context){
        LayoutInflater.from(context).inflate(R.layout.tools_properties_text_fields_layout, this);
        etText = findViewById(R.id.et_text);
+       etText.setFilters(new InputFilter[]{EditTextUtils.emojiFilter()});
        etText.addTextChangedListener(new TextWatcher() {
            @Override
            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -65,6 +70,14 @@ public class CTextFieldsView extends FrameLayout {
 
            }
        });
+        etText.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN &&
+                (event.getSource() & InputDevice.SOURCE_MOUSE) == InputDevice.SOURCE_MOUSE &&
+                (event.getButtonState() & MotionEvent.BUTTON_PRIMARY) != 0) {
+                etText.requestFocus();
+            }
+            return false;
+        });
     }
 
     public void setText(String text){

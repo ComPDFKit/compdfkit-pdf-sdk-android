@@ -121,13 +121,13 @@ public class CStyleDialogFragment extends CBasicBottomSheetDialogFragment implem
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from((View) getView().getParent());
         if (!CViewUtils.isLandScape(getContext())) {
             if (styleUIParams.fillScreenHeight){
-                CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(getDialog(), behavior);
+                CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(requireActivity(), getDialog(), behavior);
             }else {
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         } else {
             if (styleUIParams.fillScreenHeight){
-                CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(getDialog(), behavior);
+                CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(requireActivity(), getDialog(), behavior);
             }
             behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             behavior.setSkipCollapsed(true);

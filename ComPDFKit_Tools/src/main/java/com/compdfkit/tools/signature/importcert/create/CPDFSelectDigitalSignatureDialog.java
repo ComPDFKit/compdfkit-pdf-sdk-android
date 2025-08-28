@@ -99,7 +99,7 @@ public class CPDFSelectDigitalSignatureDialog extends CBasicThemeDialogFragment 
 
     @Override
     protected int themeResId() {
-        return R.attr.dialogTheme;
+        return  com.google.android.material.R.attr.dialogTheme;
     }
 
     @Override

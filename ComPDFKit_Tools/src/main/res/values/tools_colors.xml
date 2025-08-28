@@ -2,7 +2,10 @@
 <resources>
 
     <color name="tools_search_result_text_highlight">#FFEC66</color>
-    <color name="tools_pdf_view_ctrl_background_color">#F2F2F2</color>
+    <color name="tools_pdf_view_ctrl_background_color">#efefef</color>
+    <color name="tools_pdf_view_ctrl_background_color_dark">#191b1f</color>
+    <color name="tools_pdf_view_ctrl_background_color_reseda">#BFCDE6D0</color>
+    <color name="tools_pdf_view_ctrl_background_color_sepia">#BFFFEFBE</color>
 
     <color name="tools_themes_light">#FFFFFFFF</color>
     <color name="tools_themes_dark">#000000</color>

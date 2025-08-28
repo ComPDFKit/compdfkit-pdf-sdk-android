@@ -131,7 +131,7 @@ public class CAnnotLineTypePreviewView extends CBasicAnnotPreviewView {
         }
 
         private void init(Context context) {
-            color = MaterialColors.getColor(context, R.attr.colorOnPrimary, ContextCompat.getColor(context, R.color.tools_on_primary));
+            color = MaterialColors.getColor(context,  com.google.android.material.R.attr.colorOnPrimary, ContextCompat.getColor(context, R.color.tools_on_primary));
             linePaint.setColor(color);
             linePaint.setStyle(Paint.Style.FILL);
             linePaint.setStrokeWidth(lineWidth);

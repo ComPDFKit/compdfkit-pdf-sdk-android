@@ -12,13 +12,13 @@ package com.compdfkit.tools.common.utils.dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatTextView;
+
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicThemeDialogFragment;
 
@@ -44,7 +44,7 @@ public class CExitTipsDialog extends CBasicThemeDialogFragment {
 
     @Override
     protected int themeResId() {
-        return R.attr.dialogTheme;
+        return com.google.android.material.R.attr.dialogTheme;
     }
 
     @Override

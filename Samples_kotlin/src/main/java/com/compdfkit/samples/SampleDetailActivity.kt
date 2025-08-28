@@ -17,6 +17,7 @@ import android.widget.ScrollView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.Toolbar
 import com.compdfkit.samples.util.FileUtils
 import com.compdfkit.samples.util.LoggingOutputListener
 import com.google.android.material.button.MaterialButton
@@ -34,16 +35,17 @@ open class SampleDetailActivity : AppCompatActivity() {
         val logTextView = findViewById<AppCompatTextView>(R.id.tv_logging)
         val scrollView = findViewById<ScrollView>(R.id.scroll_view)
         val tvDescription = findViewById<AppCompatTextView>(R.id.tv_description)
+        val toolBar = findViewById<Toolbar>(R.id.tool_bar)
+        toolBar.setNavigationOnClickListener {
+            onBackPressed()
+        }
         val outputListener = LoggingOutputListener(logTextView, scrollView)
         if (intent.hasExtra(EXTRA_SAMPLE_ID)) {
             pdfSamples = SampleApplication.instance.samplesList[intent.getIntExtra(EXTRA_SAMPLE_ID, 0)]
-            supportActionBar?.let {
-                it.setIcon(R.drawable.baseline_arrow_back_24)
-                it.setHomeButtonEnabled(true)
-                it.setDisplayHomeAsUpEnabled(true)
-                it.title = pdfSamples!!.title
-                tvDescription.text = pdfSamples!!.description
-            }
+            toolBar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
+            toolBar.setTitle(pdfSamples!!.title)
+
+            tvDescription.text = pdfSamples!!.description
             pdfSamples?.outputFileList?.clear()
         }
         btnRun.setOnClickListener {

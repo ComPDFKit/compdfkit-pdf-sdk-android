@@ -61,13 +61,12 @@ public class CDimensUtils {
      * @return the xOff and yOff coordinates of the top-left corner where the window is displayed
      */
     public static int[] calculatePopWindowPos(final View anchorView, final View contentView) {
-        final int windowPos[] = new int[2];
-        final int anchorLoc[] = new int[2];
-        anchorView.getLocationOnScreen(anchorLoc);
+        final int[] windowPos = new int[2];
+        final int[] anchorLoc = new int[2];
+        anchorView.getLocationInWindow(anchorLoc);
         final int anchorHeight = anchorView.getHeight();
         // Get the screen height and width
         final int screenHeight = getScreenHeight(anchorView.getContext());
-        final int screenWidth = getScreenWidth(anchorView.getContext());
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         // Calculate the height and width of the contentView
         final int windowHeight = contentView.getMeasuredHeight();
@@ -75,12 +74,13 @@ public class CDimensUtils {
         // Determine whether to pop up or down
         final boolean isNeedShowUp = (screenHeight - anchorLoc[1] - anchorHeight < windowHeight);
         if (isNeedShowUp) {
-            windowPos[0] = screenWidth - windowWidth;
-            windowPos[1] = anchorLoc[1] - windowHeight;
+            windowPos[0] = anchorLoc[0] - (windowWidth /2);
+            windowPos[1] = anchorLoc[1] - windowHeight + anchorHeight;
         } else {
-            windowPos[0] = screenWidth - windowWidth;
+            windowPos[0] =  anchorLoc[0] - (windowWidth /2);
             windowPos[1] = anchorLoc[1] + anchorHeight;
         }
+        windowPos[0] -= contentView.getMeasuredWidth() / 2;
         return windowPos;
     }
 

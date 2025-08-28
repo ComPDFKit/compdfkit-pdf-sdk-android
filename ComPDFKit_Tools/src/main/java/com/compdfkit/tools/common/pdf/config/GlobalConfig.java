@@ -59,4 +59,6 @@ public class GlobalConfig  implements Serializable {
 
     public CPDFThumbnailConfig thumbnail = new CPDFThumbnailConfig();
 
+    public boolean enableErrorTips = true;
+
 }

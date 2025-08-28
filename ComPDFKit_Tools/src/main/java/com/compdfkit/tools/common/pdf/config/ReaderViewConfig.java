@@ -41,6 +41,8 @@ public class ReaderViewConfig implements Serializable {
 
     public boolean pageSameWidth = true;
 
+    public boolean enableMinScale = true;
+
     public ArrayList<Integer> margins = new ArrayList<>();
 
     @NonNull
@@ -59,6 +61,7 @@ public class ReaderViewConfig implements Serializable {
                 "pageSpacing:" + pageSpacing + ", " +
                 "pageScale:" + pageScale + ", " +
                 "pageSameWidth:" + pageSameWidth + ", " +
+                "enableMinScale:" + enableMinScale + ", " +
                 "margins:" + margins.toString();
         return stringBuilder;
     }

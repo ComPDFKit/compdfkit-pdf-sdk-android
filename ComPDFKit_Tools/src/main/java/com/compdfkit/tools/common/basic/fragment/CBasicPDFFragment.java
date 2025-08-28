@@ -13,7 +13,6 @@ package com.compdfkit.tools.common.basic.fragment;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.compdfkit.core.annotation.CPDFLinkAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAnnotation;
@@ -37,25 +36,17 @@ import com.compdfkit.tools.common.contextmenu.impl.CSignatureContextMenuView;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
-import com.compdfkit.tools.common.views.pdfbota.CPDFBOTA;
-import com.compdfkit.tools.common.views.pdfbota.CPDFBotaDialogFragment;
-import com.compdfkit.tools.common.views.pdfbota.CPDFBotaFragmentTabs;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment;
-import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment.OnBackLisener;
 import com.compdfkit.tools.forms.pdfproperties.pdfcombobox.CustomComboBoxWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdflistbox.CustomListBoxWidgetImpl;
-import com.compdfkit.tools.forms.pdfproperties.pdfsign.CustomSignatureWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdfsign.SignatureWidgetImpl;
 import com.compdfkit.tools.viewer.contextmenu.CopyContextMenuView;
 import com.compdfkit.tools.viewer.pdfdisplaysettings.CPDFDisplaySettingDialogFragment;
 import com.compdfkit.tools.viewer.pdfinfo.CPDFDocumentInfoDialogFragment;
-import com.compdfkit.tools.viewer.pdfsearch.CSearchReplaceToolbar;
-import com.compdfkit.ui.reader.CPDFReaderView;
 
 import java.io.File;
-import java.util.ArrayList;
 
 public class CBasicPDFFragment extends CPermissionFragment {
 

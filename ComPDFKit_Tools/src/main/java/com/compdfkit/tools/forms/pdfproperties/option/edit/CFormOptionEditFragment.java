@@ -26,6 +26,7 @@ import com.compdfkit.core.annotation.form.CPDFWidgetItem;
 import com.compdfkit.core.annotation.form.CPDFWidgetItems;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.utils.CStringUtils;
 import com.compdfkit.tools.common.utils.dialog.CEditDialog;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.utils.window.CPopupMenuWindow;
@@ -118,7 +119,7 @@ public class CFormOptionEditFragment extends CBasicBottomSheetDialogFragment {
                 }
                 CEditDialog editDialog = CEditDialog.newInstance(getString(titleRes), item.getText());
                 editDialog.setEditListener(text -> {
-                    item.setText(text);
+                    item.setText(CStringUtils.filterEmoji(text));
                     itemsAdapter.notifyItemChanged(position, "REFRESH");
                     updateCallback();
                     editDialog.dismiss();
@@ -185,10 +186,11 @@ public class CFormOptionEditFragment extends CBasicBottomSheetDialogFragment {
             }
             CEditDialog editDialog = CEditDialog.newInstance(getString(titleRes), "");
             editDialog.setEditListener(text -> {
+                String filteredText = CStringUtils.filterEmoji(text);
                 if (itemsAdapter.list == null || itemsAdapter.list.size() == 0){
-                    itemsAdapter.addItem(new CWidgetItemBean(text, needDefaultSelect));
+                    itemsAdapter.addItem(new CWidgetItemBean(filteredText, needDefaultSelect));
                 }else {
-                    itemsAdapter.addItem(new CWidgetItemBean(text, false));
+                    itemsAdapter.addItem(new CWidgetItemBean(filteredText, false));
                 }
                 updateCallback();
                 editDialog.dismiss();

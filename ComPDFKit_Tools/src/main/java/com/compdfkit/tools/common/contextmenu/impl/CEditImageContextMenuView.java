@@ -29,8 +29,8 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider.CEditSelectionsProvider;
 import com.compdfkit.ui.reader.CPDFPageView;
-
 import com.compdfkit.ui.reader.CPDFReaderView;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;

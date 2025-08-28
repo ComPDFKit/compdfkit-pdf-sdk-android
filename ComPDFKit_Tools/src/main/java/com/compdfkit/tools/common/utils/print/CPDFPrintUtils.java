@@ -10,7 +10,6 @@ import android.print.PrintManager;
 import androidx.annotation.NonNull;
 import androidx.print.PrintHelper;
 
-
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.R;

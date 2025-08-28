@@ -160,9 +160,9 @@ public class CPDFStampTextView extends View {
     }
 
     private void getAttrs(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TPDFStampTextView);
-        maxWidth = ta.getInt(R.styleable.TPDFStampTextView_max_Width, (int) (CPDFScreenUtils.getScreenWidth(context) * 0.5f));
-        defaultTextSize = ta.getInt(R.styleable.TPDFStampTextView_max_TextSize, 100);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CPDFStampTextView);
+        maxWidth = ta.getInt(R.styleable.CPDFStampTextView_max_Width, (int) (CPDFScreenUtils.getScreenWidth(context) * 0.5f));
+        defaultTextSize = ta.getInt(R.styleable.CPDFStampTextView_max_TextSize, 100);
         maxWidth = CPDFScreenUtils.dp2px(context, maxWidth);
         defaultTextSize = CPDFScreenUtils.dp2px(context, defaultTextSize);
         ta.recycle();

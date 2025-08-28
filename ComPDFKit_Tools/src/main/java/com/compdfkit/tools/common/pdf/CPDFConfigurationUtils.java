@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class CPDFConfigurationUtils {
 
@@ -137,6 +136,7 @@ public class CPDFConfigurationUtils {
         toolbarConfig.availableMenus = menuActionList;
         toolbarConfig.mainToolbarVisible = jsonObject.optBoolean("mainToolbarVisible", true);
         toolbarConfig.annotationToolbarVisible = jsonObject.optBoolean("annotationToolbarVisible", true);
+        toolbarConfig.showInkToggleButton = jsonObject.optBoolean("showInkToggleButton", true);
         return toolbarConfig;
     }
 
@@ -179,8 +179,9 @@ public class CPDFConfigurationUtils {
         readerViewConfig.enableSliderBar = jsonObject.optBoolean("enableSliderBar", true);
         readerViewConfig.enablePageIndicator = jsonObject.optBoolean("enablePageIndicator", true);
         readerViewConfig.pageSpacing = jsonObject.optInt("pageSpacing", 10);
-        readerViewConfig.pageScale = Math.max((float) jsonObject.optDouble("pageScale", 1.0), 1.0F);
+        readerViewConfig.pageScale = (float) jsonObject.optDouble("pageScale", 1.0);
         readerViewConfig.pageSameWidth = jsonObject.optBoolean("pageSameWidth", true);
+        readerViewConfig.enableMinScale = jsonObject.optBoolean("enableMinScale", true);
         JSONArray marginsJsonArray = jsonObject.optJSONArray("margins");
         if (marginsJsonArray != null && marginsJsonArray.length() == 4) {
             int left = marginsJsonArray.optInt(0, 0);
@@ -748,6 +749,7 @@ public class CPDFConfigurationUtils {
         }
 
         globalConfig.signatureType = GlobalConfig.CSignatureType.fromString(jsonObject.optString("signatureType", "manual"));
+        globalConfig.enableErrorTips = jsonObject.optBoolean("enableErrorTips", true);
         return globalConfig;
     }
 

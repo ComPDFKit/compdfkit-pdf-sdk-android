@@ -31,7 +31,6 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdfstamp.bean.CTextStampBean;
 import com.compdfkit.tools.annotation.pdfproperties.pdfstamp.data.CStampDatas;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
-import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView;
 import com.compdfkit.tools.common.views.pdfproperties.stamp.CPDFStampTextView;

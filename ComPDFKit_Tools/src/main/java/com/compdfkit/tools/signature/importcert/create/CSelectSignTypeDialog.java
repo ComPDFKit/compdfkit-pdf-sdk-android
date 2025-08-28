@@ -44,7 +44,7 @@ public class CSelectSignTypeDialog extends CBasicThemeDialogFragment implements 
 
     @Override
     protected int themeResId() {
-        return R.attr.dialogTheme;
+        return  com.google.android.material.R.attr.dialogTheme;
     }
 
     @Override

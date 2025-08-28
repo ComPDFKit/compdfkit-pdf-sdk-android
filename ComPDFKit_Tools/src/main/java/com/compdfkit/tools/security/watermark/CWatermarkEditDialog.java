@@ -199,7 +199,7 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
             if (!saveAsNewFile){
                 boolean success = ((CWatermarkPageFragment) fragment).applyWatermark();
                 if (completeListener != null) {
-                    completeListener.complete(false, null);
+                    completeListener.complete(success,false, null);
                 }
                 return;
             }
@@ -292,7 +292,7 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
                         document.reload();
                     }
                     if (completeListener != null) {
-                        completeListener.complete(true, result);
+                        completeListener.complete(!TextUtils.isEmpty(result) , true, result);
                     }
                 }
             }.execute();
@@ -355,6 +355,6 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
     }
 
     public interface CEditCompleteListener {
-        void complete(boolean saveAsNewFile, String pdfFile);
+        void complete(boolean result,  boolean saveAsNewFile, String pdfFile);
     }
 }

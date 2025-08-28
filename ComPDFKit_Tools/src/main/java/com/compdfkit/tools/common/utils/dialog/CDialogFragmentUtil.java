@@ -13,25 +13,32 @@ import android.app.Dialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
+import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class CDialogFragmentUtil {
-    public static void setBottomSheetDialogFragmentFullScreen(@Nullable Dialog dialog, BottomSheetBehavior<View> behavior) {
+
+    public static void setBottomSheetDialogFragmentFullScreen(FragmentActivity fragmentActivity, @Nullable Dialog dialog, BottomSheetBehavior<View> behavior) {
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         behavior.setSkipCollapsed(true);
         if (dialog == null) {
             return;
         }
         FrameLayout bottomSheet =
-                dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
         ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
-        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        View rootView =fragmentActivity.findViewById(android.R.id.content);
+        layoutParams.height = CViewUtils.isInDesktopWindowMode(fragmentActivity) ?
+            rootView.getHeight() : LayoutParams.MATCH_PARENT;
         bottomSheet.setLayoutParams(layoutParams);
     }
+
 
     public static void resetBottomSheetDialogFragment(@Nullable Dialog dialog, BottomSheetBehavior<View> behavior) {
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);

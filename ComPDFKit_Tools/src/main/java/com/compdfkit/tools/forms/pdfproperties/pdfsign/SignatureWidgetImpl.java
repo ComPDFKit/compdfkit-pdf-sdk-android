@@ -18,7 +18,6 @@ import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.GlobalConfig;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
-import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.tools.signature.CSignaturesUtils;
 import com.compdfkit.tools.signature.info.CertDigitalSignInfoDialog;
 import com.compdfkit.ui.proxy.form.CPDFSignatureWidgetImpl;

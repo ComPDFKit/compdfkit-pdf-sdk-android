@@ -74,12 +74,12 @@ public class WatermarkSamplesImpl extends OpenPDFSamplesImpl {
                 watermarkEditDialog.setDocument(document);
                 watermarkEditDialog.setSaveFileExtraFontSubset(SettingDatas.isExtraFontSet(fragment.getContext()));
                 watermarkEditDialog.setPageIndex(0);
-                watermarkEditDialog.setCompleteListener((saveAsNewFile, pdfFile) -> {
+                watermarkEditDialog.setCompleteListener((success, saveAsNewFile, pdfFile) -> {
                     watermarkEditDialog.dismiss();
-                    if (TextUtils.isEmpty(pdfFile)){
-                        CToastUtil.showLongToast(fragment.getContext(), R.string.tools_watermark_add_failed);
+                    if (!success){
+                        CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_add_failed);
                     } else {
-                        CToastUtil.showLongToast(fragment.getContext(), R.string.tools_watermark_add_success);
+                        CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_add_success);
                         startPDFActivity(pdfFile, null, password);
                     }
                 });
@@ -102,7 +102,7 @@ public class WatermarkSamplesImpl extends OpenPDFSamplesImpl {
                         alertDialog.dismiss();
                         String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
                         CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(dir,
-                                fragment.getString(R.string.tools_save_location), fragment.getString(R.string.tools_save_to_this_directory));
+                                fragment.getString(com.compdfkit.tools.R.string.tools_save_location), fragment.getString(com.compdfkit.tools.R.string.tools_save_to_this_directory));
                         directoryDialog.setSelectFolderListener(dir1 -> {
                             try {
                                 // remove all watermark
@@ -120,14 +120,14 @@ public class WatermarkSamplesImpl extends OpenPDFSamplesImpl {
                                 }
                                 if (result){
                                     String fileName = CFileUtils.getFileNameNoExtension(document.getFileName());
-                                    File file = new File(dir1, fileName +fragment.getContext().getString(R.string.tools_remove_watermark_suffix));
+                                    File file = new File(dir1, fileName +fragment.getContext().getString(com.compdfkit.tools.R.string.tools_remove_watermark_suffix));
                                     file = CFileUtils.renameNameSuffix(file);
                                     document.saveAs(file.getAbsolutePath(), false);
                                     document.close();
-                                    CToastUtil.showLongToast(fragment.getContext(), R.string.tools_watermark_removed_success);
+                                    CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_removed_success);
                                     startPDFActivity(file.getAbsolutePath(), null, password);
                                 }else {
-                                    CToastUtil.showLongToast(fragment.getContext(), R.string.tools_watermark_removed_failed);
+                                    CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_removed_failed);
 
                                 }
 

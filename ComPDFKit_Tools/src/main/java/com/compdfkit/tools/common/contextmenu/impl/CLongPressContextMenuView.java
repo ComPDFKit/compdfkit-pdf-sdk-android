@@ -20,6 +20,7 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuLongPressPro
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.CStringUtils;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -50,7 +51,9 @@ public class CLongPressContextMenuView implements ContextMenuLongPressProvider {
                     if (!TextUtils.isEmpty(CPDFTextUtils.getClipData(pageView.getContext()))) {
                         menuView.addItem(R.string.tools_paste, v -> {
                             CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
-                            annotationManager.addFreeText(CPDFTextUtils.getClipData(pageView.getContext()), helper.getReaderView(), pageView, pointF);
+                            String content = CStringUtils.filterEmoji(CPDFTextUtils.getClipData(pageView.getContext()));
+
+                            annotationManager.addFreeText(content, helper.getReaderView(), pageView, pointF);
                             helper.dismissContextMenu();
                         });
                     }

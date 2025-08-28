@@ -45,6 +45,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
@@ -54,8 +57,8 @@ dependencies {
     api project(path:':ComPDFKit_Repo:compdfkit')
     api project(path:':ComPDFKit_Repo:compdfkit-ui')
     // or use
-//    api ('com.compdf:compdfkit:2.4.4')
-//    api ('com.compdf:compdfkit-ui:2.4.4')
+//    api ('com.compdf:compdfkit:2.4.6')
+//    api ('com.compdf:compdfkit-ui:2.4.6')
     api 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     api 'androidx.documentfile:documentfile:1.0.1'

@@ -21,7 +21,6 @@ import android.text.TextPaint;
 import android.view.View;
 import android.widget.EditText;
 
-
 import com.compdfkit.tools.common.utils.CFileUtils;
 
 import java.io.File;

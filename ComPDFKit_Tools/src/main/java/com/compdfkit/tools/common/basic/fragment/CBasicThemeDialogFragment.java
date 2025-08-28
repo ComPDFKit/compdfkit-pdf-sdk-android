@@ -45,7 +45,7 @@ public abstract class CBasicThemeDialogFragment extends DialogFragment {
     }
 
     protected int themeResId(){
-        return R.attr.dialogTheme;
+        return com.google.android.material.R.attr.dialogTheme;
     }
 
     protected abstract int layoutId();

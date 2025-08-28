@@ -10,14 +10,10 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.pdfviewer.R;
-import com.compdfkit.pdfviewer.home.datas.FunDatas;
-import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.CPDFConfigurationUtils;
 import com.compdfkit.tools.common.pdf.CPDFDocumentActivity;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CToastUtil;
-import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
-//import com.compdfkit.tools.compress.CPDFCompressDialog;
 import com.compdfkit.tools.compress.CPDFCompressDialog;
 import com.compdfkit.tools.security.encryption.CDocumentEncryptionDialog;
 import com.compdfkit.tools.security.encryption.CInputOwnerPwdDialog;
@@ -80,7 +76,7 @@ public class FunSamplesActivity extends AppCompatActivity implements View.OnClic
 //        editDialog.setSavePath(saveFile.getAbsolutePath());
 //        editDialog.setDefaultText("ComPDFKit");
 //                editDialog.setDefaultImagePath("xxx.png");
-        editDialog.setCompleteListener((saveAsNewFile, pdfFile) -> {
+        editDialog.setCompleteListener((success, saveAsNewFile, pdfFile) -> {
             if (!TextUtils.isEmpty(pdfFile)){
                 openPDF(pdfFile);
             }
@@ -130,7 +126,7 @@ public class FunSamplesActivity extends AppCompatActivity implements View.OnClic
             compressDialog.dismiss();
             if (result && !TextUtils.isEmpty(path)){
                 openPDF(path);
-                CToastUtil.showLongToast(this, R.string.tools_compressed_successfully);
+                CToastUtil.showLongToast(this, com.compdfkit.tools.R.string.tools_compressed_successfully);
             }
         });
         compressDialog.show(getSupportFragmentManager(), "compressedDialog");

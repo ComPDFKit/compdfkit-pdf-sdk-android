@@ -50,7 +50,7 @@ class ColorListAdapter extends CBaseQuickAdapter<CColorItemBean, CBaseQuickViewH
                 drawable.setColor(item.getColor());
                 if (item.getColor() == Color.WHITE){
                     drawable.setStroke(CDimensUtils.dp2px(holder.itemView.getContext(), 1),
-                            MaterialColors.getColor(holder.itemView.getContext(), R.attr.dividerColor,
+                            MaterialColors.getColor(holder.itemView.getContext(),  com.google.android.material.R.attr.dividerColor,
                                     ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_divider_color)));
                 }else {
                     drawable.setStroke(CDimensUtils.dp2px(holder.itemView.getContext(), 2),

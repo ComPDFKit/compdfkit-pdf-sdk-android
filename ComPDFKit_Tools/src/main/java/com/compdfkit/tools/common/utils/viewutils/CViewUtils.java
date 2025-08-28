@@ -17,9 +17,11 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -194,5 +196,19 @@ public class CViewUtils {
         Context wrapper = new ContextThemeWrapper(context, themeId);
         LayoutInflater themedInflater = LayoutInflater.from(context).cloneInContext(wrapper);
         return themedInflater;
+    }
+
+    public static boolean isInDesktopWindowMode(FragmentActivity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (activity.isInMultiWindowMode()) return true;
+        }
+
+        Rect bounds = new Rect();
+        activity.getWindowManager().getDefaultDisplay().getRectSize(bounds);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        return bounds.width() < dm.widthPixels || bounds.height() < dm.heightPixels;
     }
 }

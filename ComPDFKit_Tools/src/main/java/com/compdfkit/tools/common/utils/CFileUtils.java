@@ -6,8 +6,6 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,11 +15,8 @@ import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.core.content.FileProvider;
-
-import com.compdfkit.tools.R;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.List;
 
 public class CFileUtils {
 

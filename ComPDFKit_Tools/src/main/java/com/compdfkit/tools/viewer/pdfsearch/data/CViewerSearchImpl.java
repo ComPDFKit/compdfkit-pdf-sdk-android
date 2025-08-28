@@ -82,6 +82,7 @@ public class CViewerSearchImpl implements CPDFSearch {
     @Override
     public void select(int page, int textRangeIndex) {
         readerView.getTextSearcher().searchBegin(page, textRangeIndex);
+        readerView.invalidateAllChildren();
     }
 
     private int getSearchOptions(boolean ignoreCase, boolean wholeWordsOnly){

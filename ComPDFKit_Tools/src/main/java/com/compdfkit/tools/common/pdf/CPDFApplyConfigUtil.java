@@ -19,8 +19,6 @@ import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.document.CPDFDocument;
-import com.compdfkit.core.edit.CPDFEditManager;
-import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
@@ -117,21 +115,22 @@ public class CPDFApplyConfigUtil {
             readerView.setVerticalMode(readerViewConfig.verticalMode);
             readerView.setCropMode(readerViewConfig.cropMode);
             readerView.setPageSameWidth(readerViewConfig.pageSameWidth);
+            readerView.setMinScaleEnable(readerViewConfig.enableMinScale);
             switch (readerViewConfig.themes) {
                 case Dark:
                     int darkColor = ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_dark);
                     readerView.setReadBackgroundColor(darkColor);
-                    fragment.pdfView.setBackgroundColor(CViewUtils.getColor(darkColor, 190));
+                    fragment.pdfView.setBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_pdf_view_ctrl_background_color_dark));
                     break;
                 case Sepia:
                     int sepiaColor = ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_sepia);
                     readerView.setReadBackgroundColor(sepiaColor);
-                    fragment.pdfView.setBackgroundColor(CViewUtils.getColor(sepiaColor, 190));
+                    fragment.pdfView.setBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_pdf_view_ctrl_background_color_sepia));
                     break;
                 case Reseda:
                     int resedaColor = ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_reseda);
                     readerView.setReadBackgroundColor(resedaColor);
-                    fragment.pdfView.setBackgroundColor(CViewUtils.getColor(resedaColor, 190));
+                    fragment.pdfView.setBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_pdf_view_ctrl_background_color_reseda));
                     break;
                 default:
                     readerView.setReadBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_light));
@@ -155,6 +154,8 @@ public class CPDFApplyConfigUtil {
                 fragment.pdfView.enableSliderBar(readerViewConfig.enableSliderBar);
                 fragment.pdfView.enablePageIndicator(readerViewConfig.enablePageIndicator);
             }
+            fragment.pdfView.updateScaleForLayout();
+
         }
     }
 

@@ -29,9 +29,6 @@ public class SampleListActivity extends AppCompatActivity {
         File file = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
         FileUtils.deleteFile(file);
         RecyclerView recyclerView = findViewById(R.id.rv_sample_list);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.samples);
-        }
 
         SampleListAdapter listAdapter = new SampleListAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

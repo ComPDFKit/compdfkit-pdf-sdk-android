@@ -85,7 +85,7 @@ public class DocumentListFragment extends Fragment {
             // create a blank page document or select a pdf file from the file manager.
             Bundle args = new Bundle();
             args.putString(CSelectInsertPageTypeDialogFragment.EXTRA_CREATE_BLANK_PAGE_ITEM_TITLE, getString(R.string.tools_create_a_new_file));
-            args.putString(CSelectInsertPageTypeDialogFragment.EXTRA_INSERT_PDF_PAGE_ITEM_TITLE, getString(R.string.tools_open_document));
+            args.putString(CSelectInsertPageTypeDialogFragment.EXTRA_INSERT_PDF_PAGE_ITEM_TITLE, getString(com.compdfkit.tools.R.string.tools_open_document));
             CSelectInsertPageTypeDialogFragment insertDialogFragment = CSelectInsertPageTypeDialogFragment.newInstance(args);
             insertDialogFragment.setInsertBlankPageClickListener(v1 -> {
                 // show create a blank page document dialog
@@ -95,7 +95,7 @@ public class DocumentListFragment extends Fragment {
                 bundle.putBoolean(CInsertBlankPageDialogFragment.EXTRA_SHOW_INSERT_LOCATION, false);
                 bundle.putBoolean(CInsertBlankPageDialogFragment.EXTRA_DEFAULT_VISIBLE_PAGE_SIZE, true);
                 bundle.putString(CInsertBlankPageDialogFragment.EXTRA_TITLE, getString(R.string.tools_create_a_new_file));
-                bundle.putString(CInsertBlankPageDialogFragment.EXTRA_SAVE_BUTTON_TEXT, getString(R.string.tools_okay));
+                bundle.putString(CInsertBlankPageDialogFragment.EXTRA_SAVE_BUTTON_TEXT, getString(com.compdfkit.tools.R.string.tools_okay));
                 blankPageDialogFragment.setArguments(bundle);
                 blankPageDialogFragment.setDocument(document);
                 blankPageDialogFragment.setOnEditDoneCallback(() -> {

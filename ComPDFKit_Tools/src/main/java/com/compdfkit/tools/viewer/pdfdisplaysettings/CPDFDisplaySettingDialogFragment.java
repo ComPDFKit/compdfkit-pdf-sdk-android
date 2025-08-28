@@ -83,7 +83,7 @@ public class CPDFDisplaySettingDialogFragment extends CBasicBottomSheetDialogFra
             CDialogFragmentUtil.setDimAmount(getDialog(), 0F);
         }
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from((View) getView().getParent());
-        CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(getDialog(), behavior);
+        CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(requireActivity(), getDialog(), behavior);
     }
 
 
@@ -157,42 +157,52 @@ public class CPDFDisplaySettingDialogFragment extends CBasicBottomSheetDialogFra
         } else if (checkedId == R.id.r_btn_dark_mode) {
             int color = ContextCompat.getColor(getContext(), R.color.tools_themes_dark);
             setReaderBackgroundColor(color);
-            pdfView.setBackgroundColor(CViewUtils.getColor(color, 190));
+            pdfView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.tools_pdf_view_ctrl_background_color_dark));
         } else if (checkedId == R.id.r_btn_sepia_mode) {
             int color = ContextCompat.getColor(getContext(), R.color.tools_themes_sepia);
             setReaderBackgroundColor(color);
-            pdfView.setBackgroundColor(CViewUtils.getColor(color, 190));
+            pdfView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.tools_pdf_view_ctrl_background_color_sepia));
+
         } else if (checkedId == R.id.r_btn_reseda_mode) {
             int color = ContextCompat.getColor(getContext(), R.color.tools_themes_reseda);
             setReaderBackgroundColor(color);
-            pdfView.setBackgroundColor(CViewUtils.getColor(color, 190));
+            pdfView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.tools_pdf_view_ctrl_background_color_reseda));
         } else if (checkedId == R.id.r_btn_single_page) {
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setDoublePageMode(false);
                 pdfView.getCPdfReaderView().setCoverPageMode(false);
                 updateContinueStatus();
+                checkAndAdjustScaleToFitHeight();
             }
         } else if (checkedId == R.id.r_btn_double_page) {
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setDoublePageMode(true);
                 pdfView.getCPdfReaderView().setCoverPageMode(false);
                 updateContinueStatus();
+                checkAndAdjustScaleToFitHeight();
+
             }
         } else if (checkedId == R.id.r_btn_cover_double_page) {
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setDoublePageMode(true);
                 pdfView.getCPdfReaderView().setCoverPageMode(true);
                 updateContinueStatus();
+                checkAndAdjustScaleToFitHeight();
+
             }
-        } else if (checkedId == R.id.r_btn_vertical ){
+        } else if (checkedId == R.id.r_btn_vertical){
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setVerticalMode(true);
                 updateContinueStatus();
+                checkAndAdjustScaleToFitHeight();
+
             }
         } else if (checkedId == R.id.r_btn_horizontal) {
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setVerticalMode(false);
                 updateContinueStatus();
+                checkAndAdjustScaleToFitHeight();
+
             }
         }
     }
@@ -203,6 +213,7 @@ public class CPDFDisplaySettingDialogFragment extends CBasicBottomSheetDialogFra
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setContinueMode(isChecked);
             }
+            checkAndAdjustScaleToFitHeight();
         } else if (buttonView.getId() == R.id.sw_is_crop) {
             if (pdfView != null) {
                 pdfView.getCPdfReaderView().setCropMode(isChecked);
@@ -235,6 +246,10 @@ public class CPDFDisplaySettingDialogFragment extends CBasicBottomSheetDialogFra
         } else {
 
         }
+    }
+
+    private void checkAndAdjustScaleToFitHeight(){
+        pdfView.updateScaleForLayout();
     }
 
     private void setReaderBackgroundColor(int color) {

@@ -11,8 +11,8 @@ package com.compdfkit.pdfviewer.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +21,7 @@ import com.compdfkit.core.document.CPDFSdk;
 import com.compdfkit.pdfviewer.R;
 import com.compdfkit.pdfviewer.databinding.ActivityHomeBinding;
 import com.compdfkit.tools.common.utils.CFileUtils;
+
 import java.io.File;
 
 
@@ -53,6 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         CPDFSdk.setImportFontDir(savePath, true);
         CPDFSdk.initWithPath(this, "assets://license_key_android.xml", (verifyCode, verifyMsg) -> {
             Log.e("ComPDFKit", "verifyCode: " + verifyCode + ", verifyMsg: " + verifyMsg);
+            CPDFAbility.checkLicenseAllAbility();
         });
     }
 

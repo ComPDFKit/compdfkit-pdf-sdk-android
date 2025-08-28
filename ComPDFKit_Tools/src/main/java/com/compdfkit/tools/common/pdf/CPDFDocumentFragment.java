@@ -214,6 +214,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     return;
                 }
                 pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
+                pdfView.getCPdfReaderView().pauseAllRenderProcess();
+                pdfView.getCPdfReaderView().removeAllAnnotFocus();
 
                 CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
                 boolean hasChanges = document != null && document.hasChanges();
@@ -300,6 +302,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         screenManager.bind(this);
+        pdfView.setCPDFConfiguration(cpdfConfiguration);
         initDocument(() -> {
             initPDFView();
             initToolBarView();
@@ -331,8 +334,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     }
 
     protected void initPDFView() {
-        pdfView.setCPDFConfiguration(cpdfConfiguration);
-        pdfView.getCPdfReaderView().setMinScaleEnable(false);
         registerAnnotHelper(pdfView);
         registerFormHelper(pdfView);
         pdfView.addReaderViewCallback(new CPDFIReaderViewCallback() {
@@ -354,12 +355,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 if (!cpdfConfiguration.modeConfig.readerOnly) {
                     //Use the CFillScreenManager.class to manage fullscreen switching.
                     screenManager.fillScreenChange();
-                    CPDFReaderView readerView = pdfView.getCPdfReaderView();
-                    if (!readerView.isContinueMode() && CViewUtils.isLandScape(getContext()) && !readerView.isVerticalMode()) {
-                        readerView.postDelayed(() -> {
-                            readerView.setScale(1F);
-                        }, 200);
-                    }
                     if (fillScreenChangeListener != null) {
                         fillScreenChangeListener.fillScreenChange(screenManager.isFillScreen);
                     }
@@ -516,7 +511,9 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 }
             }
             if (type == CAnnotationType.INK){
-                screenManager.constraintShow(cardTouchBrowse);
+                if (cpdfConfiguration.toolbarConfig.showInkToggleButton){
+                    screenManager.constraintShow(cardTouchBrowse);
+                }
             }else {
                 screenManager.constraintHide(cardTouchBrowse);
                 ivTouchBrowse.setSelected(false);
@@ -841,20 +838,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        boolean pageSameWidth = cpdfConfiguration.readerViewConfig.pageSameWidth;
-        CPDFReaderView readerView = pdfView.getCPdfReaderView();
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             pdfSearchToolBarView.showSearchReplaceContextMenu();
-            if (pageSameWidth && !readerView.isContinueMode()) {
-                readerView.setPageSameWidth(false);
-                readerView.invalidateAllChildren();
-            }
         } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             pdfSearchToolBarView.showSearchReplaceContextMenu();
-            if (!readerView.isContinueMode()) {
-                readerView.setPageSameWidth(pageSameWidth);
-                readerView.invalidateAllChildren();
-            }
         }
     }
 
@@ -962,10 +949,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         watermarkEditDialog.setSaveFileExtraFontSubset(pdfView.isSaveFileExtraFontSubset());
         watermarkEditDialog.setPageIndex(pdfView.currentPageIndex);
         watermarkEditDialog.setSaveAsNewFile(saveAsNewFile);
-        watermarkEditDialog.setCompleteListener((saveAsNewFile1, pdfFile) -> {
+        watermarkEditDialog.setCompleteListener((success, saveAsNewFile1, pdfFile) -> {
             watermarkEditDialog.dismiss();
             pdfView.getCPdfReaderView().reloadPages();
-            if (TextUtils.isEmpty(pdfFile)) {
+            if (!success) {
                 CToastUtil.showLongToast(getContext(), R.string.tools_watermark_add_failed);
                 return;
             }

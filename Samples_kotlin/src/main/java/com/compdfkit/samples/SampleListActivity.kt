@@ -25,7 +25,6 @@ class SampleListActivity : AppCompatActivity() {
         file?.let {
             FileUtils.deleteFile(it)
         }
-        supportActionBar?.setTitle(R.string.samples)
         val recyclerView = findViewById<RecyclerView>(R.id.rv_sample_list)
         val listAdapter = SampleListAdapter().apply {
             onItemClickListener = { position ->

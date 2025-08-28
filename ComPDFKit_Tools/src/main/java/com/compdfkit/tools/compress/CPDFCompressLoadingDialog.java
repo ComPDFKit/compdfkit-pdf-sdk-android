@@ -12,14 +12,11 @@ package com.compdfkit.tools.compress;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.DialogFragment;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicThemeDialogFragment;

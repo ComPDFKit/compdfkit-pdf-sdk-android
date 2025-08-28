@@ -16,11 +16,11 @@ import android.os.Bundle;
 import android.widget.ScrollView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.compdfkit.samples.util.FileUtils;
 import com.compdfkit.samples.util.LoggingOutputListener;
@@ -48,18 +48,15 @@ public class SampleDetailActivity extends AppCompatActivity {
         AppCompatTextView logTextView = findViewById(R.id.tv_logging);
         ScrollView scrollView = findViewById(R.id.scroll_view);
         AppCompatTextView tvDescription = findViewById(R.id.tv_description);
+        Toolbar toolbar = findViewById(R.id.tool_bar);
+        toolbar.setNavigationOnClickListener(view -> onBackPressed());
 
-        ActionBar actionBar = getSupportActionBar();
         LoggingOutputListener outputListener = new LoggingOutputListener(logTextView, scrollView);
         if (getIntent().hasExtra(EXTRA_SAMPLE_ID)) {
             pdfSamples = SampleApplication.getInstance().samplesList.get(getIntent().getIntExtra(EXTRA_SAMPLE_ID, 0));
-            if (actionBar != null) {
-                actionBar.setIcon(R.drawable.baseline_arrow_back_24);
-                actionBar.setHomeButtonEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setTitle(pdfSamples.getTitle());
-                tvDescription.setText(pdfSamples.getDescription());
-            }
+            toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
+            toolbar.setTitle(pdfSamples.getTitle());
+            tvDescription.setText(pdfSamples.getDescription());
             pdfSamples.getOutputFileList().clear();
         }
         btnRun.setOnClickListener(v -> {
@@ -76,9 +73,9 @@ public class SampleDetailActivity extends AppCompatActivity {
                 builder.setItems(pdfSamples.getOutputFileNames(), (dialog, which) -> {
                     String filePath = pdfSamples.getOutputFileList().get(which);
                     String mimeType = "application/pdf";
-                    if (filePath.endsWith(".pdf")){
+                    if (filePath.endsWith(".pdf")) {
                         mimeType = "application/pdf";
-                    } else if (filePath.endsWith("png") || filePath.endsWith("jpg")){
+                    } else if (filePath.endsWith("png") || filePath.endsWith("jpg")) {
                         mimeType = "image/*";
                     } else if (filePath.endsWith(".xfdf")) {
                         mimeType = "application/vnd.adobe.xfdf";
@@ -90,11 +87,4 @@ public class SampleDetailActivity extends AppCompatActivity {
         });
     }
 
-
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return super.onSupportNavigateUp();
-    }
 }

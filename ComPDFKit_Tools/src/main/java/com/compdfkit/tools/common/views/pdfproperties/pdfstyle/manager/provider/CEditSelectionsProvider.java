@@ -10,9 +10,7 @@
 package com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider;
 
 import android.content.Context;
-import android.media.MediaScannerConnection;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.compdfkit.core.edit.CPDFEditArea;

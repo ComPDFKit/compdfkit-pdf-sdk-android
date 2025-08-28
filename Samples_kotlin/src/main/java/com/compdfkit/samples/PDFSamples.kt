@@ -92,7 +92,7 @@ abstract class PDFSamples {
     }
 
     protected fun outputDir(): File? {
-        return context().filesDir
+        return context().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
     }
 
     protected fun context(): Context = SampleApplication.instance

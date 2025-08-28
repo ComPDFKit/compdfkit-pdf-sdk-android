@@ -11,6 +11,7 @@ package com.compdfkit.pdfviewer.home.samples;
 
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
@@ -42,6 +43,7 @@ public class DocumentEncryptionSamplesImpl extends OpenPDFSamplesImpl {
      * @param uri
      */
     private void security(String filePath, Uri uri){
+        Log.i("ComPDFKit", "security: filePath = " + filePath + ", uri = " + uri);
         verifyDocument(filePath, uri, document -> {
             if (document.getPermissions() == CPDFDocument.PDFDocumentPermissions.PDFDocumentPermissionsUser) {
                 showInputOwnerPasswordDialog(document);
@@ -65,9 +67,9 @@ public class DocumentEncryptionSamplesImpl extends OpenPDFSamplesImpl {
             encryptionDialog.dismiss();
             int tipsResId;
             if (isRemoveSecurity){
-                tipsResId = result ? R.string.tools_password_remove_success : R.string.tools_password_remove_fail;
+                tipsResId = result ? com.compdfkit.tools.R.string.tools_password_remove_success :com.compdfkit.tools. R.string.tools_password_remove_fail;
             }else {
-                tipsResId = result ? R.string.tools_set_password_successfully : R.string.tools_set_password_failures;
+                tipsResId = result ? com.compdfkit.tools.R.string.tools_set_password_successfully : com.compdfkit.tools.R.string.tools_set_password_failures;
             }
             if (!result){
                 showResultDialog(fragment.getActivity().getString(tipsResId));

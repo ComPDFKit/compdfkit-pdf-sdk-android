@@ -17,6 +17,8 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.InputDevice;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
@@ -36,7 +38,6 @@ import com.compdfkit.core.document.CPDFDocumentPermissionInfo;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
@@ -187,6 +188,22 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
             public void afterTextChanged(Editable s) {
 
             }
+        });
+        etOwnerPassword.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN &&
+                (event.getSource() & InputDevice.SOURCE_MOUSE) == InputDevice.SOURCE_MOUSE &&
+                (event.getButtonState() & MotionEvent.BUTTON_PRIMARY) != 0) {
+                etOwnerPassword.requestFocus();
+            }
+            return false;
+        });
+        etUserPassword.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN &&
+                (event.getSource() & InputDevice.SOURCE_MOUSE) == InputDevice.SOURCE_MOUSE &&
+                (event.getButtonState() & MotionEvent.BUTTON_PRIMARY) != 0) {
+                etUserPassword.requestFocus();
+            }
+            return false;
         });
         algorithmSpinnerAdapter = new CEncryptAlgorithmSpinnerAdapter(getContext(), document.getEncryptAlgorithm());
         levelSpinner.setAdapter(algorithmSpinnerAdapter);

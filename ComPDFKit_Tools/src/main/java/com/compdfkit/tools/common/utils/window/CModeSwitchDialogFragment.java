@@ -222,7 +222,7 @@ public class CModeSwitchDialogFragment extends CBasicBottomSheetDialogFragment
     private void setRadioButtonInfo(AppCompatRadioButton item, @StringRes int titleResId, @DrawableRes int startDrawableResId){
         item.setText(titleResId);
         Drawable startDrawable = ContextCompat.getDrawable(getContext(), startDrawableResId);
-        int startDrawableColor = MaterialColors.getColor(getContext(), R.attr.colorOnPrimary, Color.BLACK);
+        int startDrawableColor = MaterialColors.getColor(getContext(), com.google.android.material.R.attr.colorOnPrimary, Color.BLACK);
         DrawableCompat.setTint(startDrawable, startDrawableColor);
         DrawableCompat.setTintMode(startDrawable, PorterDuff.Mode.SRC_ATOP);
         Drawable endDrawable = ContextCompat.getDrawable(getContext(), R.drawable.tools_reader_settings_page_mode_radio_button);

@@ -111,7 +111,11 @@ public class HomeFunFragment extends Fragment {
         getParentFragmentManager()
                 .beginTransaction()
                 .addToBackStack(null)
-                .setCustomAnimations(R.anim.tools_slide_in_right, R.anim.tools_slide_out_left, R.anim.tools_slide_in_left, R.anim.tools_slide_out_right)
+                .setCustomAnimations(
+                        com.compdfkit.tools.R.anim.tools_slide_in_right,
+                        com.compdfkit.tools.R.anim.tools_slide_out_left,
+                        com.compdfkit.tools.R.anim.tools_slide_in_left,
+                        com.compdfkit.tools.R.anim.tools_slide_out_right)
                 .replace(R.id.fragment_content, DocumentListFragment.newInstance(funType), funType.name() + "_DocumentListFragment")
                 .commit();
     }

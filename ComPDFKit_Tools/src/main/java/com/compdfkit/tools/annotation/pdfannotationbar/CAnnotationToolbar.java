@@ -11,8 +11,6 @@ package com.compdfkit.tools.annotation.pdfannotationbar;
 
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -50,8 +48,8 @@ import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.ui.proxy.attach.IInkDrawCallback;
 import com.compdfkit.ui.proxy.attach.IInkDrawCallback.Mode;
 import com.compdfkit.ui.reader.CPDFReaderView;
-
 import com.compdfkit.ui.reader.CPDFReaderView.ViewMode;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -167,10 +165,14 @@ public class CAnnotationToolbar extends FrameLayout {
     }
 
     private void showAnnotStyleDialog() {
+        CStyleType styleType = toolListAdapter.getCurrentAnnotType().getStyleType();
+        showAnnotStyleDialog(styleType);
+    }
+
+    public void showAnnotStyleDialog(CStyleType styleType) {
         saveInk();
         CViewUtils.hideKeyboard(this);
         CStyleManager styleManager = new CStyleManager(pdfView);
-        CStyleType styleType = toolListAdapter.getCurrentAnnotType().getStyleType();
         CAnnotStyle style = styleManager.getStyle(styleType);
         CStyleUIParams styleUiParams = CStyleUIParams.defaultStyle(getContext(), styleType);
         CStyleDialogFragment dialogFragment = CStyleDialogFragment.newInstance(style);
@@ -223,6 +225,10 @@ public class CAnnotationToolbar extends FrameLayout {
     }
 
     public void switchAnnotationType(CAnnotationType type) {
+        if(type == CAnnotationType.UNKNOWN){
+            switchAnnotationUnknown();
+            return;
+        }
         toolListAdapter.selectByType(type);
         if (ivSetting != null) {
             ivSetting.setEnabled(toolListAdapter.annotEnableSetting());

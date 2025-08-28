@@ -20,7 +20,6 @@ import android.util.SparseIntArray;
 
 import androidx.print.PrintHelper;
 
-
 import com.compdfkit.tools.BuildConfig;
 
 import java.io.FileOutputStream;

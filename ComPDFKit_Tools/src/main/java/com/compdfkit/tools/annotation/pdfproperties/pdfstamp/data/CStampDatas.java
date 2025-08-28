@@ -33,27 +33,27 @@ public class CStampDatas {
 
     public static List<CStandardStampItemBean> getStandardStampList() {
         return Arrays.asList(
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.APPROVED, R.drawable.stamp_01_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.NOTAPPROVED, R.drawable.stamp_02_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.DRAFT, R.drawable.stamp_03_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.FINAL, R.drawable.stamp_04_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.COMPLETED, R.drawable.stamp_05_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.CONFIDENTIAL, R.drawable.stamp_06_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.FORPUBLICRELEASE, R.drawable.stamp_07_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.NOTFORPUBLICRELEASE, R.drawable.stamp_08_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.FORCOMMENT, R.drawable.stamp_09_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.VOID, R.drawable.stamp_10_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.PRELIMINARYRESULTS, R.drawable.stamp_11_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.INFORMATIONONLY, R.drawable.stamp_12_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.WITNESS, R.drawable.stamp_13_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.INITIALHERE, R.drawable.stamp_14_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.SIGNHERE, R.drawable.stamp_15_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.REVISED, R.drawable.stamp_16_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.ACCEPTED, R.drawable.stamp_20_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.REJECTED, R.drawable.stamp_18_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.PRIVATEACCEPTED, R.drawable.stamp_chick_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.PRIVATEREJECTED, R.drawable.stamp_cross_2x),
-                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.PRIVATERADIOMARK, R.drawable.stamp_circle_01_2x)
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.APPROVED, com.compdfkit.ui.R.drawable.stamp_01_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.NOTAPPROVED, com.compdfkit.ui.R.drawable.stamp_02_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.DRAFT, com.compdfkit.ui.R.drawable.stamp_03_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.FINAL, com.compdfkit.ui.R.drawable.stamp_04_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.COMPLETED, com.compdfkit.ui.R.drawable.stamp_05_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.CONFIDENTIAL, com.compdfkit.ui.R.drawable.stamp_06_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.FORPUBLICRELEASE, com.compdfkit.ui.R.drawable.stamp_07_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.NOTFORPUBLICRELEASE, com.compdfkit.ui.R.drawable.stamp_08_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.FORCOMMENT, com.compdfkit.ui.R.drawable.stamp_09_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.VOID, com.compdfkit.ui.R.drawable.stamp_10_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.PRELIMINARYRESULTS, com.compdfkit.ui.R.drawable.stamp_11_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.INFORMATIONONLY, com.compdfkit.ui.R.drawable.stamp_12_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.WITNESS, com.compdfkit.ui.R.drawable.stamp_13_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.INITIALHERE, com.compdfkit.ui.R.drawable.stamp_14_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.SIGNHERE, com.compdfkit.ui.R.drawable.stamp_15_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.REVISED, com.compdfkit.ui.R.drawable.stamp_16_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.ACCEPTED, com.compdfkit.ui.R.drawable.stamp_20_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.REJECTED, com.compdfkit.ui.R.drawable.stamp_18_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.PRIVATEACCEPTED, com.compdfkit.ui.R.drawable.stamp_chick_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.PRIVATEREJECTED, com.compdfkit.ui.R.drawable.stamp_cross_2x),
+                new CStandardStampItemBean(CPDFStampAnnotation.StandardStamp.PRIVATERADIOMARK, com.compdfkit.ui.R.drawable.stamp_circle_01_2x)
         );
     }
 

@@ -122,5 +122,8 @@
         </attr>
     </declare-styleable>
 
-
+    <declare-styleable name="CPDFStampTextView" tools:ignore="ResourceName">
+        <attr format="integer" name="max_Width"/>
+        <attr format="integer" name="max_TextSize"/>
+    </declare-styleable>
 </resources>

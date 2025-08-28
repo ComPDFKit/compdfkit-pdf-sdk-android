@@ -84,7 +84,10 @@ public class CSampleScreenManager {
         if (type == CAnnotationType.INK){
             fillScreenManager.hideFromTop(documentFragment.flTool, 100);
         }else {
-            if (documentFragment.flTool.getVisibility() == GONE){
+            boolean isGone = documentFragment.flTool.getVisibility() == GONE;
+            boolean isEnable = documentFragment.pdfView.getCPDFConfiguration().toolbarConfig.mainToolbarVisible;
+            boolean isReaderOnly = documentFragment.pdfView.getCPDFConfiguration().modeConfig.readerOnly;
+            if (!isReaderOnly && isEnable && isGone){
                 fillScreenManager.showFromTop(documentFragment.flTool, 100);
             }
         }

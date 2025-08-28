@@ -92,4 +92,6 @@ public class ToolbarConfig implements Serializable {
 
     public List<MenuAction> availableMenus;
 
+    public boolean showInkToggleButton = true;
+
 }

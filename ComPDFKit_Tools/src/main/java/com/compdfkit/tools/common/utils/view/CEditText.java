@@ -15,6 +15,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.InputDevice;
+import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -93,6 +95,14 @@ public class CEditText extends FrameLayout {
             public void afterTextChanged(Editable s) {
 
             }
+        });
+        editText.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN &&
+                (event.getSource() & InputDevice.SOURCE_MOUSE) == InputDevice.SOURCE_MOUSE &&
+                (event.getButtonState() & MotionEvent.BUTTON_PRIMARY) != 0) {
+                editText.requestFocus();
+            }
+            return false;
         });
     }
 

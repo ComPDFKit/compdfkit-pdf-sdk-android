@@ -251,8 +251,6 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
             }
         });
         int[] windowPos = CDimensUtils.calculatePopWindowPos(anchorView, moreMenu.getContentView());
-        windowPos[0] -= anchorView.getMeasuredWidth() / 2;
-        windowPos[1] -= anchorView.getMeasuredHeight();
         moreMenu.setAnimationStyle(R.style.PopupAnimation);
         moreMenu.showAtLocation(anchorView, Gravity.START | Gravity.TOP, windowPos[0], windowPos[1]);
     }

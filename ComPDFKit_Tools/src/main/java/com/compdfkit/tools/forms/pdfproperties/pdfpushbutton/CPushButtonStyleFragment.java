@@ -11,6 +11,7 @@ package com.compdfkit.tools.forms.pdfproperties.pdfpushbutton;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.view.colorpicker.CColorPickerFragment;
 import com.compdfkit.tools.common.utils.view.sliderbar.CSliderBar;
+import com.compdfkit.tools.common.utils.viewutils.EditTextUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CPropertiesSwitchView;
 import com.compdfkit.tools.common.views.pdfproperties.basic.CBasicPropertiesFragment;
 import com.compdfkit.tools.common.views.pdfproperties.colorlist.ColorListView;
@@ -68,6 +70,7 @@ public class CPushButtonStyleFragment extends CBasicPropertiesFragment implement
         fontSizeSliderBar = rootView.findViewById(R.id.font_size_slider_bar);
         fontView = rootView.findViewById(R.id.font_view);
         hideFormSwitch = rootView.findViewById(R.id.switch_hide_form);
+        etBtnText.setFilters(new InputFilter[]{EditTextUtils.emojiFilter()});
     }
 
     @Override

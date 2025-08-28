@@ -151,9 +151,6 @@ public class CPDFAnnotReplyListAdapter extends CBaseQuickAdapter<CPDFReplyAnnota
     // If there is enough space at the bottom,
     // it will be displayed below the anchor view. If not, it will be displayed above it.
     int[] windowPos = CDimensUtils.calculatePopWindowPos(anchorView, reviewStatusMenuWindow.getContentView());
-    windowPos[0] -= reviewStatusMenuWindow.getContentView().getMeasuredWidth() /2;
-    windowPos[1] -= anchorView.getMeasuredHeight() / 2;
-    windowPos[1] -= anchorView.getMeasuredHeight();
     reviewStatusMenuWindow.setAnimationStyle(R.style.PopupAnimation);
     reviewStatusMenuWindow.showAtLocation(anchorView, Gravity.START | Gravity.TOP, windowPos[0], windowPos[1]);
   }

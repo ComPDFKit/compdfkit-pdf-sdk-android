@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.activity.CPermissionActivity;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
-import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.CFileUtils;
 
 public class CPDFDocumentActivity extends CPermissionActivity {
 
@@ -69,8 +69,10 @@ public class CPDFDocumentActivity extends CPermissionActivity {
                         password,
                         configuration);
             }else {
+                Uri uri = getIntent().getData();
+                CFileUtils.takeUriPermission(this, uri);
                 documentFragment = CPDFDocumentFragment.newInstance(
-                        getIntent().getData(),
+                        uri,
                         password,
                         configuration);
             }

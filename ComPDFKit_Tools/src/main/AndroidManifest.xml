@@ -28,8 +28,9 @@
 
         <activity
             android:name=".common.pdf.CPDFDocumentActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|density"
+            android:resizeableActivity="true"
             android:theme="@style/ComPDFKit.Theme.Light"
             android:windowSoftInputMode="adjustPan">
         </activity>

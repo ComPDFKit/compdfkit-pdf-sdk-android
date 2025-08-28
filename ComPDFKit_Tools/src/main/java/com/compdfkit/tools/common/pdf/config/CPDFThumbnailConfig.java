@@ -1,7 +1,5 @@
 package com.compdfkit.tools.common.pdf.config;
 
-import android.graphics.Color;
-
 import java.io.Serializable;
 
 /**

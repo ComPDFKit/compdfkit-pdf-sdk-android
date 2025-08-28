@@ -23,9 +23,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.view.CFlowLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ContextMenuMultipleLineView extends LinearLayout {
     Context mContext;
 

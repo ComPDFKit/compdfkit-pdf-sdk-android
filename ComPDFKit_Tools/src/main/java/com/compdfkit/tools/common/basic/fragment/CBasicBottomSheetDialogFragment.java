@@ -49,7 +49,7 @@ public abstract class CBasicBottomSheetDialogFragment extends BottomSheetDialogF
         super.onStart();
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from((View) getView().getParent());
         if (fullScreen()) {
-            CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(getDialog(), behavior);
+            CDialogFragmentUtil.setBottomSheetDialogFragmentFullScreen(requireActivity(), getDialog(), behavior);
         }
         if (CViewUtils.isPad(getContext())){
             CDialogFragmentUtil.setDimAmount(getDialog(),0.2F);

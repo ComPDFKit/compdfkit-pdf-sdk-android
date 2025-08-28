@@ -155,6 +155,8 @@
         <item name="android:colorControlActivated">@color/tools_color_accent</item>
         <item name="colorControlActivated">@color/tools_color_accent</item>
         <item name="colorOnPrimary">@color/tools_dark_on_primary</item>
+        <item name="android:navigationBarColor">@color/tools_color_background</item>
+        <item name="android:windowTranslucentNavigation">false</item>
 
     </style>
 
@@ -183,6 +185,8 @@
         <item name="compdfkit_textColorPrimaryNoEnable">@color/tools_dark_icon_enable_color</item>
         <item name="compdfkit_tabLayoutStyle">@style/ComPDFKit.Theme.TabLayout</item>
         <item name="isLightTheme">false</item>
+        <item name="android:navigationBarColor">@color/tools_dark_color_background</item>
+
 
     </style>
 
@@ -202,6 +206,7 @@
         <item name="compdfkit_HeadItem_BackgroundColor">@color/tools_reader_setting_head_bg_color</item>
         <item name="dividerColor">@color/tools_divider_color</item>
         <item name="isLightTheme">true</item>
+        <item name="android:navigationBarColor">@color/tools_color_background</item>
 
     </style>
 

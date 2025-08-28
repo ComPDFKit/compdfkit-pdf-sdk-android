@@ -19,6 +19,7 @@
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:enableOnBackInvokedCallback="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.Compdfkit_android_demo">
         <activity
@@ -33,7 +34,7 @@
 
         <activity
             android:name=".SampleDetailActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

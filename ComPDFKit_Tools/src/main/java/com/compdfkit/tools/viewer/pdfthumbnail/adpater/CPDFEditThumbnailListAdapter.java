@@ -8,7 +8,6 @@
  */
 package com.compdfkit.tools.viewer.pdfthumbnail.adpater;
 
-import android.content.res.Configuration;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.util.SparseIntArray;

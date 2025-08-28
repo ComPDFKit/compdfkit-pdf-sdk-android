@@ -62,7 +62,7 @@ public class CLineTypeListAdapter extends CBaseQuickAdapter<CPDFLineAnnotation.L
         if (item == selectLineType){
             previewView.setBorderColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_annot_icon_select_color));
         }else {
-            previewView.setBorderColor(MaterialColors.getColor(holder.itemView.getContext(), R.attr.colorOnPrimary,
+            previewView.setBorderColor(MaterialColors.getColor(holder.itemView.getContext(),  com.google.android.material.R.attr.colorOnPrimary,
                     ContextCompat.getColor(holder.itemView.getContext(), R.color.tools_on_primary)));
         }
     }

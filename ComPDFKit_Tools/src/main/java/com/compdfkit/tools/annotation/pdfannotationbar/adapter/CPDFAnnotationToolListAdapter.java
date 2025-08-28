@@ -41,7 +41,7 @@ public class CPDFAnnotationToolListAdapter extends CBaseQuickAdapter<CAnnotToolB
 
     @Override
     protected void onBindViewHolder(CBaseQuickViewHolder holder, int position, CAnnotToolBean item) {
-        int isLightTheme = CViewUtils.getThemeAttrData(holder.itemView.getContext().getTheme(), R.attr.isLightTheme);
+        int isLightTheme = CViewUtils.getThemeAttrData(holder.itemView.getContext().getTheme(),  com.google.android.material.R.attr.isLightTheme);
         boolean isDarkTheme = isLightTheme == 0;
         holder.setImageResource(R.id.iv_annot_type, isDarkTheme && item.getIconDarkResId() != 0 ? item.getIconDarkResId() : item.getIconResId());
         CardView cardView = holder.getView(R.id.card_view);
@@ -98,7 +98,7 @@ public class CPDFAnnotationToolListAdapter extends CBaseQuickAdapter<CAnnotToolB
                 if (item.isSelect()) {
                     holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tools_annot_icon_select_color)));
                 } else {
-                    holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(MaterialColors.getColor(context, R.attr.colorOnPrimary, ContextCompat.getColor(context, R.color.tools_text_color_primary))));
+                    holder.setImageTintList(R.id.iv_annot_type, ColorStateList.valueOf(MaterialColors.getColor(context,  com.google.android.material.R.attr.colorOnPrimary, ContextCompat.getColor(context, R.color.tools_text_color_primary))));
                 }
                 break;
         }

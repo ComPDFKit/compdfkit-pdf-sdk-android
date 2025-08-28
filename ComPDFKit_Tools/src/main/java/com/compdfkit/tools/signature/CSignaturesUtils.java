@@ -35,8 +35,6 @@ import com.compdfkit.tools.signature.importcert.create.CPDFSelectDigitalSignatur
 import com.compdfkit.tools.signature.importcert.create.CSelectSignTypeDialog;
 import com.compdfkit.tools.signature.preview.CDigitalSignStylePreviewDialog;
 import com.compdfkit.ui.proxy.form.CPDFSignatureWidgetImpl;
-import com.compdfkit.ui.reader.CPDFPageView;
-import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.reader.PageView;
 import com.compdfkit.ui.reader.ReaderView;
 

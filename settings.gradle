@@ -4,7 +4,6 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
-        mavenLocal()
     }
 }
 dependencyResolutionManagement {
@@ -13,7 +12,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
-        mavenLocal()
     }
 }
 rootProject.name = "compdfkit_demo_android"
