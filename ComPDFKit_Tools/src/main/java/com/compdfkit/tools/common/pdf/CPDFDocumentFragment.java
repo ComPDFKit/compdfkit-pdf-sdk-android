@@ -59,6 +59,7 @@ import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts.RequestType;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultLauncher;
 import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
+import com.compdfkit.tools.common.utils.animation.CFillScreenManager;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 import com.compdfkit.tools.common.utils.dialog.CExitTipsDialog;
@@ -191,7 +192,13 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             annotationToolbar.reset();
             screenManager.changeWindowStatus(cpdfConfiguration.modeConfig.initialViewMode);
             screenManager.constraintHide(signStatusView);
-            pdfView.openPDF(uri, null, () -> editToolBar.setEditMode(false));
+            pdfView.openPDF(uri, null, () -> {
+                editToolBar.setEditMode(false);
+                boolean enableSliderBar = pdfView.isEnableSliderBar();
+                if (enableSliderBar && !screenManager.isFillScreen){
+                    screenManager.fillScreenManager.showFromRight(pdfView.slideBar, CFillScreenManager.CONFIG_SHORT_ANIM_TIME);
+                }
+            });
         }
     });
 
@@ -916,7 +923,21 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     }
 
     public void showPageEdit(boolean enterEditMode, boolean enableEditMode) {
-        showPageEdit(pdfView, enterEditMode, enableEditMode, this::restoreEdit);
+        showPageEdit(pdfView, enterEditMode, enableEditMode, () -> {
+            restoreEdit();
+            int pageCount = pdfView.getCPdfReaderView().getPageCount();
+            CPDFConfiguration configuration = pdfView.getCPDFConfiguration();
+            if (configuration != null){
+                boolean enableSliderBar = configuration.readerViewConfig.enableSliderBar;
+                if (enableSliderBar){
+                    boolean show = pageCount > 1;
+                    pdfView.enableSliderBar(show);
+                    if (show && !screenManager.isFillScreen){
+                        screenManager.fillScreenManager.showFromRight(pdfView.slideBar, CFillScreenManager.CONFIG_SHORT_ANIM_TIME);
+                    }
+                }
+            }
+        });
     }
 
     public void showSecurityDialog() {

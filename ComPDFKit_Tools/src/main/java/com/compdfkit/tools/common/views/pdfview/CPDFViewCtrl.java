@@ -584,6 +584,14 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   }
 
   private void initCPDFSliderBar() {
+    CPDFDocument document = cPdfReaderView.getPDFDocument();
+    if (document != null && document.getPageCount() == 1){
+      enableSliderBar = false;
+    }else {
+      if (cpdfConfiguration != null){
+        enableSliderBar = cpdfConfiguration.readerViewConfig.enableSliderBar;
+      }
+    }
     if (!enableSliderBar) {
       if (slideBar.getParent() != null) {
         ViewGroup viewGroup = (ViewGroup) slideBar.getParent();
@@ -659,6 +667,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       dialog.setOnPDFDisplayPageIndexListener(page -> {
         if (page <= cPdfReaderView.getPDFDocument().getPageCount() && page > 0) {
           cPdfReaderView.setDisplayPageIndex(page - 1, true);
+          showPageIndicator();
         }
       });
       FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
@@ -670,7 +679,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     pageIndicatorAnimator.setDuration(100);
     pageIndicatorAnimator.setInterpolator(new FastOutLinearInInterpolator());
     showPageIndicator();
-    hidePageIndicator();
+    postDelayed(this::hidePageIndicator, 110);
   }
 
   private void hidePageIndicator() {
@@ -705,6 +714,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     initCPDFSliderBar();
   }
 
+  public boolean isEnableSliderBar() {
+    return enableSliderBar;
+  }
+
   public boolean isSaveFileExtraFontSubset() {
     if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null) {
       return cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
@@ -730,8 +743,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         getCPdfReaderView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
           updateScaleForLayout();
+          slideBar.refreshLayoutPosition();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
           updateScaleForLayout();
+          slideBar.refreshLayoutPosition();
         }
       }
     });

@@ -199,6 +199,10 @@ public class CPDFSlideBar extends View {
                     matrix, true);
         }
 
+        initPosition();
+    }
+
+    private void initPosition(){
         slideBarWidth = slideBarBitmap.getWidth();
         slideBarHeight = slideBarBitmap.getHeight();
 
@@ -529,9 +533,8 @@ public class CPDFSlideBar extends View {
             perPageDistance = Integer.MAX_VALUE;
         }
 
-        if (!isInit && perPageDistance > 0) {
+        if (perPageDistance > 0) {
             setPageIndex(pageIndex);
-            isInit = true;
         }
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -645,6 +648,17 @@ public class CPDFSlideBar extends View {
             canvas.translate(thumbnailPosition.left + thumbnailWidth / 2 - textWidth / 2, 0);
             float staticLayoutHeight = CPDFTextUtils.getTextSmallestBounds(textPaint, content).height();
             canvas.drawText(content, 0, (textSize * 3 / 2 + staticLayoutHeight) / 2, textPaint);
+        }
+    }
+
+    public void refreshLayoutPosition(){
+        try {
+            requestLayout();
+            postInvalidate();
+            initPosition();
+            setPageIndex(pageIndex);
+        }catch (Exception e){
+
         }
     }
 }

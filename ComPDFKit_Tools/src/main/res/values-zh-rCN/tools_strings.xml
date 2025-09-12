@@ -532,7 +532,7 @@
     <string name="tools_please_enter_percentage">请输入百分比</string>
     <string name="tools_save_path">文件存储路径</string>
     <string name="tools_compressed_successfully">压缩成功</string>
-    <string name="compressing_">正在压缩&#8230;</string>
+    <string name="tools_compressing_">正在压缩&#8230;</string>
     <string name="tools_print_systemversion_not_support">打印功能支持4.4以上安卓系统，请升级您的系统。</string>
     <string name="tools_print_not_working">打印机不可用。</string>
 

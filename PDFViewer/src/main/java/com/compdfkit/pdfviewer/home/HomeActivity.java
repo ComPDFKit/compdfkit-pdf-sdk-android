@@ -49,9 +49,9 @@ public class HomeActivity extends AppCompatActivity {
                     .replace(R.id.fragment_content, new HomeFunFragment(), "homeFunFragment")
                     .commit();
         }
-        String savePath = new File(getFilesDir(), "extraFonts/").getAbsolutePath();
+        String fontDir = new File(getFilesDir(), "extraFonts/").getAbsolutePath();
         CFileUtils.copyAssetsDirToPhone(this, "extraFonts", getFilesDir().getAbsolutePath());
-        CPDFSdk.setImportFontDir(savePath, true);
+        CPDFSdk.setImportFontDir(fontDir, true);
         CPDFSdk.initWithPath(this, "assets://license_key_android.xml", (verifyCode, verifyMsg) -> {
             Log.e("ComPDFKit", "verifyCode: " + verifyCode + ", verifyMsg: " + verifyMsg);
             CPDFAbility.checkLicenseAllAbility();

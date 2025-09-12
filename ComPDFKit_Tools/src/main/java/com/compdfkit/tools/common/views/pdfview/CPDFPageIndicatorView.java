@@ -99,15 +99,19 @@ public class CPDFPageIndicatorView extends LinearLayout {
      */
     public void setCurrentPageIndex(int pageIndex){
         this.currentPageIndex = pageIndex + 1;
-        if (tvPageIndex != null) {
-            tvPageIndex.setText(currentPageIndex + "");
-        }
-        if (isRNMeasureLayout){
-            measure(
-                    MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-            layout(getLeft(), getTop(), getRight(), getBottom());
-        }
+        post(()->{
+            if (tvPageIndex != null) {
+                tvPageIndex.setText(currentPageIndex + "");
+            }
+            if (isRNMeasureLayout){
+                measure(
+                        MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                        MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+                layout(getLeft(), getTop(), getRight(), getBottom());
+            }
+        });
+
+
     }
 
     public void setRNMeasureLayout(boolean RNMeasureLayout) {

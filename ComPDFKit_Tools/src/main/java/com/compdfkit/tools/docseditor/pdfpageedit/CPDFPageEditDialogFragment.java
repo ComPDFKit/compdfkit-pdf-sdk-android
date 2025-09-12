@@ -624,18 +624,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
 
     @Override
     public void dismiss() {
-        if (checkPdfView()) {
-            CPDFReaderView readerView = pdfView.getCPdfReaderView();
-            if (hasEdit) {
-                int pageCount = readerView.getPDFDocument().getPageCount();
-                int jumpIndex = pdfView.currentPageIndex >= pageCount ? pageCount - 1 : pdfView.currentPageIndex;
-                readerView.reloadPages(refreshHQApList);
-                readerView.setDisplayPageIndex(jumpIndex);
-                pdfView.slideBar.setPageCount(pageCount);
-                pdfView.slideBar.requestLayout();
-                pdfView.indicatorView.setTotalPage(pageCount);
-            }
-        }
+        refreshPDFView();
         super.dismiss();
         if (onBackLisener != null) {
             onBackLisener.onBack();
@@ -645,6 +634,16 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
+        refreshPDFView();
+        if (onBackLisener != null) {
+            onBackLisener.onBack();
+        }
+        if (onEnterBackPressedListener != null) {
+            onEnterBackPressedListener.onEnterBackPressed();
+        }
+    }
+
+    private void refreshPDFView(){
         if (checkPdfView()) {
             CPDFReaderView readerView = pdfView.getCPdfReaderView();
             if (hasEdit) {
@@ -656,9 +655,6 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
                 pdfView.slideBar.requestLayout();
                 pdfView.indicatorView.setTotalPage(pageCount);
             }
-        }
-        if (onEnterBackPressedListener != null) {
-            onEnterBackPressedListener.onEnterBackPressed();
         }
     }
 
