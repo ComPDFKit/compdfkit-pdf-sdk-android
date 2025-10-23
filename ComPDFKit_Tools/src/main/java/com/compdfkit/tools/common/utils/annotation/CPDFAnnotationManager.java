@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -59,7 +59,6 @@ public class CPDFAnnotationManager {
         CPDFFreetextAttr freetextAttr = readerView.getReaderAttribute().getAnnotAttribute().getFreetextAttr();
         if (freetextAnnotation.isValid()) {
             CPDFTextAttribute attribute = freetextAttr.getTextAttribute();
-            attribute.setFontSize(attribute.getFontSize() / pageView.getScaleValue());
             freetextAnnotation.setFreetextDa(attribute);
             freetextAnnotation.setFreetextAlignment(freetextAttr.getAlignment());
             freetextAnnotation.setAlpha(freetextAttr.getAlpha());
@@ -86,7 +85,6 @@ public class CPDFAnnotationManager {
         CPDFFreetextAttr freetextAttr = readerView.getReaderAttribute().getAnnotAttribute().getFreetextAttr();
         if (freetextAnnotation.isValid()) {
             CPDFTextAttribute attribute = freetextAttr.getTextAttribute();
-            attribute.setFontSize(attribute.getFontSize() / pageView.getScaleValue());
             freetextAnnotation.setFreetextDa(attribute);
             freetextAnnotation.setFreetextAlignment(freetextAttr.getAlignment());
             freetextAnnotation.setAlpha(freetextAnnotation.getAlpha());

@@ -47,7 +47,7 @@ public class ModeConfig implements Serializable {
 
     public CPreviewMode initialViewMode = CPreviewMode.Viewer;
 
-    public boolean readerOnly = false;
+    public CPDFUIVisibilityMode uiVisibilityMode = CPDFUIVisibilityMode.AUTOMATIC;
 
     public List<CPreviewMode> availableViewModes = new ArrayList<>();
 
@@ -56,7 +56,8 @@ public class ModeConfig implements Serializable {
     public String toString() {
         String stringBuilder = "[modeConfig: " + "initialViewMode:" + initialViewMode.name() +
                 ", availableViewModes: " + availableViewModes.toString() +
-                ", readerOnly: " + readerOnly + "]";
+                ", uiVisibilityMode: " + uiVisibilityMode.name() +
+                "]";
         return stringBuilder;
     }
 }

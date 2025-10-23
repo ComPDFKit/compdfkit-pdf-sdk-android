@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -38,52 +38,4 @@ public class CPDFConfiguration implements Serializable {
         return modeConfig.toString() + "\n" + readerViewConfig.toString() + "\n" + annotationsConfig.toString();
     }
 
-    public static class Builder {
-
-        CPDFConfiguration configuration = new CPDFConfiguration();
-
-        public Builder setModeConfig(ModeConfig modeConfig) {
-            configuration.modeConfig = modeConfig;
-            return this;
-        }
-
-        public Builder setToolbarConfig(ToolbarConfig toolbarConfig) {
-            configuration.toolbarConfig = toolbarConfig;
-            return this;
-        }
-
-        public Builder setReaderViewConfig(ReaderViewConfig readerViewConfig) {
-            configuration.readerViewConfig = readerViewConfig;
-            return this;
-        }
-
-        public Builder setAnnotationsConfig(AnnotationsConfig annotationsConfig){
-            configuration.annotationsConfig = annotationsConfig;
-            return this;
-        }
-
-        public Builder setContentEditorConfig(ContentEditorConfig contentEditorConfig){
-            configuration.contentEditorConfig = contentEditorConfig;
-            return this;
-        }
-
-        public Builder setFormsConfig(FormsConfig formsConfig){
-            configuration.formsConfig = formsConfig;
-            return this;
-        }
-
-        public Builder setGlobalConfig(GlobalConfig globalConfig){
-            configuration.globalConfig = globalConfig;
-            return this;
-        }
-
-        public Builder setContextMenuConfig(ContextMenuConfig contextMenuConfig){
-            configuration.contextMenuConfig = contextMenuConfig;
-            return this;
-        }
-
-        public CPDFConfiguration create() {
-            return configuration;
-        }
-    }
 }

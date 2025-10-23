@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -25,6 +25,8 @@ import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfannotationlist.bean.CPDFAnnotListItem;
 import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CMarkedTipsWindow;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaAnnotationMenu;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaItemMenu;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickAdapter;
 import com.compdfkit.tools.common.utils.adapter.CBaseQuickViewHolder;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
@@ -32,6 +34,7 @@ import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.utils.window.CPopupMenuWindow;
 import com.google.android.material.color.MaterialColors;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,6 +53,19 @@ public class CPDFAnnotListAdapter  extends CBaseQuickAdapter<CPDFAnnotListItem, 
     private static final HashMap<CPDFAnnotation.Type, Integer> ICON_RES_IDS_DARK = new HashMap<>();
 
     private boolean showMoreMenu = true;
+
+    private boolean isShowReviewStatus = true;
+
+    private boolean isShowMarkedStatus = true;
+
+    public CPDFAnnotListAdapter(){}
+
+    public CPDFAnnotListAdapter(boolean isShowReviewStatus, boolean isShowMarkedStatus, boolean isShowMoreMenu){
+        this.isShowReviewStatus = isShowReviewStatus;
+        this.isShowMarkedStatus = isShowMarkedStatus;
+        this.showMoreMenu = isShowMoreMenu;
+    }
+
 
     static {
         ICON_RES_IDS.put(CPDFAnnotation.Type.TEXT, R.drawable.tools_ic_annotation_note);
@@ -153,6 +169,8 @@ public class CPDFAnnotListAdapter  extends CBaseQuickAdapter<CPDFAnnotListItem, 
             holder.setText(R.id.tv_annot_date, item.getModifyDate());
             holder.setText(R.id.tv_author, item.getAttr().getTitle());
             holder.setVisible(R.id.iv_more, showMoreMenu);
+            holder.setVisible(R.id.iv_review_status, isShowReviewStatus);
+            holder.setVisible(R.id.cb_marked_status, isShowMarkedStatus);
             refreshReviewStatus(holder, item.getAttr().getReviewAnnotState());
             refreshMarkedStatus(holder, item.getAttr().getMarkedAnnotState());
         }
@@ -227,35 +245,68 @@ public class CPDFAnnotListAdapter  extends CBaseQuickAdapter<CPDFAnnotListItem, 
         this.showMoreMenu = showMoreMenu;
     }
 
+    public void setShowMarkedStatus(boolean showMarkedStatus) {
+        isShowMarkedStatus = showMarkedStatus;
+    }
+
+    public void setShowReviewStatus(boolean showReviewStatus) {
+        isShowReviewStatus = showReviewStatus;
+    }
+
     @Override
     public int getItemViewType(int position) {
        return list.get(position).isHeader() ? ITEM_HEADER : ITEM_CONTENT;
     }
 
+    public void showReviewStatusMenu(Context context, int position, View anchorView) {
+        showReviewStatusMenu(context, position,anchorView, Arrays.asList(
+                CPDFBotaAnnotationMenu.REVIEW_STATUS_ACCEPTED,
+                CPDFBotaAnnotationMenu.REVIEW_STATUS_REJECTED,
+                CPDFBotaAnnotationMenu.REVIEW_STATUS_CANCELLED,
+                CPDFBotaAnnotationMenu.REVIEW_STATUS_COMPLETED,
+                CPDFBotaAnnotationMenu.REVIEW_STATUS_NONE
+        ));
+    }
     /**
      * Display the comment reply status menu
      * @param position The subscript of the selected annotation in the list
      * @param anchorView The position anchor view to be popped up, displayed above or below it
      */
-    public void showReviewStatusMenu(Context context, int position, View anchorView){
+    public void showReviewStatusMenu(Context context, int position, View anchorView, List<String> subMenus){
         anchorView.setSelected(true);
         CPopupMenuWindow reviewStatusMenuWindow = new CPopupMenuWindow(context);
         reviewStatusMenuWindow.setOutsideTouchable(false);
-        reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_accepted, R.string.tools_accepted, v -> {
-            setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_ACCEPTED);
-        });
-        reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_rejected, R.string.tools_rejected, v -> {
-            setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_REJECTED);
-        });
-        reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_cancelled, R.string.tools_cancelled, v -> {
-            setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_CANCELLED);
-        });
-        reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_completed, R.string.tools_completed, v -> {
-            setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_COMPLETED);
-        });
-        reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_none, R.string.tools_none, v -> {
-            setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_NONE);
-        });
+        for (String subMenu : subMenus) {
+            switch (subMenu) {
+                case CPDFBotaAnnotationMenu.REVIEW_STATUS_ACCEPTED:
+                    reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_accepted, R.string.tools_accepted, v -> {
+                        setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_ACCEPTED);
+                    });
+                    break;
+                case CPDFBotaAnnotationMenu.REVIEW_STATUS_REJECTED:
+                    reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_rejected, R.string.tools_rejected, v -> {
+                        setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_REJECTED);
+                    });
+                    break;
+                case CPDFBotaAnnotationMenu.REVIEW_STATUS_CANCELLED:
+                    reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_cancelled, R.string.tools_cancelled, v -> {
+                        setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_CANCELLED);
+                    });
+                    break;
+                case CPDFBotaAnnotationMenu.REVIEW_STATUS_COMPLETED:
+                    reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_completed, R.string.tools_completed, v -> {
+                        setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_COMPLETED);
+                    });
+                    break;
+                case CPDFBotaAnnotationMenu.REVIEW_STATUS_NONE:
+                    reviewStatusMenuWindow.addItem(R.drawable.tools_annot_review_status_none, R.string.tools_none, v -> {
+                        setReviewStatus(position, CPDFAnnotation.ReviewState.REVIEW_NONE);
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
         reviewStatusMenuWindow.setOnDismissListener(() -> anchorView.setSelected(false));
         //Calculate the position of the pop-up.
         // If there is enough space at the bottom,

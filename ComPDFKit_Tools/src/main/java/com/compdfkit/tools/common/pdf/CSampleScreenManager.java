@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.pdf.config.CPDFUIVisibilityMode;
 import com.compdfkit.tools.common.utils.animation.CFillScreenManager;
 import com.compdfkit.tools.common.utils.animation.ConstraintSetUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
@@ -45,49 +46,67 @@ public class CSampleScreenManager {
     public void changeWindowStatus(CPreviewMode mode){
         if (mode == CPreviewMode.Viewer){
             fillScreenManager.removeToolView(documentFragment.flBottomToolBar);
+            documentFragment.annotationToolbar.setVisibility(GONE);
+            documentFragment.formToolBar.setVisibility(GONE);
+            documentFragment.editToolBar.setVisibility(GONE);
+            documentFragment.signatureToolBar.setVisibility(GONE);
+            constraintSetUtils.hide(constraintSet, documentFragment.flBottomToolBar);
             constraintSetUtils.hideFromBottom(constraintSet, documentFragment.flBottomToolBar);
         }else if (mode == CPreviewMode.Annotation){
             fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
             CPDFConfiguration configuration = documentFragment.pdfView.getCPDFConfiguration();
-            boolean visible = configuration.toolbarConfig.annotationToolbarVisible;
+            boolean visible = configuration != null && configuration.toolbarConfig.annotationToolbarVisible;
             documentFragment.annotationToolbar.setVisibility(visible ? View.VISIBLE : GONE);
             documentFragment.editToolBar.setVisibility(GONE);
             documentFragment.formToolBar.setVisibility(GONE);
             documentFragment.signatureToolBar.setVisibility(GONE);
+            constraintSetUtils.show(constraintSet, documentFragment.flBottomToolBar);
             constraintSetUtils.showFromBottom(constraintSet, documentFragment.flBottomToolBar);
         } else if (mode == CPreviewMode.Edit) {
             fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
             documentFragment.annotationToolbar.setVisibility(GONE);
-            documentFragment.editToolBar.setVisibility(View.VISIBLE);
+            CPDFConfiguration configuration = documentFragment.pdfView.getCPDFConfiguration();
+            boolean visible = configuration != null && configuration.toolbarConfig.contentEditorToolbarVisible;
+            documentFragment.editToolBar.setVisibility(visible ? View.VISIBLE : GONE);
             documentFragment.formToolBar.setVisibility(GONE);
             documentFragment.signatureToolBar.setVisibility(GONE);
+            constraintSetUtils.show(constraintSet, documentFragment.flBottomToolBar);
             constraintSetUtils.showFromBottom(constraintSet, documentFragment.flBottomToolBar);
         } else if (mode == CPreviewMode.Form){
             fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
             documentFragment.annotationToolbar.setVisibility(GONE);
             documentFragment.editToolBar.setVisibility(GONE);
-            documentFragment.formToolBar.setVisibility(View.VISIBLE);
+            CPDFConfiguration configuration = documentFragment.pdfView.getCPDFConfiguration();
+            boolean visible = configuration != null && configuration.toolbarConfig.formToolbarVisible;
+            documentFragment.formToolBar.setVisibility(visible ? View.VISIBLE : GONE);
             documentFragment.signatureToolBar.setVisibility(GONE);
+            constraintSetUtils.show(constraintSet, documentFragment.flBottomToolBar);
             constraintSetUtils.showFromBottom(constraintSet, documentFragment.flBottomToolBar);
         } else if (mode == CPreviewMode.Signature){
             fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
             documentFragment.annotationToolbar.setVisibility(GONE);
             documentFragment.editToolBar.setVisibility(GONE);
             documentFragment.formToolBar.setVisibility(GONE);
-            documentFragment.signatureToolBar.setVisibility(View.VISIBLE);
+            CPDFConfiguration configuration = documentFragment.pdfView.getCPDFConfiguration();
+            boolean visible = configuration != null && configuration.toolbarConfig.signatureToolbarVisible;
+            documentFragment.signatureToolBar.setVisibility(visible ? View.VISIBLE : GONE);
+            constraintSetUtils.show(constraintSet, documentFragment.flBottomToolBar);
             constraintSetUtils.showFromBottom(constraintSet, documentFragment.flBottomToolBar);
         }
         constraintSetUtils.apply(constraintSet, documentFragment.clRoot);
     }
 
     public void changeWindowStatus(CAnnotationType type){
+        CPDFUIVisibilityMode uiVisibilityMode = documentFragment.pdfView.getCPDFConfiguration().modeConfig.uiVisibilityMode;
         if (type == CAnnotationType.INK){
-            fillScreenManager.hideFromTop(documentFragment.flTool, 100);
+            if (uiVisibilityMode != CPDFUIVisibilityMode.ALWAYS){
+                fillScreenManager.hideFromTop(documentFragment.flTool, 100);
+            }
         }else {
             boolean isGone = documentFragment.flTool.getVisibility() == GONE;
             boolean isEnable = documentFragment.pdfView.getCPDFConfiguration().toolbarConfig.mainToolbarVisible;
-            boolean isReaderOnly = documentFragment.pdfView.getCPDFConfiguration().modeConfig.readerOnly;
-            if (!isReaderOnly && isEnable && isGone){
+            boolean isShowToolbar = uiVisibilityMode != CPDFUIVisibilityMode.NEVER && isEnable;
+            if (isShowToolbar && isGone){
                 fillScreenManager.showFromTop(documentFragment.flTool, 100);
             }
         }
@@ -97,7 +116,7 @@ public class CSampleScreenManager {
         if (pdfType == CPDFAnnotation.Type.INK){
             fillScreenManager.hideFromTop(documentFragment.flTool, 100);
             fillScreenManager.hideFromBottom(documentFragment.flBottomToolBar, 100);
-        }else {
+        } else {
             if (documentFragment.flTool.getVisibility() == GONE){
                 fillScreenManager.showFromTop(documentFragment.flTool, 100);
             }

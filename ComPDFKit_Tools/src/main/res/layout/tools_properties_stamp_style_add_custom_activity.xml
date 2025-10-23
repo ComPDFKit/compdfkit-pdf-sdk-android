@@ -26,6 +26,7 @@
             android:background="@drawable/tools_properties_signature_add_sign"
             android:minWidth="70dp"
             android:text="@string/tools_save"
+            android:paddingHorizontal="8dp"
             android:textColor="@color/tools_normal_btn_text_color"
             android:textSize="16sp" />
 

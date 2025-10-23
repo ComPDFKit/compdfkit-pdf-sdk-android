@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -11,6 +11,7 @@ package com.compdfkit.tools.common.pdf;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
@@ -21,6 +22,9 @@ import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.edit.CPDFEditTextArea;
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.pdf.config.CPDFEditorConfig;
+import com.compdfkit.tools.common.pdf.config.CPDFUIVisibilityMode;
+import com.compdfkit.tools.common.pdf.config.CPDFWatermarkConfig;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.pdf.config.FormsConfig;
@@ -33,6 +37,11 @@ import com.compdfkit.tools.common.pdf.config.annot.AnnotFreetextAttr;
 import com.compdfkit.tools.common.pdf.config.annot.AnnotInkAttr;
 import com.compdfkit.tools.common.pdf.config.annot.AnnotShapeAttr;
 import com.compdfkit.tools.common.pdf.config.annot.AnnotationsAttributes;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaAnnotationMenu;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaConfig;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaGlobalMenuItem;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaItemMenu;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaMenusConfig;
 import com.compdfkit.tools.common.pdf.config.forms.FormsAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsCheckBoxAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsComboBoxAttr;
@@ -42,6 +51,7 @@ import com.compdfkit.tools.common.pdf.config.forms.FormsRadioButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsTextFieldAttr;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.views.pdfbota.CPDFBOTA;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 
@@ -87,7 +97,19 @@ public class CPDFConfigurationUtils {
             return ModeConfig.normal();
         }
         ModeConfig modeConfig = ModeConfig.normal();
-        modeConfig.readerOnly = jsonObject.optBoolean("readerOnly", false);
+        // parse ui visibility mode
+        String uiVisibilityMode = jsonObject.optString("uiVisibilityMode", "automatic").toLowerCase();
+        switch (uiVisibilityMode) {
+            case "always":
+                modeConfig.uiVisibilityMode = CPDFUIVisibilityMode.ALWAYS;
+                break;
+            case "never":
+                modeConfig.uiVisibilityMode = CPDFUIVisibilityMode.NEVER;
+                break;
+            default:
+                modeConfig.uiVisibilityMode = CPDFUIVisibilityMode.AUTOMATIC;
+                break;
+        }
         CPreviewMode mode = CPreviewMode.fromAlias(jsonObject.optString("initialViewMode"));
         modeConfig.initialViewMode = mode != null ? mode : CPreviewMode.Viewer;
         JSONArray availableViewModes = jsonObject.optJSONArray("availableViewModes");
@@ -136,6 +158,9 @@ public class CPDFConfigurationUtils {
         toolbarConfig.availableMenus = menuActionList;
         toolbarConfig.mainToolbarVisible = jsonObject.optBoolean("mainToolbarVisible", true);
         toolbarConfig.annotationToolbarVisible = jsonObject.optBoolean("annotationToolbarVisible", true);
+        toolbarConfig.contentEditorToolbarVisible = jsonObject.optBoolean("contentEditorToolbarVisible", true);
+        toolbarConfig.formToolbarVisible = jsonObject.optBoolean("formToolbarVisible", true);
+        toolbarConfig.signatureToolbarVisible = jsonObject.optBoolean("signatureToolbarVisible", true);
         toolbarConfig.showInkToggleButton = jsonObject.optBoolean("showInkToggleButton", true);
         return toolbarConfig;
     }
@@ -550,7 +575,7 @@ public class CPDFConfigurationUtils {
         return formsConfig;
     }
 
-    private static CPDFWidget.WidgetType getWidgetType(String key){
+    public static CPDFWidget.WidgetType getWidgetType(String key){
         switch (key.toLowerCase()){
             case "textfield":
                 return CPDFWidget.WidgetType.Widget_TextField;
@@ -711,8 +736,6 @@ public class CPDFConfigurationUtils {
 
     private static CPDFWidget.CheckStyle getCheckStyle(String key){
         switch(key.toLowerCase()){
-            case "check":
-                return CPDFWidget.CheckStyle.CK_Check;
             case "circle":
                 return CPDFWidget.CheckStyle.CK_Circle;
             case "cross":
@@ -736,10 +759,32 @@ public class CPDFConfigurationUtils {
         globalConfig.themeMode = GlobalConfig.CThemeMode.fromString(jsonObject.optString("themeMode", "light"));
         globalConfig.fileSaveExtraFontSubset = jsonObject.optBoolean("fileSaveExtraFontSubset", true);
         globalConfig.enableExitSaveTips = jsonObject.optBoolean("enableExitSaveTips", true);
-        JSONObject watermark = jsonObject.optJSONObject("watermark");
-        if (watermark != null){
-            globalConfig.watermark.saveAsNewFile = watermark.optBoolean("saveAsNewFile",true);
-            globalConfig.watermark.outsideBackgroundColor = watermark.optString("outsideBackgroundColor", "");
+        JSONObject watermarkJson = jsonObject.optJSONObject("watermark");
+        if (watermarkJson != null){
+            CPDFWatermarkConfig watermark = globalConfig.watermark;
+            watermark.types = new ArrayList<>();
+            JSONArray typesJsonArray = watermarkJson.optJSONArray("types");
+            if (typesJsonArray != null) {
+                for (int i = 0; i < typesJsonArray.length(); i++) {
+                    String type = typesJsonArray.optString(i, null);
+                    if (type != null && (type.equalsIgnoreCase("text") || type.equalsIgnoreCase("image"))) {
+                        if (!watermark.types.contains(type.toLowerCase())) {
+                            watermark.types.add(type.toLowerCase());
+                        }
+                    }
+                }
+            }
+            watermark.saveAsNewFile = watermarkJson.optBoolean("saveAsNewFile",true);
+            watermark.outsideBackgroundColor = watermarkJson.optString("outsideBackgroundColor", "");
+            watermark.text = watermarkJson.optString("text", "");
+            watermark.image = watermarkJson.optString("image", "");
+            watermark.textSize = watermarkJson.optInt("textSize", 30);
+            watermark.textColor = watermarkJson.optString("textColor", "#000000");
+            watermark.scale = watermarkJson.optDouble("scale", 1.0);
+            watermark.rotation = watermarkJson.optInt("rotation", 0);
+            watermark.opacity = watermarkJson.optInt("opacity", 255);
+            watermark.isFront = watermarkJson.optBoolean("isFront", false);
+            watermark.isTilePage = watermarkJson.optBoolean("isTilePage", false);
         }
         JSONObject thumbnailJsonObject = jsonObject.optJSONObject("thumbnail");
         if (thumbnailJsonObject != null) {
@@ -750,7 +795,165 @@ public class CPDFConfigurationUtils {
 
         globalConfig.signatureType = GlobalConfig.CSignatureType.fromString(jsonObject.optString("signatureType", "manual"));
         globalConfig.enableErrorTips = jsonObject.optBoolean("enableErrorTips", true);
+        globalConfig.bota = parseBotaConfig(jsonObject.optJSONObject("bota"));
+
+        JSONObject searchJsonObject = jsonObject.optJSONObject("search");
+        if (searchJsonObject != null) {
+            JSONObject normalKeywordJsonObject = searchJsonObject.optJSONObject("normalKeyword");
+            if (normalKeywordJsonObject != null) {
+                String fillColor = normalKeywordJsonObject.optString("fillColor", "#77FFFF00");
+                String borderColor = normalKeywordJsonObject.optString("borderColor", "#00000000");
+
+                globalConfig.search.normalKeyword.fillColor = Color.parseColor(fillColor);
+                globalConfig.search.normalKeyword.borderColor = Color.parseColor(borderColor);
+            }
+
+            JSONObject focusKeywordJsonObject = searchJsonObject.optJSONObject("focusKeyword");
+            if (focusKeywordJsonObject != null) {
+                String fillColor = focusKeywordJsonObject.optString("fillColor", "#77FF0000");
+                String borderColor = focusKeywordJsonObject.optString("borderColor", "#00000000");
+                globalConfig.search.focusKeyword.fillColor = Color.parseColor(fillColor);
+                globalConfig.search.focusKeyword.borderColor = Color.parseColor(borderColor);
+            }
+        }
+
+        // parse editor document config
+        JSONObject pageEditorJsonObject = jsonObject.optJSONObject("pageEditor");
+        if (pageEditorJsonObject != null) {
+            JSONArray pageEditorMenus = pageEditorJsonObject.optJSONArray("menus");
+            if (pageEditorMenus != null) {
+                List<CPDFEditorConfig.CPDFEditorMenus> menus = new ArrayList<>();
+                for (int i = 0; i < pageEditorMenus.length(); i++) {
+                    String menu = pageEditorMenus.optString(i, null);
+                    if (menu != null) {
+                        switch (menu.toLowerCase()) {
+                            case "insertpage":
+                                menus.add(CPDFEditorConfig.CPDFEditorMenus.INSERT_PAGE);
+                                break;
+                            case "replacepage":
+                                menus.add(CPDFEditorConfig.CPDFEditorMenus.REPLACE_PAGE);
+                                break;
+                            case "extractpage":
+                                menus.add(CPDFEditorConfig.CPDFEditorMenus.EXTRACT_PAGE);
+                                break;
+                            case "copypage":
+                                menus.add(CPDFEditorConfig.CPDFEditorMenus.COPY_PAGE);
+                                break;
+                            case "rotatepage":
+                                menus.add(CPDFEditorConfig.CPDFEditorMenus.ROTATE_PAGE);
+                                break;
+                            case "deletepage":
+                                menus.add(CPDFEditorConfig.CPDFEditorMenus.DELETE_PAGE);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                globalConfig.pageEditor.menus = menus;
+            }
+        }
+
         return globalConfig;
+    }
+
+    private static CPDFBotaConfig parseBotaConfig(@Nullable JSONObject jsonObject){
+        CPDFBotaConfig botaConfig = new CPDFBotaConfig();
+        if (jsonObject == null) return botaConfig;
+
+        // 解析 tabs (字符串 -> int 映射)
+        List<Integer> tabs = new ArrayList<>();
+        JSONArray tabsJsonArray = jsonObject.optJSONArray("tabs");
+        if (tabsJsonArray != null) {
+            for (int i = 0; i < tabsJsonArray.length(); i++) {
+                String tabStr = tabsJsonArray.optString(i, null);
+                if (tabStr == null) continue;
+
+                int tab = -1;
+                switch (tabStr.toLowerCase()) {
+                    case "outline":
+                        tab = CPDFBOTA.OUTLINE;
+                        break;
+                    case "bookmark":
+                    case "bookmarks": // 容错写法
+                        tab = CPDFBOTA.BOOKMARKS;
+                        break;
+                    case "annotations":
+                    case "annotation":
+                        tab = CPDFBOTA.ANNOTATION;
+                        break;
+                }
+                if (tab != -1) {
+                    tabs.add(tab);
+                }
+            }
+        }
+        if (!tabs.isEmpty()) {
+            botaConfig.tabs = tabs;
+        }
+        JSONObject menusJsonObject = jsonObject.optJSONObject("menus");
+        if (menusJsonObject != null) {
+            botaConfig.menus = parseBotaMenuConfig(menusJsonObject);
+        }
+        return botaConfig;
+    }
+
+    private static CPDFBotaMenusConfig parseBotaMenuConfig(JSONObject object){
+        CPDFBotaMenusConfig menus = new CPDFBotaMenusConfig();
+
+        JSONObject annotationsObject = object.optJSONObject("annotations");
+        if (annotationsObject != null) {
+            CPDFBotaAnnotationMenu annotations = new CPDFBotaAnnotationMenu();
+
+            // global
+            JSONArray globalArray = annotationsObject.optJSONArray("global");
+            if (globalArray != null) {
+                List<CPDFBotaGlobalMenuItem> globals = new ArrayList<>();
+                for (int i = 0; i < globalArray.length(); i++) {
+                    JSONObject globalObj = globalArray.optJSONObject(i);
+                    if (globalObj != null) {
+                        String id = globalObj.optString("id", null);
+                        if (TextUtils.isEmpty(id)) continue;
+                        CPDFBotaGlobalMenuItem item = new CPDFBotaGlobalMenuItem(id);
+                        globals.add(item);
+                    }
+                }
+                annotations.setGlobal(globals);
+            }
+
+            // item
+            JSONArray itemArray = annotationsObject.optJSONArray("item");
+            if (itemArray != null) {
+                List<CPDFBotaItemMenu> items = new ArrayList<>();
+                for (int i = 0; i < itemArray.length(); i++) {
+                    JSONObject itemObj = itemArray.optJSONObject(i);
+                    if (itemObj != null) {
+                        CPDFBotaItemMenu menuItem = new CPDFBotaItemMenu();
+                        String id  = itemObj.optString("id", null);
+                        if (TextUtils.isEmpty(id)){
+                            continue;
+                        }
+                        menuItem.setId(id);
+
+                        JSONArray subMenuArray = itemObj.optJSONArray("subMenus");
+                        if (subMenuArray != null) {
+                            List<String> subMenus = new ArrayList<>();
+                            for (int j = 0; j < subMenuArray.length(); j++) {
+                                String sub = subMenuArray.optString(j, null);
+                                if (sub != null) {
+                                    subMenus.add(sub);
+                                }
+                            }
+                            menuItem.setSubMenus(subMenus);
+                        }
+                        items.add(menuItem);
+                    }
+                }
+                annotations.setItem(items);
+            }
+            menus.setAnnotations(annotations);
+        }
+        return menus;
     }
 
     private static ContextMenuConfig parseContextMenuConfig(@Nullable JSONObject jsonObject) {

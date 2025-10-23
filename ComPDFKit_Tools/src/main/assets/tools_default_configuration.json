@@ -1,7 +1,7 @@
 {
   "modeConfig": {
     "initialViewMode": "viewer",
-    "readerOnly": false,
+    "uiVisibilityMode": "automatic",
     "availableViewModes": [
       "viewer",
       "annotations",
@@ -12,7 +12,10 @@
   },
   "toolbarConfig": {
     "mainToolbarVisible" : true,
+    "contentEditorToolbarVisible" : true,
     "annotationToolbarVisible" : true,
+    "formToolbarVisible" : true,
+    "signatureToolbarVisible" : true,
     "showInkToggleButton": true,
     "androidAvailableActions": [
       "thumbnail",
@@ -270,17 +273,80 @@
     "themeMode" : "system",
     "fileSaveExtraFontSubset" : true,
     "watermark": {
-      "saveAsNewFile" : true,
-      "outsideBackgroundColor" : ""
+      "types" : [ "text" , "image" ],
+      "saveAsNewFile" : false,
+      "outsideBackgroundColor" : "",
+      "text" : "",
+      "image" : "tools_logo",
+      "textSize" : 80,
+      "textColor" : "#FF000000",
+      "scale" : 1.0,
+      "rotation" : -45,
+      "opacity" : 255,
+      "isFront" : false,
+      "isTilePage" : false
     },
     "thumbnail": {
       "title" : "",
       "backgroundColor": "",
       "editMode" : true
     },
+    "bota": {
+      "tabs": ["outline", "bookmark", "annotations"],
+      "menus": {
+        "annotations": {
+          "global": [
+            { "id": "importAnnotation" },
+            { "id": "exportAnnotation" },
+            { "id": "removeAllAnnotation" },
+            { "id": "removeAllReply" }
+          ],
+          "item": [
+            { "id": "reviewStatus",
+              "subMenus": [
+                "accepted",
+                "rejected",
+                "cancelled",
+                "completed",
+                "none"
+              ]
+            },
+            { "id": "markedStatus" },
+            {
+              "id": "more",
+              "subMenus": [
+                "addReply",
+                "viewReply",
+                "delete"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "signatureType": "manual",
     "enableExitSaveTips" : true,
-    "enableErrorTips" : true
+    "enableErrorTips" : true,
+    "search": {
+      "normalKeyword": {
+        "borderColor": "#00000000",
+        "fillColor": "#77FFFF00"
+      },
+      "focusKeyword": {
+        "borderColor": "#00000000",
+        "fillColor": "#CCFD7338"
+      }
+    },
+    "pageEditor": {
+      "menus": [
+        "insertPage",
+        "replacePage",
+        "extractPage",
+        "copyPage",
+        "rotatePage",
+        "deletePage"
+      ]
+    }
   },
   "contextMenuConfig" : {
     "global": {

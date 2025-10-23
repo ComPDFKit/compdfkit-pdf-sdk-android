@@ -1,15 +1,27 @@
 package com.compdfkit.tools.common.utils;
 
+import android.media.MediaCodec.CryptoInfo;
 import java.util.regex.Pattern;
 
-
+/**
+ * @classname:
+ * @author: LiuXiaoLong
+ * @date: 2025/7/17 description:
+ */
 public class CStringUtils {
+  // 正则表达式：匹配所有常见的 emoji 字符
   public static final Pattern EMOJI_PATTERN = Pattern.compile(
-      "[\uD83C-\uDBFF\uDC00-\uDFFF]+|" +
-          "[\u2600-\u27FF]|" +
-          "[\uFE0F]"
+      "[\uD83C-\uDBFF\uDC00-\uDFFF]+|" + // surrogate pair 区间
+          "[\u2600-\u27FF]|" +                // 杂项符号及象形文字
+          "[\uFE0F]"                          // emoji 变体选择符
   );
 
+  /**
+   * 过滤字符串中的 emoji 字符
+   *
+   * @param source 输入字符串
+   * @return 过滤后的字符串
+   */
   public static String filterEmoji(String source) {
     if (source == null) {
       return null;

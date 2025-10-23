@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -285,4 +285,25 @@ public class CFormToolbar extends FrameLayout {
     public void showUndoRedo(boolean show){
         llFormTool.setVisibility(show ? VISIBLE : GONE);
     }
+
+    public void switchFormMode(CPDFWidget.WidgetType type){
+        toolListAdapter.selectByType(type);
+        if (type == CPDFWidget.WidgetType.Widget_Unknown) {
+            pdfView.resetFormType();
+            pdfView.getCPdfReaderView().getInkDrawHelper().onClean();
+            if (onFormChangeListener != null) {
+                onFormChangeListener.change(CPDFWidget.WidgetType.Widget_Unknown);
+            }
+            return;
+        }
+        IContextMenuShowListener listener = pdfView.getCPdfReaderView().getContextMenuShowListener();
+        if (listener != null){
+            listener.dismissContextMenu();
+        }
+        pdfView.changeFormType(type);
+        if (onFormChangeListener != null) {
+            onFormChangeListener.change(type);
+        }
+    }
+
 }

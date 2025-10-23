@@ -1,5 +1,7 @@
 package com.compdfkit.tools.common.pdf.config;
 
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaConfig;
+
 import java.io.Serializable;
 
 
@@ -60,5 +62,11 @@ public class GlobalConfig  implements Serializable {
     public CPDFThumbnailConfig thumbnail = new CPDFThumbnailConfig();
 
     public boolean enableErrorTips = true;
+
+    public CPDFBotaConfig bota = new CPDFBotaConfig();
+
+    public CPDFSearchConfig search = new CPDFSearchConfig();
+
+    public CPDFEditorConfig pageEditor = new CPDFEditorConfig();
 
 }

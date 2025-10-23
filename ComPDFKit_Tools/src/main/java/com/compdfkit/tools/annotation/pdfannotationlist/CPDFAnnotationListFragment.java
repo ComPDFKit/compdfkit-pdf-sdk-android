@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -8,6 +8,7 @@
  */
 
 package com.compdfkit.tools.annotation.pdfannotationlist;
+
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,6 +38,9 @@ import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFEditReplyDial
 import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFReplyDetailsDialogFragment;
 import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaAnnotationMenu;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaGlobalMenuItem;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaItemMenu;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CToastUtil;
@@ -64,6 +68,8 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
     private CPDFAnnotListAdapter listAdapter;
 
     private ProgressBar progressBar;
+
+    private CPDFBotaAnnotationMenu annotationMenu = new CPDFBotaAnnotationMenu();
 
 
     public static CPDFAnnotationListFragment newInstance() {
@@ -109,6 +115,9 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
         this.pdfView = pdfView;
     }
 
+    public void setAnnotationMenu(CPDFBotaAnnotationMenu annotationMenu) {
+        this.annotationMenu = annotationMenu;
+    }
 
     @Override
     protected int layoutId() {
@@ -125,7 +134,22 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        listAdapter = new CPDFAnnotListAdapter();
+        listAdapter = new CPDFAnnotListAdapter(false,false,false);
+        if (annotationMenu != null && !annotationMenu.getItem().isEmpty()) {
+            for (CPDFBotaItemMenu cpdfBotaItemMenu : annotationMenu.getItem()) {
+                switch (cpdfBotaItemMenu.getId()) {
+                    case CPDFBotaAnnotationMenu.MENU_ID_REVIEW_STATUS:
+                        listAdapter.setShowReviewStatus(true);
+                        break;
+                    case CPDFBotaAnnotationMenu.MENU_ID_MARKED_STATUS:
+                        listAdapter.setShowMarkedStatus(true);
+                        break;
+                    case CPDFBotaAnnotationMenu.MENU_ID_MORE:
+                        listAdapter.setShowMoreMenu(true);
+                        break;
+                }
+            }
+        }
         updateAnnotationList();
         listAdapter.addOnItemChildClickListener((adapter, view1, position) -> {
             CPDFAnnotListItem item = adapter.list.get(position);
@@ -137,7 +161,10 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
                     }
                 }
             } else if (view1.getId() == R.id.iv_review_status) {
-                listAdapter.showReviewStatusMenu(getContext(), position, view1);
+                List<String> subMenus = annotationMenu.getReviewStatusMenu().getSubMenus();
+                if (subMenus != null){
+                    listAdapter.showReviewStatusMenu(getContext(), position, view1, subMenus);
+                }
             } else if (view1.getId() == R.id.cb_marked_status) {
                 listAdapter.showMarkedStatusMenu(getContext(), position, view1);
             } else if (view1.getId() == R.id.iv_more) {
@@ -183,29 +210,44 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
      *
      */
     public void showAnnotationMenu(View anchorView) {
-        CPopupMenuWindow menuWindow = new CPopupMenuWindow(getContext());
-        boolean hasAnnotations = !listAdapter.list.isEmpty();
-        menuWindow.addItem(R.string.tools_import_annotations, v -> importAnnotFileLauncher.launch(CFileUtils.getIntent("application/octet-stream")));
-        menuWindow.addItem(R.string.tools_export_annotations,hasAnnotations,  v -> {
-            // Select the directory to export the annotation files
-            String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(dirPath, getString(R.string.tools_saving_path), getString(R.string.tools_okay));
-            directoryDialog.setSelectFolderListener(dir -> {
-                CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-                boolean result = CPDFAnnotDatas.exportAnnotations(document, dir, CFileUtils.getFileNameNoExtension(document.getFileName()));
-                if (result) {
-                    CToastUtil.showLongToast(getContext(), R.string.tools_export_success);
+        if (annotationMenu != null && annotationMenu.getGlobal() != null) {
+            CPopupMenuWindow menuWindow = new CPopupMenuWindow(getContext());
+            boolean hasAnnotations = !listAdapter.list.isEmpty();
+
+            for (CPDFBotaGlobalMenuItem cpdfBotaGlobalMenuItem : annotationMenu.getGlobal()) {
+                switch (cpdfBotaGlobalMenuItem.getId()) {
+                    case CPDFBotaAnnotationMenu.GLOBAL_MENU_ID_IMPORT_ANNOTATION:
+                        menuWindow.addItem(R.string.tools_import_annotations, v -> importAnnotFileLauncher.launch(CFileUtils.getIntent("application/octet-stream")));
+                        break;
+                    case CPDFBotaAnnotationMenu.GLOBAL_MENU_ID_EXPORT_ANNOTATION:
+                        menuWindow.addItem(R.string.tools_export_annotations,hasAnnotations,  v -> {
+                            // Select the directory to export the annotation files
+                            String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+                            CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(dirPath, getString(R.string.tools_saving_path), getString(R.string.tools_okay));
+                            directoryDialog.setSelectFolderListener(dir -> {
+                                CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+                                boolean result = CPDFAnnotDatas.exportAnnotations(document, dir, CFileUtils.getFileNameNoExtension(document.getFileName()));
+                                if (result) {
+                                    CToastUtil.showLongToast(getContext(), R.string.tools_export_success);
+                                }
+                            });
+                            directoryDialog.show(getChildFragmentManager(), "dirDialog");
+                        });
+                        break;
+                    case CPDFBotaAnnotationMenu.GLOBAL_MENU_ID_REMOVE_ALL_ANNOTATION:
+                        menuWindow.addItem(R.string.tools_delete_all_annotations, hasAnnotations, v -> deleteAllAnnotations());
+                        break;
+                    case CPDFBotaAnnotationMenu.GLOBAL_MENU_ID_REMOVE_ALL_REPLY:
+                        menuWindow.addItem(R.string.tools_delete_all_replies,hasAnnotations,  v -> {
+                            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+                            CPDFAnnotDatas.removeAllAnnotationReply(document);
+                            updateAnnotationList();
+                        });
+                        break;
                 }
-            });
-            directoryDialog.show(getChildFragmentManager(), "dirDialog");
-        });
-        menuWindow.addItem(R.string.tools_delete_all_annotations, hasAnnotations, v -> deleteAllAnnotations());
-        menuWindow.addItem(R.string.tools_delete_all_replies,hasAnnotations,  v -> {
-            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-            CPDFAnnotDatas.removeAllAnnotationReply(document);
-            updateAnnotationList();
-        });
-        menuWindow.showAsDropDown(anchorView);
+            }
+            menuWindow.showAsDropDown(anchorView);
+        }
     }
 
     /**
@@ -229,27 +271,40 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
      */
     private void showAnnotationMoreMenu(CPDFAnnotListItem item, int position, View anchorView) {
         CPopupMenuWindow moreMenu = new CPopupMenuWindow(getContext());
-        moreMenu.addItem(R.string.tools_add_a_new_reply, v -> {
-            CPDFEditReplyDialogFragment editReplyDialogFragment = CPDFEditReplyDialogFragment.addReply();
-            editReplyDialogFragment.setReplyContentListener(content -> {
-                CPDFReplyAnnotation replyAnnotation = item.getAttr().createReplyAnnotation();
-                replyAnnotation.setTitle(pdfView.getCPDFConfiguration().annotationsConfig.annotationAuthor);
-                replyAnnotation.setContent(content);
-                showReplyDetailsFragment(item, position);
-            });
-            editReplyDialogFragment.show(getChildFragmentManager(), "addReplyDialogFragment");
-        });
-        moreMenu.addItem(R.string.tools_view_replies, v -> showReplyDetailsFragment(item, position));
-        moreMenu.addItem(R.string.tools_delete_annotation, v -> {
-            boolean result = item.getAttr().removeFromPage();
-            if (result) {
-                listAdapter.remove(position);
-                ArrayList<Integer> pages = new ArrayList<>();
-                pages.add(item.getPage());
-                pdfView.getCPdfReaderView().reloadPages(pages);
-                pdfView.getCPdfReaderView().postDelayed(() -> updateAnnotationList(false), 450);
+        List<String> subMenus = annotationMenu.getMoreMenu().getSubMenus();
+        if (subMenus != null && !subMenus.isEmpty()) {
+            for (String menu : subMenus) {
+                switch (menu) {
+                    case CPDFBotaAnnotationMenu.MORE_MENU_ID_ADD_REPLY:
+                        moreMenu.addItem(R.string.tools_add_a_new_reply, v -> {
+                            CPDFEditReplyDialogFragment editReplyDialogFragment = CPDFEditReplyDialogFragment.addReply();
+                            editReplyDialogFragment.setReplyContentListener(content -> {
+                                CPDFReplyAnnotation replyAnnotation = item.getAttr().createReplyAnnotation();
+                                replyAnnotation.setTitle(pdfView.getCPDFConfiguration().annotationsConfig.annotationAuthor);
+                                replyAnnotation.setContent(content);
+                                showReplyDetailsFragment(item, position);
+                            });
+                            editReplyDialogFragment.show(getChildFragmentManager(), "addReplyDialogFragment");
+                        });
+                        break;
+                    case CPDFBotaAnnotationMenu.MORE_MENU_ID_VIEW_REPLY:
+                        moreMenu.addItem(R.string.tools_view_replies, v -> showReplyDetailsFragment(item, position));
+                        break;
+                    case CPDFBotaAnnotationMenu.MORE_MENU_ID_DELETE:
+                        moreMenu.addItem(R.string.tools_delete_annotation, v -> {
+                            boolean result = item.getAttr().removeFromPage();
+                            if (result) {
+                                listAdapter.remove(position);
+                                ArrayList<Integer> pages = new ArrayList<>();
+                                pages.add(item.getPage());
+                                pdfView.getCPdfReaderView().reloadPages(pages);
+                                pdfView.getCPdfReaderView().postDelayed(() -> updateAnnotationList(false), 450);
+                            }
+                        });
+                        break;
+                }
             }
-        });
+        }
         int[] windowPos = CDimensUtils.calculatePopWindowPos(anchorView, moreMenu.getContentView());
         moreMenu.setAnimationStyle(R.style.PopupAnimation);
         moreMenu.showAtLocation(anchorView, Gravity.START | Gravity.TOP, windowPos[0], windowPos[1]);

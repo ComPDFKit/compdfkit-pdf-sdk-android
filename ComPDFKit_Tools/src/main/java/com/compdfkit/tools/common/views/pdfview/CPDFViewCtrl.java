@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -37,6 +37,7 @@ import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditManager;
+import com.compdfkit.core.edit.OnEditStatusChangeListener;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.CFileUtils;
@@ -48,7 +49,6 @@ import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
-import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.reader.IReaderViewCallback;
 import com.compdfkit.ui.reader.OnFocusedTypeChangedListener;
@@ -139,6 +139,8 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   private List<CPDFIReaderViewCallback> readerViewCallbacks = new ArrayList<>();
 
+  private List<OnEditStatusChangeListener> editStatusChangeListeners = new ArrayList<>();
+
   private boolean isScrolling = false;
 
   private Handler handler = new Handler(Looper.getMainLooper());
@@ -221,6 +223,29 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     cPdfReaderView.setDoublePageMode(false);
     cPdfReaderView.setReaderViewCallback(this);
     cPdfReaderView.setOnFocusedTypeChangedListener(this);
+    CPDFEditManager editManager = cPdfReaderView.getEditManager();
+    editManager.addEditStatusChangeListener(new OnEditStatusChangeListener() {
+      @Override
+      public void onBegin(int i) {
+        for (OnEditStatusChangeListener listener : editStatusChangeListeners) {
+          listener.onBegin(i);
+        }
+      }
+
+      @Override
+      public void onUndoRedo(int pageIndex, boolean canUndo, boolean canRedo) {
+        for (OnEditStatusChangeListener listener : editStatusChangeListeners) {
+          listener.onUndoRedo(pageIndex, canUndo, canRedo);
+        }
+      }
+
+      @Override
+      public void onExit() {
+        for (OnEditStatusChangeListener listener : editStatusChangeListeners) {
+          listener.onExit();
+        }
+      }
+    });
 
     addView(cPdfReaderView);
   }
@@ -764,6 +789,14 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   public void setSaveCallback(COnSaveCallback saveGlobalCallback, COnSaveError error) {
     this.saveGlobalCallback = saveGlobalCallback;
     this.saveGlobalErrorCallback = error;
+  }
+
+  public void addEditStatusChangeListener(OnEditStatusChangeListener listener){
+    editStatusChangeListeners.add(listener);
+  }
+
+  public void removeEditStatusChangeListener(OnEditStatusChangeListener listener){
+    editStatusChangeListeners.remove(listener);
   }
 
   public interface COnSaveCallback {

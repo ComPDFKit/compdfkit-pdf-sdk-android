@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -15,8 +15,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+
+import androidx.core.content.ContextCompat;
 
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CUriUtil;
@@ -161,5 +164,26 @@ public class CBitmapUtil {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Drawable getDrawableByName(Context context, String resName) {
+        int resId = context.getResources().getIdentifier(resName, "drawable", context.getPackageName());
+        if (resId != 0) {
+            return ContextCompat.getDrawable(context, resId);
+        }
+        return null;
+    }
+
+    public static Bitmap getBitmapByName(Context context, String resName) {
+        int resId = context.getResources().getIdentifier(resName, "drawable", context.getPackageName());
+        if (resId != 0) {
+            return BitmapFactory.decodeResource(context.getResources(), resId);
+        }
+        return null;
+    }
+
+    public static int getBitmapResId(Context context, String resName) {
+        int resId = context.getResources().getIdentifier(resName, "drawable", context.getPackageName());
+        return resId;
     }
 }

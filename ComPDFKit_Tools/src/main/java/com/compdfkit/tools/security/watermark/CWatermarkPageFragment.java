@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -9,6 +9,7 @@
 
 package com.compdfkit.tools.security.watermark;
 
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -26,6 +27,8 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicThemeFragment;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.pdf.config.CPDFWatermarkConfig;
+import com.compdfkit.tools.common.utils.image.CBitmapUtil;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CBasicOnStyleChangeListener;
@@ -61,7 +64,7 @@ import java.util.Map;
  *     pageFragment.setPageIndex(pageIndex);
  *     pageFragment.applyWatermark();
  * </pre></blockquote><p>
- *
+ * <p>
  * Edit an existing watermark:
  * <blockquote><pre>
  *     CWatermarkPageFragment pageFragment = CWatermarkPageFragment.newInstance(EditType.Image); or EditType.Txt
@@ -73,7 +76,6 @@ import java.util.Map;
  *
  * @see CWatermarkPageView
  * @see CWatermarkView
- *
  */
 public class CWatermarkPageFragment extends CBasicThemeFragment {
 
@@ -87,9 +89,7 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
 
     private CPDFWatermark watermark;
 
-    private String defaultText;
-
-    private String defaultImagePath;
+    private CPDFWatermarkConfig watermarkConfig;
 
     public static CWatermarkPageFragment newInstance(CWatermarkView.EditType type) {
         Bundle args = new Bundle();
@@ -107,13 +107,10 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
         this.pageIndex = pageIndex;
     }
 
-    public void setDefaultText(String defaultText) {
-        this.defaultText = defaultText;
+    public void setWatermarkConfig(CPDFWatermarkConfig watermarkConfig) {
+        this.watermarkConfig = watermarkConfig;
     }
 
-    public void setDefaultImagePath(String defaultImagePath) {
-        this.defaultImagePath = defaultImagePath;
-    }
 
     public void setEditWatermark(CPDFWatermark watermark) {
         this.watermark = watermark;
@@ -134,7 +131,7 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
         super.onViewCreated(view, savedInstanceState);
         try {
             CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
-            if (configuration != null){
+            if (configuration != null && !TextUtils.isEmpty(configuration.globalConfig.watermark.outsideBackgroundColor)) {
                 int outsideColor = configuration.globalConfig.watermark.getOutsideBackgroundColor();
                 view.setBackgroundColor(outsideColor);
             }
@@ -150,18 +147,35 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
                     return;
                 }
                 if (editType == CWatermarkView.EditType.TXT) {
-                    if (!TextUtils.isEmpty(defaultText)){
-                        // If it is a text watermark type, a watermark named 'Watermark' will be created by default.
-                        watermarkPageView.createTextWatermark(defaultText);
-                    }else {
-                        // If it is a text watermark type, a watermark named 'Watermark' will be created by default.
-                        watermarkPageView.createTextWatermark(getString(R.string.tools_default_watermark_text));
+                    if (watermarkConfig != null) {
+                        if (!TextUtils.isEmpty(watermarkConfig.text)) {
+                            // If it is a text watermark type, a watermark named 'Watermark' will be created by default.
+                            watermarkPageView.createTextWatermark(watermarkConfig.text);
+                        } else {
+                            // If it is a text watermark type, a watermark named 'Watermark' will be created by default.
+                            watermarkPageView.createTextWatermark(getString(R.string.tools_default_watermark_text));
+                        }
+                        watermarkPageView.setFront(watermarkConfig.isFront);
+                        watermarkPageView.setTile(watermarkConfig.isTilePage);
+                        watermarkPageView.watermarkView.setScale((float) watermarkConfig.scale);
+                        watermarkPageView.watermarkView.setTextColor(watermarkConfig.getTextColor());
+                        watermarkPageView.watermarkView.setTextSize(watermarkConfig.textSize);
+                        watermarkPageView.watermarkView.setWatermarkAlpha(watermarkConfig.opacity);
+                        watermarkPageView.watermarkView.setDegree(watermarkConfig.rotation);
+                        watermarkPageView.updateTileWatermark();
                     }
                 } else {
                     watermarkPageView.watermarkView.setWatermarkType(editType);
-                    if (!TextUtils.isEmpty(defaultImagePath)) {
-                        updateImageWatermark(defaultImagePath);
+                    watermarkPageView.setFront(watermarkConfig.isFront);
+                    watermarkPageView.setTile(watermarkConfig.isTilePage);
+                    watermarkPageView.watermarkView.setDegree(watermarkConfig.rotation);
+                    watermarkPageView.watermarkView.setScale((float) watermarkConfig.scale);
+                    watermarkPageView.watermarkView.setWatermarkAlpha(watermarkConfig.opacity);
+
+                    if (watermarkConfig != null && !TextUtils.isEmpty(watermarkConfig.image)) {
+                        updateImageWatermark(watermarkConfig.image);
                     }
+                    watermarkPageView.updateTileWatermark();
                 }
             });
         }
@@ -240,9 +254,9 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
             @Override
             public void onChangeImagePath(String imagePath, Uri imageUri) {
                 super.onChangeImagePath(imagePath, imageUri);
-                if (!TextUtils.isEmpty(imagePath)){
+                if (!TextUtils.isEmpty(imagePath)) {
                     updateImageWatermark(imagePath);
-                }else {
+                } else {
                     updateImageWatermark(imageUri.toString());
                 }
             }
@@ -250,13 +264,23 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
         styleDialogFragment.show(getChildFragmentManager(), "styleFragment");
     }
 
-    private void updateImageWatermark(String image){
+    @SuppressLint("StaticFieldLeak")
+    private void updateImageWatermark(String image) {
         new SimpleBackgroundTask<Bitmap>(getContext()) {
 
             @Override
             protected Bitmap onRun() {
                 try {
-                    Bitmap bitmap = Glide.with(getContext()).asBitmap().load(image).submit(360, 480).get();
+                    Bitmap bitmap;
+                    int bitmapResId = CBitmapUtil.getBitmapResId(getContext(), image);
+                    if (bitmapResId != 0) {
+                        bitmap = Glide.with(requireContext())
+                                .asBitmap()
+                                .load(bitmapResId)
+                                .submit(360, 480).get();
+                    } else {
+                        bitmap = Glide.with(getContext()).asBitmap().load(image).submit(360, 480).get();
+                    }
                     return bitmap;
                 } catch (Exception e) {
                 }
@@ -266,6 +290,7 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
             @Override
             protected void onSuccess(Bitmap result) {
                 if (result != null) {
+                    watermarkPageView.watermarkView.setScale((float) watermarkConfig.scale);
                     if (watermarkPageView.watermarkView.getImageWatermarkBitmap() != null) {
                         watermarkPageView.watermarkView.setImageBitmap(result);
                         return;
@@ -279,9 +304,9 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
 
     public boolean hasWatermark() {
         if (editType == CWatermarkView.EditType.Image) {
-            return watermarkPageView.watermarkView.getImageWatermarkBitmap() != null;
+            return watermarkPageView.watermarkView.getImageWatermarkBitmap() == null;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -299,11 +324,11 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            watermarkPageView.afterMeasured(()->{
+            watermarkPageView.afterMeasured(() -> {
                 watermarkPageView.updateCenterPoint();
             });
         } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            watermarkPageView.afterMeasured(()->{
+            watermarkPageView.afterMeasured(() -> {
                 watermarkPageView.updateCenterPoint();
             });
         }

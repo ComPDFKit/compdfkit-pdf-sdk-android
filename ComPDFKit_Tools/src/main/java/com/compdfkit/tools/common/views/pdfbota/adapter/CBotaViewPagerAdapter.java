@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -18,6 +18,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.compdfkit.tools.annotation.pdfannotationlist.CPDFAnnotationListFragment;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaAnnotationMenu;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaMenusConfig;
 import com.compdfkit.tools.common.views.pdfbota.CPDFBOTA;
 import com.compdfkit.tools.common.views.pdfbota.CPDFBotaEmptyFragment;
 import com.compdfkit.tools.common.views.pdfbota.CPDFBotaFragmentTabs;
@@ -48,10 +50,17 @@ public class CBotaViewPagerAdapter extends FragmentStateAdapter {
      */
     private COnSetPDFDisplayPageIndexListener pdfDisplayPageIndexListener;
 
-    public CBotaViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, CPDFViewCtrl pdfView, ArrayList<CPDFBotaFragmentTabs> tabs) {
+    private CPDFBotaMenusConfig menusConfig;
+
+    public CBotaViewPagerAdapter(@NonNull FragmentManager fragmentManager,
+                                 @NonNull Lifecycle lifecycle,
+                                 CPDFViewCtrl pdfView,
+                                 ArrayList<CPDFBotaFragmentTabs> tabs,
+                                 CPDFBotaMenusConfig menusConfig) {
         super(fragmentManager, lifecycle);
         this.pdfView = pdfView;
         this.tabs = tabs;
+        this.menusConfig = menusConfig;
     }
 
 
@@ -109,6 +118,9 @@ public class CBotaViewPagerAdapter extends FragmentStateAdapter {
     private CPDFAnnotationListFragment annotationListFragment(){
         CPDFAnnotationListFragment listFragment = CPDFAnnotationListFragment.newInstance();
         listFragment.initWithPDFView(pdfView);
+        if (menusConfig.getAnnotations() != null) {
+            listFragment.setAnnotationMenu(menusConfig.getAnnotations());
+        }
         listFragment.setPDFDisplayPageIndexListener(pdfDisplayPageIndexListener);
         return listFragment;
     }

@@ -15,6 +15,10 @@ public class CPDFDocumentPageWrapper implements CIPDFWrapper {
 
     private int backgroundColor = Color.WHITE;
 
+    private boolean drawAnnotation;
+
+    private boolean drawForms;
+
     public CPDFDocumentPageWrapper(CPDFDocument cpdfDocument, int pageIndex){
         this.document = cpdfDocument;
         this.pageIndex = pageIndex;
@@ -36,13 +40,33 @@ public class CPDFDocumentPageWrapper implements CIPDFWrapper {
         return backgroundColor;
     }
 
+    public boolean isDrawAnnotation() {
+        return drawAnnotation;
+    }
+
+    public void setDrawAnnotation(boolean drawAnnotation) {
+        this.drawAnnotation = drawAnnotation;
+    }
+
+    public boolean isDrawForms() {
+        return drawForms;
+    }
+
+    public void setDrawForms(boolean drawForms) {
+        this.drawForms = drawForms;
+    }
+
     @Override
     public String cacheKey() {
         return TPDF + document.getAbsolutePath() +
                 "_" +
                 pageIndex +
                 "_" +
-                backgroundColor;
+                backgroundColor +
+                "_" +
+                drawAnnotation +
+                "_" +
+                drawForms;
     }
 
     @Override

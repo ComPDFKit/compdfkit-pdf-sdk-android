@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -22,10 +22,13 @@ import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
+import com.compdfkit.tools.common.pdf.config.CPDFSearchConfig;
+import com.compdfkit.tools.common.pdf.config.CPDFUIVisibilityMode;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.pdf.config.ModeConfig;
 import com.compdfkit.tools.common.pdf.config.ReaderViewConfig;
+import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
 import com.compdfkit.tools.common.pdf.config.annot.AnnotFreetextAttr;
 import com.compdfkit.tools.common.pdf.config.annot.AnnotShapeAttr;
 import com.compdfkit.tools.common.pdf.config.annot.AnnotationsAttributes;
@@ -43,6 +46,7 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
+import com.compdfkit.ui.attribute.CPDFReaderAttribute;
 import com.compdfkit.ui.reader.CPDFReaderView;
 
 import java.util.ArrayList;
@@ -149,6 +153,15 @@ public class CPDFApplyConfigUtil {
                 readerView.setReaderViewTopMargin(top);
                 readerView.setReaderViewBottomMargin(bottom);
             }
+            // set search text rect color
+            CPDFSearchConfig searchConfig = configuration.globalConfig.search;
+            CPDFReaderAttribute readerAttribute = readerView.getReaderAttribute();
+            readerAttribute.normalKeyWordColor = searchConfig.normalKeyword.fillColor;
+            readerAttribute.normalKeywordStrokeColor = searchConfig.normalKeyword.borderColor;
+            readerAttribute.focusedKeyWordColor = searchConfig.focusKeyword.fillColor;
+            readerAttribute.focusedKeywordStrokeColor = searchConfig.focusKeyword.borderColor;
+            readerAttribute.onload();
+
             CPDFDocument document = fragment.pdfView.getCPdfReaderView().getPDFDocument();
             if (document != null) {
                 fragment.pdfView.enableSliderBar(readerViewConfig.enableSliderBar);
@@ -183,14 +196,31 @@ public class CPDFApplyConfigUtil {
 
     public void appleUiConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration){
         ModeConfig modeConfig = configuration.modeConfig;
-        if (modeConfig.readerOnly) {
+        ToolbarConfig toolbarConfig = configuration.toolbarConfig;
+        if (modeConfig.uiVisibilityMode == CPDFUIVisibilityMode.NEVER) {
             fragment.flTool.setVisibility(View.GONE);
             fragment.flBottomToolBar.setVisibility(View.GONE);
+            toolbarConfig.mainToolbarVisible = false;
+            toolbarConfig.annotationToolbarVisible = false;
+            toolbarConfig.contentEditorToolbarVisible = false;
+            toolbarConfig.formToolbarVisible = false;
+            toolbarConfig.signatureToolbarVisible = false;
         }
+        // hide top toolbar
         boolean showMainToolbar = configuration.toolbarConfig.mainToolbarVisible;
-        fragment.flTool.setVisibility(showMainToolbar && !modeConfig.readerOnly ? View.VISIBLE : View.GONE);
+        fragment.flTool.setVisibility(showMainToolbar ? View.VISIBLE : View.GONE);
+        // hide bottom annotation toolbar
         boolean showAnnotationToolbar = configuration.toolbarConfig.annotationToolbarVisible;
-        fragment.annotationToolbar.setVisibility(showAnnotationToolbar && !modeConfig.readerOnly ? View.VISIBLE : View.GONE);
+        fragment.annotationToolbar.setVisibility(showAnnotationToolbar ? View.VISIBLE : View.GONE);
+        // hide bottom edit toolbar
+        boolean showEditToolbar = configuration.toolbarConfig.contentEditorToolbarVisible;
+        fragment.editToolBar.setVisibility(showEditToolbar ? View.VISIBLE : View.GONE);
+        // hide bottom form toolbar
+        boolean showFormToolbar = configuration.toolbarConfig.formToolbarVisible;
+        fragment.formToolBar.setVisibility(showFormToolbar ? View.VISIBLE : View.GONE);
+        // hide bottom signature toolbar
+        boolean showSignatureToolbar = configuration.toolbarConfig.signatureToolbarVisible;
+        fragment.signatureToolBar.setVisibility(showSignatureToolbar ? View.VISIBLE : View.GONE);
     }
 
     private void applyAnnotationConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {

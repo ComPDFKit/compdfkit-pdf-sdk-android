@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -22,6 +22,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfannotationlist.CPDFAnnotationListFragment;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaMenusConfig;
 import com.compdfkit.tools.common.utils.glide.CPDFGlideInitializer;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
@@ -54,6 +55,8 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
 
     private ArrayList<CPDFBotaFragmentTabs> tabs = new ArrayList<>();
 
+    private CPDFBotaMenusConfig menus = new CPDFBotaMenusConfig();
+
     public static CPDFBotaDialogFragment newInstance(){
         return new CPDFBotaDialogFragment();
     }
@@ -64,6 +67,10 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
 
     public void setBotaDialogTabs(ArrayList<CPDFBotaFragmentTabs> tabs){
         this.tabs = tabs;
+    }
+
+    public void setMenus(CPDFBotaMenusConfig menus) {
+        this.menus = menus;
     }
 
     public void setBotaDialogTab(CPDFBotaFragmentTabs tab){
@@ -120,7 +127,7 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
         if (tabs.size() <= 1){
             tabLayout.setVisibility(View.GONE);
         }
-        CBotaViewPagerAdapter boTaViewPagerAdapter = new CBotaViewPagerAdapter(getChildFragmentManager(), getLifecycle(), pdfView, tabs);
+        CBotaViewPagerAdapter boTaViewPagerAdapter = new CBotaViewPagerAdapter(getChildFragmentManager(), getLifecycle(), pdfView, tabs, menus);
         //Listen to thumbnail and outline click events, CPDFReaderView jumps to the corresponding page and dismisses the popup
         boTaViewPagerAdapter.setPDFDisplayPageIndexListener(pageIndex -> {
             if (pdfView != null) {
@@ -130,15 +137,23 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
         });
         viewPager2.setAdapter(boTaViewPagerAdapter);
         viewPager2.setCurrentItem(getDefaultSelectIndex(), false);
-        if (tabs.size()>0){
+        if (!tabs.isEmpty()){
             toolBar.setTitle(tabs.get(getDefaultSelectIndex()).getTitle());
-            ivMenu.setVisibility(tabs.get(getDefaultSelectIndex()).getBotaType() == CPDFBOTA.ANNOTATION ? View.VISIBLE : View.GONE);
+            if (menus != null && !menus.getAnnotations().getGlobal().isEmpty()){
+                ivMenu.setVisibility(tabs.get(getDefaultSelectIndex()).getBotaType() == CPDFBOTA.ANNOTATION ? View.VISIBLE : View.GONE);
+            }else {
+                ivMenu.setVisibility(View.GONE);
+            }
         }
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 toolBar.setTitle(tabs.get(position).getTitle());
-                ivMenu.setVisibility(tabs.get(position).getBotaType() == CPDFBOTA.ANNOTATION ? View.VISIBLE : View.GONE);
+                if (menus != null && !menus.getAnnotations().getGlobal().isEmpty()){
+                    ivMenu.setVisibility(tabs.get(position).getBotaType() == CPDFBOTA.ANNOTATION ? View.VISIBLE : View.GONE);
+                }else {
+                    ivMenu.setVisibility(View.GONE);
+                }
             }
         });
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
@@ -146,6 +161,7 @@ public class CPDFBotaDialogFragment extends CBasicBottomSheetDialogFragment {
         });
         tabLayoutMediator.attach();
     }
+
 
     private int getDefaultSelectIndex(){
         int defaultSelectIndex = 0;

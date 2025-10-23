@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -93,6 +93,7 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
 
     public void initWithPDFView(CPDFViewCtrl pdfView) {
         this.pdfView = pdfView;
+        initEditorManager();
     }
 
     public void updateUndo(boolean canUndo) {
@@ -145,14 +146,14 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
         if (view.getId() == R.id.iv_edit_text) {
             boolean sel = view.isSelected();
             view.setSelected(!sel);
-            if (sel == false) {
+            if (!sel) {
                 ivEditImage.setSelected(false);
             }
             changeEditType();
         } else if (view.getId() == R.id.iv_edit_image) {
             boolean sel = view.isSelected();
             view.setSelected(!sel);
-            if (sel == false) {
+            if (!sel) {
                 ivEditText.setSelected(false);
             }
             changeEditType();
@@ -163,7 +164,7 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
         proPerClickListener = listener;
     }
 
-    public void setEditMode(boolean beginedit) {
+    private void initEditorManager(){
         if (pdfView == null || pdfView.getCPdfReaderView() == null) {
             return;
         }
@@ -181,25 +182,15 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
                 }
             }
         });
-
-        editManager.addEditStatusChangeListener(new OnEditStatusChangeListener() {
+        pdfView.addEditStatusChangeListener(new OnEditStatusChangeListener() {
             @Override
             public void onBegin(int i) {
                 CThreadPoolUtils.getInstance().executeMain(() -> {
                     if (pdfView == null || pdfView.getCPdfReaderView() == null || pdfView.getCPdfReaderView().getEditManager() == null) {
                         return;
                     }
-                    int type = pdfView.getCPdfReaderView().getLoadType();
-                    if (type == CPDFEditPage.LoadText) {
-                        ivEditText.setSelected(true);
-                        ivEditImage.setSelected(false);
-                    } else if (type == CPDFEditPage.LoadImage) {
-                        ivEditText.setSelected(false);
-                        ivEditImage.setSelected(true);
-                    } else if (type == CPDFEditPage.LoadTextImage) {
-                        ivEditText.setSelected(false);
-                        ivEditImage.setSelected(false);
-                    }
+                    updateTypeStatus();
+
                 });
             }
 
@@ -221,8 +212,29 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
 
             }
         });
+    }
+
+    public void setEditMode(boolean beginedit) {
+        CPDFEditManager editManager = pdfView.getCPdfReaderView().getEditManager();
+        if (editManager == null) {
+            return;
+        }
         if (beginedit) {
             editManager.beginEdit(CPDFEditPage.LoadTextImage | CPDFEditPage.LoadPath);
+        }
+    }
+
+    public void updateTypeStatus(){
+        int type = pdfView.getCPdfReaderView().getLoadType();
+        if (type == CPDFEditPage.LoadText) {
+            ivEditText.setSelected(true);
+            ivEditImage.setSelected(false);
+        } else if (type == CPDFEditPage.LoadImage) {
+            ivEditText.setSelected(false);
+            ivEditImage.setSelected(true);
+        } else {
+            ivEditText.setSelected(false);
+            ivEditImage.setSelected(false);
         }
     }
 

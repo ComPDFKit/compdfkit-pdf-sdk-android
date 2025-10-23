@@ -26,6 +26,8 @@ import com.compdfkit.tools.annotation.pdfannotationlist.adapter.CPDFAnnotReplyLi
 import com.compdfkit.tools.annotation.pdfannotationlist.bean.CPDFAnnotListItem;
 import com.compdfkit.tools.annotation.pdfannotationlist.data.CPDFAnnotDatas;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaAnnotationMenu;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaItemMenu;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.utils.window.CPopupMenuWindow;

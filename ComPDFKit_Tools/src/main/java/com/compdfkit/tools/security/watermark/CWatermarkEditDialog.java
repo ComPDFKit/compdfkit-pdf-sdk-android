@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -8,6 +8,8 @@
  */
 
 package com.compdfkit.tools.security.watermark;
+
+import static android.view.View.GONE;
 
 import android.Manifest;
 import android.content.res.Configuration;
@@ -27,6 +29,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.pdf.config.CPDFWatermarkConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
@@ -37,6 +40,7 @@ import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
+import com.compdfkit.tools.security.watermark.view.CWatermarkView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -86,11 +90,7 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
 
     private String savePath;
 
-    private String defaultText;
-
-    private String defaultImagePath;
-
-    private boolean saveAsNewFile = true;
+    private CPDFWatermarkConfig watermarkConfig = new CPDFWatermarkConfig();
 
     protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
 
@@ -105,16 +105,8 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
         this.document = document;
     }
 
-    public void setDefaultText(String defaultText) {
-        this.defaultText = defaultText;
-    }
-
-    public void setDefaultImagePath(String defaultImagePath) {
-        this.defaultImagePath = defaultImagePath;
-    }
-
-    public void setSaveAsNewFile(boolean saveAsNewFile) {
-        this.saveAsNewFile = saveAsNewFile;
+    public void setWatermarkConfig(CPDFWatermarkConfig watermarkConfig) {
+        this.watermarkConfig = watermarkConfig;
     }
 
     /**
@@ -192,11 +184,11 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
             }
             Fragment fragment = getChildFragmentManager().findFragmentByTag("f" + tabLayout.getSelectedTabPosition());
             if (fragment != null && fragment instanceof CWatermarkPageFragment) {
-                if (!((CWatermarkPageFragment) fragment).hasWatermark()) {
+                if (((CWatermarkPageFragment) fragment).hasWatermark()) {
                     return;
                 }
             }
-            if (!saveAsNewFile){
+            if (!watermarkConfig.saveAsNewFile){
                 boolean success = ((CWatermarkPageFragment) fragment).applyWatermark();
                 if (completeListener != null) {
                     completeListener.complete(success,false, null);
@@ -226,15 +218,16 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
     }
 
     private void initWatermarkContent() {
-        int[] tabs = new int[]{R.string.tools_custom_stamp_text, R.string.tools_image};
         watermarkPageFragmentAdapter = new CWatermarkPageFragmentAdapter(this, document, pageIndex);
-        watermarkPageFragmentAdapter.setDefaultText(defaultText);
-        watermarkPageFragmentAdapter.setDefaultImagePath(defaultImagePath);
+        watermarkPageFragmentAdapter.setWatermarkConfig(watermarkConfig);
         viewPager2.setAdapter(watermarkPageFragmentAdapter);
         viewPager2.setUserInputEnabled(false);
         viewPager2.setOffscreenPageLimit(2);
+        if (watermarkConfig.types == null || watermarkConfig.types.size() <=1) {
+            tabLayout.setVisibility(GONE);
+        }
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
-            tab.setText(tabs[position]);
+            tab.setText(watermarkPageFragmentAdapter.getTitleRes(position));
         });
         tabLayoutMediator.attach();
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -242,13 +235,13 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 try {
-                    if (position == 1) {
+                    if (watermarkPageFragmentAdapter.getEditType(position) == CWatermarkView.EditType.Image) {
                         viewPager2.postDelayed(() -> {
                             Fragment fragment = getChildFragmentManager().findFragmentByTag("f" + position);
                             if (fragment != null && fragment instanceof CWatermarkPageFragment) {
                                 CWatermarkPageFragment watermarkPageFragment = ((CWatermarkPageFragment) fragment);
                                 Fragment styleFragment = watermarkPageFragment.getChildFragmentManager().findFragmentByTag("styleFragment");
-                                if (styleFragment == null && !watermarkPageFragment.hasWatermark()) {
+                                if (styleFragment == null && watermarkPageFragment.hasWatermark()) {
                                     watermarkPageFragment.showWatermarkStyleDialog();
                                 }
                             }

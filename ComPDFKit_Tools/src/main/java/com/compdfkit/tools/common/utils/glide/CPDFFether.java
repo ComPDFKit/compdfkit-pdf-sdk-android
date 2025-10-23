@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -85,8 +85,8 @@ class CPDFFether implements DataFetcher<Bitmap> {
                 cpdfWrapper.getBackgroundColor(),
                 255,
                 0,
-                true,
-                true);
+                cpdfWrapper.isDrawAnnotation(),
+                cpdfWrapper.isDrawForms());
 
         if (!res || (null == bitmap) || bitmap.isRecycled()) {
             return loadDataWithRedirects(pageIndex, width, height, ++redirects);

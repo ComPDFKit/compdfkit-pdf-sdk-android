@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -52,7 +52,10 @@ import com.compdfkit.tools.common.basic.fragment.CBasicPDFFragment;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.CPDFThumbnailConfig;
+import com.compdfkit.tools.common.pdf.config.CPDFUIVisibilityMode;
+import com.compdfkit.tools.common.pdf.config.CPDFWatermarkConfig;
 import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
+import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
@@ -359,7 +362,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 if (annotationToolbar.toolListAdapter.getCurrentAnnotType() == CAnnotationType.INK) {
                     return;
                 }
-                if (!cpdfConfiguration.modeConfig.readerOnly) {
+                CPDFUIVisibilityMode uiVisibilityMode = cpdfConfiguration.modeConfig.uiVisibilityMode;
+                if (uiVisibilityMode == CPDFUIVisibilityMode.AUTOMATIC) {
                     //Use the CFillScreenManager.class to manage fullscreen switching.
                     screenManager.fillScreenChange();
                     if (fillScreenChangeListener != null) {
@@ -405,6 +409,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             return;
         }
         CPDFReaderView readerView = pdfView.getCPdfReaderView();
+        readerView.getInkDrawHelper().onSave();
+        readerView.pauseAllRenderProcess();
         readerView.removeAllAnnotFocus();
         IContextMenuShowListener contextMenuShowListener = readerView.getContextMenuShowListener();
         if (contextMenuShowListener != null) {
@@ -418,6 +424,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         CPDFEditManager editManager = readerView.getEditManager();
         if (mode == CPreviewMode.Edit) {
             readerView.setViewMode(CPDFReaderView.ViewMode.PDFEDIT);
+            editToolBar.updateUndoRedo();
             if (editManager != null && !editManager.isEditMode()) {
                 editManager.enable();
                 editManager.beginEdit(CPDFEditPage.LoadTextImage | CPDFEditPage.LoadPath);
@@ -464,7 +471,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                         break;
                     case Search:
                         pdfToolBar.addAction(R.drawable.tools_ic_search, v -> {
-                            showSearch();
+                            showTextSearchView();
                         });
                         break;
                     case Bota:
@@ -543,19 +550,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     protected void initSearchBar() {
         pdfSearchToolBarView.initWithPDFView(pdfView);
-        pdfSearchToolBarView.setExitSearchListener(() -> {
-            if (curEditMode > CPDFEditPage.LoadNone) {
-                restoreEdit();
-                editToolBar.updateUndoRedo();
-            }
-            pdfToolBar.setVisibility(VISIBLE);
-            pdfSearchToolBarView.setVisibility(GONE);
-            if (pdfView.getCPdfReaderView().getViewMode() == CPDFReaderView.ViewMode.PDFEDIT) {
-                screenManager.fillScreenManager.bindBottomToolViewList(flBottomToolBar);
-                screenManager.constraintShow(flBottomToolBar);
-            }
-            blockView.setVisibility(GONE);
-        });
+        pdfSearchToolBarView.setExitSearchListener(this::hideTextSearchView);
     }
 
     private void restoreEdit() {
@@ -567,8 +562,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             return;
         }
         editToolBar.initWithPDFView(pdfView);
-        editToolBar.setEditMode(false);
-
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(ContextCompat.getColor(getContext(), R.color.tools_color_accent_50));
@@ -748,7 +741,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     /**
      *
      */
-    protected void verifyDocumentSignStatus() {
+    public void verifyDocumentSignStatus() {
         CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
         if (CertificateDigitalDatas.hasDigitalSignature(document)) {
             CThreadPoolUtils.getInstance().executeIO(() -> {
@@ -766,6 +759,13 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 screenManager.fillScreenManager.removeAndHideToolView(signStatusView);
                 screenManager.constraintHide(signStatusView);
             }
+        }
+    }
+
+    public void hideDigitalSignStatusView(){
+        if (signStatusView.getVisibility() == View.VISIBLE) {
+            screenManager.fillScreenManager.removeAndHideToolView(signStatusView);
+            screenManager.constraintHide(signStatusView);
         }
     }
 
@@ -875,13 +875,16 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         screenManager.fillScreenChange();
     }
 
-    public void showSearch() {
+    public void showTextSearchView() {
         if (pdfView.getCPdfReaderView().getEditManager().isEditMode()) {
             curEditMode = pdfView.getCPdfReaderView().getLoadType();
         } else {
             curEditMode = CPDFEditPage.LoadNone;
         }
         pdfView.exitEditMode();
+        if (flTool.getVisibility() == GONE && !cpdfConfiguration.toolbarConfig.mainToolbarVisible){
+            screenManager.fillScreenManager.showFromTop(flTool, 200);
+        }
         pdfToolBar.setVisibility(View.GONE);
         CSearchReplaceToolbar.ViewType viewType = pdfView.getCPdfReaderView().getViewMode() == CPDFReaderView.ViewMode.PDFEDIT
                 ? CSearchReplaceToolbar.ViewType.SearchReplace : CSearchReplaceToolbar.ViewType.Search;
@@ -893,6 +896,24 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             screenManager.fillScreenManager.removeToolView(flBottomToolBar);
             screenManager.fillScreenManager.hideFromBottom(flBottomToolBar, 200);
         }
+    }
+
+    public void hideTextSearchView(){
+        if (curEditMode > CPDFEditPage.LoadNone) {
+            restoreEdit();
+            editToolBar.updateUndoRedo();
+        }
+        if (!cpdfConfiguration.toolbarConfig.mainToolbarVisible) {
+            flTool.setVisibility(GONE);
+        }
+        pdfToolBar.setVisibility(VISIBLE);
+        pdfSearchToolBarView.hideKeyboard();
+        pdfSearchToolBarView.setVisibility(GONE);
+        if (pdfView.getCPdfReaderView().getViewMode() == CPDFReaderView.ViewMode.PDFEDIT) {
+            screenManager.fillScreenManager.bindBottomToolViewList(flBottomToolBar);
+            screenManager.constraintShow(flBottomToolBar);
+        }
+        blockView.setVisibility(GONE);
     }
 
     public void showBOTA() {
@@ -908,9 +929,16 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         CPDFBotaFragmentTabs outlineTab = new CPDFBotaFragmentTabs(CPDFBOTA.OUTLINE, getString(R.string.tools_outlines));
         CPDFBotaFragmentTabs bookmarkTab = new CPDFBotaFragmentTabs(CPDFBOTA.BOOKMARKS, getString(R.string.tools_bookmarks));
 
-        tabs.add(outlineTab);
-        tabs.add(bookmarkTab);
-        tabs.add(annotationTab);
+        CPDFBotaConfig botaConfig = cpdfConfiguration.globalConfig.bota;
+        for (Integer tab : botaConfig.tabs) {
+            if (tab == CPDFBOTA.OUTLINE) {
+                tabs.add(outlineTab);
+            } else if (tab == CPDFBOTA.BOOKMARKS) {
+                tabs.add(bookmarkTab);
+            } else if (tab == CPDFBOTA.ANNOTATION) {
+                tabs.add(annotationTab);
+            }
+        }
         if (pdfToolBar.getMode() == CPreviewMode.Annotation) {
             annotationTab.setDefaultSelect(true);
         }
@@ -918,6 +946,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         CPDFBotaDialogFragment dialogFragment = CPDFBotaDialogFragment.newInstance();
         dialogFragment.initWithPDFView(pdfView);
         dialogFragment.setBotaDialogTabs(tabs);
+        dialogFragment.setMenus(botaConfig.getMenus());
         dialogFragment.setDismissListener(this::restoreEdit);
         dialogFragment.show(getChildFragmentManager(), "annotationList");
     }
@@ -961,15 +990,15 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     }
 
     public void showAddWatermarkDialog() {
-        showAddWatermarkDialog(cpdfConfiguration.globalConfig.watermark.saveAsNewFile);
+        showAddWatermarkDialog(cpdfConfiguration.globalConfig.watermark);
     }
 
-    public void showAddWatermarkDialog(boolean saveAsNewFile) {
+    public void showAddWatermarkDialog(CPDFWatermarkConfig watermarkConfig) {
         CWatermarkEditDialog watermarkEditDialog = CWatermarkEditDialog.newInstance();
         watermarkEditDialog.setDocument(pdfView.getCPdfReaderView().getPDFDocument());
         watermarkEditDialog.setSaveFileExtraFontSubset(pdfView.isSaveFileExtraFontSubset());
         watermarkEditDialog.setPageIndex(pdfView.currentPageIndex);
-        watermarkEditDialog.setSaveAsNewFile(saveAsNewFile);
+        watermarkEditDialog.setWatermarkConfig(watermarkConfig);
         watermarkEditDialog.setCompleteListener((success, saveAsNewFile1, pdfFile) -> {
             watermarkEditDialog.dismiss();
             pdfView.getCPdfReaderView().reloadPages();

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2023 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -36,6 +36,7 @@ import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.dialog.CEditDialog;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
+import com.compdfkit.tools.common.utils.glide.wrapper.impl.CPDFDocumentPageWrapper;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.security.watermark.pdfproperties.CPageRange;
@@ -106,6 +107,7 @@ public class CWatermarkPageView extends FrameLayout {
     private boolean front = true;
 
     private int watermarkSpacing = 30;
+
 
     public CWatermarkPageView(@NonNull Context context) {
         this(context, null);
@@ -195,8 +197,11 @@ public class CWatermarkPageView extends FrameLayout {
 
     private void initDocumentThumbnail() {
         if (document != null && currentPageWidth != 0 && currentPageHeight != 0) {
+            CPDFDocumentPageWrapper pageWrapper = new CPDFDocumentPageWrapper(document, pageIndex);
+            pageWrapper.setDrawAnnotation(true);
+            CPDFWrapper wrapper = new CPDFWrapper(pageWrapper);
             Glide.with(getContext())
-                    .load(CPDFWrapper.fromDocument(document, pageIndex))
+                    .load(wrapper)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .override((int) currentPageWidth, (int) currentPageHeight)
                     .into(ivPageView);
