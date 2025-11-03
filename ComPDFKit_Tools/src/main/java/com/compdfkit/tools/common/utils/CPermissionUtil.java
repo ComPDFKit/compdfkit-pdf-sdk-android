@@ -1,6 +1,5 @@
 /**
  * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
- *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
  * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
@@ -89,17 +88,15 @@ public class CPermissionUtil {
     }
 
     public static void toSelfSetting(Context context) {
-        Intent mIntent = new Intent();
-        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (Build.VERSION.SDK_INT >= 9) {
-            mIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+        try{
+            Intent mIntent = new Intent();
+            mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             mIntent.setData(Uri.fromParts("package", context.getPackageName(), null));
-        } else if (Build.VERSION.SDK_INT <= 8) {
-            mIntent.setAction(Intent.ACTION_VIEW);
-            mIntent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
-            mIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName());
+            context.startActivity(mIntent);
+        }catch (Exception ignored){
+
         }
-        context.startActivity(mIntent);
     }
 
     public static boolean shouldShowRequestPermissionRationale(Activity activity, String permission){
@@ -121,7 +118,7 @@ public class CPermissionUtil {
     }
 
     public static List<String> getManifestPermissions(Context context){
-        ArrayList<String> requestedPermissionsArrayList = new ArrayList<String>();
+        ArrayList<String> requestedPermissionsArrayList = new ArrayList<>();
         PackageManager pm = context.getPackageManager();
         try {
             PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_PERMISSIONS);
@@ -135,8 +132,7 @@ public class CPermissionUtil {
                 requestedPermissionsArrayList.addAll(requestedPermissionsList);
             }
             return requestedPermissionsArrayList;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        } catch (PackageManager.NameNotFoundException ignored) {
         }
         return requestedPermissionsArrayList;
     }

@@ -13,7 +13,7 @@
         <attr name="android:textSize"/>
     </declare-styleable>
 
-    <declare-styleable name="CPDFReaderView" tools:ignore="ResourceName">
+    <declare-styleable name="CPDFViewCtrl" tools:ignore="ResourceName">
         <attr name="tools_enable_slider_bar" format="boolean"/>
         <attr name="tools_slider_bar_position" format="enum">
             <enum name="left" value="0"/>

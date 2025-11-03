@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 
 public abstract class CBasicThemeDialogFragment extends DialogFragment {
@@ -45,7 +44,7 @@ public abstract class CBasicThemeDialogFragment extends DialogFragment {
     }
 
     protected int themeResId(){
-        return com.google.android.material.R.attr.dialogTheme;
+        return androidx.appcompat.R.attr.dialogTheme;
     }
 
     protected abstract int layoutId();

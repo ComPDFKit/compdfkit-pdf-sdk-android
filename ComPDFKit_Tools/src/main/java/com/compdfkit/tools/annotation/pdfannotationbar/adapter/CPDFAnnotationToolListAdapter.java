@@ -41,7 +41,7 @@ public class CPDFAnnotationToolListAdapter extends CBaseQuickAdapter<CAnnotToolB
 
     @Override
     protected void onBindViewHolder(CBaseQuickViewHolder holder, int position, CAnnotToolBean item) {
-        int isLightTheme = CViewUtils.getThemeAttrData(holder.itemView.getContext().getTheme(),  com.google.android.material.R.attr.isLightTheme);
+        int isLightTheme = CViewUtils.getThemeAttrData(holder.itemView.getContext().getTheme(),  androidx.appcompat.R.attr.isLightTheme);
         boolean isDarkTheme = isLightTheme == 0;
         holder.setImageResource(R.id.iv_annot_type, isDarkTheme && item.getIconDarkResId() != 0 ? item.getIconDarkResId() : item.getIconResId());
         CardView cardView = holder.getView(R.id.card_view);

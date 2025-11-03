@@ -54,14 +54,15 @@ dependencies {
 
     api fileTree(include: ['*.jar'], dir: 'libs')
     // use this
-    api project(path:':ComPDFKit_Repo:compdfkit')
-    api project(path:':ComPDFKit_Repo:compdfkit-ui')
+//    api project(path:':ComPDFKit_Repo:compdfkit')
+//    api project(path:':ComPDFKit_Repo:compdfkit-ui')
     // or use
-//    api ('com.compdf:compdfkit:2.5.0')
-//    api ('com.compdf:compdfkit-ui:2.5.0')
+    api ('com.compdf:compdfkit:2.5.0')
+    api ('com.compdf:compdfkit-ui:2.5.0')
 
     api 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+    api "androidx.print:print:1.1.0"
     api 'androidx.documentfile:documentfile:1.0.1'
     api 'androidx.appcompat:appcompat:1.6.1'
     api 'com.google.android.material:material:1.8.0'

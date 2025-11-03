@@ -20,7 +20,6 @@ import android.util.SparseIntArray;
 
 import androidx.print.PrintHelper;
 
-import com.compdfkit.tools.BuildConfig;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,16 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-/**
- * @classname：ProPrintAdapter
- * @author：luozhipeng
- * @date：2019-10-11 21:59
- * @description： 打印机适配类
- */
-public class CPDFPrintAdpater extends PrintDocumentAdapter {
+public class CPDFPrintAdapter extends PrintDocumentAdapter {
     private static final int MILS_PER_INCH = 1000;
-    /****** 是否显示打印的文档页码测试信息 ******/
-    private static final boolean isShowTestPage = BuildConfig.DEBUG;
+
     /****** 打印清晰度： 1.5：标清；2.3：高清；3：超清 ******/
     public static final float SD = 1.5f;
     public static final float HQ = 2.3f;
@@ -52,18 +44,18 @@ public class CPDFPrintAdpater extends PrintDocumentAdapter {
     private IPrintCallback iPrintCallback;
     private final Stack<AsyncTask> mStack = new Stack<>();
 
-    public CPDFPrintAdpater(Context context, int totalpages, String jobName, IPrintCallback iPrintCallback) {
+    public CPDFPrintAdapter(Context context, int totalpages, String jobName, IPrintCallback iPrintCallback) {
         this.context = context.getApplicationContext();
         this.totalpages = totalpages;
         this.jobName = jobName;
         this.iPrintCallback = iPrintCallback;
     }
 
-    public CPDFPrintAdpater(Context context, int totalpages, String jobName, float resolutionScale, boolean isDrawAnnot, IPrintCallback iPrintCallback) {
+    public CPDFPrintAdapter(Context context, int totalPages, String jobName, float resolutionScale, boolean isDrawAnnot, IPrintCallback iPrintCallback) {
         this.resolutionScale = resolutionScale;
         this.isDrawAnnot = isDrawAnnot;
         this.context = context.getApplicationContext();
-        this.totalpages = totalpages;
+        this.totalpages = totalPages;
         this.jobName = jobName;
         this.iPrintCallback = iPrintCallback;
     }
@@ -175,8 +167,7 @@ public class CPDFPrintAdpater extends PrintDocumentAdapter {
                     writtenPages.clear();
                     try {
                         destination.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException ignored) {
                     }
                 }
             }
@@ -194,8 +185,7 @@ public class CPDFPrintAdpater extends PrintDocumentAdapter {
                     if ((null != asyncTask) && !asyncTask.isCancelled()) {
                         asyncTask.cancel(true);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception ignored) {
                 }
             }
         } finally {
@@ -206,14 +196,7 @@ public class CPDFPrintAdpater extends PrintDocumentAdapter {
         }
     }
 
-    /**
-     * @param ：[pageRanges, page]
-     *                      pageRanges书面页面的PageRange数组。
-     *                      numPage要检查PageRange数组的页码。
-     * @return : boolean 如果页面包含在PageRange数组中，则为true。否则为假。
-     * @methodName ：containsPage created by luozhipeng on 2019-10-11 20:59.
-     * @description ：检查给定的页码是否包含在PageRange数组中。
-     */
+
     private boolean containsPage(PageRange[] pageRanges, int numPage) {
         for (PageRange pr : pageRanges) {
             if ((numPage >= pr.getStart()) && (numPage <= pr.getEnd())) {
@@ -223,10 +206,6 @@ public class CPDFPrintAdpater extends PrintDocumentAdapter {
         return false;
     }
 
-    /**
-     * @methodName：drawPage created by luozhipeng on 2019-10-11 21:38.
-     * @description： 页面绘制（渲染）
-     */
     private void drawPage(PdfDocument.Page page, int pagenumber) {
         Canvas canvas = page.getCanvas();
         Bitmap bitmap = null;

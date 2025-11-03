@@ -201,7 +201,7 @@ public class CPDFReplyDetailsDialogFragment extends CBasicBottomSheetDialogFragm
                 // If there is enough space at the bottom,
                 // it will be displayed below the anchor view. If not, it will be displayed above it.
                 int[] windowPos = CDimensUtils.calculatePopWindowPos(view, moreMenu.getContentView());
-                moreMenu.setAnimationStyle(R.style.PopupAnimation);
+                moreMenu.setAnimationStyle(R.style.ToolsPopupAnimation);
                 moreMenu.showAtLocation(view, Gravity.START | Gravity.TOP, windowPos[0], windowPos[1]);
             }
         }, R.id.iv_review_status, R.id.cb_marked_status, R.id.iv_more);

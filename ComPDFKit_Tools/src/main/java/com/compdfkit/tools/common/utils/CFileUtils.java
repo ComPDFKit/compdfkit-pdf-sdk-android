@@ -91,8 +91,7 @@ public class CFileUtils {
                 fileOutputStream.flush();
                 inStream.close();
                 fileOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignored) {
             }
             CLog.d("FileUtils", "[copyFileFromAssets] copy asset file: " + assetName + " to : " + filename);
         } else {
@@ -105,7 +104,8 @@ public class CFileUtils {
         try {
             if (!file.exists()) {
                 // 如果文件不存在
-                if (!file.getParentFile().exists()) {
+                File parentFile = file.getParentFile();
+                if (parentFile != null && parentFile.exists()) {
                     // 如果文件父目录不存在
                     createFile(file.getParentFile(), false);
                 } else {
@@ -118,8 +118,7 @@ public class CFileUtils {
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
@@ -131,10 +130,16 @@ public class CFileUtils {
     ) {
         try {
             File file = new File(dir, fileName);
-            file.getParentFile().mkdirs();
+            File parentFile = file.getParentFile();
+            if (parentFile != null){
+                parentFile.mkdirs();
+            }
 
             ContentResolver cr = context.getContentResolver();
             ParcelFileDescriptor fd = cr.openFileDescriptor(uri, "r");
+            if (fd == null){
+                return null;
+            }
             FileInputStream ist = new FileInputStream(fd.getFileDescriptor());
             FileOutputStream outputStream = new FileOutputStream(file.getAbsolutePath());
             if (writeFile(ist, outputStream)) {
@@ -166,14 +171,13 @@ public class CFileUtils {
             bw.write(content);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         } finally {
             try {
                 if (bw != null) {
                     bw.close();
                 }
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
     }
@@ -201,14 +205,13 @@ public class CFileUtils {
             }
             return sb.toString();
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         } finally {
             try {
                 if (reader != null) {
                     reader.close();
                 }
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
     }
@@ -230,7 +233,7 @@ public class CFileUtils {
         try {
 
             byte[] data = new byte[2048];
-            int length = -1;
+            int length;
             while ((length = fileInputStream.read(data)) != -1) {
                 fileOutputStream.write(data, 0, length);
             }
@@ -242,7 +245,7 @@ public class CFileUtils {
             try {
                 fileInputStream.close();
                 fileOutputStream.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
     }
@@ -267,8 +270,7 @@ public class CFileUtils {
             intent.putExtra(Intent.EXTRA_STREAM, getUriBySystem(context, file));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             context.startActivity(Intent.createChooser(intent, title));
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
+        } catch (ActivityNotFoundException ignored) {
         }
     }
 
@@ -280,8 +282,7 @@ public class CFileUtils {
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             context.startActivity(Intent.createChooser(intent, title));
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
+        } catch (ActivityNotFoundException ignored) {
         }
     }
 
@@ -308,7 +309,7 @@ public class CFileUtils {
             Uri uri = Uri.fromFile(new File(filePath));
             intent.setData(uri);
             context.sendBroadcast(intent);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }
@@ -324,15 +325,13 @@ public class CFileUtils {
         try {
             context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             context.grantUriPermission(context.getPackageName(), uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }
 
     public static String getFilePathFromUri(Context context, Uri uri) {
         String filePath = null;
-
         if (DocumentsContract.isDocumentUri(context, uri)) {
             if ("com.android.externalstorage.documents".equals(uri.getAuthority())) {
                 final String docId = DocumentsContract.getDocumentId(uri);
@@ -374,17 +373,11 @@ public class CFileUtils {
     private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         String filePath = null;
         String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = null;
 
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+        try (Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 filePath = cursor.getString(columnIndex);
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
             }
         }
 
@@ -473,23 +466,22 @@ public class CFileUtils {
         InputStreamReader isr = null;
         BufferedReader br = null;
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         try {
             inputStream = assetManager.open(fileName);
             isr = new InputStreamReader(inputStream);
             br = new BufferedReader(isr);
 
             sb.append(br.readLine());
-            String line = null;
+            String line;
             while ((line = br.readLine()) != null) {
-                sb.append("\n" + line);
+                sb.append("\n").append(line);
             }
 
             br.close();
             isr.close();
             inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         } finally {
             try {
                 if (br != null) {
@@ -501,8 +493,7 @@ public class CFileUtils {
                 if (inputStream != null) {
                     inputStream.close();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignored) {
             }
         }
         return sb.toString();
@@ -525,11 +516,7 @@ public class CFileUtils {
         File file = new File(filePath$Name);
         // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
         if (file.exists() && file.isFile()) {
-            if (file.delete()) {
-                return true;
-            } else {
-                return false;
-            }
+            return file.delete();
         } else {
             return false;
         }
@@ -545,26 +532,24 @@ public class CFileUtils {
         }
         boolean flag = true;
         File[] files = dirFile.listFiles();
-        for (File file : files) {
-            if (file.isFile()) {
-                flag = deleteSingleFile(file.getAbsolutePath());
-                if (!flag)
-                    break;
-            } else if (file.isDirectory()) {
-                flag = deleteDirectory(file
-                        .getAbsolutePath());
-                if (!flag)
-                    break;
+        if (files != null){
+            for (File file : files) {
+                if (file.isFile()) {
+                    flag = deleteSingleFile(file.getAbsolutePath());
+                    if (!flag)
+                        break;
+                } else if (file.isDirectory()) {
+                    flag = deleteDirectory(file
+                            .getAbsolutePath());
+                    if (!flag)
+                        break;
+                }
             }
         }
         if (!flag) {
             return false;
         }
-        if (dirFile.delete()) {
-            return true;
-        } else {
-            return false;
-        }
+        return dirFile.delete();
     }
 
     public static void startPrint(Context context, String filePath, Uri uri) {
@@ -593,7 +578,7 @@ public class CFileUtils {
                 }
             }
             context.startActivity(intent);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }
@@ -601,9 +586,9 @@ public class CFileUtils {
     public static void copyAssetsDirToPhone(Activity activity, String assetsPath, String outPutParentDir){
         try {
             String[] fileList = activity.getAssets().list(assetsPath);
-            if(fileList.length>0) {//如果是目录
-                File file=new File(outPutParentDir+ File.separator+assetsPath);
-                file.mkdirs();//如果文件夹不存在，则递归
+            if(fileList != null && fileList.length>0) {//如果是目录
+                File file = new File(outPutParentDir+ File.separator+assetsPath);
+                boolean result = file.mkdirs();//如果文件夹不存在，则递归
                 for (String fileName:fileList){
                     assetsPath=assetsPath+File.separator+fileName;
                     copyAssetsDirToPhone(activity,assetsPath, outPutParentDir);
@@ -614,19 +599,17 @@ public class CFileUtils {
                 File file=new File(outPutParentDir+ File.separator+assetsPath);
                 if(!file.exists() || file.length()==0) {
                     FileOutputStream fos=new FileOutputStream(file);
-                    int len=-1;
-                    byte[] buffer=new byte[1024];
+                    int len;
+                    byte[] buffer = new byte[1024];
                     while ((len=inputStream.read(buffer))!=-1){
                         fos.write(buffer,0,len);
                     }
                     fos.flush();
                     inputStream.close();
                     fos.close();
-                } else {
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
     }
 

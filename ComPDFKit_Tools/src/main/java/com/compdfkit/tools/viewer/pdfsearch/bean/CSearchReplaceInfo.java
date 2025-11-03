@@ -76,7 +76,7 @@ public class CSearchReplaceInfo {
     private SpannableStringBuilder highlight(Context context, String text, String target) {
         SpannableStringBuilder spannable = new SpannableStringBuilder(text);
         CharacterStyle span;
-        Pattern p = Pattern.compile(target);
+        Pattern p = Pattern.compile(Pattern.quote(target));
         Matcher m = p.matcher(text);
         int backGroundColor = ContextCompat.getColor(context, R.color.tools_search_result_text_highlight);
         while (m.find()) {

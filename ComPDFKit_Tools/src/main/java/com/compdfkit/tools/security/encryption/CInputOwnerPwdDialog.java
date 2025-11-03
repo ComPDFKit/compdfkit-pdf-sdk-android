@@ -70,11 +70,6 @@ public class CInputOwnerPwdDialog extends CBasicThemeDialogFragment {
     }
 
     @Override
-    protected int themeResId() {
-        return  com.google.android.material.R.attr.dialogTheme;
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         if (getDialog() != null) {

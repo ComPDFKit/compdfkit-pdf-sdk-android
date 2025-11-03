@@ -98,11 +98,6 @@ public class CPDFSelectDigitalSignatureDialog extends CBasicThemeDialogFragment 
     }
 
     @Override
-    protected int themeResId() {
-        return  com.google.android.material.R.attr.dialogTheme;
-    }
-
-    @Override
     protected int layoutId() {
         return R.layout.tools_sign_digital_sign_select_dialog;
     }

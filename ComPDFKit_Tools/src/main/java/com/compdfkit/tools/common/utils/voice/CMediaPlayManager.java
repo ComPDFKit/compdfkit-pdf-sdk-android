@@ -1,6 +1,5 @@
 /**
  * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
- *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
  * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
@@ -37,8 +36,7 @@ public class CMediaPlayManager implements MediaPlayer.OnCompletionListener {
             }
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setOnCompletionListener(this);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
@@ -61,7 +59,7 @@ public class CMediaPlayManager implements MediaPlayer.OnCompletionListener {
                 mMediaPlayer.setDataSource(path);
                 mMediaPlayer.prepare();
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

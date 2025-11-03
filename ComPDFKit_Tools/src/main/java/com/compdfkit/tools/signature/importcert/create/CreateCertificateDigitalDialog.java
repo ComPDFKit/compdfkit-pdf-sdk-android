@@ -183,18 +183,10 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
         tvTitle.setText(R.string.tools_create_a_self_signed_digital_id);
         initCountryReginData();
         initPurpose();
-        etName.addTextChangedListener((s, start, before, count) -> {
-            enableConfirmButton();
-        });
-        etOrganizationUnit.addTextChangedListener((s, start, before, count) -> {
-            enableConfirmButton();
-        });
-        etEmailAddress.addTextChangedListener((s, start, before, count) -> {
-            enableConfirmButton();
-        });
-        etOrganizationName.addTextChangedListener((s, start, before, count) -> {
-            enableConfirmButton();
-        });
+        etName.addTextChangedListener((s, start, before, count) -> enableConfirmButton());
+        etOrganizationUnit.addTextChangedListener((s, start, before, count) -> enableConfirmButton());
+        etEmailAddress.addTextChangedListener((s, start, before, count) -> enableConfirmButton());
+        etOrganizationName.addTextChangedListener((s, start, before, count) -> enableConfirmButton());
         swSaveToFile.setOnCheckedChangeListener((buttonView, isChecked) -> {
             llSaveAddress.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             tvSaveAddress.setText(getSaveAddress() + File.separator + fileName);
@@ -284,8 +276,7 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
                         countryReginSpinnerAdapter = new CountryReginSpinnerAdapter(getContext(), datas);
                         spinnerCountry.setAdapter(countryReginSpinnerAdapter);
                         spinnerCountry.setSelection(countryReginSpinnerAdapter.getSelectPosition());
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ignored) {
                     }
                 });
             }
@@ -331,8 +322,8 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
     private void showDirectoryDialog(){
         CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(
                 Environment.getExternalStorageDirectory().getAbsolutePath(),
-                getContext().getString(R.string.tools_select_folder),
-                getContext().getString(R.string.tools_save_to_this_directory)
+                getString(R.string.tools_select_folder),
+                getString(R.string.tools_save_to_this_directory)
         );
         directoryDialog.setSelectFolderListener(dir -> {
             customSavePath = dir;

@@ -60,11 +60,6 @@ public class CGotoPageDialog extends CBasicThemeDialogFragment {
     }
 
     @Override
-    protected int themeResId() {
-        return com.google.android.material.R.attr.dialogTheme;
-    }
-
-    @Override
     protected int layoutId() {
         return R.layout.tools_bota_bookmark_input_dialog;
     }
@@ -72,7 +67,9 @@ public class CGotoPageDialog extends CBasicThemeDialogFragment {
     public void onStart() {
         super.onStart();
         if (getDialog() != null) {
-            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (getDialog().getWindow() != null) {
+                getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
     }
     @Override
@@ -98,16 +95,15 @@ public class CGotoPageDialog extends CBasicThemeDialogFragment {
         tvTitle.setText(R.string.tools_enter_a_page_number);
         btnCancel.setOnClickListener(v -> dismiss());
         btnAdd.setOnClickListener(v -> {
-            String text = editText.getText().toString();
-            if (null != pdfDisplayPageIndexListener && (!TextUtils.isEmpty(text))) {
+            if (null != pdfDisplayPageIndexListener && (!TextUtils.isEmpty(editText.getText()))) {
                 int page;
                 try {
+                    String text = editText.getText().toString();
                     page = Integer.parseInt(text);
                     if (page >= 0) {
                         pdfDisplayPageIndexListener.displayPage(page);
                     }
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
+                } catch (NumberFormatException ignored) {
                 }
             }
             dismiss();

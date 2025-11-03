@@ -178,7 +178,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
         this.pageEditDialogOnBackListener = pageEditDialogOnBackListener;
     }
 
-    protected void showPageEdit(CPDFViewCtrl pdfView, boolean enterEdit, boolean enableEditMode, CPDFPageEditDialogFragment.OnBackLisener backListener) {
+    protected void showPageEdit(CPDFViewCtrl pdfView, boolean enterEdit, boolean enableEditMode, CPDFPageEditDialogFragment.OnBackListener backListener) {
         curEditMode = pdfView.getCPdfReaderView().getLoadType();
         pdfView.exitEditMode();
         pdfView.getCPdfReaderView().getContextMenuShowListener().dismissContextMenu();

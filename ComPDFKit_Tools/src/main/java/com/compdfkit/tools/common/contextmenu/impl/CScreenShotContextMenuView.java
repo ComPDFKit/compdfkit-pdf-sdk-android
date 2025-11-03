@@ -51,25 +51,22 @@ public class CScreenShotContextMenuView implements ContextMenuScreenShotProvider
         for (ContextMenuConfig.ContextMenuActionItem item : screenShotMenu) {
             switch (item.key) {
                 case "exit":
-                    menuView.addItem(R.string.tools_exit, v -> {
-                        exitScreenShot(helper, pageView);
-                    });
+                    menuView.addItem(R.string.tools_exit, v -> exitScreenShot(helper));
                     break;
                 case "share":
                     menuView.addItem(R.string.tools_share, v -> {
                         try {
                             Bitmap bitmap = pageView.getScreenshotBitmap();
                             if (bitmap == null) {
-                                exitScreenShot(helper, pageView);
+                                exitScreenShot(helper);
                                 return;
                             }
                             String fileName = "screenshot_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ".png";
                             String screenShotFilePath = CImageUtil.saveBitmap(pageView.getContext(), fileName, bitmap);
                             CFileUtils.shareFile(menuView.getContext(), pageView.getContext().getString(R.string.tools_share), "image/*", new File(screenShotFilePath));
-                            exitScreenShot(helper, pageView);
+                            exitScreenShot(helper);
                         } catch (Exception e) {
-                            e.printStackTrace();
-                            exitScreenShot(helper, pageView);
+                            exitScreenShot(helper);
                         }
                     });
                     break;
@@ -78,13 +75,13 @@ public class CScreenShotContextMenuView implements ContextMenuScreenShotProvider
         return menuView;
     }
 
-    private void exitScreenShot(CPDFContextMenuHelper helper, CPDFPageView pageView) {
+    private void exitScreenShot(CPDFContextMenuHelper helper) {
         CPDFReaderView readerView = helper.getReaderView();
         FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
         if (fragmentActivity != null) {
             Fragment fragment = fragmentActivity.getSupportFragmentManager()
                     .findFragmentByTag("documentFragment");
-            if (fragment != null && fragment instanceof CPDFDocumentFragment) {
+            if (fragment instanceof CPDFDocumentFragment) {
                 CPDFDocumentFragment documentFragment = (CPDFDocumentFragment) fragment;
                 documentFragment.exitScreenShot();
             }

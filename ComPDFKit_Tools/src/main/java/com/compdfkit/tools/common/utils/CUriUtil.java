@@ -5,7 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -31,7 +31,7 @@ public class CUriUtil {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         } finally {
             if (cursor != null) {
@@ -54,7 +54,7 @@ public class CUriUtil {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         } finally {
             if (cursor != null) {
@@ -77,7 +77,7 @@ public class CUriUtil {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         } finally {
             if (cursor != null) {
@@ -94,9 +94,8 @@ public class CUriUtil {
             if (TextUtils.isEmpty(fileName)) {
                 fileName = "pic_" + System.currentTimeMillis() + ".png";
             }
-            String image = CFileUtils.copyFileToInternalDirectory(
+            return CFileUtils.copyFileToInternalDirectory(
                     context, uri, file.getAbsolutePath(), fileName);
-            return image;
         } catch (Exception e) {
             return "";
         }
@@ -137,6 +136,9 @@ public class CUriUtil {
         try {
             int degree = 0;
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            if (inputStream == null){
+                return 0;
+            }
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 ExifInterface exifInterface = new ExifInterface(inputStream);
                 // 获取图片的旋转信息
@@ -161,7 +163,6 @@ public class CUriUtil {
                 return 0;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return 0;
         }
     }
@@ -171,6 +172,9 @@ public class CUriUtil {
             ContentResolver resolver = context.getContentResolver();
             InputStream inputStream = resolver.openInputStream(uri);
             ParcelFileDescriptor fileDescriptor = resolver.openFileDescriptor(uri, "r");
+            if (fileDescriptor == null){
+                return 0;
+            }
             int detachFd = fileDescriptor.detachFd();
             if (inputStream != null) {
                 inputStream.close();

@@ -188,7 +188,7 @@ public class CBasicPDFActivity extends CPermissionActivity {
         });
     }
 
-    protected void showPageEdit(CPDFViewCtrl pdfView, boolean enterEdit, CPDFPageEditDialogFragment.OnBackLisener backListener) {
+    protected void showPageEdit(CPDFViewCtrl pdfView, boolean enterEdit, CPDFPageEditDialogFragment.OnBackListener backListener) {
         curEditMode = pdfView.getCPdfReaderView().getLoadType();
         pdfView.exitEditMode();
         CPDFPageEditDialogFragment pageEditDialogFragment = CPDFPageEditDialogFragment.newInstance();

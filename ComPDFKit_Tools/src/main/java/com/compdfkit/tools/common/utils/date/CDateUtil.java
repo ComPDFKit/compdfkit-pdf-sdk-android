@@ -79,7 +79,6 @@ public class CDateUtil {
             System.out.println(formattedOutput);
             return formattedOutput;
         } catch (ParseException e) {
-            e.printStackTrace();
             return dateStr;
         }
     }
@@ -105,7 +104,6 @@ public class CDateUtil {
             String formattedOutput = outputFormat.format(date);
             return formattedOutput;
         } catch (ParseException e) {
-            e.printStackTrace();
             return pdfUTCDate;
         }
     }

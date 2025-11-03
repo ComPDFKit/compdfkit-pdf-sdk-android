@@ -40,7 +40,7 @@ public class CertificateDigitalDatas {
      * Generate a digital signature certificate based on relevant information
      *
      * @param ownerInfo Certificate information
-     * @param password
+     * @param password Certificate password
      * @param saveDir   Local storage save path
      * @param fileName  Certificate file name
      * @return Whether a certificate was generated
@@ -54,14 +54,12 @@ public class CertificateDigitalDatas {
      * Get certificate information
      *
      * @param certFilePath Certificate local file path
-     * @param password
-     * @return
+     * @param password    Certificate password
      */
     @Nullable
     public static CPDFX509 getCertInfo(String certFilePath, String password) {
         if (CPDFSignature.checkPKCS12Password(certFilePath, password)) {
-            CPDFX509 x509 = CPDFSignature.getX509ByPKCS12Cert(certFilePath, password);
-            return x509;
+            return CPDFSignature.getX509ByPKCS12Cert(certFilePath, password);
         } else {
             return null;
         }
@@ -70,8 +68,7 @@ public class CertificateDigitalDatas {
     /**
      * Get a collection of digital signatures in a pdf document
      *
-     * @param document
-     * @return
+     * @param document PDF document object
      */
     @NotNull
     public static List<CPDFSignature> getDigitalSignList(CPDFDocument document) {
@@ -93,18 +90,17 @@ public class CertificateDigitalDatas {
     }
 
     public static boolean hasDigitalSignature(CPDFDocument document) {
-        return getDigitalSignList(document).size() > 0;
+        return !getDigitalSignList(document).isEmpty();
     }
 
     /**
      * Write digital signature into pdf document
      *
-     * @param document
-     * @param signatureWidget
+     * @param document       PDF document object
+     * @param signatureWidget Signature widget
      * @param certPath        Signed certificate local file path
      * @param password        certificate password
      * @param savePath        Document save path
-     * @return
      */
     public static boolean writeSignature(CPDFDocument document,
                                          CPDFSignatureWidget signatureWidget,
@@ -127,9 +123,8 @@ public class CertificateDigitalDatas {
     /**
      * Verify that the specified digital signature is valid
      *
-     * @param signature
-     * @param document
-     * @return
+     * @param signature Digital signature object
+     * @param document PDF document object
      */
     public static CPDFSignatureStatusInfo verifyGetSignatureStatusInfo(CPDFDocument document, CPDFSignature signature) {
         CPDFSigner signer = signature.getSignerArr()[0];
@@ -161,10 +156,6 @@ public class CertificateDigitalDatas {
 
     /**
      * Digital Signature Timestamp Authentication
-     *
-     * @param context
-     * @param signature
-     * @return
      */
     public static boolean verifyTimeStamp(Context context, CPDFSignature signature) {
         return signature.veryfyTimestamp(context);
@@ -172,7 +163,7 @@ public class CertificateDigitalDatas {
 
     public static CPDFDocumentSignInfo verifyDocumentSignStatus(CPDFDocument document) {
         List<CPDFSignature> signatures = getDigitalSignList(document);
-        if (signatures != null && signatures.size() > 0) {
+        if (!signatures.isEmpty()) {
             boolean hasInValid = false;
             boolean hasUnknownStatusSign = false;
             for (CPDFSignature signature : signatures) {
@@ -207,13 +198,10 @@ public class CertificateDigitalDatas {
         try {
             CPDFReaderView readerView = pdfView.getCPdfReaderView();
             CPDFDocument document = readerView.getPDFDocument();
-            boolean result = document.removeSignature(signature, true, cpdfSignatureWidget ->{
-                readerView.refreshSignatureWidget(cpdfSignatureWidget);
-            });
+            boolean result = document.removeSignature(signature, true, readerView::refreshSignatureWidget);
             document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental, pdfView.isSaveFileExtraFontSubset());
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -233,9 +221,9 @@ public class CertificateDigitalDatas {
 
     private static void loopVerifyGetChain(Context context, List<CPDFX509> list, CPDFSignature signature, CPDFX509 cert) {
         cert.verifyGetChain(context, signature);
-        CPDFX509[] cpdfx509s = cert.getChain();
-        if (cpdfx509s != null && cpdfx509s.length > 0) {
-            CPDFX509 a = cpdfx509s[0];
+        CPDFX509[] cpdfX509s = cert.getChain();
+        if (cpdfX509s != null && cpdfX509s.length > 0) {
+            CPDFX509 a = cpdfX509s[0];
             list.add(a);
             loopVerifyGetChain(context, list, signature, a);
         }

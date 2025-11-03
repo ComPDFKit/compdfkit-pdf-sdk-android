@@ -64,8 +64,7 @@ public class CPDFAnnotDatas {
                     list.addAll(annotListItems);
                 }
             }
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (Exception ignored){
         }
         return list;
     }
@@ -194,20 +193,41 @@ public class CPDFAnnotDatas {
      * @param saveName The name of the saved file, excluding the xfdf file suffix
      * @return export success or failure status
      */
-    public static boolean exportAnnotations(CPDFDocument document, String saveDir, String saveName){
+    public static boolean exportAnnotations(CPDFDocument document, String saveDir, String saveName) {
+        if (document == null || saveDir == null || saveName == null) {
+            CLog.e("ComPDFKit", "Invalid parameters: document, saveDir, or saveName is null");
+            return false;
+        }
+
         File dirFile = new File(saveDir);
-        File saveFile = new File(dirFile, saveName+".xfdf");
+        if (!dirFile.exists() && !dirFile.mkdirs()) {
+            CLog.e("ComPDFKit", "Failed to create save directory: " + dirFile.getAbsolutePath());
+            return false;
+        }
+
+        File saveFile = new File(dirFile, saveName + ".xfdf");
         saveFile = CFileUtils.renameNameSuffix(saveFile);
-        if (dirFile.isDirectory() && !dirFile.exists()){
-            dirFile.mkdirs();
-        }
+
         File cacheFile = new File(document.getContext().getCacheDir(), "annotationExportCache");
-        cacheFile.mkdirs();
-        CLog.e("ComPDFKit", "Annotation export path:" + saveFile.getAbsolutePath());
-        boolean result = document.exportAnnotations(saveFile.getAbsolutePath(), cacheFile.getAbsolutePath());
-        if (result){
-            CFileUtils.notifyMediaStore(document.getContext(), saveFile.getAbsolutePath());
+        if (cacheFile.exists()) {
+            if (!cacheFile.isDirectory()) {
+                CLog.e("ComPDFKit", "Cache path exists but is not a directory: " + cacheFile.getAbsolutePath());
+                return false;
+            }
+        } else if (!cacheFile.mkdirs()) {
+            CLog.e("ComPDFKit", "Failed to create cache directory: " + cacheFile.getAbsolutePath());
+            return false;
         }
+
+        CLog.d("ComPDFKit", "Annotation export path: " + saveFile.getAbsolutePath());
+        boolean result = document.exportAnnotations(saveFile.getAbsolutePath(), cacheFile.getAbsolutePath());
+        if (result) {
+            CFileUtils.notifyMediaStore(document.getContext(), saveFile.getAbsolutePath());
+            CLog.d("ComPDFKit", "Annotation export success: " + saveFile.getAbsolutePath());
+        } else {
+            CLog.d("ComPDFKit", "Annotation export failed for: " + saveFile.getAbsolutePath());
+        }
+
         return result;
     }
 
@@ -215,11 +235,14 @@ public class CPDFAnnotDatas {
         File dirFile = new File(saveDir);
         File saveFile = new File(dirFile, saveName+"_widgets.xfdf");
         saveFile = CFileUtils.renameNameSuffix(saveFile);
-        if (dirFile.isDirectory() && !dirFile.exists()){
-            dirFile.mkdirs();
+        if (!dirFile.exists() && !dirFile.mkdirs()){
+            CLog.e("ComPDFKit", "Failed to create directory: " + dirFile.getAbsolutePath());
+            return false;
         }
         File cacheFile = new File(document.getContext().getCacheDir(), "widgetExportCache");
-        cacheFile.mkdirs();
+        if (!cacheFile.exists() && !cacheFile.mkdirs()){
+            CLog.e("ComPDFKit", "Failed to create directory: " + cacheFile.getAbsolutePath());
+        }
         CLog.e("ComPDFKit", "Widgets export path:" + saveFile.getAbsolutePath());
         boolean result = document.exportWidgets(saveFile.getAbsolutePath(), cacheFile.getAbsolutePath());
         if (result){
@@ -230,7 +253,9 @@ public class CPDFAnnotDatas {
 
     public static boolean importWidgets(CPDFDocument document, String importFilePath){
         File cacheFile = new File(document.getContext().getCacheDir(), "widgetsExportCache");
-        cacheFile.mkdirs();
+        if (!cacheFile.exists()){
+            boolean result = cacheFile.mkdirs();
+        }
         return document.importWidgets(importFilePath, cacheFile.getAbsolutePath());
     }
     /**
@@ -241,7 +266,7 @@ public class CPDFAnnotDatas {
      */
     public static boolean importAnnotations(CPDFDocument document, String importFilePath){
         File cacheFile = new File(document.getContext().getCacheDir(), "annotationExportCache");
-        cacheFile.mkdirs();
+        boolean result = cacheFile.mkdirs();
         return document.importAnnotations(importFilePath, cacheFile.getAbsolutePath());
     }
 

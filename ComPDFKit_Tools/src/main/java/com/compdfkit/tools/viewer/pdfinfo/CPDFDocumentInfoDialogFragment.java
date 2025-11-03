@@ -21,8 +21,6 @@ import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 
 public class CPDFDocumentInfoDialogFragment extends CBasicBottomSheetDialogFragment {
 
-    private CToolBar toolBar;
-
     private AppCompatTextView tvPDFFileName;
 
     private AppCompatTextView tvPDFSize;
@@ -86,10 +84,8 @@ public class CPDFDocumentInfoDialogFragment extends CBasicBottomSheetDialogFragm
 
     @Override
     protected void onCreateView(View rootView) {
-        toolBar = rootView.findViewById(R.id.tool_bar);
-        toolBar.setBackBtnClickListener(v -> {
-            dismiss();
-        });
+        CToolBar toolbar = rootView.findViewById(R.id.tool_bar);
+        toolbar.setBackBtnClickListener(v -> dismiss());
         tvPDFFileName = rootView.findViewById(R.id.id_pdf_info_fileName);
         tvPDFSize = rootView.findViewById(R.id.id_pdf_info_size);
         tvPDFTitle = rootView.findViewById(R.id.id_pdf_info_title);
@@ -123,27 +119,25 @@ public class CPDFDocumentInfoDialogFragment extends CBasicBottomSheetDialogFragm
         if (documentInfoBean == null){
             documentInfoBean = getCDocumentInfo(pdfView);
         }
-        if (documentInfoBean != null) {
-            tvPDFFileName.setText(documentInfoBean.getFileName());
-            tvPDFSize.setText(documentInfoBean.getFileSize());
-            tvPDFTitle.setText(documentInfoBean.getTitle());
-            tvPDFAuthor.setText(documentInfoBean.getAuthor());
-            tvPDFSubject.setText(documentInfoBean.getSubject());
-            tvPDFKeywords.setText(documentInfoBean.getKeywords());
+        tvPDFFileName.setText(documentInfoBean.getFileName());
+        tvPDFSize.setText(documentInfoBean.getFileSize());
+        tvPDFTitle.setText(documentInfoBean.getTitle());
+        tvPDFAuthor.setText(documentInfoBean.getAuthor());
+        tvPDFSubject.setText(documentInfoBean.getSubject());
+        tvPDFKeywords.setText(documentInfoBean.getKeywords());
 
-            tvPDFVersion.setText(documentInfoBean.getVersion());
-            tvPDFPageNum.setText(String.valueOf(documentInfoBean.getPageCount()));
-            tvPDFCreator.setText(documentInfoBean.getCreator());
-            tvPDFCreationDate.setText(documentInfoBean.getCreationDate());
-            tvPDFModificationDate.setText(documentInfoBean.getModificationDate());
+        tvPDFVersion.setText(documentInfoBean.getVersion());
+        tvPDFPageNum.setText(String.valueOf(documentInfoBean.getPageCount()));
+        tvPDFCreator.setText(documentInfoBean.getCreator());
+        tvPDFCreationDate.setText(documentInfoBean.getCreationDate());
+        tvPDFModificationDate.setText(documentInfoBean.getModificationDate());
 
-            tvPDFAllowPrint.setText(allowStr(documentInfoBean.isAllowsPrinting()));
-            tvPDFAllowCopy.setText(allowStr(documentInfoBean.isAllowsCopying()));
-            tvPDFAllowDocumentChanges.setText(allowStr(documentInfoBean.isAllowsDocumentChanges()));
-            tvPDFAllowDocumentAssembly.setText(allowStr(documentInfoBean.isAllowsDocumentAssembly()));
-            tvPDFAllowDocumentCommenting.setText(allowStr(documentInfoBean.isAllowsCommenting()));
-            tvPDFAllowDocumentFormFieldEntry.setText(allowStr(documentInfoBean.isAllowsFormFieldEntry()));
-        }
+        tvPDFAllowPrint.setText(allowStr(documentInfoBean.isAllowsPrinting()));
+        tvPDFAllowCopy.setText(allowStr(documentInfoBean.isAllowsCopying()));
+        tvPDFAllowDocumentChanges.setText(allowStr(documentInfoBean.isAllowsDocumentChanges()));
+        tvPDFAllowDocumentAssembly.setText(allowStr(documentInfoBean.isAllowsDocumentAssembly()));
+        tvPDFAllowDocumentCommenting.setText(allowStr(documentInfoBean.isAllowsCommenting()));
+        tvPDFAllowDocumentFormFieldEntry.setText(allowStr(documentInfoBean.isAllowsFormFieldEntry()));
     }
 
     private CDocumentInfoBean getCDocumentInfo(CPDFViewCtrl pdfView){
@@ -194,8 +188,7 @@ public class CPDFDocumentInfoDialogFragment extends CBasicBottomSheetDialogFragm
             ParcelFileDescriptor p = document.getContext().getContentResolver().openFileDescriptor(document.getUri(), "r");
             fileSize = p.getStatSize();
             p.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         float size;
         String unit = " M";

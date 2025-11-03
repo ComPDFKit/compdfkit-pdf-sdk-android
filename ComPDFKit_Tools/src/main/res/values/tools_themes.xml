@@ -329,11 +329,5 @@
     </style>
 
 
-    <style name="LaunchTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Show a splash screen on the activity. Automatically removed when
-             the Flutter engine draws its first frame -->
-
-    </style>
-
 
 </resources>

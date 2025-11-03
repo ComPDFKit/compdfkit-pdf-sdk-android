@@ -64,14 +64,11 @@ public class CDigitalSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                             context.getString(R.string.tools_select_folder),
                             context.getString(R.string.tools_save_to_this_directory)
                     );
-                    directoryDialog.setSelectFolderListener(dir -> {
-                        signDocument(cpdfSignatureWidget, config, location, reason, certFilePath, certPassword, dir);
-                    });
+                    directoryDialog.setSelectFolderListener(dir -> signDocument(cpdfSignatureWidget, config, location, reason, certFilePath, certPassword, dir));
                     if (fragmentActivity != null) {
                         directoryDialog.show(fragmentActivity.getSupportFragmentManager(), "selectFolderDialog");
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception ignored) {
                 }
                 dialog.dismiss();
             });
@@ -96,8 +93,10 @@ public class CDigitalSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
         String uuid = UUID.randomUUID().toString().substring(0, 4);
         String fileName = readerView.getPDFDocument().getFileName();
         File saveFile = new File(saveDir + File.separator + fileName + "_" + uuid, readerView.getPDFDocument().getFileName());
-        saveFile.getParentFile().mkdirs();
-
+        File parentFile = saveFile.getParentFile();
+        if (parentFile != null) {
+            boolean result = parentFile.mkdirs();
+        }
         boolean updateSignApResult = cpdfSignatureWidget.updateApWithDigitalSigConfig(config);
         if (!updateSignApResult){
             return;

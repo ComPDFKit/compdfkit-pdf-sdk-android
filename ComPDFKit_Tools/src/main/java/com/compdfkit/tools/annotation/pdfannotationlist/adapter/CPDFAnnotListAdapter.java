@@ -114,7 +114,7 @@ public class CPDFAnnotListAdapter  extends CBaseQuickAdapter<CPDFAnnotListItem, 
             holder.setText(R.id.id_item_annot_head_page, String.valueOf(item.getPage() + 1));
             holder.setText(R.id.id_item_annot_count, String.valueOf(item.getAnnotationCount()));
         }else {
-            int isLightThemeValue = CViewUtils.getThemeAttrData(holder.itemView.getContext().getTheme(),  com.google.android.material.R.attr.isLightTheme);
+            int isLightThemeValue = CViewUtils.getThemeAttrData(holder.itemView.getContext().getTheme(),  androidx.appcompat.R.attr.isLightTheme);
             boolean isDarkTheme = isLightThemeValue == 0;
             Integer annotIcon = ICON_RES_IDS.get(item.getAnnotType());
             if (isDarkTheme){
@@ -312,7 +312,7 @@ public class CPDFAnnotListAdapter  extends CBaseQuickAdapter<CPDFAnnotListItem, 
         // If there is enough space at the bottom,
         // it will be displayed below the anchor view. If not, it will be displayed above it.
         int[] windowPos = CDimensUtils.calculatePopWindowPos(anchorView, reviewStatusMenuWindow.getContentView());
-        reviewStatusMenuWindow.setAnimationStyle(R.style.PopupAnimation);
+        reviewStatusMenuWindow.setAnimationStyle(R.style.ToolsPopupAnimation);
         reviewStatusMenuWindow.showAtLocation(anchorView, Gravity.START | Gravity.TOP, windowPos[0], windowPos[1]);
     }
 

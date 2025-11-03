@@ -60,11 +60,6 @@ public class CAlertDialog extends CBasicThemeDialogFragment {
     }
 
     @Override
-    protected int themeResId() {
-        return com.google.android.material.R.attr.dialogTheme;
-    }
-
-    @Override
     protected int layoutId() {
         return R.layout.tools_alert_dialog;
     }

@@ -43,8 +43,7 @@ public class CustomSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                     Bitmap bitmap = CBitmapUtil.decodeBitmap(annotStyle.getImagePath());
                     ((CPDFSignatureWidget) pdfAnnotation).updateApWithBitmap(bitmap, CPDFImageScaleType.SCALETYPE_fitCenter);
                     refresh();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception ignored) {
                 }
             }
         });

@@ -41,12 +41,6 @@ public class CSelectSignTypeDialog extends CBasicThemeDialogFragment implements 
         return fragment;
     }
 
-
-    @Override
-    protected int themeResId() {
-        return  com.google.android.material.R.attr.dialogTheme;
-    }
-
     @Override
     protected int layoutId() {
         return R.layout.tools_sign_select_sign_type_dialog;

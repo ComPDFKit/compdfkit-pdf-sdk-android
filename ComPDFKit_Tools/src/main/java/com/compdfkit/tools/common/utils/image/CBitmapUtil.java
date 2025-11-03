@@ -1,6 +1,5 @@
 /**
  * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
- *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
  * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
@@ -143,7 +142,6 @@ public class CBitmapUtil {
             }
             return bitmap;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -152,6 +150,9 @@ public class CBitmapUtil {
         try {
             ContentResolver contentResolver = context.getContentResolver();
             ParcelFileDescriptor parcelFileDescriptor = contentResolver.openFileDescriptor(uri, "r");
+            if (parcelFileDescriptor == null){
+                return null;
+            }
             Bitmap bitmap = BitmapFactory.decodeFileDescriptor(parcelFileDescriptor.getFileDescriptor());
             int degrees = CUriUtil.getBitmapDegree(context, uri);
             if (degrees > 0){
@@ -161,7 +162,6 @@ public class CBitmapUtil {
             }
             return bitmap;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -183,7 +183,6 @@ public class CBitmapUtil {
     }
 
     public static int getBitmapResId(Context context, String resName) {
-        int resId = context.getResources().getIdentifier(resName, "drawable", context.getPackageName());
-        return resId;
+        return context.getResources().getIdentifier(resName, "drawable", context.getPackageName());
     }
 }

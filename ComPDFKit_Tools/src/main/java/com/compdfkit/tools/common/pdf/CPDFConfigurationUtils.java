@@ -87,7 +87,6 @@ public class CPDFConfigurationUtils {
             configuration.contextMenuConfig = parseContextMenuConfig(rootJsonObject.optJSONObject("contextMenuConfig"));
             return configuration;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -631,7 +630,7 @@ public class CPDFConfigurationUtils {
                 radioButtonAttr.setBorderWidth((float) jsonObject.optDouble("borderWidth", 5));
                 radioButtonAttr.setCheckedColor(jsonObject.optString("checkedColor", "#000000"));
                 radioButtonAttr.isChecked = jsonObject.optBoolean("isChecked", false);
-                radioButtonAttr.checkedStyle = getCheckStyle(jsonObject.optString("checkedStyle", FormsCheckBoxAttr.CheckedStyle.Check.name()));;
+                radioButtonAttr.checkedStyle = getCheckStyle(jsonObject.optString("checkedStyle", FormsCheckBoxAttr.CheckedStyle.Check.name()));
                 formsAttr = radioButtonAttr;
                 break;
             case Widget_ListBox:

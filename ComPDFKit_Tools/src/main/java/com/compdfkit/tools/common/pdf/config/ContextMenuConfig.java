@@ -10,7 +10,9 @@
 package com.compdfkit.tools.common.pdf.config;
 
 
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,6 +55,7 @@ public class ContextMenuConfig implements Serializable {
             this.subItems = subItems;
         }
 
+        @NonNull
         @Override
         public String toString() {
             if (subItems == null){
@@ -91,21 +94,9 @@ public class ContextMenuConfig implements Serializable {
                 }
                 resultMap.put(key, itemList);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
 
         return resultMap;
-    }
-
-    private static void printMode(String title, Map<String, List<ContextMenuActionItem>> modeMap) {
-        Log.d("PDFConfig", "==== " + title + " ====");
-        for (Map.Entry<String, List<ContextMenuActionItem>> entry : modeMap.entrySet()) {
-            Log.d("PDFConfig", "  " + entry.getKey() + ":");
-            for (ContextMenuActionItem item : entry.getValue()) {
-                Log.d("PDFConfig", "    " + item);
-            }
-        }
     }
 }

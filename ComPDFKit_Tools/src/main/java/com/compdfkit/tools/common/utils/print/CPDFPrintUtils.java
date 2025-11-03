@@ -34,7 +34,7 @@ public class CPDFPrintUtils {
                         .setColorMode(PrintAttributes.COLOR_MODE_COLOR)
                         .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
                         .build();
-                CPDFPrintAdpater adapter = getPDFPrintAdapter(activity, document);
+                CPDFPrintAdapter adapter = getPDFPrintAdapter(activity, document);
                 printManager.print(document.getFileName(), adapter, attributes);
             } else {
                 CToastUtil.showToast(activity.getApplicationContext(), R.string.tools_print_systemversion_not_support);
@@ -45,8 +45,8 @@ public class CPDFPrintUtils {
     }
 
     @NonNull
-    private static CPDFPrintAdpater getPDFPrintAdapter(@NonNull Activity activity, CPDFDocument document) {
-        CPDFPrintAdpater adapter = new CPDFPrintAdpater(activity, document.getPageCount(), document.getFileName(), new CPDFPrintAdpater.IPrintCallback() {
+    private static CPDFPrintAdapter getPDFPrintAdapter(@NonNull Activity activity, CPDFDocument document) {
+        CPDFPrintAdapter adapter = new CPDFPrintAdapter(activity, document.getPageCount(), document.getFileName(), new CPDFPrintAdapter.IPrintCallback() {
             @Override
             public Bitmap onWriteBitmap(int pageNum, int pageWidth, boolean isDrawAnnot) {
                 return pdfToBitmap(document, pageNum, pageWidth, isDrawAnnot);
@@ -56,7 +56,7 @@ public class CPDFPrintUtils {
 
             }
         });
-        adapter.setResolutionScale(CPDFPrintAdpater.FHQ);
+        adapter.setResolutionScale(CPDFPrintAdapter.FHQ);
         adapter.setDrawAnnot(true);
         return adapter;
     }

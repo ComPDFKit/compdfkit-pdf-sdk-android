@@ -152,7 +152,7 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="PopupAnimation">
+    <style name="ToolsPopupAnimation">
         <item name="android:windowEnterAnimation">@anim/tools_popup_enter</item>
         <item name="android:windowExitAnimation">@anim/tools_popup_exit</item>
     </style>

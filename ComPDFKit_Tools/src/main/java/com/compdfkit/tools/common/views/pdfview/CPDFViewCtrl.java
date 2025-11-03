@@ -181,27 +181,26 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   private void initAttr(Context context, AttributeSet attributeSet) {
     try {
       TypedArray typedArray = context.obtainStyledAttributes(attributeSet,
-          R.styleable.CPDFReaderView);
-      if (typedArray != null) {
-        enableSliderBar = typedArray.getBoolean(R.styleable.CPDFReaderView_tools_enable_slider_bar,
-            true);
+          R.styleable.CPDFViewCtrl);
+        enableSliderBar = typedArray.getBoolean(R.styleable.CPDFViewCtrl_tools_enable_slider_bar,
+                true);
         int sliderBarPositionEnum = typedArray.getInt(
-            R.styleable.CPDFReaderView_tools_slider_bar_position, 1);
+            R.styleable.CPDFViewCtrl_tools_slider_bar_position, 1);
         if (sliderBarPositionEnum == 0) {
           slideBarPosition = CPDFSlideBar.SlideBarPosition.LEFT;
         } else {
           slideBarPosition = CPDFSlideBar.SlideBarPosition.RIGHT;
         }
         sliderBarThumbnailWidth = typedArray.getDimensionPixelOffset(
-            R.styleable.CPDFReaderView_tools_slider_bar_thumbnail_width, 314);
+            R.styleable.CPDFViewCtrl_tools_slider_bar_thumbnail_width, 314);
         sliderBarThumbnailHeight = typedArray.getDimensionPixelOffset(
-            R.styleable.CPDFReaderView_tools_slider_bar_thumbnail_height, 444);
+            R.styleable.CPDFViewCtrl_tools_slider_bar_thumbnail_height, 444);
         sliderBarIconResId = typedArray.getResourceId(
-            R.styleable.CPDFReaderView_tools_slider_bar_icon, R.drawable.tools_ic_pdf_slider_bar);
+            R.styleable.CPDFViewCtrl_tools_slider_bar_icon, R.drawable.tools_ic_pdf_slider_bar);
         enablePageIndicator = typedArray.getBoolean(
-            R.styleable.CPDFReaderView_tools_enable_page_indicator, true);
+            R.styleable.CPDFViewCtrl_tools_enable_page_indicator, true);
         pageIndicatorMarginBottom = typedArray.getDimensionPixelOffset(
-            R.styleable.CPDFReaderView_tools_page_indicator_margin_bottom, 0);
+            R.styleable.CPDFViewCtrl_tools_page_indicator_margin_bottom, 0);
         if (enableSliderBar) {
           slideBar = new CPDFSliderBarView(getContext());
         }
@@ -211,8 +210,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         CViewUtils.applyViewBackground(this,
             ContextCompat.getColor(getContext(), R.color.tools_pdf_view_ctrl_background_color));
         typedArray.recycle();
-      }
-    } catch (Exception e) {
+    } catch (Exception ignored) {
 
     }
   }
@@ -263,9 +261,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
               getContext().getString(R.string.tools_warning),
               getContext().getString(R.string.tools_scan_pdf_annot_warning)
           );
-          alertDialog.setConfirmClickListener(v -> {
-            alertDialog.dismiss();
-          });
+          alertDialog.setConfirmClickListener(v -> alertDialog.dismiss());
           FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
           if (fragmentActivity != null) {
             alertDialog.show(fragmentActivity.getSupportFragmentManager(), "alertDialog");
@@ -314,9 +310,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
 
       CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfFilePath, password);
-      CThreadPoolUtils.getInstance().executeMain(() -> {
-        setPDFDocument(cpdfDocument, pdfFilePath, pdfDocumentError, openPdfFinishCallback);
-      });
+      CThreadPoolUtils.getInstance().executeMain(() -> setPDFDocument(cpdfDocument, pdfFilePath, pdfDocumentError, openPdfFinishCallback));
     });
   }
 
@@ -334,9 +328,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       CPDFDocument cpdfDocument = new CPDFDocument(getContext());
       // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
       CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfUri, password);
-      CThreadPoolUtils.getInstance().executeMain(() -> {
-        setPDFDocument(cpdfDocument, pdfUri, pdfDocumentError, openPdfFinishCallback);
-      });
+      CThreadPoolUtils.getInstance().executeMain(() -> setPDFDocument(cpdfDocument, pdfUri, pdfDocumentError, openPdfFinishCallback));
     });
   }
 
@@ -435,7 +427,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         if (result) {
           openPDF(tempFile.getAbsolutePath());
         }
-      } catch (Exception e) {
+      } catch (Exception ignored) {
       }
       alertDialog.dismiss();
     });
@@ -473,9 +465,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
                 saveFileExtraFontSubset);
             if (document.shouleReloadDocument()) {
               document.reload();
-              CThreadPoolUtils.getInstance().executeMain(() -> {
-                cPdfReaderView.reloadPages2();
-              });
+              CThreadPoolUtils.getInstance().executeMain(() -> cPdfReaderView.reloadPages2());
             }
             CThreadPoolUtils.getInstance().executeMain(() -> {
               if (callback != null) {
@@ -486,7 +476,6 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
               }
             });
           } catch (CPDFDocumentException e) {
-            e.printStackTrace();
             CLog.e("ComPDFKit", "save fail:" + e.getMessage());
             if (error != null) {
               error.error(e);

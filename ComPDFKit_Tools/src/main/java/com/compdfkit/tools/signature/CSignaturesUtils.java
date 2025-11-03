@@ -57,7 +57,6 @@ public class CSignaturesUtils {
                     signatureWidget.updateApWithBitmap(bitmap, CPDFImageScaleType.SCALETYPE_fitCenter);
                     signatureWidgetImpl.refresh();
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -85,15 +84,12 @@ public class CSignaturesUtils {
                             context.getString(R.string.tools_select_folder),
                             context.getString(R.string.tools_save_to_this_directory)
                     );
-                    directoryDialog.setSelectFolderListener(dir -> {
-                        sigitalSignatureDocument(signatureWidget,readerView, config, location, reason, certFilePath, certPassword, dir);
-                    });
+                    directoryDialog.setSelectFolderListener(dir -> sigitalSignatureDocument(signatureWidget,readerView, config, location, reason, certFilePath, certPassword, dir));
                     FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(pageView.getContext());
                     if (fragmentActivity != null) {
                         directoryDialog.show(fragmentActivity.getSupportFragmentManager(), "selectFolderDialog");
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception ignored) {
                 }
                 dialog.dismiss();
             });

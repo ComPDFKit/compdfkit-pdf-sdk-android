@@ -1,6 +1,5 @@
 /**
  * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
- *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
  * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
@@ -31,6 +30,7 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 
 import com.compdfkit.core.document.CPDFDocument;
@@ -53,7 +53,6 @@ import java.io.File;
  * Document encryption related settings dialog
  * 1. Set file opening password
  * 2. Set file permission password
- *
  * Before encrypting or decrypting, make sure you have document owner permissions
  * <blockquote><pre>
  *     CPDFDocument.PDFDocumentPermissions permission = document.getPermissions()
@@ -67,9 +66,9 @@ import java.io.File;
  *     // has owner permission
  *     CDocumentEncryptionDialog documentEncryptionDialog = CDocumentEncryptionDialog.newInstance();
  *     documentEncryptionDialog.setDocument(binding.pdfView.getCPdfReaderView().getPDFDocument());
- *     documentEncryptionDialog.setEncryptionResultListener((isRemoveSecurity, result, filePath, passowrd) -> {
+ *     documentEncryptionDialog.setEncryptionResultListener((isRemoveSecurity, result, filePath, password) -> {
  *         // Open encrypted or password-removed documents
- *         binding.pdfView.openPDF(filePath, passowrd);
+ *         binding.pdfView.openPDF(filePath, password);
  *         documentEncryptionDialog.dismiss();
  *     });
  *     documentEncryptionDialog.show(getSupportFragmentManager(), "documentEncryptionDialog");
@@ -284,11 +283,15 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
         } else if (v.getId() == R.id.iv_user_pwd_show) {
             ivUserPwdVisible.setSelected(!ivUserPwdVisible.isSelected());
             etUserPassword.setInputType(ivUserPwdVisible.isSelected() ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            etUserPassword.setSelection(etUserPassword.getText().length());
+            if (!TextUtils.isEmpty(etUserPassword.getText())){
+                etUserPassword.setSelection(etUserPassword.getText().length());
+            }
         } else if (v.getId() == R.id.iv_owner_pwd_show) {
             ivOwnerPwdVisible.setSelected(!ivOwnerPwdVisible.isSelected());
             etOwnerPassword.setInputType(ivOwnerPwdVisible.isSelected() ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            etOwnerPassword.setSelection(etOwnerPassword.getText().length());
+            if (!TextUtils.isEmpty(etOwnerPassword.getText())){
+                etOwnerPassword.setSelection(etOwnerPassword.getText().length());
+            }
         }
     }
 
@@ -367,7 +370,7 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
         String rootDir = Environment.getExternalStorageDirectory().getAbsolutePath();
         CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(rootDir,
                 getString(R.string.tools_saving_path), getString(R.string.tools_okay));
-        directoryDialog.setSelectFolderListener(dir -> encryptionDocument(dir));
+        directoryDialog.setSelectFolderListener(this::encryptionDocument);
         directoryDialog.show(getParentFragmentManager(), "dirDialog");
     }
 
@@ -379,8 +382,8 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
         CThreadPoolUtils.getInstance().executeIO(() -> {
             boolean removeUserPassword = false;
             boolean removeOwnerPassword = false;
-            String userPassword = etUserPassword.getText().toString();
-            String ownerPassword = etOwnerPassword.getText().toString();
+            String userPassword = !TextUtils.isEmpty(etUserPassword.getText()) ? etUserPassword.getText().toString() : "";
+            String ownerPassword = !TextUtils.isEmpty(etOwnerPassword.getText()) ? etOwnerPassword.getText().toString() : "";
             try {
                 CPDFDocument.PDFDocumentPermissions permissions = document.getPermissions();
                 if (swUserPassword.isChecked()) {
@@ -428,8 +431,8 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
                     // Save to specified directory
                     result = document.saveAs(filePath, false, false, saveFileExtraFontSubset);
                 }
-                boolean shouleReloadDocument = document.shouleReloadDocument();
-                if (shouleReloadDocument) {
+                boolean shouldReloadDocument = document.shouleReloadDocument();
+                if (shouldReloadDocument) {
                     document.reload();
                 }
                 if (getActivity() != null) {
@@ -442,8 +445,7 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
                         }
                     });
                 }
-            } catch (Exception exception) {
-                exception.printStackTrace();
+            } catch (Exception ignored) {
             }
         });
     }

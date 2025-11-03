@@ -135,8 +135,7 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
                 int outsideColor = configuration.globalConfig.watermark.getOutsideBackgroundColor();
                 view.setBackgroundColor(outsideColor);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         watermarkPageView.setDocument(document, pageIndex);
         if (getArguments() != null) {
@@ -282,7 +281,7 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
                         bitmap = Glide.with(getContext()).asBitmap().load(image).submit(360, 480).get();
                     }
                     return bitmap;
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 return null;
             }
@@ -324,13 +323,9 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            watermarkPageView.afterMeasured(() -> {
-                watermarkPageView.updateCenterPoint();
-            });
+            watermarkPageView.afterMeasured(() -> watermarkPageView.updateCenterPoint());
         } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            watermarkPageView.afterMeasured(() -> {
-                watermarkPageView.updateCenterPoint();
-            });
+            watermarkPageView.afterMeasured(() -> watermarkPageView.updateCenterPoint());
         }
     }
 }
