@@ -104,8 +104,7 @@ public class CFileUtils {
         try {
             if (!file.exists()) {
                 // 如果文件不存在
-                File parentFile = file.getParentFile();
-                if (parentFile != null && parentFile.exists()) {
+                if (!file.getParentFile().exists()) {
                     // 如果文件父目录不存在
                     createFile(file.getParentFile(), false);
                 } else {
@@ -130,10 +129,7 @@ public class CFileUtils {
     ) {
         try {
             File file = new File(dir, fileName);
-            File parentFile = file.getParentFile();
-            if (parentFile != null){
-                parentFile.mkdirs();
-            }
+            file.getParentFile().mkdirs();
 
             ContentResolver cr = context.getContentResolver();
             ParcelFileDescriptor fd = cr.openFileDescriptor(uri, "r");
@@ -532,18 +528,16 @@ public class CFileUtils {
         }
         boolean flag = true;
         File[] files = dirFile.listFiles();
-        if (files != null){
-            for (File file : files) {
-                if (file.isFile()) {
-                    flag = deleteSingleFile(file.getAbsolutePath());
-                    if (!flag)
-                        break;
-                } else if (file.isDirectory()) {
-                    flag = deleteDirectory(file
-                            .getAbsolutePath());
-                    if (!flag)
-                        break;
-                }
+        for (File file : files) {
+            if (file.isFile()) {
+                flag = deleteSingleFile(file.getAbsolutePath());
+                if (!flag)
+                    break;
+            } else if (file.isDirectory()) {
+                flag = deleteDirectory(file
+                        .getAbsolutePath());
+                if (!flag)
+                    break;
             }
         }
         if (!flag) {
@@ -586,9 +580,9 @@ public class CFileUtils {
     public static void copyAssetsDirToPhone(Activity activity, String assetsPath, String outPutParentDir){
         try {
             String[] fileList = activity.getAssets().list(assetsPath);
-            if(fileList != null && fileList.length>0) {//如果是目录
-                File file = new File(outPutParentDir+ File.separator+assetsPath);
-                boolean result = file.mkdirs();//如果文件夹不存在，则递归
+            if(fileList.length>0) {//如果是目录
+                File file=new File(outPutParentDir+ File.separator+assetsPath);
+                file.mkdirs();//如果文件夹不存在，则递归
                 for (String fileName:fileList){
                     assetsPath=assetsPath+File.separator+fileName;
                     copyAssetsDirToPhone(activity,assetsPath, outPutParentDir);
