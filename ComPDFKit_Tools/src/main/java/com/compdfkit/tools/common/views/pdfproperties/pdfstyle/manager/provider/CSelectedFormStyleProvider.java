@@ -12,7 +12,9 @@ package com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider
 
 import android.graphics.Color;
 
+import androidx.annotation.Nullable;
 import com.compdfkit.core.annotation.CPDFAnnotation;
+import com.compdfkit.core.annotation.CPDFAnnotation.Type;
 import com.compdfkit.core.annotation.CPDFTextAlignment;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFCheckboxWidget;
@@ -21,15 +23,11 @@ import com.compdfkit.core.annotation.form.CPDFListboxWidget;
 import com.compdfkit.core.annotation.form.CPDFPushbuttonWidget;
 import com.compdfkit.core.annotation.form.CPDFRadiobuttonWidget;
 import com.compdfkit.core.annotation.form.CPDFTextWidget;
+import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
-import com.compdfkit.ui.proxy.form.CPDFCheckboxWidgetImpl;
-import com.compdfkit.ui.proxy.form.CPDFComboboxWidgetImpl;
 import com.compdfkit.ui.proxy.form.CPDFListboxWidgetImpl;
-import com.compdfkit.ui.proxy.form.CPDFPushbuttonWidgetImpl;
-import com.compdfkit.ui.proxy.form.CPDFRadiobuttonWidgetImpl;
-import com.compdfkit.ui.proxy.form.CPDFTextWidgetImpl;
 import com.compdfkit.ui.reader.PageView;
 
 import java.util.LinkedHashSet;
@@ -37,12 +35,20 @@ import java.util.LinkedHashSet;
 
 public class CSelectedFormStyleProvider implements CStyleProvider {
 
-    private CPDFBaseAnnotImpl baseAnnotImpl;
+    private @Nullable CPDFBaseAnnotImpl baseAnnotImpl;
 
-    private PageView pageView;
+    private CPDFAnnotation annotation;
 
-    public CSelectedFormStyleProvider(CPDFBaseAnnotImpl baseAnnotImpl, PageView pageView) {
+    private @Nullable PageView pageView;
+
+    public CSelectedFormStyleProvider(CPDFBaseAnnotImpl baseAnnotImpl, @Nullable PageView pageView) {
         this.baseAnnotImpl = baseAnnotImpl;
+        this.pageView = pageView;
+        this.annotation = baseAnnotImpl.onGetAnnotation();
+    }
+
+    public CSelectedFormStyleProvider(CPDFAnnotation annotation, @Nullable PageView pageView) {
+        this.annotation = annotation;
         this.pageView = pageView;
     }
 
@@ -56,120 +62,142 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
     @Override
     public void updateStyle(LinkedHashSet<CAnnotStyle> annotStyle) {
         for (CAnnotStyle style : annotStyle) {
-            CPDFAnnotation pdfAnnotation = baseAnnotImpl.onGetAnnotation();
-            if (baseAnnotImpl instanceof CPDFTextWidgetImpl) {
-                CPDFTextWidget textWidget = (CPDFTextWidget) pdfAnnotation;
-                textWidget.setFieldName(style.getFormFieldName());
-                textWidget.setFontSize(style.getFontSize());
-                textWidget.setFontColor(style.getTextColor());
-                textWidget.setFillColor(style.getFillColor());
-                textWidget.setBorderColor(style.getLineColor());
-                textWidget.setBorderWidth(style.getBorderWidth());
-                textWidget.setMultiLine(style.isFormMultiLine());
-                textWidget.setHidden(style.isHideForm());
-                textWidget.setFontName(getAnnotStyleFontName(style));
+            if (annotation.getType() != Type.WIDGET){
+                continue;
+            }
+            CPDFWidget widget = (CPDFWidget) annotation;
+            switch (widget.getWidgetType()){
+                case Widget_TextField:
+                    CPDFTextWidget textWidget = (CPDFTextWidget) widget;
+                    textWidget.setFieldName(style.getFormFieldName());
+                    textWidget.setFontSize(style.getFontSize());
+                    textWidget.setFontColor(style.getTextColor());
+                    textWidget.setFillColor(style.getFillColor());
+                    textWidget.setBorderColor(style.getLineColor());
+                    textWidget.setBorderWidth(style.getBorderWidth());
+                    textWidget.setMultiLine(style.isFormMultiLine());
+                    textWidget.setHidden(style.isHideForm());
+                    textWidget.setFontName(getAnnotStyleFontName(style));
 
-                textWidget.setText(style.getFormDefaultValue());
-                switch (style.getAlignment()) {
-                    case LEFT:
-                        textWidget.setTextAlignment(CPDFTextAlignment.ALIGNMENT_LEFT);
-                        break;
-                    case CENTER:
-                        textWidget.setTextAlignment(CPDFTextAlignment.ALIGNMENT_CENTER);
-                        break;
-                    case RIGHT:
-                        textWidget.setTextAlignment(CPDFTextAlignment.ALIGNMENT_RIGHT);
-                        break;
-                    default:
-                        textWidget.setTextAlignment(CPDFTextAlignment.ALIGNMENT_UNKNOWN);
-                        break;
-                }
-                textWidget.updateAp();
-                baseAnnotImpl.onAnnotAttrChange();
-                if (pageView != null) {
-                    pageView.invalidate();
-                }
-            } else if (baseAnnotImpl instanceof CPDFCheckboxWidgetImpl) {
-                CPDFCheckboxWidget checkboxWidget = (CPDFCheckboxWidget) pdfAnnotation;
-                checkboxWidget.setCheckStyle(style.getCheckStyle());
-                checkboxWidget.setColor(style.getColor());
-                checkboxWidget.setBorderColor(style.getLineColor());
-                checkboxWidget.setFillColor(style.getFillColor());
-                checkboxWidget.setHidden(style.isHideForm());
-                checkboxWidget.setFieldName(style.getFormFieldName());
-                checkboxWidget.setChecked(style.isChecked());
-                checkboxWidget.updateAp();
-                baseAnnotImpl.onAnnotAttrChange();
-                if (pageView != null) {
-                    pageView.invalidate();
-                }
-            } else if (baseAnnotImpl instanceof CPDFRadiobuttonWidgetImpl) {
-                CPDFRadiobuttonWidget radiobuttonWidget = (CPDFRadiobuttonWidget) pdfAnnotation;
-                radiobuttonWidget.setCheckStyle(style.getCheckStyle());
-                radiobuttonWidget.setColor(style.getColor());
-                radiobuttonWidget.setBorderColor(style.getLineColor());
-                radiobuttonWidget.setFillColor(style.getFillColor());
-                radiobuttonWidget.setHidden(style.isHideForm());
-                radiobuttonWidget.setFieldName(style.getFormFieldName());
-                radiobuttonWidget.setChecked(style.isChecked());
-                radiobuttonWidget.updateAp();
-                baseAnnotImpl.onAnnotAttrChange();
-                if (pageView != null) {
-                    pageView.invalidate();
-                }
-            } else if (baseAnnotImpl instanceof CPDFListboxWidgetImpl) {
-                CPDFListboxWidget listBoxWidget = (CPDFListboxWidget) pdfAnnotation;
-                listBoxWidget.setFieldName(style.getFormFieldName());
-                listBoxWidget.setHidden(style.isHideForm());
-                listBoxWidget.setBorderWidth(2);
-                listBoxWidget.setFontSize(style.getFontSize());
-                listBoxWidget.setFontColor(style.getTextColor());
-                listBoxWidget.setFillColor(style.getFillColor());
-                if (style.getLineColor() == Color.TRANSPARENT){
-                    listBoxWidget.setBorderWidth(0);
-                }
-                listBoxWidget.setBorderColor(style.getLineColor());
-                listBoxWidget.setFontName(getAnnotStyleFontName(style));
-                listBoxWidget.updateAp();
-                baseAnnotImpl.onAnnotAttrChange();
-                ((CPDFListboxWidgetImpl) baseAnnotImpl).refresh();
-                if (pageView != null) {
-                    pageView.invalidate();
-                }
-            }  else if (baseAnnotImpl instanceof CPDFComboboxWidgetImpl) {
-                CPDFComboboxWidget comboBoxWidget = (CPDFComboboxWidget) pdfAnnotation;
-                comboBoxWidget.setFieldName(style.getFormFieldName());
-                comboBoxWidget.setHidden(style.isHideForm());
-                comboBoxWidget.setBorderWidth(2);
-                comboBoxWidget.setFontSize(style.getFontSize());
-                comboBoxWidget.setFontColor(style.getTextColor());
-                comboBoxWidget.setFillColor(style.getFillColor());
-                if (style.getLineColor() == Color.TRANSPARENT){
-                    comboBoxWidget.setBorderWidth(0);
-                }
-                comboBoxWidget.setBorderColor(style.getLineColor());
-                comboBoxWidget.setFontName(getAnnotStyleFontName(style));
-                comboBoxWidget.updateAp();
-                baseAnnotImpl.onAnnotAttrChange();
-                if (pageView != null) {
-                    pageView.invalidate();
-                }
-            } else if (baseAnnotImpl instanceof CPDFPushbuttonWidgetImpl){
-                CPDFPushbuttonWidget pushButtonWidget = (CPDFPushbuttonWidget) pdfAnnotation;
-                pushButtonWidget.setFieldName(style.getFormFieldName());
-                pushButtonWidget.setHidden(style.isHideForm());
-                pushButtonWidget.setBorderWidth(2);
-                pushButtonWidget.setFontSize(style.getFontSize());
-                pushButtonWidget.setFontColor(style.getTextColor());
-                pushButtonWidget.setFillColor(style.getFillColor());
-                pushButtonWidget.setBorderColor(style.getLineColor());
-                pushButtonWidget.setFontName(getAnnotStyleFontName(style));
-                pushButtonWidget.setButtonTitle(style.getFormDefaultValue());
-                pushButtonWidget.updateAp();
-                baseAnnotImpl.onAnnotAttrChange();
-                if (pageView != null) {
-                    pageView.invalidate();
-                }
+                    textWidget.setText(style.getFormDefaultValue());
+                    switch (style.getAlignment()) {
+                        case LEFT:
+                            textWidget.setTextAlignment(CPDFTextAlignment.ALIGNMENT_LEFT);
+                            break;
+                        case CENTER:
+                            textWidget.setTextAlignment(CPDFTextAlignment.ALIGNMENT_CENTER);
+                            break;
+                        case RIGHT:
+                            textWidget.setTextAlignment(CPDFTextAlignment.ALIGNMENT_RIGHT);
+                            break;
+                        default:
+                            textWidget.setTextAlignment(CPDFTextAlignment.ALIGNMENT_UNKNOWN);
+                            break;
+                    }
+                    textWidget.updateAp();
+                      if (baseAnnotImpl != null) {
+                          baseAnnotImpl.onAnnotAttrChange();
+                      }
+                    if (pageView != null) {
+                        pageView.invalidate();
+                    }
+                    break;
+                case Widget_CheckBox:
+                    CPDFCheckboxWidget checkboxWidget = (CPDFCheckboxWidget) widget;
+                    checkboxWidget.setCheckStyle(style.getCheckStyle());
+                    checkboxWidget.setColor(style.getColor());
+                    checkboxWidget.setBorderColor(style.getLineColor());
+                    checkboxWidget.setFillColor(style.getFillColor());
+                    checkboxWidget.setHidden(style.isHideForm());
+                    checkboxWidget.setFieldName(style.getFormFieldName());
+                    checkboxWidget.setChecked(style.isChecked());
+                    checkboxWidget.updateAp();
+                  if (baseAnnotImpl != null) {
+                    baseAnnotImpl.onAnnotAttrChange();
+                  }
+                  if (pageView != null) {
+                        pageView.invalidate();
+                    }
+                    break;
+                case Widget_RadioButton:
+                    CPDFRadiobuttonWidget radiobuttonWidget = (CPDFRadiobuttonWidget) widget;
+                    radiobuttonWidget.setCheckStyle(style.getCheckStyle());
+                    radiobuttonWidget.setColor(style.getColor());
+                    radiobuttonWidget.setBorderColor(style.getLineColor());
+                    radiobuttonWidget.setFillColor(style.getFillColor());
+                    radiobuttonWidget.setHidden(style.isHideForm());
+                    radiobuttonWidget.setFieldName(style.getFormFieldName());
+                    radiobuttonWidget.setChecked(style.isChecked());
+                    radiobuttonWidget.updateAp();
+                  if (baseAnnotImpl != null) {
+                    baseAnnotImpl.onAnnotAttrChange();
+                  }
+                  if (pageView != null) {
+                        pageView.invalidate();
+                    }
+                    break;
+                case Widget_ListBox:
+                    CPDFListboxWidget listBoxWidget = (CPDFListboxWidget) widget;
+                    listBoxWidget.setFieldName(style.getFormFieldName());
+                    listBoxWidget.setHidden(style.isHideForm());
+                    listBoxWidget.setBorderWidth(2);
+                    listBoxWidget.setFontSize(style.getFontSize());
+                    listBoxWidget.setFontColor(style.getTextColor());
+                    listBoxWidget.setFillColor(style.getFillColor());
+                    if (style.getLineColor() == Color.TRANSPARENT){
+                        listBoxWidget.setBorderWidth(0);
+                    }
+                    listBoxWidget.setBorderColor(style.getLineColor());
+                    listBoxWidget.setFontName(getAnnotStyleFontName(style));
+                    listBoxWidget.updateAp();
+                  if (baseAnnotImpl != null) {
+                        baseAnnotImpl.onAnnotAttrChange();
+                      ((CPDFListboxWidgetImpl) baseAnnotImpl).refresh();
+                  }
+                    if (pageView != null) {
+                        pageView.invalidate();
+                    }
+                    break;
+                case Widget_ComboBox:
+                    CPDFComboboxWidget comboBoxWidget = (CPDFComboboxWidget) widget;
+                    comboBoxWidget.setFieldName(style.getFormFieldName());
+                    comboBoxWidget.setHidden(style.isHideForm());
+                    comboBoxWidget.setBorderWidth(2);
+                    comboBoxWidget.setFontSize(style.getFontSize());
+                    comboBoxWidget.setFontColor(style.getTextColor());
+                    comboBoxWidget.setFillColor(style.getFillColor());
+                    if (style.getLineColor() == Color.TRANSPARENT){
+                        comboBoxWidget.setBorderWidth(0);
+                    }
+                    comboBoxWidget.setBorderColor(style.getLineColor());
+                    comboBoxWidget.setFontName(getAnnotStyleFontName(style));
+                    comboBoxWidget.updateAp();
+                  if (baseAnnotImpl != null) {
+                    baseAnnotImpl.onAnnotAttrChange();
+                  }
+                  if (pageView != null) {
+                        pageView.invalidate();
+                    }
+                    break;
+                case Widget_PushButton:
+                    CPDFPushbuttonWidget pushButtonWidget = (CPDFPushbuttonWidget) widget;
+                    pushButtonWidget.setFieldName(style.getFormFieldName());
+                    pushButtonWidget.setHidden(style.isHideForm());
+                    pushButtonWidget.setBorderWidth(2);
+                    pushButtonWidget.setFontSize(style.getFontSize());
+                    pushButtonWidget.setFontColor(style.getTextColor());
+                    pushButtonWidget.setFillColor(style.getFillColor());
+                    pushButtonWidget.setBorderColor(style.getLineColor());
+                    pushButtonWidget.setFontName(getAnnotStyleFontName(style));
+                    pushButtonWidget.setButtonTitle(style.getFormDefaultValue());
+                    pushButtonWidget.updateAp();
+                  if (baseAnnotImpl != null) {
+                    baseAnnotImpl.onAnnotAttrChange();
+                  }
+                  if (pageView != null) {
+                        pageView.invalidate();
+                    }
+                    break;
             }
         }
     }
@@ -177,10 +205,10 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
     @Override
     public CAnnotStyle getStyle(CStyleType type) {
         CAnnotStyle style = new CAnnotStyle(type);
-        CPDFAnnotation pdfAnnotation = baseAnnotImpl.onGetAnnotation();
-        if (baseAnnotImpl instanceof CPDFTextWidgetImpl) {
+
+        if (annotation instanceof CPDFTextWidget) {
             //text fields
-            CPDFTextWidget textWidget = (CPDFTextWidget) pdfAnnotation;
+            CPDFTextWidget textWidget = (CPDFTextWidget) annotation;
             style.setFormFieldName(textWidget.getFieldName());
             style.setHideForm(textWidget.isHidden());
             style.setFormMultiLine(textWidget.isMultiLine());
@@ -207,8 +235,8 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
                     style.setAlignment(CAnnotStyle.Alignment.UNKNOWN);
                     break;
             }
-        } else if (baseAnnotImpl instanceof CPDFCheckboxWidgetImpl) {
-            CPDFCheckboxWidget textWidget = (CPDFCheckboxWidget) pdfAnnotation;
+        } else if (annotation instanceof CPDFCheckboxWidget) {
+            CPDFCheckboxWidget textWidget = (CPDFCheckboxWidget) annotation;
             style.setColor(textWidget.getColor());
             style.setBorderColor(textWidget.getBorderColor());
             style.setFillColor(textWidget.getFillColor());
@@ -216,8 +244,8 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
             style.setFormFieldName(textWidget.getFieldName());
             style.setHideForm(textWidget.isHidden());
             style.setChecked(textWidget.isChecked());
-        } else if (baseAnnotImpl instanceof CPDFRadiobuttonWidgetImpl){
-            CPDFRadiobuttonWidget textWidget = (CPDFRadiobuttonWidget) pdfAnnotation;
+        } else if (annotation instanceof CPDFRadiobuttonWidget){
+            CPDFRadiobuttonWidget textWidget = (CPDFRadiobuttonWidget) annotation;
             style.setColor(textWidget.getColor());
             style.setBorderColor(textWidget.getBorderColor());
             style.setFillColor(textWidget.getFillColor());
@@ -225,8 +253,8 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
             style.setFormFieldName(textWidget.getFieldName());
             style.setHideForm(textWidget.isHidden());
             style.setChecked(textWidget.isChecked());
-        } else if (baseAnnotImpl instanceof CPDFListboxWidgetImpl){
-            CPDFListboxWidget listBoxWidget = (CPDFListboxWidget) pdfAnnotation;
+        } else if (annotation instanceof CPDFListboxWidget){
+            CPDFListboxWidget listBoxWidget = (CPDFListboxWidget) annotation;
             style.setBorderWidth(2);
             style.setBorderColor(listBoxWidget.getBorderColor());
             style.setFillColor(listBoxWidget.getFillColor());
@@ -237,8 +265,8 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
             updateAnnotStyleFont(style, listBoxWidget.getFontName());
             style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(listBoxWidget.getFontName()));
             style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(listBoxWidget.getFontName()));
-        } else if (baseAnnotImpl instanceof CPDFComboboxWidgetImpl){
-            CPDFComboboxWidget comboBoxWidget = (CPDFComboboxWidget) pdfAnnotation;
+        } else if (annotation instanceof CPDFComboboxWidget){
+            CPDFComboboxWidget comboBoxWidget = (CPDFComboboxWidget) annotation;
             style.setBorderWidth(2);
             style.setBorderColor(comboBoxWidget.getBorderColor());
             style.setFillColor(comboBoxWidget.getFillColor());
@@ -249,8 +277,8 @@ public class CSelectedFormStyleProvider implements CStyleProvider {
             updateAnnotStyleFont(style, comboBoxWidget.getFontName());
             style.setFontBold(CPDFTextAttribute.FontNameHelper.isBold(comboBoxWidget.getFontName()));
             style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(comboBoxWidget.getFontName()));
-        } else if (baseAnnotImpl instanceof CPDFPushbuttonWidgetImpl){
-            CPDFPushbuttonWidget pushButtonWidget = (CPDFPushbuttonWidget) pdfAnnotation;
+        } else if (annotation instanceof CPDFPushbuttonWidget){
+            CPDFPushbuttonWidget pushButtonWidget = (CPDFPushbuttonWidget) annotation;
             style.setBorderWidth(2);
             style.setBorderColor(pushButtonWidget.getBorderColor());
             style.setFillColor(pushButtonWidget.getFillColor());

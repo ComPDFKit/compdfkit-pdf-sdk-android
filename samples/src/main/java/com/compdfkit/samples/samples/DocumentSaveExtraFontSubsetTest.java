@@ -121,8 +121,7 @@ public class DocumentSaveExtraFontSubsetTest extends PDFSamples {
             if (close){
                 document.close();
             }
-        } catch (CPDFDocumentException e) {
-            e.printStackTrace();
+        } catch (CPDFDocumentException ignored) {
         }
     }
 

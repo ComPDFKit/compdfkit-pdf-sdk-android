@@ -206,6 +206,8 @@ public class CPDFConfigurationUtils {
         readerViewConfig.pageScale = (float) jsonObject.optDouble("pageScale", 1.0);
         readerViewConfig.pageSameWidth = jsonObject.optBoolean("pageSameWidth", true);
         readerViewConfig.enableMinScale = jsonObject.optBoolean("enableMinScale", true);
+        readerViewConfig.annotationsVisible = jsonObject.optBoolean("annotationsVisible", true);
+        readerViewConfig.enableAutoCreateEditTextInput = jsonObject.optBoolean("enableAutoCreateEditTextInput", true);
         JSONArray marginsJsonArray = jsonObject.optJSONArray("margins");
         if (marginsJsonArray != null && marginsJsonArray.length() == 4) {
             int left = marginsJsonArray.optInt(0, 0);

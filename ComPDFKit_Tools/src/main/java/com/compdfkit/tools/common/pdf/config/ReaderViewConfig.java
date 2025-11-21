@@ -45,6 +45,10 @@ public class ReaderViewConfig implements Serializable {
 
     public ArrayList<Integer> margins = new ArrayList<>();
 
+    public boolean annotationsVisible = true;
+
+    public boolean enableAutoCreateEditTextInput = true;
+
     @NonNull
     @Override
     public String toString() {
@@ -62,7 +66,10 @@ public class ReaderViewConfig implements Serializable {
                 "pageScale:" + pageScale + ", " +
                 "pageSameWidth:" + pageSameWidth + ", " +
                 "enableMinScale:" + enableMinScale + ", " +
-                "margins:" + margins.toString();
+                "margins:" + margins.toString() + ", " +
+                "annotationsVisible:" + annotationsVisible + ", " +
+                "enableAutoCreateEditTextInput:" + enableAutoCreateEditTextInput +
+                "]";
         return stringBuilder;
     }
 

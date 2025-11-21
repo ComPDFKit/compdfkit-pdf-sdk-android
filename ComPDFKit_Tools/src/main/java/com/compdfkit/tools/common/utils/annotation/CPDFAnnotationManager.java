@@ -16,22 +16,27 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
+import com.compdfkit.core.annotation.CPDFAnnotation.Type;
 import com.compdfkit.core.annotation.CPDFFreetextAnnotation;
 import com.compdfkit.core.annotation.CPDFReplyAnnotation;
 import com.compdfkit.core.annotation.CPDFStampAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFPushbuttonWidget;
+import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.annotation.form.CPDFWidgetItems;
 import com.compdfkit.core.document.CPDFDestination;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.document.action.CPDFAction;
 import com.compdfkit.core.document.action.CPDFGoToAction;
 import com.compdfkit.core.document.action.CPDFUriAction;
+import com.compdfkit.core.edit.CPDFEditArea;
+import com.compdfkit.core.edit.CPDFEditTextArea;
 import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.core.utils.TMathUtils;
 import com.compdfkit.tools.R;
@@ -41,10 +46,17 @@ import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CNoteEditDialog;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.common.views.pdfproperties.CTypeUtil;
 import com.compdfkit.tools.common.views.pdfproperties.action.CActionEditDialogFragment;
+import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
+import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
+import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
+import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
+import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider.CEditSelectionsProvider;
 import com.compdfkit.tools.forms.pdfproperties.option.edit.CFormOptionEditFragment;
 import com.compdfkit.ui.attribute.CPDFFreetextAttr;
 import com.compdfkit.ui.attribute.CPDFTextAttr;
+import com.compdfkit.ui.edit.CPDFEditTextSelections;
 import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
 import com.compdfkit.ui.proxy.CPDFFreetextAnnotImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
@@ -352,6 +364,65 @@ public class CPDFAnnotationManager {
             helper.dismissContextMenu();
         });
         dialogFragment.show(helper.getFragmentManager(), "ReplyDetailsDialogFragment");
+    }
+
+    public static void showPropertiesDialog(FragmentManager fragmentManager, CPDFAnnotation annotation, @Nullable CPDFPageView pageView){
+        CStyleManager styleManager = new CStyleManager(annotation, pageView);
+        CStyleType styleType;
+        if (annotation.getType() == Type.WIDGET){
+            CPDFWidget widget = (CPDFWidget) annotation;
+            styleType = CTypeUtil.getFormStyleType(widget.getWidgetType());
+        }else {
+            styleType = CTypeUtil.getStyleType(annotation.getType());
+        }
+        CAnnotStyle annotStyle = styleManager.getStyle(styleType);
+        CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(annotStyle);
+        styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
+        if (pageView != null && pageView.getParentView() instanceof CPDFReaderView){
+            styleManager.setDialogHeightCallback(styleDialogFragment,
+                (CPDFReaderView) pageView.getParentView());
+        }
+        styleDialogFragment.show(fragmentManager, "propertiesDialog");
+    }
+
+    public static void showPropertiesDialog(FragmentManager fragmentManager, CPDFBaseAnnotImpl annotImpl, @Nullable CPDFPageView pageView){
+        CStyleManager styleManager = new CStyleManager(annotImpl, pageView);
+        CStyleType styleType;
+        if (annotImpl.getAnnotType() == Type.WIDGET){
+            CPDFWidget widget = (CPDFWidget) annotImpl.onGetAnnotation();
+            styleType = CTypeUtil.getFormStyleType(widget.getWidgetType());
+        }else {
+            styleType = CTypeUtil.getStyleType(annotImpl.getAnnotType());
+        }
+        CAnnotStyle annotStyle = styleManager.getStyle(styleType);
+        CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(annotStyle);
+        styleManager.setAnnotStyleFragmentListener(styleDialogFragment);
+        if (pageView != null && pageView.getParentView() instanceof CPDFReaderView){
+            styleManager.setDialogHeightCallback(styleDialogFragment,
+                (CPDFReaderView) pageView.getParentView());
+        }
+        styleDialogFragment.show(fragmentManager, "propertiesDialog");
+    }
+
+    public static void showPropertiesDialog(FragmentManager fragmentManager, CPDFEditArea editArea, @Nullable CPDFPageView pageView){
+        CAnnotStyle annotStyle = null;
+        CStyleManager styleManager;
+        if (editArea instanceof CPDFEditTextArea){
+            CPDFEditTextArea editTextArea = (CPDFEditTextArea) editArea;
+            CPDFEditTextSelections textSelections = new CPDFEditTextSelections(pageView, editTextArea, ((CPDFEditTextArea) editArea).getCurrentAreaSelections());
+            styleManager = new CStyleManager(textSelections, pageView);
+            annotStyle = styleManager.getStyle(CStyleType.EDIT_TEXT);
+        }else {
+            styleManager = new CStyleManager(new CEditSelectionsProvider(null, pageView));
+            annotStyle = styleManager.getStyle(CStyleType.EDIT_IMAGE);
+        }
+        CStyleDialogFragment dialogFragment = CStyleDialogFragment.newInstance(annotStyle);
+        styleManager.setAnnotStyleFragmentListener(dialogFragment);
+        if (pageView != null && pageView.getParentView() instanceof CPDFReaderView){
+            styleManager.setDialogHeightCallback(dialogFragment,
+                (CPDFReaderView) pageView.getParentView());
+        }
+        dialogFragment.show(fragmentManager, "propertiesDialog");
     }
 
 

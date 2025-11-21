@@ -191,8 +191,7 @@ public class ContentEditorTest extends PDFSamples {
                 outputListener.println("Failed to insert picture!!!");
             }
             cpdfEditPage.endEdit();
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (Exception ignored){
         }
     }
 }

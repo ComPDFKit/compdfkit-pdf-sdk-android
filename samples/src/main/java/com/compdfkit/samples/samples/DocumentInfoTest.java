@@ -1,6 +1,5 @@
 /**
  * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
- *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
  * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
@@ -71,8 +70,7 @@ public class DocumentInfoTest extends PDFSamples {
             ParcelFileDescriptor p = document.getContext().getContentResolver().openFileDescriptor(document.getUri(), "r");
             fileSize = p.getStatSize();
             p.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         float size;
         String unit = " M";

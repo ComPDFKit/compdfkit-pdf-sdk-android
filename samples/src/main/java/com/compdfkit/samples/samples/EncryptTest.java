@@ -136,7 +136,7 @@ public class EncryptTest extends PDFSamples {
             newDocument.close();
             outputListener.println("Document decrypt done.");
             outputListener.println("Decrypt done.");
-        } catch (CPDFDocumentException e) {
+        } catch (CPDFDocumentException ignored) {
 
         }
     }
@@ -152,8 +152,7 @@ public class EncryptTest extends PDFSamples {
             if (close) {
                 document.close();
             }
-        } catch (CPDFDocumentException e) {
-            e.printStackTrace();
+        } catch (CPDFDocumentException ignored) {
         }
     }
 }

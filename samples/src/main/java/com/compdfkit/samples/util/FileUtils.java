@@ -34,8 +34,7 @@ public class FileUtils {
             intent.setDataAndType(uri, type);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             context.startActivity(Intent.createChooser(intent, title));
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
+        } catch (ActivityNotFoundException ignored) {
         }
     }
 
@@ -93,20 +92,19 @@ public class FileUtils {
                 fileOutputStream.flush();
                 inStream.close();
                 fileOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignored) {
             }
-            return file.getAbsolutePath();
-        } else {
-            return file.getAbsolutePath();
         }
+        return file.getAbsolutePath();
     }
 
     public static void deleteFile(File file) {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                File f = files[i];
+            if (files == null){
+                return;
+            }
+            for (File f : files) {
                 deleteFile(f);
             }
             file.delete();//如要保留文件夹，只删除文件，请注释这行

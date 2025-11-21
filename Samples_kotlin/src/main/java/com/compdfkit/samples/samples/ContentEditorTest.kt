@@ -48,7 +48,7 @@ class ContentEditorTest : PDFSamples() {
         val size = page.size
 
         // Convert the text area to the actual position on the page
-        var area = run {
+        val area = run {
             // Set the position for adding text (top-left point)
             val point = Point(10, 10)
             val pointArea = RectF(point.x.toFloat(), point.y.toFloat(), point.x.toFloat(), point.y.toFloat())

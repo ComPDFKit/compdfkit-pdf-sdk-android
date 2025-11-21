@@ -24,7 +24,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +56,7 @@ import com.compdfkit.tools.common.pdf.config.CPDFWatermarkConfig;
 import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
 import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts.RequestType;
@@ -100,6 +100,7 @@ import com.compdfkit.ui.proxy.attach.IInkDrawCallback;
 import com.compdfkit.ui.proxy.form.CPDFComboboxWidgetImpl;
 import com.compdfkit.ui.proxy.form.CPDFListboxWidgetImpl;
 import com.compdfkit.ui.proxy.form.CPDFPushbuttonWidgetImpl;
+import com.compdfkit.ui.reader.CPDFAddAnnotCallback;
 import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
 
@@ -155,6 +156,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     private CPDFDocumentFragmentInitListener initListener;
 
     public CFillScreenChangeListener fillScreenChangeListener;
+
+    private CPDFAddAnnotCallback addAnnotCallback;
 
     public static CPDFDocumentFragment newInstance(String filePath, String password, CPDFConfiguration configuration) {
         Bundle args = new Bundle();
@@ -383,6 +386,9 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             if (annotation.getType() != CPDFAnnotation.Type.WIDGET) {
                 annotation.setTitle(cpdfConfiguration.annotationsConfig.annotationAuthor);
                 annotation.updateAp();
+            }
+            if (addAnnotCallback != null) {
+                addAnnotCallback.onAddAnnotation(cpdfPageView, cpdfBaseAnnot);
             }
 
             // Annotation creation completed listener, you can use cpdfBaseAnnot.getAnnotType() to determine the type of the added annotation
@@ -1050,16 +1056,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     public void onDestroy() {
         try {
             CViewUtils.hideKeyboard(getActivity().getWindow().getDecorView());
-            Log.e("ComPDFKit", "CPDFDocumentFragment:onDestroy() document close()");
-            if (pdfView.getCPdfReaderView().getPDFDocument() != null) {
-                pdfView.getCPdfReaderView().getPDFDocument().close();
-            }
-            pdfView.getCPdfReaderView().getContextMenuShowListener().dismissContextMenu();
+            CLog.e("ComPDFKit", "CPDFDocumentFragment:onDestroy() document close()");
+            pdfView.close();
             if (menuWindow != null) {
                 menuWindow.dismiss();
             }
         } catch (Exception ignored) {
-
         }
         super.onDestroy();
     }
@@ -1070,6 +1072,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     public void setFillScreenChangeListener(CFillScreenChangeListener fillScreenChangeListener) {
         this.fillScreenChangeListener = fillScreenChangeListener;
+    }
+
+    public void setAddAnnotCallback(CPDFAddAnnotCallback addAnnotCallback) {
+        this.addAnnotCallback = addAnnotCallback;
     }
 
     public interface CPDFDocumentFragmentInitListener {

@@ -122,8 +122,7 @@ public abstract class PDFSamples {
             if (close){
                 document.close();
             }
-        } catch (CPDFDocumentException e) {
-            e.printStackTrace();
+        } catch (CPDFDocumentException ignored) {
         }
     }
 

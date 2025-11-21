@@ -13,6 +13,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
 import com.compdfkit.core.edit.CPDFEditArea;
 import com.compdfkit.core.edit.CPDFEditImageArea;
 import com.compdfkit.core.edit.CPDFEditTextArea;
@@ -33,9 +34,9 @@ public class CEditSelectionsProvider implements CStyleProvider {
 
     private CPDFEditSelections selections;
 
-    private CPDFPageView pageView;
+    private @Nullable CPDFPageView pageView;
 
-    public CEditSelectionsProvider(CPDFEditSelections selections, CPDFPageView pageView) {
+    public CEditSelectionsProvider(CPDFEditSelections selections, @Nullable  CPDFPageView pageView) {
         this.selections = selections;
         this.pageView = pageView;
     }
@@ -78,8 +79,10 @@ public class CEditSelectionsProvider implements CStyleProvider {
                         } else if (align == CAnnotStyle.Alignment.RIGHT) {
                             textSelections.setAlign(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignRight);
                         }
-                        pageView.operateEditTextSelect(CPDFPageView.EditTextSelectFuncType.ATTR);
-                        pageView.onUpdateUI(pageView.getPageNum());
+                        if (pageView != null) {
+                          pageView.operateEditTextSelect(CPDFPageView.EditTextSelectFuncType.ATTR);
+                          pageView.onUpdateUI(pageView.getPageNum());
+                        }
                         break;
 
                     case FontType:
@@ -149,11 +152,13 @@ public class CEditSelectionsProvider implements CStyleProvider {
                         }
                         break;
                     case ReplaceImage:
-                        if (!TextUtils.isEmpty(style.getImagePath())) {
-                            pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.REPLACE, style.getImagePath());
-                            new File(style.getImagePath()).delete();
-                        } else if (style.getImageUri() != null) {
-                            pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.REPLACE, style.getImageUri());
+                        if (pageView != null){
+                            if (!TextUtils.isEmpty(style.getImagePath())) {
+                                pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.REPLACE, style.getImagePath());
+                                new File(style.getImagePath()).delete();
+                            } else if (style.getImageUri() != null) {
+                                pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.REPLACE, style.getImageUri());
+                            }
                         }
                         break;
                     case Crop:
@@ -207,14 +212,16 @@ public class CEditSelectionsProvider implements CStyleProvider {
             style.setFontSize(fontsize > 0 ? fontsize : 25);
             updateAnnotStyleFont(style, textSelections.getFontName());
         } else if (style.getType() == CStyleType.EDIT_IMAGE) {
-            CPDFEditArea editArea = pageView.getCurrentEditArea();
-            if (editArea != null && editArea instanceof CPDFEditImageArea) {
-                CPDFEditImageArea editImageArea = (CPDFEditImageArea) editArea;
-                float transparency = editImageArea.getTransparency();
-                style.setOpacity((int) transparency);
-                style.setEditImageBitmap(editImageArea.getImage());
-            } else {
-                style.setOpacity(255);
+            if (pageView != null){
+                CPDFEditArea editArea = pageView.getCurrentEditArea();
+                if (editArea != null && editArea instanceof CPDFEditImageArea) {
+                    CPDFEditImageArea editImageArea = (CPDFEditImageArea) editArea;
+                    float transparency = editImageArea.getTransparency();
+                    style.setOpacity((int) transparency);
+                    style.setEditImageBitmap(editImageArea.getImage());
+                } else {
+                    style.setOpacity(255);
+                }
             }
         }
         return style;

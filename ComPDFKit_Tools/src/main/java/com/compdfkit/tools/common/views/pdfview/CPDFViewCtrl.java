@@ -38,6 +38,7 @@ import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditManager;
 import com.compdfkit.core.edit.OnEditStatusChangeListener;
+import com.compdfkit.core.edit.OnSelectEditAreaChangeListener;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.CFileUtils;
@@ -141,6 +142,8 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   private List<OnEditStatusChangeListener> editStatusChangeListeners = new ArrayList<>();
 
+  private List<OnSelectEditAreaChangeListener> selectEditAreaChangeListeners = new ArrayList<>();
+
   private boolean isScrolling = false;
 
   private Handler handler = new Handler(Looper.getMainLooper());
@@ -222,6 +225,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     cPdfReaderView.setReaderViewCallback(this);
     cPdfReaderView.setOnFocusedTypeChangedListener(this);
     CPDFEditManager editManager = cPdfReaderView.getEditManager();
+    editManager.disable();
     editManager.addEditStatusChangeListener(new OnEditStatusChangeListener() {
       @Override
       public void onBegin(int i) {
@@ -242,6 +246,12 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         for (OnEditStatusChangeListener listener : editStatusChangeListeners) {
           listener.onExit();
         }
+      }
+    });
+
+    cPdfReaderView.setSelectEditAreaChangeListener(selectType -> {
+      for (OnSelectEditAreaChangeListener selectEditAreaChangeListener : selectEditAreaChangeListeners) {
+        selectEditAreaChangeListener.onSelectEditAreaChange(selectType);
       }
     });
 
@@ -767,6 +777,22 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   }
 
+  public void close(){
+    try {
+      if (getCPdfReaderView().getPDFDocument() != null) {
+        getCPdfReaderView().getPDFDocument().close();
+      }
+      getCPdfReaderView().getContextMenuShowListener().dismissContextMenu();
+      saveGlobalCallback = null;
+      saveGlobalErrorCallback = null;
+      editStatusChangeListeners.clear();
+      selectEditAreaChangeListeners.clear();
+      pdfViewFocusedListenerList.clear();
+    } catch (Exception ignored){
+
+    }
+  }
+
   /**
    * Updates the scale based on the current reading mode and screen orientation.
    */
@@ -786,6 +812,14 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   public void removeEditStatusChangeListener(OnEditStatusChangeListener listener){
     editStatusChangeListeners.remove(listener);
+  }
+
+  public void addSelectEditAreaChangeListener(OnSelectEditAreaChangeListener listener){
+    selectEditAreaChangeListeners.add(listener);
+  }
+
+  public void removeSelectEditAreaChangeListener(OnSelectEditAreaChangeListener listener){
+    selectEditAreaChangeListeners.remove(listener);
   }
 
   public interface COnSaveCallback {

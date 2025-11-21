@@ -173,9 +173,9 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
             return;
         }
         editManager.enable();
-        pdfView.getCPdfReaderView().setSelectEditAreaChangeListener(type -> {
+        pdfView.addSelectEditAreaChangeListener(selectType -> {
             if (ivProper != null) {
-                if (type == SELECT_AREA_NONE) {
+                if (selectType == SELECT_AREA_NONE) {
                     ivProper.setEnabled(false);
                 } else {
                     ivProper.setEnabled(true);

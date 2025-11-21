@@ -94,9 +94,6 @@ public class CFormToolbar extends FrameLayout {
     public void initWithPDFView(CPDFViewCtrl pdfView) {
         this.pdfView = pdfView;
         toolListAdapter.setList(CFormToolDatas.getFormList());
-        pdfView.getCPdfReaderView().setSelectEditAreaChangeListener(type -> {
-            CLog.e("SelectEdit", "type:"+ type);
-        });
         redoUndoManager();
     }
 

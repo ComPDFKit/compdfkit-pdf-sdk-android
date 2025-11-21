@@ -163,7 +163,7 @@
     "initAttribute": {
       "text": {
         "fontColor": "#000000",
-        "fontColorAlpha" : 100,
+        "fontColorAlpha" : 255,
         "fontSize": 30,
         "isBold": false,
         "isItalic": false,
@@ -267,7 +267,9 @@
     "margins" : [0,0,0,0],
     "pageScale": 1.0,
     "pageSameWidth": true,
-    "enableMinScale": true
+    "enableMinScale": true,
+    "annotationsVisible": true,
+    "enableAutoCreateEditTextInput" : true
   },
   "global" : {
     "themeMode" : "system",

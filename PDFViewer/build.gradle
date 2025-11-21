@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
@@ -57,5 +57,5 @@ dependencies {
     api project(path: ':ComPDFKit_Tools')
 
     // or
-//  implementation ('com.compdf:compdfkit-tools:2.5.0')
+//  implementation ('com.compdf:compdfkit-tools:2.5.2')
 }

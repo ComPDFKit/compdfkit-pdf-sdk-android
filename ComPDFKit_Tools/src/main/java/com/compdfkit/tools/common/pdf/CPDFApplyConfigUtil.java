@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
+import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
@@ -46,6 +47,8 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
+import com.compdfkit.ui.attribute.CPDFAnnotAttribute;
+import com.compdfkit.ui.attribute.CPDFEditorTextAttr;
 import com.compdfkit.ui.attribute.CPDFReaderAttribute;
 import com.compdfkit.ui.reader.CPDFReaderView;
 
@@ -153,6 +156,8 @@ public class CPDFApplyConfigUtil {
                 readerView.setReaderViewTopMargin(top);
                 readerView.setReaderViewBottomMargin(bottom);
             }
+            readerView.setAnnotationsVisible(readerViewConfig.annotationsVisible);
+            readerView.setEnableAutoTextInput(readerViewConfig.enableAutoCreateEditTextInput);
             // set search text rect color
             CPDFSearchConfig searchConfig = configuration.globalConfig.search;
             CPDFReaderAttribute readerAttribute = readerView.getReaderAttribute();
@@ -316,6 +321,19 @@ public class CPDFApplyConfigUtil {
         ContentEditorConfig editorConfig = configuration.contentEditorConfig;
         fragment.editToolBar.setTools(editorConfig.availableTools);
         fragment.editToolBar.setEditType(editorConfig.availableTypes.toArray(new ContentEditorConfig.ContentEditorType[0]));
+
+        ContentEditorConfig.ContentEditorAttr contentEditorAttr = editorConfig.initAttribute;
+        ContentEditorConfig.TextAttr textAttr = contentEditorAttr.text;
+
+        CPDFReaderView readerView = fragment.pdfView.getCPdfReaderView();
+        CPDFAnnotAttribute annotAttribute = readerView.getReaderAttribute().getAnnotAttribute();
+        CPDFEditorTextAttr editorTextAttr = annotAttribute.getEditorTextAttr();
+        editorTextAttr.setAlpha(textAttr.getFontColorAlpha());
+        editorTextAttr.setAlignment(textAttr.getAlignment());
+
+        String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(textAttr.getTypeface(), textAttr.isBold(), textAttr.isItalic());
+        editorTextAttr.setTextAttribute(new CPDFTextAttribute(psName, textAttr.getFontSize(), textAttr.getFontColor()));
+        editorTextAttr.onstore();
     }
 
     private void applyFormsConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {

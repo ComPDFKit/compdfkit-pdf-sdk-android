@@ -9,6 +9,8 @@
 
 package com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider;
 
+import androidx.annotation.Nullable;
+import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFCircleAnnotation;
 import com.compdfkit.core.annotation.CPDFFreetextAnnotation;
@@ -21,12 +23,6 @@ import com.compdfkit.tools.common.views.pdfproperties.CTypeUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
-import com.compdfkit.ui.proxy.CPDFCircleAnnotImpl;
-import com.compdfkit.ui.proxy.CPDFFreetextAnnotImpl;
-import com.compdfkit.ui.proxy.CPDFInkAnnotImpl;
-import com.compdfkit.ui.proxy.CPDFLineAnnotImpl;
-import com.compdfkit.ui.proxy.CPDFMarkupAnnotImpl;
-import com.compdfkit.ui.proxy.CPDFSquareAnnotImpl;
 import com.compdfkit.ui.reader.PageView;
 
 import java.util.LinkedHashSet;
@@ -34,12 +30,19 @@ import java.util.LinkedHashSet;
 
 public class CSelectedAnnotStyleProvider implements CStyleProvider {
 
-    private CPDFBaseAnnotImpl annotImpl;
+    private @Nullable CPDFBaseAnnotImpl annotImpl;
 
-    private PageView pageView;
+    private CPDFAnnotation annotation;
+    private @Nullable PageView pageView;
 
-    public CSelectedAnnotStyleProvider(CPDFBaseAnnotImpl annotImpl, PageView pageView) {
+    public CSelectedAnnotStyleProvider(CPDFBaseAnnotImpl annotImpl, @Nullable PageView pageView) {
         this.annotImpl = annotImpl;
+        this.annotation = annotImpl.onGetAnnotation();
+        this.pageView = pageView;
+    }
+
+    public CSelectedAnnotStyleProvider(CPDFAnnotation annotation, @Nullable PageView pageView) {
+        this.annotation = annotation;
         this.pageView = pageView;
     }
 
@@ -53,26 +56,34 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
     @Override
     public void updateStyle(LinkedHashSet<CAnnotStyle> annotStyle) {
         for (CAnnotStyle style : annotStyle) {
-            if (annotImpl instanceof CPDFMarkupAnnotImpl) {
-                CPDFMarkupAnnotImpl markupAnnot = (CPDFMarkupAnnotImpl) annotImpl;
-                CPDFMarkupAnnotation markupAnnotation = markupAnnot.onGetAnnotation();
+            if (annotation == null){
+                continue;
+            }
+            if (annotation instanceof CPDFMarkupAnnotation) {
+                CPDFMarkupAnnotation markupAnnotation = (CPDFMarkupAnnotation) annotation;
                 markupAnnotation.setColor(style.getColor());
                 markupAnnotation.setAlpha(style.getOpacity());
                 markupAnnotation.updateAp();
-                annotImpl.onAnnotAttrChange();
-                pageView.invalidate();
-            } else if (annotImpl instanceof CPDFInkAnnotImpl) {
-                CPDFInkAnnotImpl inkAnnot = (CPDFInkAnnotImpl) annotImpl;
-                CPDFInkAnnotation inkAnnotation = (CPDFInkAnnotation) inkAnnot.onGetAnnotation();
+                if (annotImpl != null){
+                    annotImpl.onAnnotAttrChange();
+                }
+                if (pageView != null) {
+                    pageView.invalidate();
+                }
+            } else if (annotation instanceof CPDFInkAnnotation) {
+                CPDFInkAnnotation inkAnnotation = (CPDFInkAnnotation) annotation;
                 inkAnnotation.setColor(style.getColor());
                 inkAnnotation.setAlpha(style.getOpacity());
                 inkAnnotation.setBorderWidth(style.getBorderWidth());
                 inkAnnotation.updateAp();
-                annotImpl.onAnnotAttrChange();
-                pageView.invalidate();
-            } else if (annotImpl instanceof CPDFSquareAnnotImpl) {
-                CPDFSquareAnnotImpl squareAnnot = (CPDFSquareAnnotImpl) annotImpl;
-                CPDFSquareAnnotation squareAnnotation = (CPDFSquareAnnotation) squareAnnot.onGetAnnotation();
+                if (annotImpl != null) {
+                    annotImpl.onAnnotAttrChange();
+                }
+                if (pageView != null) {
+                    pageView.invalidate();
+                }
+            } else if (annotation instanceof CPDFSquareAnnotation) {
+                CPDFSquareAnnotation squareAnnotation = (CPDFSquareAnnotation) annotation;
                 squareAnnotation.setBorderColor(style.getLineColor());
                 squareAnnotation.setBorderAlpha(style.getLineColorOpacity());
                 squareAnnotation.setFillColor(style.getFillColor());
@@ -82,11 +93,14 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                     squareAnnotation.setBordEffectType(style.getBordEffectType());
                 }
                 squareAnnotation.updateAp();
-                annotImpl.onAnnotAttrChange();
-                pageView.invalidate();
-            } else if (annotImpl instanceof CPDFCircleAnnotImpl) {
-                CPDFCircleAnnotImpl circleAnnot = (CPDFCircleAnnotImpl) annotImpl;
-                CPDFCircleAnnotation circleAnnotation = (CPDFCircleAnnotation) circleAnnot.onGetAnnotation();
+                if (annotImpl != null) {
+                    annotImpl.onAnnotAttrChange();
+                }
+                if (pageView != null) {
+                    pageView.invalidate();
+                }
+            } else if (annotation instanceof CPDFCircleAnnotation) {
+                CPDFCircleAnnotation circleAnnotation = (CPDFCircleAnnotation) annotation;
                 circleAnnotation.setBorderColor(style.getLineColor());
                 circleAnnotation.setBorderAlpha(style.getLineColorOpacity());
                 circleAnnotation.setFillColor(style.getFillColor());
@@ -96,11 +110,14 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                     circleAnnotation.setBordEffectType(style.getBordEffectType());
                 }
                 circleAnnotation.updateAp();
-                annotImpl.onAnnotAttrChange();
-                pageView.invalidate();
-            } else if (annotImpl instanceof CPDFLineAnnotImpl) {
-                CPDFLineAnnotImpl lineAnnot = (CPDFLineAnnotImpl) annotImpl;
-                CPDFLineAnnotation lineAnnotation = lineAnnot.onGetAnnotation();
+                if (annotImpl != null) {
+                    annotImpl.onAnnotAttrChange();
+                }
+                 if (pageView != null) {
+                    pageView.invalidate();
+                }
+            } else if (annotation instanceof  CPDFLineAnnotation) {
+                CPDFLineAnnotation lineAnnotation = (CPDFLineAnnotation) annotation;
                 lineAnnotation.setBorderColor(style.getLineColor());
                 lineAnnotation.setBorderAlpha(style.getLineColorOpacity());
                 lineAnnotation.setFillColor(style.getFillColor());
@@ -108,11 +125,14 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 lineAnnotation.setBorderStyle(style.getBorderStyle());
                 lineAnnotation.setLineType(style.getStartLineType(), style.getTailLineType());
                 lineAnnotation.updateAp();
-                annotImpl.onAnnotAttrChange();
-                pageView.invalidate();
-            } else if (annotImpl instanceof CPDFFreetextAnnotImpl) {
-                CPDFFreetextAnnotImpl freetextAnnot = (CPDFFreetextAnnotImpl) annotImpl;
-                CPDFFreetextAnnotation freetextAnnotation = freetextAnnot.onGetAnnotation();
+                if (annotImpl != null) {
+                    annotImpl.onAnnotAttrChange();
+                }
+                if (pageView != null) {
+                    pageView.invalidate();
+                }
+            } else if (annotation instanceof CPDFFreetextAnnotation) {
+                CPDFFreetextAnnotation freetextAnnotation = (CPDFFreetextAnnotation) annotation;
                 switch (style.getAlignment()) {
                     case LEFT:
                         freetextAnnotation.setFreetextAlignment(CPDFFreetextAnnotation.Alignment.ALIGNMENT_LEFT);
@@ -130,8 +150,12 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 freetextAnnotation.setAlpha(style.getTextColorOpacity());
                 freetextAnnotation.setFreetextDa(new CPDFTextAttribute(getAnnotStyleFontName(style), style.getFontSize(), style.getTextColor()));
                 freetextAnnotation.updateAp();
-                annotImpl.onAnnotAttrChange();
-                pageView.invalidate();
+                if (annotImpl != null) {
+                    annotImpl.onAnnotAttrChange();
+                }
+                if (pageView != null) {
+                    pageView.invalidate();
+                }
             }
         }
     }
@@ -144,21 +168,18 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
             case ANNOT_UNDERLINE:
             case ANNOT_SQUIGGLY:
             case ANNOT_STRIKEOUT:
-                CPDFMarkupAnnotImpl markupAnnot = (CPDFMarkupAnnotImpl) annotImpl;
-                CPDFMarkupAnnotation markupAnnotation = markupAnnot.onGetAnnotation();
+                CPDFMarkupAnnotation markupAnnotation = (CPDFMarkupAnnotation) annotation;
                 style.setColor(markupAnnotation.getColor());
                 style.setOpacity(markupAnnotation.getAlpha());
                 break;
             case ANNOT_INK:
-                CPDFInkAnnotImpl inkAnnot = (CPDFInkAnnotImpl) annotImpl;
-                CPDFInkAnnotation inkAnnotation = (CPDFInkAnnotation) inkAnnot.onGetAnnotation();
+                CPDFInkAnnotation inkAnnotation = (CPDFInkAnnotation) annotation;
                 style.setColor(inkAnnotation.getColor());
                 style.setOpacity(inkAnnotation.getAlpha());
                 style.setBorderWidth(inkAnnotation.getBorderWidth());
                 break;
             case ANNOT_SQUARE:
-                CPDFSquareAnnotImpl squareAnnot = (CPDFSquareAnnotImpl) annotImpl;
-                CPDFSquareAnnotation squareAnnotation = (CPDFSquareAnnotation) squareAnnot.onGetAnnotation();
+                CPDFSquareAnnotation squareAnnotation = (CPDFSquareAnnotation) annotation;
                 style.setBorderColor(squareAnnotation.getBorderColor());
                 style.setLineColorOpacity(squareAnnotation.getBorderAlpha());
                 style.setFillColor(squareAnnotation.getFillColor());
@@ -175,8 +196,7 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 style.setBorderStyle(borderStyle);
                 break;
             case ANNOT_CIRCLE:
-                CPDFCircleAnnotImpl circleAnnot = (CPDFCircleAnnotImpl) annotImpl;
-                CPDFCircleAnnotation circleAnnotation = (CPDFCircleAnnotation) circleAnnot.onGetAnnotation();
+                CPDFCircleAnnotation circleAnnotation = (CPDFCircleAnnotation) annotation;
                 style.setBorderColor(circleAnnotation.getBorderColor());
                 style.setLineColorOpacity(circleAnnotation.getBorderAlpha());
                 style.setFillColor(circleAnnotation.getFillColor());
@@ -194,8 +214,7 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 break;
             case ANNOT_LINE:
             case ANNOT_ARROW:
-                CPDFLineAnnotImpl lineAnnot = (CPDFLineAnnotImpl) annotImpl;
-                CPDFLineAnnotation lineAnnotation = lineAnnot.onGetAnnotation();
+                CPDFLineAnnotation lineAnnotation = (CPDFLineAnnotation) annotation;
                 style.setBorderColor(lineAnnotation.getBorderColor());
                 style.setLineColorOpacity(lineAnnotation.getBorderAlpha());
                 style.setFillColor(lineAnnotation.getFillColor());
@@ -217,8 +236,7 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
                 }
                 break;
             case ANNOT_FREETEXT:
-                CPDFFreetextAnnotImpl freetextAnnot = (CPDFFreetextAnnotImpl) annotImpl;
-                CPDFFreetextAnnotation freetextAnnotation = freetextAnnot.onGetAnnotation();
+                CPDFFreetextAnnotation freetextAnnotation = (CPDFFreetextAnnotation) annotation;
                 CPDFTextAttribute textAttribute = freetextAnnotation.getFreetextDa();
                 style.setFontColor(textAttribute.getColor());
                 style.setTextColorOpacity(freetextAnnotation.getAlpha());
@@ -248,7 +266,7 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
     }
 
     public CAnnotStyle getStyle() {
-        return getStyle(CTypeUtil.getStyleType(annotImpl.getAnnotType()));
+        return getStyle(CTypeUtil.getStyleType(annotation.getType()));
     }
 
 }

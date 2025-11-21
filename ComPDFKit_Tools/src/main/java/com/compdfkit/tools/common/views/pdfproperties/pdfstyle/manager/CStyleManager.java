@@ -68,6 +68,16 @@ public class CStyleManager implements CAnnotStyle.OnAnnotStyleChangeListener {
         }
     }
 
+    public CStyleManager(CPDFAnnotation annotation, PageView pageView) {
+        if (annotation.getType() == CPDFAnnotation.Type.WIDGET) {
+            this.styleProxy = new CSelectedFormStyleProvider(annotation, pageView);
+        } else {
+            this.styleProxy = new CSelectedAnnotStyleProvider(annotation, pageView);
+        }
+    }
+
+
+
     public void updateStyle(CAnnotStyle style) {
         LinkedHashSet<CAnnotStyle> linkedHashSet = new LinkedHashSet<>();
         linkedHashSet.add(style);
