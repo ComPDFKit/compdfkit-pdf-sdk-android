@@ -106,9 +106,9 @@ public class CSineCurveView extends View {
             startX = borderWidth;
             viewWidth = (int) (getWidth() - 2 * borderWidth);
         }
-        /****** 起始位置  */
+
         path.moveTo(startX, ((float) getHeight() / 2));
-        /****** rQuardto的位置是相对的  */
+  
         path.rQuadTo(((float) viewWidth / 4), -sineCurveHeight, ((float) viewWidth / 2), 0F);
         path.rQuadTo(((float) viewWidth / 4), sineCurveHeight, ((float) viewWidth / 2), 0F);
 

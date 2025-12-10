@@ -54,7 +54,6 @@ public class CRecordVoicePopupWindow extends CBasePopupWindow {
 
     private long stopCountTime = 0;
 
-    //是否正在录音
     private boolean isRecording = false;
 
     CRecorderManager recorderManager;

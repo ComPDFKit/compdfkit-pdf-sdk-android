@@ -44,6 +44,7 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
     public static final int UPDATE_TYPE_ROTATE = 1;
 
     public static final int UPDATE_TYPE_DELETE = 2;
+    private CProItemTouchHelper itemTouchHelper;
 
     /**
      * Creates a new instance of CPDFThumbnailFragment.
@@ -87,7 +88,7 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
     public void setSelectAll(boolean select) {
         if (getActivity() != null) {
             getActivity().runOnUiThread(()->{
-                if (isEdit == true && thumbnailListAdapter != null) {
+                if (isEdit && thumbnailListAdapter != null) {
                     if (select) {
                         thumbnailListAdapter.setAllClick(rvThumbnailRecyclerView);
                     } else {
@@ -144,7 +145,7 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
                     }
                 }
             });
-            CProItemTouchHelper itemTouchHelper = new CProItemTouchHelper(thumbnailListAdapter);
+            itemTouchHelper = new CProItemTouchHelper(thumbnailListAdapter);
             itemTouchHelper.attachToRecyclerView(rvThumbnailRecyclerView);
             itemTouchHelper.setDragEnable(enableEditMode);
             itemTouchHelper.setSwapEnable(false);
@@ -206,4 +207,18 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
             rvThumbnailRecyclerView.scrollToPosition(position);
         }
     }
+
+    public void setRecyclerViewTouchable(boolean touchable) {
+        if (rvThumbnailRecyclerView != null){
+            if (touchable) {
+                itemTouchHelper.setDragEnable(true);
+                rvThumbnailRecyclerView.setOnTouchListener(null);
+            } else {
+                itemTouchHelper.setDragEnable(false);
+                rvThumbnailRecyclerView.setOnTouchListener((v, event) -> true);
+            }
+        }
+    }
+
+
 }

@@ -22,13 +22,13 @@ import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 
 class ColorRectSelector extends View {
 
-    //半径
+
     public static float RADIUS = 30f;
 
-    //整体半径
+    
     public float radiusRectSelector;
 
-    //选择器宽度
+    
     public float levelOneWidth;
     public float levelTwoWidth;
 

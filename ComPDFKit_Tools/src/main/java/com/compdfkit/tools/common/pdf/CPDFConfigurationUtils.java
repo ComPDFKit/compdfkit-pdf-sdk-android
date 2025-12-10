@@ -862,7 +862,6 @@ public class CPDFConfigurationUtils {
         CPDFBotaConfig botaConfig = new CPDFBotaConfig();
         if (jsonObject == null) return botaConfig;
 
-        // 解析 tabs (字符串 -> int 映射)
         List<Integer> tabs = new ArrayList<>();
         JSONArray tabsJsonArray = jsonObject.optJSONArray("tabs");
         if (tabsJsonArray != null) {
@@ -876,7 +875,7 @@ public class CPDFConfigurationUtils {
                         tab = CPDFBOTA.OUTLINE;
                         break;
                     case "bookmark":
-                    case "bookmarks": // 容错写法
+                    case "bookmarks": 
                         tab = CPDFBOTA.BOOKMARKS;
                         break;
                     case "annotations":

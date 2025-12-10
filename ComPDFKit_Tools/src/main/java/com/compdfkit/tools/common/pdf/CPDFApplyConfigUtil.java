@@ -10,6 +10,8 @@
 package com.compdfkit.tools.common.pdf;
 
 
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.view.View;
 
@@ -210,22 +212,36 @@ public class CPDFApplyConfigUtil {
             toolbarConfig.contentEditorToolbarVisible = false;
             toolbarConfig.formToolbarVisible = false;
             toolbarConfig.signatureToolbarVisible = false;
+        } else {
+            if (modeConfig.initialViewMode != CPreviewMode.Viewer) {
+                fragment.flBottomToolBar.setVisibility(VISIBLE);
+            }
         }
         // hide top toolbar
         boolean showMainToolbar = configuration.toolbarConfig.mainToolbarVisible;
-        fragment.flTool.setVisibility(showMainToolbar ? View.VISIBLE : View.GONE);
-        // hide bottom annotation toolbar
-        boolean showAnnotationToolbar = configuration.toolbarConfig.annotationToolbarVisible;
-        fragment.annotationToolbar.setVisibility(showAnnotationToolbar ? View.VISIBLE : View.GONE);
-        // hide bottom edit toolbar
-        boolean showEditToolbar = configuration.toolbarConfig.contentEditorToolbarVisible;
-        fragment.editToolBar.setVisibility(showEditToolbar ? View.VISIBLE : View.GONE);
-        // hide bottom form toolbar
-        boolean showFormToolbar = configuration.toolbarConfig.formToolbarVisible;
-        fragment.formToolBar.setVisibility(showFormToolbar ? View.VISIBLE : View.GONE);
-        // hide bottom signature toolbar
-        boolean showSignatureToolbar = configuration.toolbarConfig.signatureToolbarVisible;
-        fragment.signatureToolBar.setVisibility(showSignatureToolbar ? View.VISIBLE : View.GONE);
+        fragment.flTool.setVisibility(showMainToolbar ? VISIBLE : View.GONE);
+
+        switch (modeConfig.initialViewMode){
+            case Annotation:
+                boolean showAnnotationToolbar = configuration.toolbarConfig.annotationToolbarVisible;
+                fragment.annotationToolbar.setVisibility(showAnnotationToolbar ? VISIBLE : View.GONE);
+                break;
+            case Edit:
+                // hide bottom edit toolbar
+                boolean showEditToolbar = configuration.toolbarConfig.contentEditorToolbarVisible;
+                fragment.editToolBar.setVisibility(showEditToolbar ? VISIBLE : View.GONE);
+                break;
+            case Form:
+                // hide bottom form toolbar
+                boolean showFormToolbar = configuration.toolbarConfig.formToolbarVisible;
+                fragment.formToolBar.setVisibility(showFormToolbar ? VISIBLE : View.GONE);
+                break;
+            case Signature:
+                // hide bottom signature toolbar
+                boolean showSignatureToolbar = configuration.toolbarConfig.signatureToolbarVisible;
+                fragment.signatureToolBar.setVisibility(showSignatureToolbar ? VISIBLE : View.GONE);
+                break;
+        }
     }
 
     private void applyAnnotationConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {

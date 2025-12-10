@@ -41,7 +41,7 @@ import com.compdfkit.tools.viewer.pdfthumbnail.adpater.CPDFThumbnailListAdapter;
  *      .diskCacheStrategy(DiskCacheStrategy.NONE) <br/>
  *      .into(imageView) <br/>
  * <p/>
- * 如果你想加载pdf 的封面图，你可以使用以下方式 <br/>
+ *  <br/>
  * - fromFile <br/>
  * GlideApp.with(context) <br/>
  *      .load(CPDFWrapper.fromFile(String pdfFilePath)) <br/>

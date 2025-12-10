@@ -27,7 +27,7 @@ public class CProItemTouchHelper extends CDefaultItemTouchHelper {
     /**
      * @param ：[canDrag]
      * @return : void
-     * @description ：设置是否可以被拖拽
+     * @description ：
      */
     public void setDragEnable(boolean canDrag) {
         itemTouchHelpCallback.setDragEnable(canDrag);
@@ -36,7 +36,7 @@ public class CProItemTouchHelper extends CDefaultItemTouchHelper {
     /**
      * @param ：[canSwap]
      * @return : void
-     * @description ：设置是否可以被位置交换
+     * @description ：
      */
     public void setSwapEnable(boolean canSwap) {
         itemTouchHelpCallback.setSwapEnable(canSwap);
@@ -45,7 +45,7 @@ public class CProItemTouchHelper extends CDefaultItemTouchHelper {
     /**
      * @param ：[canSwipe]
      * @return : void
-     * @description ：设置是否可以被滑动
+     * @description ：
      */
     public void setSwipeEnable(boolean canSwipe) {
         itemTouchHelpCallback.setSwipeEnable(canSwipe);

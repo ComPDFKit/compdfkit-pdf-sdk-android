@@ -102,19 +102,18 @@
     </declare-styleable>
 
 
-    <!--水印-->
     <declare-styleable name="WatermarkView" tools:ignore="ResourceName">
-        <attr name="src" format="reference" tools:ignore="ResourceName" />            <!-- 用于缩放旋转的图标 -->
-        <attr name="editable" format="boolean" tools:ignore="ResourceName"/>          <!-- 是否SingleTouchView处于可编辑状态 -->
-        <attr name="frameColor" format="color" tools:ignore="ResourceName"/>         <!-- 边框颜色 -->
-        <attr name="frameWidth" format="dimension" tools:ignore="ResourceName"/>     <!-- 边框线宽度 -->
-        <attr name="framePadding" format="dimension" tools:ignore="ResourceName"/>   <!-- 边框与图片的间距 -->
-        <attr name="controlDrawableWidth" format="dimension" tools:ignore="ResourceName"/> <!-- 控制图标宽-->
-        <attr name="controlDrawableHeight" format="dimension" tools:ignore="ResourceName"/> <!-- 控制图标高-->
-        <attr name="degree" format="float" tools:ignore="ResourceName"/>             <!-- 旋转角度 -->
-        <attr name="scale" format="float" tools:ignore="ResourceName"/>              <!-- 缩放比例 -->
-        <attr name="controlDrawable" format="reference" tools:ignore="ResourceName"/> <!-- 控制图标 -->
-        <attr name="controlLocation" >                     <!-- 控制图标的位置 -->
+        <attr name="src" format="reference" tools:ignore="ResourceName" />
+        <attr name="editable" format="boolean" tools:ignore="ResourceName"/>
+        <attr name="frameColor" format="color" tools:ignore="ResourceName"/>
+        <attr name="frameWidth" format="dimension" tools:ignore="ResourceName"/>
+        <attr name="framePadding" format="dimension" tools:ignore="ResourceName"/>
+        <attr name="controlDrawableWidth" format="dimension" tools:ignore="ResourceName"/>
+        <attr name="controlDrawableHeight" format="dimension" tools:ignore="ResourceName"/>
+        <attr name="degree" format="float" tools:ignore="ResourceName"/>
+        <attr name="scale" format="float" tools:ignore="ResourceName"/>
+        <attr name="controlDrawable" format="reference" tools:ignore="ResourceName"/>
+        <attr name="controlLocation" >
             <enum name="left_top" value="0" />
             <enum name="right_top" value="1" />
             <enum name="right_bottom" value="2" />

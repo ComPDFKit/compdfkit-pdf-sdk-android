@@ -35,10 +35,9 @@ public class EditTextUtils {
         return (source, start, end, dest, dstart, dend) -> {
             if (source == null) return null;
             if (EMOJI_PATTERN.matcher(source).find()) {
-                // 过滤 emoji
                 return EMOJI_PATTERN.matcher(source).replaceAll("");
             }
-            return null; // 保持原样
+            return null; 
         };
     }
 

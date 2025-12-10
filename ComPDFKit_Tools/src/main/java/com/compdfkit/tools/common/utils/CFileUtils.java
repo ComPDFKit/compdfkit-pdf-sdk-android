@@ -76,7 +76,6 @@ public class CFileUtils {
             }
         }
 
-        // 拷贝文件
         String filename = savePath + "/" + saveName;
         File file = new File(filename);
         if (!file.exists() || overwriteExisting) {
@@ -100,20 +99,18 @@ public class CFileUtils {
     }
 
 
-    public static void createFile(File file, boolean isFile) {// 创建文件
+    public static void createFile(File file, boolean isFile) {
         try {
             if (!file.exists()) {
-                // 如果文件不存在
                 if (!file.getParentFile().exists()) {
-                    // 如果文件父目录不存在
                     createFile(file.getParentFile(), false);
                 } else {
-                    // 存在文件父目录
+                    
                     if (isFile) {
-                        // 创建文件
-                        file.createNewFile();// 创建新文件
+                       
+                        file.createNewFile();
                     } else {
-                        file.mkdir();// 创建目录
+                        file.mkdir();
                     }
                 }
             }
@@ -510,7 +507,6 @@ public class CFileUtils {
 
     public static boolean deleteSingleFile(String filePath$Name) {
         File file = new File(filePath$Name);
-        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
         if (file.exists() && file.isFile()) {
             return file.delete();
         } else {
@@ -519,7 +515,6 @@ public class CFileUtils {
     }
 
     public static boolean deleteDirectory(String filePath) {
-        // 如果dir不以文件分隔符结尾，自动添加文件分隔符
         if (!filePath.endsWith(File.separator))
             filePath = filePath + File.separator;
         File dirFile = new File(filePath);
@@ -580,15 +575,15 @@ public class CFileUtils {
     public static void copyAssetsDirToPhone(Activity activity, String assetsPath, String outPutParentDir){
         try {
             String[] fileList = activity.getAssets().list(assetsPath);
-            if(fileList.length>0) {//如果是目录
+            if(fileList.length>0) {
                 File file=new File(outPutParentDir+ File.separator+assetsPath);
-                file.mkdirs();//如果文件夹不存在，则递归
+                file.mkdirs();
                 for (String fileName:fileList){
                     assetsPath=assetsPath+File.separator+fileName;
                     copyAssetsDirToPhone(activity,assetsPath, outPutParentDir);
                     assetsPath=assetsPath.substring(0,assetsPath.lastIndexOf(File.separator));
                 }
-            } else {//如果是文件
+            } else {
                 InputStream inputStream=activity.getAssets().open(assetsPath);
                 File file=new File(outPutParentDir+ File.separator+assetsPath);
                 if(!file.exists() || file.length()==0) {

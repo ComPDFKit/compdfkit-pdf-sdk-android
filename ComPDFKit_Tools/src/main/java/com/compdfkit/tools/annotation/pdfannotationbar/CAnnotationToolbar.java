@@ -507,13 +507,12 @@ public class CAnnotationToolbar extends FrameLayout {
                 int index1 = typeList.indexOf(o1.getType());
                 int index2 = typeList.indexOf(o2.getType());
 
-                // 处理不在categorys中的元素
                 if (index1 == -1 && index2 == -1) {
-                    return 0; // 两个元素都不在categorys中，保持原有顺序
+                    return 0; 
                 } else if (index1 == -1) {
-                    return 1; // item1不在categorys中，将item1排到后面
+                    return 1; 
                 } else if (index2 == -1) {
-                    return -1; // item2不在categorys中，将item2排到后面
+                    return -1; 
                 }
 
                 return Integer.compare(index1, index2);

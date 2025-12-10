@@ -30,12 +30,11 @@ import java.util.Stack;
 public class CPDFPrintAdapter extends PrintDocumentAdapter {
     private static final int MILS_PER_INCH = 1000;
 
-    /****** 打印清晰度： 1.5：标清；2.3：高清；3：超清 ******/
     public static final float SD = 1.5f;
     public static final float HQ = 2.3f;
     public static final float FHQ = 3.0f;
     private float resolutionScale = SD;
-    /****** 是否绘制注释 ******/
+    /****** draw annot ******/
     private boolean isDrawAnnot = true;
     private Context context;
     private String jobName;
@@ -79,7 +78,7 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
         }
 
         if (totalpages > 0) {
-            //构建文档配置信息
+        
             PrintDocumentInfo info = new PrintDocumentInfo
                     .Builder(jobName)
                     .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
@@ -219,16 +218,16 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
             }
 
             if (null != bitmap) {
-                // 计算页码的缩放比例
+                
                 float scale = Math.min((float) pageWidth / bitmap.getWidth(), (float) pageHeight / bitmap.getHeight());
                 if (scale > 1) {
                     scale = 1;
                 }
-                // 取得想要缩放的matrix参数
+
                 Matrix matrix = new Matrix();
                 matrix.postScale(scale, scale);
 
-                // 页码居中
+
 //                int translateX = Math.abs((int) (bitmap.getWidth() * scale) - pageWidth);
 //                int translateY = Math.abs((int) (bitmap.getHeight() * scale) - pageHeight);
 //                matrix.postTranslate(translateX / 2f, translateY / 2f);
@@ -255,10 +254,10 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
     }
 
     /**
-     * @param ：[writtenPages] 一个SparseIntArray，其中包含必须写入的页面。
-     * @return : android.print.PageRange[] 一个包含结果范围的PageRange数组。
+     * @param ：[writtenPages] 。
+     * @return : android.print.PageRange[] 
      * @methodName ：computeWrittenPageRanges created by luozhipeng on 2019-10-11 21:04.
-     * @description ：将所选页面转换为以PageRange数组形式写入的函数。
+     * @description ：
      */
     private PageRange[] computeWrittenPageRanges(SparseIntArray writtenPages) {
         final List<PageRange> pageRanges = new ArrayList<>();

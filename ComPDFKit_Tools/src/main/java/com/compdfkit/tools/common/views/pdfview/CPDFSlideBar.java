@@ -188,12 +188,12 @@ public class CPDFSlideBar extends View {
         if (slideBarBitmap == null || slideBarBitmap.isRecycled()) {
             return;
         }
-        /****** 如果是横向滑动，则旋转滑块图片的角度90度 ******/
+
         if (SlideBarPosition.TOP == slideBarPosition ||
                 SlideBarPosition.BOTTOM == slideBarPosition) {
-            // 定义矩阵对象
+
             Matrix matrix = new Matrix();
-            // 向左旋转45度，参数为正则向右旋转
+
             matrix.postRotate(-90);
             slideBarBitmap = Bitmap.createBitmap(slideBarBitmap, 0, 0, slideBarBitmap.getWidth(), slideBarBitmap.getHeight(),
                     matrix, true);
@@ -206,7 +206,6 @@ public class CPDFSlideBar extends View {
         slideBarWidth = slideBarBitmap.getWidth();
         slideBarHeight = slideBarBitmap.getHeight();
 
-        /****** 根据滑块停靠的位置，计算出滑块的初始位置 ******/
         switch (slideBarPosition) {
             case LEFT:
             case TOP:
@@ -466,10 +465,10 @@ public class CPDFSlideBar extends View {
     }
 
     /**
-     * ACTION_MOVE事件改变滑块的位置，同时改变缩略图的位置
+     * ACTION_MOVE
      *
-     * @param distanceX：ACTION_MOVE事件的x轴方向的移动距离
-     * @param distanceY：ACTION_MOVE事件的y轴方向的移动距离
+     * @param distanceX：ACTION_MOVE
+     * @param distanceY：ACTION_MOVE
      */
     private void changeSlideBarPosition(float distanceX, float distanceY) {
         if (SlideBarPosition.TOP == slideBarPosition ||
@@ -506,17 +505,17 @@ public class CPDFSlideBar extends View {
     }
 
     /**
-     * 判断ACTION_DOWN事件的触控点是否落在滑块上面
+     * 
      *
-     * @param x：ACTION_DOWN事件的触控点的x坐标
-     * @param y：ACTION_DOWN事件的触控点的y坐标
+     * @param x：ACTION_DOWN
+     * @param y：ACTION_DOWN
      */
     private boolean judgeTouchSlideBar(float x, float y) {
         return currentSlideBarPosition.contains(x, y);
     }
 
     /**
-     * 计算父容器的高宽（注意：添加该view到父view中，高宽必须使用MATCH_PARENT）
+     * 
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -603,7 +602,7 @@ public class CPDFSlideBar extends View {
                             linePaint);
                 }
             }
-            /****** 在缩略图下方绘制文字 ******/
+  
             String content;
             if (onlyShowPageIndex) {
                 content = String.valueOf((pageIndex + 1));

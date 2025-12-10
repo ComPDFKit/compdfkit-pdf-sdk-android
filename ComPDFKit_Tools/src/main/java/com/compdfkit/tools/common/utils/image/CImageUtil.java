@@ -48,11 +48,11 @@ public class CImageUtil {
         StaticLayout staticLayout = new StaticLayout(
                 text, new TextPaint(paint), width,
                 Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-        int height = staticLayout.getHeight(); // 获取所有行的总高度
+        int height = staticLayout.getHeight();
 
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        canvas.drawColor(Color.TRANSPARENT); // 设定背景色（可修改）
+        canvas.drawColor(Color.TRANSPARENT); 
 
         float centerX = width / 2f;
 

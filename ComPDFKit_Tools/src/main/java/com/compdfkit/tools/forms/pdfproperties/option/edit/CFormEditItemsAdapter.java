@@ -43,9 +43,7 @@ public class CFormEditItemsAdapter extends CBaseQuickAdapter<CWidgetItemBean, CB
     }
 
     public void onMove(int fromPosition, int toPosition) {
-        //对原数据进行移动
         Collections.swap(list, fromPosition, toPosition);
-        //通知数据移动
         notifyItemMoved(fromPosition, toPosition);
     }
 }

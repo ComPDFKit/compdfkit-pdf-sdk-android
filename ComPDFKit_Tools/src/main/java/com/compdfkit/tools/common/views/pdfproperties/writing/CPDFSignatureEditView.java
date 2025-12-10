@@ -24,16 +24,16 @@ public class CPDFSignatureEditView extends View {
 
     private final int padding = 50;
 
-    /****** 涂鸦的路径 ******/
+
     private ArrayList<PathPoints> drawPathPoints = null;
-    /****** 需要在该控件上绘制的bitmap ******/
+
     private Bitmap pictureBitmap;
 
-    /****** 上一次点击的坐标，防止记录重复的绘制点 ******/
+
     private float lastTouchX = 0;
     private float lastTouchY = 0;
 
-    /****** 记录绘制区域的大小 ******/
+
     private float left = 0;
     private float right = 0;
     private float top = 0;
@@ -41,7 +41,7 @@ public class CPDFSignatureEditView extends View {
     private PointF firstTouchPoint;
     private Paint markerPenPaint_signEdit;
 
-    /****** 画笔属性值 ******/
+
     private float lineWidth;
     private int lineColor = Color.parseColor("#DD2C00");
     private int lineAlpha = 255;
@@ -124,7 +124,7 @@ public class CPDFSignatureEditView extends View {
         t -= offset;
         r += offset;
         b += offset;
-        //添加一些padding
+
         return new Rect((int) l-padding, (int) t-padding, (int) r+padding, (int) b+padding);
     }
 
@@ -166,14 +166,14 @@ public class CPDFSignatureEditView extends View {
     private void drawPaintPath(Canvas canvas) {
         if (drawPathPoints != null) {
             PointF p;
-            /****** 保存绘制的每条路径 ******/
+
             ArrayList<PathItem> pathList = new ArrayList<>();
 
             Iterator<PathPoints> it = drawPathPoints.iterator();
             while (it.hasNext()) {
                 PathPoints pps = it.next();
                 ArrayList<PointF> arc = pps.locations;
-                /****** 获取每条线的颜色值 ******/
+
                 int lineColor = pps.pointColor;
                 float lineSize = pps.pointSize;
                 int lineAlpha = pps.pointAlpha;
@@ -193,7 +193,6 @@ public class CPDFSignatureEditView extends View {
                         mY = y;
                     }
                     drawingPath.lineTo(mX, mY);
-                    /****** 每条绘制的线和颜色值保存下来 ******/
                     pathList.add(new PathItem(drawingPath, lineColor, lineSize, lineAlpha));
                 } else {
                     p = arc.get(0);
@@ -205,7 +204,6 @@ public class CPDFSignatureEditView extends View {
             }
 
             Iterator<PathItem> ipath = pathList.iterator();
-            /****** 绘制每一条保存的路径 ******/
             while (ipath.hasNext()) {
                 PathItem iipath = ipath.next();
                 markerPenPaint_signEdit.setStyle(Paint.Style.STROKE);

@@ -70,7 +70,6 @@ object FileUtils {
             }
         }
 
-        // 拷贝文件
         val filename = "$savePath/$saveName"
         val file = File(filename)
         if (file.exists()) {
@@ -106,7 +105,7 @@ object FileUtils {
                     deleteFile(f)
                 }
             }
-            file.delete() //如要保留文件夹，只删除文件，请注释这行
+            file.delete()
         } else if (file.exists()) {
             file.delete()
         }

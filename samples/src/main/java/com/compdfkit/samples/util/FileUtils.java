@@ -74,7 +74,6 @@ public class FileUtils {
             }
         }
 
-        // 拷贝文件
         String filename = savePath + "/" + saveName;
         File file = new File(filename);
         if (file.exists()) {
@@ -107,7 +106,7 @@ public class FileUtils {
             for (File f : files) {
                 deleteFile(f);
             }
-            file.delete();//如要保留文件夹，只删除文件，请注释这行
+            file.delete();
         } else if (file.exists()) {
             file.delete();
         }

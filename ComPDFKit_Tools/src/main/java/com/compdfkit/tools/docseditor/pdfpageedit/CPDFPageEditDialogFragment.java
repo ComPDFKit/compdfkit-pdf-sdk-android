@@ -527,8 +527,10 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         return true;
     }
 
+    private boolean deleteing = false;
+
     private boolean deletePage() {
-        if (!checkPdfView()) {
+        if (!checkPdfView() || deleteing) {
             return false;
         }
         CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
@@ -541,11 +543,20 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         for (int i = 0; i < pagesArr.size(); i++) {
             pageNum[i] = pagesArr.keyAt(i);
         }
-        boolean res = document.removePages(pageNum);
-        editThumbnailFragment.setSelectAll(false);
-        editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_DELETE);
-        hasEdit = true;
-        return res;
+        deleteing = true;
+        editThumbnailFragment.setRecyclerViewTouchable(false);
+        CThreadPoolUtils.getInstance().executeIO(()->{
+            document.removePages(pageNum);
+            CThreadPoolUtils.getInstance().executeMain(()->{
+                editThumbnailFragment.setSelectAll(false);
+                editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_DELETE);
+                editThumbnailFragment.setRecyclerViewTouchable(true);
+                hasEdit = true;
+                deleteing = false;
+            });
+        });
+
+        return true;
     }
 
     private boolean checkPdfView() {

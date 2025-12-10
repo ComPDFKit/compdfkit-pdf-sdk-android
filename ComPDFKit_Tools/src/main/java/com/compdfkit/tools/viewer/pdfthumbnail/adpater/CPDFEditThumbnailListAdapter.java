@@ -224,6 +224,7 @@ public class CPDFEditThumbnailListAdapter
             RecyclerView.ViewHolder sourceViewHolder, RecyclerView.ViewHolder targetViewHolder) {
         int sourcePosition = sourceViewHolder.getAdapterPosition();
         int targetPosition = targetViewHolder.getAdapterPosition();
+        if (sourcePosition == RecyclerView.NO_POSITION || targetPosition == RecyclerView.NO_POSITION) return false;
         notifyItemMoved(sourcePosition, targetPosition);
         return true;
     }
@@ -238,7 +239,7 @@ public class CPDFEditThumbnailListAdapter
                         boolean isSuccess;
                         try {
                             isSuccess = cPdfDocument.movePage(sourcePosition, targetPosition);
-                            if (sourcePosition < targetPosition) { // 往后移动
+                            if (sourcePosition < targetPosition) { 
                                 List<Integer> selected = new ArrayList<>();
                                 for (int i = sourcePosition; i <= targetPosition; i++) {
                                     if (selectArr.get(i) == 1) {
@@ -257,7 +258,7 @@ public class CPDFEditThumbnailListAdapter
                                         selectArr.put(targetPosition, 1);
                                     }
                                 }
-                            } else { // 往前移动
+                            } else { 
                                 List<Integer> selected = new ArrayList<>();
                                 for (int i = sourcePosition; i >= targetPosition; i--) {
                                     if (selectArr.get(i) == 1) {

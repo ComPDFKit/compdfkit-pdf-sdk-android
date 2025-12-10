@@ -137,7 +137,7 @@ public class ColorAlphaSliderView extends View implements CMotionEventUpdatable 
     }
 
     /**
-     * 更新数据
+     * 
      */
     private void updateValue(float eventX_) {
         float eventX = eventX_;

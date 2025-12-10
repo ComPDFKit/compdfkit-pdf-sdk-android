@@ -22,7 +22,7 @@ public class CPDFPrintUtils {
     /**
      * @param ：[context, file, pageCounts, isEncrypted]
      * @return : void
-     * @methodName ：printCurrentDocument created by liujiyuan on 2018/9/13 下午5:31.
+     * @methodName ：printCurrentDocument 
      */
     public static void printCurrentDocument(@NotNull final Activity activity,CPDFDocument document) {
         try {

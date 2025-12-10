@@ -325,11 +325,11 @@ public class CAnnotShapePreviewView extends CBasicAnnotPreviewView {
           fillRectF.right,
           fillRectF.bottom);
 
-      drawRoundedCorner(canvas, borderRectF.left, borderRectF.top, 90, 270); // 左上角
-      drawRoundedCorner(canvas, borderRectF.left, borderRectF.bottom - diameter, 0, 270); // 左下角
-      drawRoundedCorner(canvas, borderRectF.right - diameter, borderRectF.top, 180, 270); // 右上角
+      drawRoundedCorner(canvas, borderRectF.left, borderRectF.top, 90, 270); 
+      drawRoundedCorner(canvas, borderRectF.left, borderRectF.bottom - diameter, 0, 270); 
+      drawRoundedCorner(canvas, borderRectF.right - diameter, borderRectF.top, 180, 270); 
       drawRoundedCorner(canvas, borderRectF.right - diameter, borderRectF.bottom - diameter, 270,
-          270); // 右下角
+          270); 
 
       int verRectCount = (int) (borderRectF.height() - (diameter * 2) / this.diameter);
       float leftRectStartPoint = borderRectF.left;

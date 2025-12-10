@@ -198,7 +198,7 @@ public class CWatermarkView extends View {
     private Point mControlPoint = new Point();
 
     /**
-     * 用于缩放，Icons for zoom, rotate
+     *  for zoom, rotate
      */
     private Drawable controlDrawable = null;
 
@@ -525,7 +525,7 @@ public class CWatermarkView extends View {
     }
 
     /**
-     * 设置旋转图
+     * 
      *
      * @param drawable
      */
@@ -1100,7 +1100,7 @@ public class CWatermarkView extends View {
     }
 
     /**
-     * @methodName： created by liujiyuan on 2021/3/29 下午6:13.
+     * @methodName： created by liujiyuan on 2021/3/29 6:13.
      * @description：Calculate the distance from the initial watermark image boundary point to the image center
      */
     private void calculateDrawToCenterDistance() {

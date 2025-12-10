@@ -107,9 +107,9 @@ public class CUriUtil {
         if (TextUtils.isEmpty(path)) {
             return degree;
         }
-        try { // 从指定路径下读取图片，并获取其EXIF信息
+        try { 
             ExifInterface exifInterface = new ExifInterface(path);
-            // 获取图片的旋转信息
+            
             int orientation = exifInterface.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_NORMAL
@@ -141,7 +141,7 @@ public class CUriUtil {
             }
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 ExifInterface exifInterface = new ExifInterface(inputStream);
-                // 获取图片的旋转信息
+               
                 int orientation = exifInterface.getAttributeInt(
                         ExifInterface.TAG_ORIENTATION,
                         ExifInterface.ORIENTATION_NORMAL
