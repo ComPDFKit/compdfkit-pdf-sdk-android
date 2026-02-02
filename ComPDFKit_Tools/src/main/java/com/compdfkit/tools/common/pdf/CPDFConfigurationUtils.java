@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -24,9 +24,13 @@ import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.CPDFEditorConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFUIVisibilityMode;
+import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig;
+import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.BorderStyle;
+import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.FocusBorderStyle;
 import com.compdfkit.tools.common.pdf.config.CPDFWatermarkConfig;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.pdf.config.CustomToolbarItem;
 import com.compdfkit.tools.common.pdf.config.FormsConfig;
 import com.compdfkit.tools.common.pdf.config.GlobalConfig;
 import com.compdfkit.tools.common.pdf.config.ModeConfig;
@@ -50,7 +54,7 @@ import com.compdfkit.tools.common.pdf.config.forms.FormsPushButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsRadioButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsTextFieldAttr;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.views.CPDFToolBarMenuHelper.ToolBarAction;
 import com.compdfkit.tools.common.views.pdfbota.CPDFBOTA;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
@@ -132,29 +136,15 @@ public class CPDFConfigurationUtils {
             return ToolbarConfig.normal();
         }
         ToolbarConfig toolbarConfig = new ToolbarConfig();
-        List<ToolbarConfig.ToolbarAction> androidAvailableActionsList = new ArrayList<>();
-        JSONArray androidAvailableActions = jsonObject.optJSONArray("androidAvailableActions");
-        if (androidAvailableActions != null) {
-            for (int i = 0; i < androidAvailableActions.length(); i++) {
-                ToolbarConfig.ToolbarAction action = ToolbarConfig.ToolbarAction.fromString(androidAvailableActions.optString(i));
-                if (action != null) {
-                    androidAvailableActionsList.add(action);
-                }
-            }
-        }
-        toolbarConfig.androidAvailableActions = androidAvailableActionsList;
-        // parse more menu actions
-        List<ToolbarConfig.MenuAction> menuActionList = new ArrayList<>();
-        JSONArray availableMenusArray = jsonObject.optJSONArray("availableMenus");
-        if (availableMenusArray != null) {
-            for (int i = 0; i < availableMenusArray.length(); i++) {
-                ToolbarConfig.MenuAction menuAction = ToolbarConfig.MenuAction.fromString(availableMenusArray.optString(i));
-                if (menuAction != null) {
-                    menuActionList.add(menuAction);
-                }
-            }
-        }
-        toolbarConfig.availableMenus = menuActionList;
+
+        toolbarConfig.toolbarLeftItems = getToolbarActions(jsonObject.optJSONArray("toolbarLeftItems"));
+        toolbarConfig.toolbarRightItems = getToolbarActions(jsonObject.optJSONArray("toolbarRightItems"));
+        toolbarConfig.availableMenus = getToolbarActions(jsonObject.optJSONArray("availableMenus"));
+
+        toolbarConfig.customToolbarLeftItems = getToolbarCustomActions(jsonObject.optJSONArray("customToolbarLeftItems"));
+        toolbarConfig.customToolbarRightItems = getToolbarCustomActions(jsonObject.optJSONArray("customToolbarRightItems"));
+        toolbarConfig.customMoreMenuItems = getToolbarCustomActions(jsonObject.optJSONArray("customMoreMenuItems"));
+
         toolbarConfig.mainToolbarVisible = jsonObject.optBoolean("mainToolbarVisible", true);
         toolbarConfig.annotationToolbarVisible = jsonObject.optBoolean("annotationToolbarVisible", true);
         toolbarConfig.contentEditorToolbarVisible = jsonObject.optBoolean("contentEditorToolbarVisible", true);
@@ -162,6 +152,38 @@ public class CPDFConfigurationUtils {
         toolbarConfig.signatureToolbarVisible = jsonObject.optBoolean("signatureToolbarVisible", true);
         toolbarConfig.showInkToggleButton = jsonObject.optBoolean("showInkToggleButton", true);
         return toolbarConfig;
+    }
+
+    private static List<ToolBarAction> getToolbarActions(JSONArray toolbarJson){
+        List<ToolBarAction> toolbarRightItemList = new ArrayList<>();
+        if (toolbarJson != null) {
+            for (int i = 0; i < toolbarJson.length(); i++) {
+                ToolBarAction action = ToolBarAction.fromString(toolbarJson.optString(i));
+                if (action != null) {
+                    toolbarRightItemList.add(action);
+                }
+            }
+        }
+        return toolbarRightItemList;
+    }
+
+    private static List<CustomToolbarItem> getToolbarCustomActions(JSONArray customToolbarJson){
+        List<CustomToolbarItem> customToolbarItems = new ArrayList<>();
+        if (customToolbarJson != null) {
+            for (int i = 0; i < customToolbarJson.length(); i++) {
+                JSONObject itemJson = customToolbarJson.optJSONObject(i);
+                if (itemJson != null) {
+                    CustomToolbarItem customToolbarItem = new CustomToolbarItem();
+                    customToolbarItem.identifier = itemJson.optString("identifier", "");
+                    customToolbarItem.title = itemJson.optString("title", "");
+                    customToolbarItem.icon = itemJson.optString("icon", "");
+                    String action = itemJson.optString("action", "");
+                    customToolbarItem.action = ToolBarAction.fromString(action);
+                    customToolbarItems.add(customToolbarItem);
+                }
+            }
+        }
+        return customToolbarItems;
     }
 
     private static ReaderViewConfig parseReaderViewConfig(@Nullable JSONObject jsonObject) {
@@ -207,7 +229,9 @@ public class CPDFConfigurationUtils {
         readerViewConfig.pageSameWidth = jsonObject.optBoolean("pageSameWidth", true);
         readerViewConfig.enableMinScale = jsonObject.optBoolean("enableMinScale", true);
         readerViewConfig.annotationsVisible = jsonObject.optBoolean("annotationsVisible", true);
-        readerViewConfig.enableAutoCreateEditTextInput = jsonObject.optBoolean("enableAutoCreateEditTextInput", true);
+        readerViewConfig.enableCreateEditTextInput = jsonObject.optBoolean("enableCreateEditTextInput", true);
+        readerViewConfig.enableCreateImagePickerDialog = jsonObject.optBoolean("enableCreateImagePickerDialog", true);
+        readerViewConfig.enableDoubleTapZoom = jsonObject.optBoolean("enableDoubleTapZoom", true);
         JSONArray marginsJsonArray = jsonObject.optJSONArray("margins");
         if (marginsJsonArray != null && marginsJsonArray.length() == 4) {
             int left = marginsJsonArray.optInt(0, 0);
@@ -216,6 +240,8 @@ public class CPDFConfigurationUtils {
             int bottom = marginsJsonArray.optInt(3, 0);
             readerViewConfig.margins = new ArrayList<>(Arrays.asList(left, top, right, bottom));
         }
+
+        readerViewConfig.uiStyle = parseUiStyleConfig(jsonObject.optJSONObject("uiStyle"));
         return readerViewConfig;
     }
 
@@ -347,6 +373,10 @@ public class CPDFConfigurationUtils {
             }
         }
         annotationsConfig.initAttribute = annotationsAttributes;
+        annotationsConfig.autoShowSignPicker = jsonObject.optBoolean("autoShowSignPicker", true);
+        annotationsConfig.autoShowStampPicker = jsonObject.optBoolean("autoShowStampPicker", true);
+        annotationsConfig.autoShowLinkDialog = jsonObject.optBoolean("autoShowLinkDialog", true);
+        annotationsConfig.autoShowPicPicker = jsonObject.optBoolean("autoShowPicPicker", true);
         return annotationsConfig;
     }
 
@@ -430,12 +460,12 @@ public class CPDFConfigurationUtils {
                 freetextAttr.setFontColor(annotJsonObject.optString("fontColor", "#000000"));
                 freetextAttr.setFontColorAlpha(annotJsonObject.optInt("fontColorAlpha", 255));
                 freetextAttr.setFontSize(annotJsonObject.optInt("fontSize", 20));
-                String familyName = annotJsonObject.optString("typeface", "Helvetica");
-                boolean bold = annotJsonObject.optBoolean("isBold", false);
-                boolean italic = annotJsonObject.optBoolean("isItalic", false);
-
                 freetextAttr.setAlignment(AnnotFreetextAttr.Alignment.fromString(annotJsonObject.optString("alignment", AnnotFreetextAttr.Alignment.LEFT.name())));
-                freetextAttr.setPsName(getFontPsName(familyName, bold, italic));
+
+                String familyName = annotJsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
+                String styleName = annotJsonObject.optString("styleName", "Regular");
+                String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(familyName, styleName);
+                freetextAttr.setPsName(psName);
                 annotAttr = freetextAttr;
                 break;
             default:
@@ -484,7 +514,12 @@ public class CPDFConfigurationUtils {
                 textAttr.setFontSize(textAttrJsonObj.optInt("fontSize", 20));
                 textAttr.setBold(textAttrJsonObj.optBoolean("isBold", false));
                 textAttr.setItalic(textAttrJsonObj.optBoolean("isItalic", false));
-                textAttr.setTypeface(getFontType(textAttrJsonObj.optString("typeface", "helvetica")));
+
+                String familyName = textAttrJsonObj.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
+                String styleName = textAttrJsonObj.optString("styleName", "Regular");
+                String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(familyName, styleName);
+
+                textAttr.setPsName(psName);
                 switch (textAttrJsonObj.optString("alignment", "left")){
                     case "center":
                         textAttr.setAlignment(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignMiddle);
@@ -573,6 +608,10 @@ public class CPDFConfigurationUtils {
                 }
             }
         }
+
+        formsConfig.showCreateListBoxOptionsDialog = jsonObject.optBoolean("showCreateListBoxOptionsDialog", true);
+        formsConfig.showCreateComboBoxOptionsDialog = jsonObject.optBoolean("showCreateComboBoxOptionsDialog", true);
+        formsConfig.showCreatePushButtonOptionsDialog = jsonObject.optBoolean("showCreatePushButtonOptionsDialog", true);
         return formsConfig;
     }
 
@@ -607,10 +646,11 @@ public class CPDFConfigurationUtils {
                 textFieldAttr.setBorderWidth((float) jsonObject.optDouble("borderWidth", 5));
                 textFieldAttr.setFontColor(jsonObject.optString("fontColor", "#000000"));
                 textFieldAttr.setFontSize(jsonObject.optInt("fontSize", 20));
-                boolean isBold = jsonObject.optBoolean("isBold", false);
-                boolean isItalic = jsonObject.optBoolean("isItalic", false);
-                String familyName = jsonObject.optString("typeface", "Helvetica");
-                textFieldAttr.setPsName(getFontPsName(familyName, isBold, isItalic));
+                String familyName = jsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
+                String styleName = jsonObject.optString("styleName", "Regular");
+                String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(familyName, styleName);
+
+                textFieldAttr.setPsName(psName);
                 textFieldAttr.setAlignment(AnnotFreetextAttr.Alignment.fromString(jsonObject.optString("alignment", AnnotFreetextAttr.Alignment.LEFT.name())));
                 textFieldAttr.setMultiline(jsonObject.optBoolean("multiline", true));
                 formsAttr = textFieldAttr;
@@ -642,10 +682,12 @@ public class CPDFConfigurationUtils {
                 formsListBoxAttr.setBorderWidth((float) jsonObject.optDouble("borderWidth", 5));
                 formsListBoxAttr.setFontColor(jsonObject.optString("fontColor", "#000000"));
                 formsListBoxAttr.setFontSize(jsonObject.optInt("fontSize", 20));
-                boolean listBoxAttrIsBold = jsonObject.optBoolean("isBold", false);
-                boolean listBoxAttrIsItalic = jsonObject.optBoolean("isItalic", false);
-                String listBoxAttrFamilyName = jsonObject.optString("typeface", "Helvetica");
-                formsListBoxAttr.setPsName(getFontPsName(listBoxAttrFamilyName, listBoxAttrIsBold, listBoxAttrIsItalic));
+
+                String listBoxFamilyName = jsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
+                String listBoxStyleName = jsonObject.optString("styleName", "Regular");
+                String listBoxPsName = CPDFTextAttribute.FontNameHelper.obtainFontName(listBoxFamilyName, listBoxStyleName);
+
+                formsListBoxAttr.setPsName(listBoxPsName);
                 formsAttr = formsListBoxAttr;
                 break;
             case Widget_ComboBox:
@@ -655,10 +697,13 @@ public class CPDFConfigurationUtils {
                 comboBoxAttr.setBorderWidth((float) jsonObject.optDouble("borderWidth", 5));
                 comboBoxAttr.setFontColor(jsonObject.optString("fontColor", "#000000"));
                 comboBoxAttr.setFontSize(jsonObject.optInt("fontSize", 20));
-                boolean comboBoxAttrIsBold = jsonObject.optBoolean("isBold", false);
-                boolean comboBoxAttrIsItalic = jsonObject.optBoolean("isItalic", false);
-                String comboBoxAttrFamilyName = jsonObject.optString("typeface", "Helvetica");
-                comboBoxAttr.setPsName(getFontPsName(comboBoxAttrFamilyName, comboBoxAttrIsBold, comboBoxAttrIsItalic));
+
+                String comboBoxFamilyName = jsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
+                String comboBoxStyleName = jsonObject.optString("styleName", "Regular");
+                String comboBoxPsName = CPDFTextAttribute.FontNameHelper.obtainFontName(comboBoxFamilyName, comboBoxStyleName);
+
+                comboBoxAttr.setPsName(comboBoxPsName);
+
                 formsAttr = comboBoxAttr;
                 break;
             case Widget_PushButton:
@@ -669,10 +714,12 @@ public class CPDFConfigurationUtils {
                 pushButtonAttr.setFontColor(jsonObject.optString("fontColor", "#000000"));
                 pushButtonAttr.setFontSize(jsonObject.optInt("fontSize", 20));
                 pushButtonAttr.setTitle(jsonObject.optString("title", ""));
-                boolean pushButtonAttrIsBold = jsonObject.optBoolean("isBold", false);
-                boolean pushButtonAttrIsItalic = jsonObject.optBoolean("isItalic", false);
-                String pushButtonAttrFamilyName = jsonObject.optString("typeface", "Helvetica");
-                pushButtonAttr.setPsName(getFontPsName(pushButtonAttrFamilyName, pushButtonAttrIsBold, pushButtonAttrIsItalic));
+
+                String pushButtonFamilyName = jsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
+                String pushButtonStyleName = jsonObject.optString("styleName", "Regular");
+                String pushButtonPsName = CPDFTextAttribute.FontNameHelper.obtainFontName(pushButtonFamilyName, pushButtonStyleName);
+                pushButtonAttr.setPsName(pushButtonPsName);
+
                 formsAttr = pushButtonAttr;
                 break;
             case Widget_SignatureFields:
@@ -686,52 +733,6 @@ public class CPDFConfigurationUtils {
                 break;
         }
         return formsAttr;
-    }
-
-    private static CPDFTextAttribute.FontNameHelper.FontType getFontType(String key){
-        switch (key.toLowerCase()) {
-            case "courier":
-                return CPDFTextAttribute.FontNameHelper.FontType.Courier;
-            case "times-roman":
-                return CPDFTextAttribute.FontNameHelper.FontType.Times_Roman;
-            default:
-                return CPDFTextAttribute.FontNameHelper.FontType.Helvetica;
-        }
-    }
-
-    private static String getFontPsName(String familyName, boolean bold, boolean italic){
-        switch (familyName){
-            case "Helvetica":
-            case "Courier":
-                String styleName = "";
-                if (bold && !italic){
-                    styleName = "Bold";
-                } else if (!bold && italic) {
-                    styleName = "Oblique";
-                } else if (bold && italic) {
-                    styleName = "BoldOblique";
-                }
-                String psName = familyName +"-"+styleName;
-                if (TextUtils.isEmpty(styleName)){
-                    psName = familyName;
-                }
-                CLog.e("CPDFConfig", "psName：" + psName);
-                return psName;
-            case "Times-Roman":
-                String styleName1 = "Roman";
-                if (bold && !italic){
-                    styleName1 = "Bold";
-                } else if (!bold && italic) {
-                    styleName1 = "Italic";
-                } else if (bold && italic) {
-                    styleName1 = "BoldItalic";
-                }
-                String psName1 = "Times-"+styleName1;
-                CLog.e("CPDFConfig", "psName：" + psName1);
-                return psName1;
-            default:break;
-        }
-        return "Helvetica";
     }
 
 
@@ -759,6 +760,7 @@ public class CPDFConfigurationUtils {
         }
         globalConfig.themeMode = GlobalConfig.CThemeMode.fromString(jsonObject.optString("themeMode", "light"));
         globalConfig.fileSaveExtraFontSubset = jsonObject.optBoolean("fileSaveExtraFontSubset", true);
+        globalConfig.useSaveIncremental = jsonObject.optBoolean("useSaveIncremental", true);
         globalConfig.enableExitSaveTips = jsonObject.optBoolean("enableExitSaveTips", true);
         JSONObject watermarkJson = jsonObject.optJSONObject("watermark");
         if (watermarkJson != null){
@@ -960,4 +962,87 @@ public class CPDFConfigurationUtils {
         return ContextMenuConfig.fromJson(jsonObject);
     }
 
+
+    private static CPDFUiStyleConfig parseUiStyleConfig(@Nullable JSONObject jsonObject){
+        CPDFUiStyleConfig uiStyleConfig = new CPDFUiStyleConfig();
+        if (jsonObject == null){
+            return uiStyleConfig;
+        }
+        try {
+            // bookmarkIcon
+            uiStyleConfig.bookmarkIcon = jsonObject.optString("bookmarkIcon", "");
+
+            // set icons
+            JSONObject iconsJsonObj = jsonObject.getJSONObject("icons");
+            String selectTextLeftIcon = iconsJsonObj.optString("selectTextLeftIcon", "");
+            String selectTextRightIcon = iconsJsonObj.optString("selectTextRightIcon", "");
+            String selectTextIcon = iconsJsonObj.optString("selectTextIcon", "");
+            String rotationAnnotationIcon = iconsJsonObj.optString("rotationAnnotationIcon", "");
+            uiStyleConfig.icons = new CPDFUiStyleConfig.Icons(selectTextLeftIcon, selectTextRightIcon, selectTextIcon, rotationAnnotationIcon);
+
+            // set selectTextColor
+            uiStyleConfig.selectTextColor = jsonObject.optString("selectTextColor", "#33000000");
+
+            // set displayPageRect
+            JSONObject displayPageRectJsonObj = jsonObject.getJSONObject("displayPageRect");
+            String displayPageRectFillColor = displayPageRectJsonObj.optString("fillColor", "#4D1460F3");
+            String displayPageRectBorderColor = displayPageRectJsonObj.optString("borderColor", "#1460F3");
+            int displayPageRectBorderWidth = displayPageRectJsonObj.optInt("borderWidth", 5);
+            float[] displayPageRectBorderDashPattern = getBorderDashPattern(displayPageRectJsonObj.optJSONArray("borderDashPattern"));
+            uiStyleConfig.displayPageRect = new CPDFUiStyleConfig.RectStyle(displayPageRectFillColor, displayPageRectBorderColor, displayPageRectBorderWidth, displayPageRectBorderDashPattern);
+
+            // set screenshot
+            JSONObject screenshotJsonObj = jsonObject.getJSONObject("screenshot");
+            String screenshotFillColor = screenshotJsonObj.optString("fillColor", "#CCE5E5FF");
+            String outSideColor = screenshotJsonObj.optString("outsideColor", "#80000000");
+            String screenshotBorderColor = screenshotJsonObj.optString("borderColor", "#FF0000FF");
+            int screenshotBorderWidth = screenshotJsonObj.optInt("borderWidth", 5);
+            float[] screenshotBorderDashPattern = getBorderDashPattern(screenshotJsonObj.optJSONArray("borderDashPattern"));
+            uiStyleConfig.screenshot = new CPDFUiStyleConfig.ScreenshotRectStyle(outSideColor, screenshotFillColor, screenshotBorderColor, screenshotBorderWidth, screenshotBorderDashPattern);
+
+            // set formPreview
+            JSONObject formPreviewJsonObj = jsonObject.getJSONObject("formPreview");
+            String style = formPreviewJsonObj.optString("style", "fill");
+            int strokeWidth = formPreviewJsonObj.optInt("strokeWidth", 2);
+            String color = formPreviewJsonObj.optString("color", "#4D1460F3");
+            uiStyleConfig.formPreview = new CPDFUiStyleConfig.FormPreview(style, strokeWidth, color);
+
+            // set defaultBorderStyle
+            JSONObject defaultBorderStyleJsonObj = jsonObject.getJSONObject("defaultBorderStyle");
+            String defaultBorderColor = defaultBorderStyleJsonObj.optString("borderColor", "#FF888888");
+            int defaultBorderWidth = defaultBorderStyleJsonObj.optInt("borderWidth", 2);
+            float[] defaultBorderDashPattern = getBorderDashPattern(defaultBorderStyleJsonObj.optJSONArray("borderDashPattern"));
+            uiStyleConfig.defaultBorderStyle = new BorderStyle(defaultBorderColor, defaultBorderWidth, defaultBorderDashPattern);
+
+            // set focusBorderStyle
+            JSONObject focusBorderStyleJsonObj = jsonObject.getJSONObject("focusBorderStyle");
+            String focusBorderColor = focusBorderStyleJsonObj.optString("borderColor", "#FF2C69DE");
+            int focusBorderWidth = focusBorderStyleJsonObj.optInt("borderWidth", 2);
+            float[] focusBorderDashPattern = getBorderDashPattern(focusBorderStyleJsonObj.optJSONArray("borderDashPattern"));
+            String nodeColor = focusBorderStyleJsonObj.optString("nodeColor", "#FF2C69DE");
+            uiStyleConfig.focusBorderStyle = new FocusBorderStyle(focusBorderColor, focusBorderWidth, focusBorderDashPattern, nodeColor);
+
+            // crop image style
+            JSONObject cropImageStyleJsonObj = jsonObject.getJSONObject("cropImageStyle");
+            String cropImageBorderColor = cropImageStyleJsonObj.optString("borderColor", "#FF2C69DE");
+            int cropImageBorderWidth = cropImageStyleJsonObj.optInt("borderWidth", 5);
+            float[] cropImageBorderDashPattern = getBorderDashPattern(cropImageStyleJsonObj.optJSONArray("borderDashPattern"));
+            uiStyleConfig.cropImageStyle = new BorderStyle(cropImageBorderColor, cropImageBorderWidth, cropImageBorderDashPattern);
+
+        } catch (Exception e) {
+            return uiStyleConfig;
+        }
+        return uiStyleConfig;
+    }
+
+    private static float[] getBorderDashPattern(JSONArray jsonArray) {
+        if (jsonArray == null) {
+            return new float[]{};
+        }
+        float[] dashPattern = new float[jsonArray.length()];
+        for (int i = 0; i < jsonArray.length(); i++) {
+            dashPattern[i] = (float) jsonArray.optDouble(i, 0.0);
+        }
+        return dashPattern;
+    }
 }

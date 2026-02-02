@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -10,6 +10,7 @@
 package com.compdfkit.tools.annotation.pdfproperties.pdflink;
 
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.core.annotation.CPDFLinkAnnotation;
@@ -17,7 +18,11 @@ import com.compdfkit.core.document.CPDFDestination;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.document.action.CPDFGoToAction;
 import com.compdfkit.core.document.action.CPDFUriAction;
+import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
+import com.compdfkit.tools.common.pdf.CPDFDocumentFragment;
+import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfproperties.action.CActionEditDialogFragment;
 import com.compdfkit.ui.proxy.attach.CPDFLinkAnnotAttachHelper;
 
@@ -28,6 +33,14 @@ public class CLinkAnnotAttachHelper extends CPDFLinkAnnotAttachHelper {
     public void setLinkAction(CPDFLinkAnnotation cpdfLinkAnnotation) {
         super.setLinkAction(cpdfLinkAnnotation);
         if (cpdfLinkAnnotation == null || !cpdfLinkAnnotation.isValid()) {
+            return;
+        }
+        CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
+        if (configuration != null && !configuration.annotationsConfig.autoShowLinkDialog){
+            CPDFDocumentFragment documentFragment = getDocumentFragment();
+            if (documentFragment != null){
+                documentFragment.annotationToolbar.annotationCreatePreparedListenersChanged(CAnnotationType.LINK, cpdfLinkAnnotation);
+            }
             return;
         }
         CActionEditDialogFragment linkStyleDialogFragment = CActionEditDialogFragment.newInstance(
@@ -81,4 +94,14 @@ public class CLinkAnnotAttachHelper extends CPDFLinkAnnotAttachHelper {
             linkStyleDialogFragment.show(fragmentActivity.getSupportFragmentManager(), "linkDialog");
         }
     }
+
+    private CPDFDocumentFragment getDocumentFragment(){
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
+        Fragment fragment = fragmentActivity.getSupportFragmentManager().findFragmentByTag("documentFragment");
+        if (fragment != null && fragment instanceof CPDFDocumentFragment){
+            return (CPDFDocumentFragment) fragment;
+        }
+        return null;
+    }
+
 }

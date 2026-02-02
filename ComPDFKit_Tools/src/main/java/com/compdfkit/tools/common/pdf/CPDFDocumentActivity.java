@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -21,12 +21,14 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.activity.CPermissionActivity;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import java.security.PublicKey;
 
 public class CPDFDocumentActivity extends CPermissionActivity {
 
     public static final String EXTRA_FILE_PATH = CPDFDocumentFragment.EXTRA_FILE_PATH;
     public static final String EXTRA_FILE_PASSWORD = CPDFDocumentFragment.EXTRA_FILE_PASSWORD;
     public static final String EXTRA_CONFIGURATION = CPDFDocumentFragment.EXTRA_CONFIGURATION;
+    public static final String EXTRA_PAGE_INDEX = CPDFDocumentFragment.EXTRA_PAGE_INDEX;
 
     public static void startActivity(Context context, String filePath, String password, CPDFConfiguration configuration){
         Intent intent = new Intent(context, CPDFDocumentActivity.class);
@@ -44,6 +46,7 @@ public class CPDFDocumentActivity extends CPermissionActivity {
         context.startActivity(intent);
     }
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,24 +62,13 @@ public class CPDFDocumentActivity extends CPermissionActivity {
         int themeId = CPDFApplyConfigUtil.getInstance().getGlobalThemeId(getApplicationContext(), configuration);
         setTheme(themeId);
         setContentView(R.layout.tools_pdf_document_activity);
-        if (getIntent() != null && getSupportFragmentManager().findFragmentByTag("documentFragment") == null) {
-            String password = getIntent().getStringExtra(CPDFDocumentFragment.EXTRA_FILE_PASSWORD);
 
-            CPDFDocumentFragment documentFragment;
-            if (!TextUtils.isEmpty(getIntent().getStringExtra(CPDFDocumentFragment.EXTRA_FILE_PATH))){
-                documentFragment = CPDFDocumentFragment.newInstance(
-                        getIntent().getStringExtra(CPDFDocumentFragment.EXTRA_FILE_PATH),
-                        password,
-                        configuration);
-            }else {
-                Uri uri = getIntent().getData();
-                CFileUtils.takeUriPermission(this, uri);
-                documentFragment = CPDFDocumentFragment.newInstance(
-                        uri,
-                        password,
-                        configuration);
+        if (getIntent() != null && getSupportFragmentManager().findFragmentByTag("documentFragment") == null) {
+            Bundle bundle = getIntent().getExtras();
+            if (getIntent().getData() != null){
+                bundle.putParcelable(CPDFDocumentFragment.EXTRA_FILE_URI, getIntent().getData());
             }
-            int count = getSupportFragmentManager().getFragments().size();
+            CPDFDocumentFragment documentFragment = CPDFDocumentFragment.newInstance(bundle);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container_view, documentFragment, "documentFragment")

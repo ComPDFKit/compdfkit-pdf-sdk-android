@@ -25,9 +25,6 @@ android {
     defaultConfig {
         minSdk rootProject.ext.android.MINSDK
         targetSdk rootProject.ext.android.TARGETSDK
-        buildConfigField("String", "COMPDFKit_SDK_VERSION", "\"${versionName}\"")
-        buildConfigField("String", "COMPDFKit_SDK_BUILD_TAG", "\"${versionName}_${versionCode}_${releaseTime()}\"")
-
         consumerProguardFiles "proguard-rules.pro"
         setProperty("archivesBaseName", "ComPDFKit_Tools")
         vectorDrawables.useSupportLibrary = true
@@ -57,8 +54,8 @@ dependencies {
 //    api project(path:':ComPDFKit_Repo:compdfkit')
 //    api project(path:':ComPDFKit_Repo:compdfkit-ui')
     // or use
-    api ('com.compdf:compdfkit:2.5.3')
-    api ('com.compdf:compdfkit-ui:2.5.3')
+   api ('com.compdf:compdfkit:2.6.0')
+   api ('com.compdf:compdfkit-ui:2.6.0')
     api 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     api "androidx.print:print:1.1.0"

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -9,6 +9,8 @@
 
 package com.compdfkit.tools.viewer.pdfoutline.data;
 
+
+import androidx.annotation.Nullable;
 
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.document.CPDFOutline;
@@ -48,6 +50,9 @@ public class COutlineDatas {
         for (CPDFOutline outline : outlines) {
             // Convert the CPDFOutline object to a COutlineData object
             COutlineData outlineData = convertToCOutlineData(outline, maxLevel);
+            if (outlineData == null){
+                continue;
+            }
             // Only add the COutlineData object to the list if its level is 1
             if (outlineData.getLevel() == 1) {
                 outlineDataList.add(outlineData);
@@ -63,7 +68,10 @@ public class COutlineDatas {
     /**
      * Convert a CPDFOutline object to a COutlineData object
      */
-    private static COutlineData convertToCOutlineData(CPDFOutline outline, int maxLevel) {
+    private static @Nullable COutlineData convertToCOutlineData(CPDFOutline outline, int maxLevel) {
+        if (outline.getDestination() == null){
+            return null;
+        }
         COutlineData outlineData = new COutlineData();
         outlineData.setLevel(outline.getLevel());
         outlineData.setPageIndex(outline.getDestination().getPageIndex());
@@ -74,7 +82,10 @@ public class COutlineDatas {
         if (outline.getChildList() != null && outline.getChildList().length > 0) {
             for (CPDFOutline child : outline.getChildList()) {
                 if (child.getLevel() <=maxLevel){
-                    outlineData.getChildOutline().add(convertToCOutlineData(child, maxLevel));
+                    COutlineData childOutlineData = convertToCOutlineData(child, maxLevel);
+                    if (childOutlineData != null){
+                        outlineData.getChildOutline().add(childOutlineData);
+                    }
                 }
             }
         }

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -93,7 +93,7 @@ public class CSampleScreenManager {
             constraintSetUtils.show(constraintSet, documentFragment.flBottomToolBar);
             constraintSetUtils.showFromBottom(constraintSet, documentFragment.flBottomToolBar);
         }
-        constraintSetUtils.apply(constraintSet, documentFragment.clRoot);
+        constraintSetUtils.apply(constraintSet, documentFragment.clRoot, false);
     }
 
     public void changeWindowStatus(CAnnotationType type){
@@ -146,16 +146,16 @@ public class CSampleScreenManager {
             }
             isFillScreen = false;
         }
-        constraintSetUtils.apply(constraintSet, documentFragment.clRoot);
+        constraintSetUtils.apply(constraintSet, documentFragment.clRoot, true);
     }
 
     public void constraintShow(View view){
         constraintSetUtils.show(constraintSet, view);
-        constraintSetUtils.apply(constraintSet, documentFragment.clRoot);
+        constraintSetUtils.apply(constraintSet, documentFragment.clRoot, true);
     }
 
     public void constraintHide(View view){
         constraintSetUtils.hide(constraintSet, view);
-        constraintSetUtils.apply(constraintSet, documentFragment.clRoot);
+        constraintSetUtils.apply(constraintSet, documentFragment.clRoot, true);
     }
 }

@@ -507,4 +507,6 @@
     <string name="tools_keep_editing">Seguir editando</string>
     <string name="tools_yes">Sí</string>
     <string name="tools_no">No</string>
+
+    <string name="tools_saveing">Guardando…</string>
 </resources>

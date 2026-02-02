@@ -14,6 +14,7 @@
         android:layout_height="56dp"
         android:background="?android:attr/colorPrimary"
         android:title="@string/tools_search_hint"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

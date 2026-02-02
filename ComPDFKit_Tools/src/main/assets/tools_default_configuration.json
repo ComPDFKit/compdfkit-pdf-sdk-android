@@ -11,23 +11,17 @@
     ]
   },
   "toolbarConfig": {
-    "mainToolbarVisible" : true,
-    "contentEditorToolbarVisible" : true,
-    "annotationToolbarVisible" : true,
-    "formToolbarVisible" : true,
-    "signatureToolbarVisible" : true,
+    "mainToolbarVisible": true,
+    "contentEditorToolbarVisible": true,
+    "annotationToolbarVisible": true,
+    "formToolbarVisible": true,
+    "signatureToolbarVisible": true,
     "showInkToggleButton": true,
-    "androidAvailableActions": [
+    "toolbarLeftItems": [
+
+    ],
+    "toolbarRightItems": [
       "thumbnail",
-      "search",
-      "bota",
-      "menu"
-    ],
-    "iosLeftBarAvailableActions": [
-      "back",
-      "thumbnail"
-    ],
-    "iosRightBarAvailableActions": [
       "search",
       "bota",
       "menu"
@@ -43,10 +37,22 @@
       "share",
       "openDocument",
       "snip"
+    ],
+    "customToolbarLeftItems": [
+
+    ],
+    "customToolbarRightItems": [
+    ],
+    "customMoreMenuItems": [
+
     ]
   },
   "annotationsConfig": {
     "annotationAuthor": "Guest",
+    "autoShowSignPicker": true,
+    "autoShowStampPicker": true,
+    "autoShowPicPicker": true,
+    "autoShowLinkDialog": true,
     "availableTypes": [
       "note",
       "highlight",
@@ -100,24 +106,24 @@
       "square": {
         "fillColor": "#1460F3",
         "borderColor": "#000000",
-        "colorAlpha" : 128,
+        "colorAlpha": 128,
         "borderWidth": 2,
         "borderStyle": {
           "style": "solid",
           "dashGap": 0.0
         },
-        "bordEffectType":"solid"
+        "bordEffectType": "solid"
       },
       "circle": {
         "fillColor": "#1460F3",
         "borderColor": "#000000",
-        "colorAlpha" : 128,
+        "colorAlpha": 128,
         "borderWidth": 2,
         "borderStyle": {
           "style": "solid",
           "dashGap": 0.0
         },
-        "bordEffectType":"solid"
+        "bordEffectType": "solid"
       },
       "line": {
         "borderColor": "#1460F3",
@@ -143,10 +149,9 @@
         "fontColor": "#000000",
         "fontColorAlpha": 255,
         "fontSize": 30,
-        "isBold": false,
-        "isItalic": false,
         "alignment": "left",
-        "typeface": "Helvetica"
+        "familyName": "Helvetica",
+        "styleName": "Regular"
       }
     }
   },
@@ -163,16 +168,18 @@
     "initAttribute": {
       "text": {
         "fontColor": "#000000",
-        "fontColorAlpha" : 255,
+        "fontColorAlpha": 255,
         "fontSize": 30,
-        "isBold": false,
-        "isItalic": false,
-        "typeface": "Helvetica",
-        "alignment": "left"
+        "alignment": "left",
+        "familyName": "Helvetica",
+        "styleName": "Regular"
       }
     }
   },
   "formsConfig": {
+    "showCreateListBoxOptionsDialog": true,
+    "showCreateComboBoxOptionsDialog": true,
+    "showCreatePushButtonOptionsDialog": true,
     "availableTypes": [
       "textField",
       "checkBox",
@@ -193,11 +200,10 @@
         "borderWidth": 2,
         "fontColor": "#000000",
         "fontSize": 20,
-        "isBold": false,
-        "isItalic": false,
         "alignment": "left",
         "multiline": true,
-        "typeface": "Helvetica"
+        "familyName": "Helvetica",
+        "styleName": "Regular"
       },
       "checkBox": {
         "fillColor": "#DDE9FF",
@@ -221,9 +227,8 @@
         "borderWidth": 2,
         "fontColor": "#000000",
         "fontSize": 20,
-        "typeface": "Helvetica",
-        "isBold": false,
-        "isItalic": false
+        "familyName": "Helvetica",
+        "styleName": "Regular"
       },
       "comboBox": {
         "fillColor": "#DDE9FF",
@@ -231,9 +236,8 @@
         "borderWidth": 2,
         "fontColor": "#000000",
         "fontSize": 20,
-        "typeface": "Helvetica",
-        "isBold": false,
-        "isItalic": false
+        "familyName": "Helvetica",
+        "styleName": "Regular"
       },
       "pushButton": {
         "fillColor": "#DDE9FF",
@@ -242,9 +246,8 @@
         "fontColor": "#000000",
         "fontSize": 20,
         "title": "Button",
-        "typeface": "Helvetica",
-        "isBold": false,
-        "isItalic": false
+        "familyName": "Helvetica",
+        "styleName": "Regular"
       },
       "signaturesFields": {
         "fillColor": "#DDE9FF",
@@ -260,51 +263,129 @@
     "continueMode": true,
     "verticalMode": true,
     "cropMode": false,
-    "themes" : "light",
+    "themes": "light",
     "enableSliderBar": true,
     "enablePageIndicator": true,
     "pageSpacing": 10,
-    "margins" : [0,0,0,0],
+    "margins": [0, 0, 0, 0],
     "pageScale": 1.0,
     "pageSameWidth": true,
     "enableMinScale": true,
     "annotationsVisible": true,
-    "enableAutoCreateEditTextInput" : true
+    "enableCreateEditTextInput": true,
+    "enableCreateImagePickerDialog": true,
+    "enableDoubleTapZoom": false,
+    "uiStyle": {
+      "bookmarkIcon": "",
+      "icons": {
+        "selectTextLeftIcon": "",
+        "selectTextRightIcon": "",
+        "selectTextIcon": "",
+        "rotationAnnotationIcon": ""
+      },
+      "selectTextColor": "#33000000",
+      "displayPageRect": {
+        "fillColor": "#4D1460F3",
+        "borderColor": "#6499FF",
+        "borderWidth": 5,
+        "borderDashPattern": [
+          0.0,
+          0.0
+        ]
+      },
+      "screenshot": {
+        "outsideColor": "#00000000",
+        "fillColor": "#00000000",
+        "borderColor": "#6499FF",
+        "borderWidth": 5,
+        "borderDashPattern": [
+          20.0,
+          8.0
+        ]
+      },
+      "formPreview": {
+        "style": "fill",
+        "strokeWidth": 2,
+        "color": "#4D1460F3"
+      },
+      "defaultBorderStyle": {
+        "borderColor": "#FF888888",
+        "borderWidth": 2,
+        "borderDashPattern": [
+          10,
+          10
+        ]
+      },
+      "focusBorderStyle": {
+        "nodeColor": "#6499FF",
+        "borderColor": "#6499FF",
+        "borderWidth": 2,
+        "borderDashPattern": [
+          10.0,
+          10.0
+        ]
+      },
+      "cropImageStyle": {
+        "borderColor": "#6499FF",
+        "borderWidth": 5,
+        "borderDashPattern": [
+          10.0,
+          10.0
+        ]
+      }
+    }
   },
-  "global" : {
-    "themeMode" : "system",
-    "fileSaveExtraFontSubset" : true,
+  "global": {
+    "themeMode": "system",
+    "fileSaveExtraFontSubset": true,
+    "useSaveIncremental": true,
     "watermark": {
-      "types" : [ "text" , "image" ],
-      "saveAsNewFile" : false,
-      "outsideBackgroundColor" : "",
-      "text" : "",
-      "image" : "tools_logo",
-      "textSize" : 80,
-      "textColor" : "#FF000000",
-      "scale" : 1.0,
-      "rotation" : -45,
-      "opacity" : 255,
-      "isFront" : false,
-      "isTilePage" : false
+      "types": [
+        "text",
+        "image"
+      ],
+      "saveAsNewFile": false,
+      "outsideBackgroundColor": "",
+      "text": "",
+      "image": "tools_logo",
+      "textSize": 80,
+      "textColor": "#FF000000",
+      "scale": 1.0,
+      "rotation": -45,
+      "opacity": 255,
+      "isFront": false,
+      "isTilePage": false
     },
     "thumbnail": {
-      "title" : "",
+      "title": "",
       "backgroundColor": "",
-      "editMode" : true
+      "editMode": true
     },
     "bota": {
-      "tabs": ["outline", "bookmark", "annotations"],
+      "tabs": [
+        "outline",
+        "bookmark",
+        "annotations"
+      ],
       "menus": {
         "annotations": {
           "global": [
-            { "id": "importAnnotation" },
-            { "id": "exportAnnotation" },
-            { "id": "removeAllAnnotation" },
-            { "id": "removeAllReply" }
+            {
+              "id": "importAnnotation"
+            },
+            {
+              "id": "exportAnnotation"
+            },
+            {
+              "id": "removeAllAnnotation"
+            },
+            {
+              "id": "removeAllReply"
+            }
           ],
           "item": [
-            { "id": "reviewStatus",
+            {
+              "id": "reviewStatus",
               "subMenus": [
                 "accepted",
                 "rejected",
@@ -313,7 +394,9 @@
                 "none"
               ]
             },
-            { "id": "markedStatus" },
+            {
+              "id": "markedStatus"
+            },
             {
               "id": "more",
               "subMenus": [
@@ -327,8 +410,8 @@
       }
     },
     "signatureType": "manual",
-    "enableExitSaveTips" : true,
-    "enableErrorTips" : true,
+    "enableExitSaveTips": true,
+    "enableErrorTips": true,
     "search": {
       "normalKeyword": {
         "borderColor": "#00000000",
@@ -350,180 +433,392 @@
       ]
     }
   },
-  "contextMenuConfig" : {
+  "contextMenuConfig": {
+    "backgroundColor": "",
+    "fontSize": 14,
+    "padding": [0,0,0,0],
+    "iconSize": 36,
     "global": {
-      "screenshot" : [
-        { "key": "exit" },
-        { "key": "share" }
+      "screenshot": [
+        {
+          "key": "exit"
+        },
+        {
+          "key": "share"
+        }
       ]
     },
     "viewMode": {
       "textSelect": [
-        { "key": "copy" }
+        {
+          "key": "copy"
+        }
       ]
     },
     "annotationMode": {
       "textSelect": [
-        { "key": "copy" },
-        { "key": "highlight" },
-        { "key": "underline" },
-        { "key": "strikeout" },
-        { "key": "squiggly" }
+        {
+          "key": "copy"
+        },
+        {
+          "key": "highlight"
+        },
+        {
+          "key": "underline"
+        },
+        {
+          "key": "strikeout"
+        },
+        {
+          "key": "squiggly"
+        }
       ],
       "longPressContent": [
-        { "key": "paste" },
-        { "key": "note" },
-        { "key": "textBox" },
-        { "key": "stamp" },
-        { "key": "image" }
+        {
+          "key": "paste"
+        },
+        {
+          "key": "note"
+        },
+        {
+          "key": "textBox"
+        },
+        {
+          "key": "stamp"
+        },
+        {
+          "key": "image"
+        }
       ],
       "markupContent": [
-        { "key": "properties" },
-        { "key": "note" },
-        { "key": "reply" },
-        { "key": "viewReply" },
-        { "key": "delete" }
+        {
+          "key": "properties"
+        },
+        {
+          "key": "note"
+        },
+        {
+          "key": "reply"
+        },
+        {
+          "key": "viewReply"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "soundContent": [
-        { "key": "reply" },
-        { "key": "viewReply" },
-        { "key": "play" },
-        { "key": "record" },
-        { "key": "delete" }
+        {
+          "key": "reply"
+        },
+        {
+          "key": "viewReply"
+        },
+        {
+          "key": "play"
+        },
+        {
+          "key": "record"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "inkContent": [
-        { "key": "properties" },
-        { "key": "note" },
-        { "key": "reply" },
-        { "key": "viewReply" },
-        { "key": "delete" }
+        {
+          "key": "properties"
+        },
+        {
+          "key": "note"
+        },
+        {
+          "key": "reply"
+        },
+        {
+          "key": "viewReply"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "shapeContent": [
-        { "key": "properties" },
-        { "key": "note" },
-        { "key": "reply" },
-        { "key": "viewReply" },
-        { "key": "delete" }
+        {
+          "key": "properties"
+        },
+        {
+          "key": "note"
+        },
+        {
+          "key": "reply"
+        },
+        {
+          "key": "viewReply"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "freeTextContent": [
-        { "key": "properties" },
-        { "key": "edit" },
-        { "key": "reply" },
-        { "key": "viewReply" },
-        { "key": "delete" }
+        {
+          "key": "properties"
+        },
+        {
+          "key": "edit"
+        },
+        {
+          "key": "reply"
+        },
+        {
+          "key": "viewReply"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "signStampContent": [
-        { "key": "signHere" },
-        { "key": "delete" },
-        { "key": "rotate" }
+        {
+          "key": "signHere"
+        },
+        {
+          "key": "delete"
+        },
+        {
+          "key": "rotate"
+        }
       ],
       "stampContent": [
-        { "key": "note" },
-        { "key": "reply" },
-        { "key": "viewReply" },
-        { "key": "delete" },
-        { "key": "rotate" }
+        {
+          "key": "note"
+        },
+        {
+          "key": "reply"
+        },
+        {
+          "key": "viewReply"
+        },
+        {
+          "key": "delete"
+        },
+        {
+          "key": "rotate"
+        }
       ],
       "linkContent": [
-        { "key": "edit" },
-        { "key": "delete" }
+        {
+          "key": "edit"
+        },
+        {
+          "key": "delete"
+        }
       ]
     },
     "contentEditorMode": {
-      "editTextAreaContent" : [
-        { "key": "properties" },
-        { "key": "edit" },
-        { "key": "cut" },
-        { "key": "copy" },
-        { "key": "delete" }
+      "editTextAreaContent": [
+        {
+          "key": "properties"
+        },
+        {
+          "key": "edit"
+        },
+        {
+          "key": "cut"
+        },
+        {
+          "key": "copy"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "editSelectTextContent": [
-        { "key": "properties" },
+        {
+          "key": "properties"
+        },
         {
           "key": "opacity",
-          "subItems": ["25%", "50%", "75%", "100%"]
+          "subItems": [
+            "25%",
+            "50%",
+            "75%",
+            "100%"
+          ]
         },
-        { "key": "cut" },
-        { "key": "copy" },
-        { "key": "delete" }
+        {
+          "key": "cut"
+        },
+        {
+          "key": "copy"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "editTextContent": [
-        { "key": "select" },
-        { "key": "selectAll" },
-        { "key": "paste" }
+        {
+          "key": "select"
+        },
+        {
+          "key": "selectAll"
+        },
+        {
+          "key": "paste"
+        }
       ],
       "imageAreaContent": [
-        { "key": "properties" },
-        { "key": "rotateLeft" },
-        { "key": "rotateRight" },
-        { "key": "replace" },
-        { "key": "export" },
+        {
+          "key": "properties"
+        },
+        {
+          "key": "rotateLeft"
+        },
+        {
+          "key": "rotateRight"
+        },
+        {
+          "key": "replace"
+        },
+        {
+          "key": "export"
+        },
         {
           "key": "opacity",
-          "subItems": ["25%", "50%", "75%", "100%"]
+          "subItems": [
+            "25%",
+            "50%",
+            "75%",
+            "100%"
+          ]
         },
-        { "key": "flipHorizontal" },
-        { "key": "flipVertical" },
-        { "key": "crop" },
-        { "key": "delete" },
-        { "key": "copy" },
-        { "key": "cut" }
+        {
+          "key": "flipHorizontal"
+        },
+        {
+          "key": "flipVertical"
+        },
+        {
+          "key": "crop"
+        },
+        {
+          "key": "delete"
+        },
+        {
+          "key": "copy"
+        },
+        {
+          "key": "cut"
+        }
       ],
       "imageCropMode": [
-        { "key": "done" },
-        { "key": "cancel" }
+        {
+          "key": "done"
+        },
+        {
+          "key": "cancel"
+        }
       ],
       "editPathContent": [
-        { "key": "delete" }
+        {
+          "key": "delete"
+        }
       ],
-      "longPressWithEditTextMode" : [
-        { "key" : "addText"},
-        { "key" : "paste"},
-        { "key" : "keepSourceFormatingPaste"}
+      "longPressWithEditTextMode": [
+        {
+          "key": "addText"
+        },
+        {
+          "key": "paste"
+        },
+        {
+          "key": "keepSourceFormatingPaste"
+        }
       ],
-      "longPressWithEditImageMode" : [
-        { "key" : "addImages"},
-        { "key" : "paste"}
+      "longPressWithEditImageMode": [
+        {
+          "key": "addImages"
+        },
+        {
+          "key": "paste"
+        }
       ],
-      "longPressWithAllMode" : [
-        { "key" : "paste"},
-        { "key" : "keepSourceFormatingPaste"}
+      "longPressWithAllMode": [
+        {
+          "key": "paste"
+        },
+        {
+          "key": "keepSourceFormatingPaste"
+        }
       ],
       "searchReplace": [
-        { "key": "replace" }
+        {
+          "key": "replace"
+        }
       ]
     },
     "formMode": {
       "textField": [
-        { "key": "properties" },
-        { "key": "delete" }
+        {
+          "key": "properties"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "checkBox": [
-        { "key": "properties" },
-        { "key": "delete" }
+        {
+          "key": "properties"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "radioButton": [
-        { "key": "properties" },
-        { "key": "delete" }
+        {
+          "key": "properties"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "listBox": [
-        { "key": "options" },
-        { "key": "properties" },
-        { "key": "delete" }
+        {
+          "key": "options"
+        },
+        {
+          "key": "properties"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "comboBox": [
-        { "key": "options" },
-        { "key": "properties" },
-        { "key": "delete" }
+        {
+          "key": "options"
+        },
+        {
+          "key": "properties"
+        },
+        {
+          "key": "delete"
+        }
       ],
       "signatureField": [
-        { "key": "startToSign" },
-        { "key": "delete" }
+        {
+          "key": "startToSign"
+        },
+        {
+          "key": "delete"
+        }
       ],
-      "pushButton" : [
-        { "key": "options"},
-        { "key": "properties"},
-        { "key": "delete"}
+      "pushButton": [
+        {
+          "key": "options"
+        },
+        {
+          "key": "properties"
+        },
+        {
+          "key": "delete"
+        }
       ]
     }
   }

@@ -4,6 +4,7 @@
     style="@style/tools_context_menu_item_style"
     android:minWidth="50dp"
     android:gravity="center"
+    android:layout_gravity="center_vertical"
     android:textColor="?android:attr/textColorPrimary"
     android:text="@string/contextmenu_copy" />
 

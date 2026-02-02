@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -17,7 +17,6 @@ import android.view.View;
 
 import androidx.fragment.app.FragmentManager;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
@@ -28,7 +27,10 @@ import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.dialog.CImportImageDialogFragment;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
@@ -41,6 +43,7 @@ import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.utils.CPDFTextUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,14 +65,13 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : editTextAreaContent) {
             switch (contextMenuActionItem.key) {
                 case "properties":
-                    menuView.addItem(R.string.tools_context_menu_properties, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_properties, v -> {
                         CStyleManager styleManager = new CStyleManager(cpdfEditSelections, pageView);
                         CAnnotStyle annotStyle = styleManager.getStyle(CStyleType.EDIT_TEXT);
                         CStyleDialogFragment dialogFragment = CStyleDialogFragment.newInstance(annotStyle);
                         styleManager.setAnnotStyleFragmentListener(dialogFragment);
                         styleManager.setDialogHeightCallback(dialogFragment, helper.getReaderView());
-                        if (helper != null && helper.getReaderView() != null
-                                && helper.getReaderView().getContext() != null) {
+                        if (helper.getReaderView() != null && helper.getReaderView().getContext() != null) {
                             if (helper.getFragmentManager() != null) {
                                 dialogFragment.show(helper.getFragmentManager(), "noteEditDialog");
                             }
@@ -78,19 +80,19 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                     });
                     break;
                 case "edit":
-                    menuView.addItem(R.string.tools_context_menu_edit, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_edit, v -> {
                         pageView.operateEditTextArea(CPDFPageView.EditTextAreaFuncType.EDIT);
                     });
                     break;
                 case "cut":
-                    menuView.addItem(R.string.tools_context_menu_cut, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_cut, v -> {
                         pageView.operateEditTextArea(CPDFPageView.EditTextAreaFuncType.CUT);
                         updateEditToolbar(helper);
                         helper.dismissContextMenu();
                     });
                     break;
                 case "copy":
-                    menuView.addItem(R.string.tools_copy, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_copy, v -> {
                         if (helper.isAllowsCopying()) {
                             pageView.operateEditTextArea(CPDFPageView.EditTextAreaFuncType.COPY);
                             helper.dismissContextMenu();
@@ -103,9 +105,20 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                     });
                     break;
                 case "delete":
-                    menuView.addItem(R.string.tools_context_menu_delete, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_delete, v -> {
                         pageView.operateEditTextArea(CPDFPageView.EditTextAreaFuncType.DELETE);
                         updateEditToolbar(helper);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new HashMap<>();
+                        if (cpdfEditSelections instanceof CPDFEditTextSelections){
+                            extraMap.put(CPDFCustomEventField.EDIT_AREA, cpdfEditSelections);
+                        }
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
                         helper.dismissContextMenu();
                     });
                     break;
@@ -156,14 +169,12 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : longPressWithEditTextMode) {
             switch (contextMenuActionItem.key) {
                 case "addText":
-                    menuView.addItem(R.string.tools_context_menu_add_text, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_add_text, v -> {
                         CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
                         if (configuration != null) {
                             ContentEditorConfig.TextAttr textAttr = configuration.contentEditorConfig.initAttribute.text;
-                            String comboBoxFontName = CPDFTextAttribute.FontNameHelper.obtainFontName(
-                                    textAttr.getTypeface(), textAttr.isBold(), textAttr.isItalic());
                             pageView.addEditTextArea(point,
-                                    comboBoxFontName,
+                                    textAttr.getPsName(),
                                     textAttr.getFontSize(),
                                     textAttr.getFontColor(),
                                     textAttr.getFontColorAlpha(),
@@ -180,7 +191,7 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                     if (TextUtils.isEmpty(text)) {
                         continue;
                     }
-                    menuView.addItem(R.string.tools_context_menu_paste, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_paste, v -> {
                         pageView.pasteEditTextArea(point, pageView.getCopyTextAreaWidth(),
                                 pageView.getCopyTextAreaHeight());
                         helper.dismissContextMenu();
@@ -191,12 +202,23 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                         continue;
                     }
                     if (isEditAreaValid) {
-                        menuView.addItem(R.string.tools_context_menu_select_paste_with_style, v -> {
+                        menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_select_paste_with_style, v -> {
                             pageView.pasteEditTextArea(point, pageView.getCopyTextAreaWidth(),
                                     pageView.getCopyTextAreaHeight(), true);
                             helper.dismissContextMenu();
                         });
                     }
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new HashMap<>();
+
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.POINT, helper.convertPagePoint(pageView, point));
+                        extraMap.put(CPDFCustomEventField.PAGE_INDEX, pageView.getPageNum());
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
+                        helper.dismissContextMenu();
+                    });
                     break;
             }
         }
@@ -220,7 +242,7 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : longPressWithEditImageMode) {
             switch (contextMenuActionItem.key) {
                 case "addImages":
-                    menuView.addItem(R.string.tools_context_menu_add_image, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_add_image, v -> {
                         helper.getReaderView().setAddImagePoint(point);
                         helper.getReaderView().setAddImagePage(pageView.getPageNum());
                         CImportImageDialogFragment fragment = CImportImageDialogFragment.quickStart(
@@ -240,12 +262,22 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                     break;
                 case "paste":
                     if (TextUtils.isEmpty(text) && pageView.getAreaInfoType() == CPDFEditPage.LoadImage) {
-                        menuView.addItem(R.string.tools_context_menu_paste, v -> {
+                        menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_paste, v -> {
                             pageView.pasteEditImageArea(point, pageView.getCopyTextAreaWidth(),
                                     pageView.getCopyTextAreaHeight());
                             helper.dismissContextMenu();
                         });
                     }
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.POINT, helper.convertPagePoint(pageView, point));
+                        extraMap.put(CPDFCustomEventField.PAGE_INDEX, pageView.getPageNum());
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
+                        helper.dismissContextMenu();
+                    });
                     break;
             }
         }
@@ -272,14 +304,14 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                 case "paste":
                     if (TextUtils.isEmpty(text)) {
                         if (pageView.getAreaInfoType() == CPDFEditPage.LoadImage) {
-                            menuView.addItem(R.string.tools_context_menu_paste, v -> {
+                            menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_paste, v -> {
                                 pageView.pasteEditImageArea(point, pageView.getCopyTextAreaWidth(),
                                         pageView.getCopyTextAreaHeight());
                                 helper.dismissContextMenu();
                             });
                         }
                     } else {
-                        menuView.addItem(R.string.tools_context_menu_paste, v -> {
+                        menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_paste, v -> {
                             pageView.pasteEditTextArea(point, pageView.getCopyTextAreaWidth(),
                                     pageView.getCopyTextAreaHeight(), false);
                             helper.dismissContextMenu();
@@ -288,12 +320,22 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                     break;
                 case "keepSourceFormatingPaste":
                     if (isEditAreaValid && pageView.getAreaInfoType() != CPDFEditPage.LoadImage) {
-                        menuView.addItem(R.string.tools_context_menu_select_paste_with_style, v -> {
+                        menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_select_paste_with_style, v -> {
                             pageView.pasteEditTextArea(point, pageView.getCopyTextAreaWidth(),
                                     pageView.getCopyTextAreaHeight(), true);
                             helper.dismissContextMenu();
                         });
                     }
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.POINT, helper.convertPagePoint(pageView, point));
+                        extraMap.put(CPDFCustomEventField.PAGE_INDEX, pageView.getPageNum());
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
+                        helper.dismissContextMenu();
+                    });
                     break;
             }
         }
@@ -323,7 +365,7 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : editSelectTextContent) {
             switch (contextMenuActionItem.key) {
                 case "properties":
-                    menuView.addItem(R.string.tools_context_menu_properties, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_properties, v -> {
                         CViewUtils.hideKeyboard(pageView);
                         CStyleManager styleManager = new CStyleManager(textSelections, pageView);
                         CAnnotStyle annotStyle = styleManager.getStyle(CStyleType.EDIT_TEXT);
@@ -340,7 +382,7 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                         continue;
                     }
 
-                    menuView.addItem(R.string.tools_context_menu_transparancy, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_transparancy, v -> {
                         menuView.showSecondView(true);
                     });
                     menuView.addSecondView();
@@ -383,12 +425,12 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                     }
                     break;
                 case "cut":
-                    menuView.addItem(R.string.tools_context_menu_cut, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_cut, v -> {
                         pageView.operateEditTextSelect(CPDFPageView.EditTextSelectFuncType.CUT);
                     });
                     break;
                 case "copy":
-                    menuView.addItem(R.string.tools_copy, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_copy, v -> {
                         if (helper.isAllowsCopying()) {
                             pageView.operateEditTextSelect(CPDFPageView.EditTextSelectFuncType.COPY);
                         } else {
@@ -399,10 +441,20 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                     });
                     break;
                 case "delete":
-                    menuView.addItem(R.string.tools_delete, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_delete, v -> {
                         pageView.operateEditTextSelect(CPDFPageView.EditTextSelectFuncType.DELETE);
                         updateEditToolbar(helper);
 
+                    });
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.EDIT_AREA, textSelections);
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
+                        pageView.cancelSelections();
+                        helper.dismissContextMenu();
                     });
                     break;
             }
@@ -429,19 +481,19 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : editTextContent) {
             switch (contextMenuActionItem.key) {
                 case "select":
-                    menuView.addItem(R.string.tools_context_menu_select, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_select, v -> {
                         pageView.operateEditText(CPDFPageView.EditTextFuncType.SELECT);
                     });
                     break;
                 case "selectAll":
-                    menuView.addItem(R.string.tools_context_menu_select_all, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_select_all, v -> {
                         pageView.operateEditText(CPDFPageView.EditTextFuncType.SELECT_ALL);
                     });
                     break;
                 case "paste":
                     String clipData = CPDFTextUtils.getClipData(pageView.getContext());
                     if (!TextUtils.isEmpty(clipData)) {
-                        menuView.addItem(R.string.tools_context_menu_paste, v -> {
+                        menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_paste, v -> {
                             pageView.operateEditText(CPDFPageView.EditTextFuncType.PASTE);
                         });
                     }

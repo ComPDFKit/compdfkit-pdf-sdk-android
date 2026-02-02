@@ -11,7 +11,7 @@ android {
         minSdk 26
         targetSdk rootProject.ext.android.TARGETSDK
         versionCode rootProject.ext.android.VERSIONCODE as int
-        versionName rootProject.ext.sdk.COMPDFKit_SDK_VERSION
+        versionName rootProject.ext.android.VERSIONNAME
 
     }
 

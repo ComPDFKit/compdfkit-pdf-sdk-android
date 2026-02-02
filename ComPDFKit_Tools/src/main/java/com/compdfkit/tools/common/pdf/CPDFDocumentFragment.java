@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -17,8 +17,6 @@ import static com.compdfkit.tools.contenteditor.CEditToolbar.SELECT_AREA_TEXT;
 import android.Manifest;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,11 +35,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.document.CPDFDocument;
-import com.compdfkit.core.edit.CPDFEditConfig;
 import com.compdfkit.core.edit.CPDFEditManager;
 import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.core.page.CPDFPage;
@@ -50,10 +46,10 @@ import com.compdfkit.tools.annotation.pdfannotationbar.CAnnotationToolbar;
 import com.compdfkit.tools.common.basic.fragment.CBasicPDFFragment;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
-import com.compdfkit.tools.common.pdf.config.CPDFThumbnailConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFUIVisibilityMode;
 import com.compdfkit.tools.common.pdf.config.CPDFWatermarkConfig;
-import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
+import com.compdfkit.tools.common.pdf.config.FormsConfig;
+import com.compdfkit.tools.common.pdf.config.ModeConfig;
 import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
@@ -66,12 +62,12 @@ import com.compdfkit.tools.common.utils.animation.CFillScreenManager;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 import com.compdfkit.tools.common.utils.dialog.CExitTipsDialog;
-import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
 import com.compdfkit.tools.common.utils.glide.CPDFGlideInitializer;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.utils.window.CPopupMenuWindow;
 import com.compdfkit.tools.common.views.CPDFToolBar;
+import com.compdfkit.tools.common.views.CPDFToolBarMenuHelper.ToolBarAction;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
 import com.compdfkit.tools.common.views.pdfbota.CPDFBOTA;
 import com.compdfkit.tools.common.views.pdfbota.CPDFBotaDialogFragment;
@@ -119,6 +115,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     public static final String EXTRA_CONFIGURATION = "extra_configuration";
 
+    public static final String EXTRA_PAGE_INDEX = "extra_page_index";
+
     public CSampleScreenManager screenManager = new CSampleScreenManager();
 
     public ConstraintLayout clRoot;
@@ -151,7 +149,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     public OnBackPressedCallback onBackPressedCallback;
 
-    private CPopupMenuWindow menuWindow;
+    public CPopupMenuWindow menuWindow;
 
     private CPDFDocumentFragmentInitListener initListener;
 
@@ -179,6 +177,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         return fragment;
     }
 
+    public static CPDFDocumentFragment newInstance(Bundle bundle) {
+        CPDFDocumentFragment fragment = new CPDFDocumentFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     private final ActivityResultLauncher<Void> selectDocumentLauncher = registerForActivityResult(new CSelectPDFDocumentResultContract(), uri -> {
         if (uri != null) {
             CPDFReaderView readerView = pdfView.getCPdfReaderView();
@@ -198,10 +202,15 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             annotationToolbar.reset();
             screenManager.changeWindowStatus(cpdfConfiguration.modeConfig.initialViewMode);
             screenManager.constraintHide(signStatusView);
-            pdfView.openPDF(uri, null, () -> {
+
+            int pageIndex = 0;
+            if (getArguments() != null) {
+                pageIndex = getArguments().getInt(EXTRA_PAGE_INDEX, 0);
+            }
+            pdfView.openPDF(uri, null, pageIndex, () -> {
                 editToolBar.setEditMode(false);
                 boolean enableSliderBar = pdfView.isEnableSliderBar();
-                if (enableSliderBar && !screenManager.isFillScreen){
+                if (enableSliderBar && !screenManager.isFillScreen) {
                     screenManager.fillScreenManager.showFromRight(pdfView.slideBar, CFillScreenManager.CONFIG_SHORT_ANIM_TIME);
                 }
             });
@@ -234,12 +243,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 boolean hasChanges = document != null && document.hasChanges();
                 boolean enableExitSaveTips = cpdfConfiguration.globalConfig.enableExitSaveTips;
 
-                if (!hasChanges){
+                if (!hasChanges) {
                     onBackPressedCallback.setEnabled(false);
                     requireActivity().onBackPressed();
                     return;
                 }
-                if (!enableExitSaveTips){
+                if (!enableExitSaveTips) {
                     onBackPressedCallback.setEnabled(false);
                     saveAndExit();
                     return;
@@ -253,7 +262,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 exitTipsDialog.setCancelable(false);
                 exitTipsDialog.setConfirmClickListener(v -> {
                     exitTipsDialog.dismiss();
-                    onBackPressedCallback.setEnabled(false);
                     saveAndExit();
                 });
                 exitTipsDialog.setContinueClickListener(v -> {
@@ -266,15 +274,20 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
 
-    private void saveAndExit(){
+    private void saveAndExit() {
         if (pdfView != null) {
+            showLoadingDialog(getString(R.string.tools_saveing));
             pdfView.savePDF((filePath, pdfUri) -> {
                 try {
+                    dismissLoadingDialog();
+                    onBackPressedCallback.setEnabled(false);
                     requireActivity().onBackPressed();
                 } catch (Exception ignored) {
                 }
             }, e -> {
                 try {
+                    dismissLoadingDialog();
+                    onBackPressedCallback.setEnabled(false);
                     requireActivity().onBackPressed();
                 } catch (Exception ignored) {
 
@@ -333,14 +346,15 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     protected void initDocument(CPDFViewCtrl.COnOpenPdfFinishCallback callback) {
         if (getArguments() != null) {
+            int pageIndex = getArguments().getInt(EXTRA_PAGE_INDEX, 0);
             String password = getArguments().getString(EXTRA_FILE_PASSWORD);
             if (!TextUtils.isEmpty(getArguments().getString(EXTRA_FILE_PATH))) {
                 String path = getArguments().getString(EXTRA_FILE_PATH);
-                pdfView.openPDF(path, password, callback);
+                pdfView.openPDF(path, password, pageIndex, callback);
             } else if (getArguments().getParcelable(EXTRA_FILE_URI) != null) {
                 Uri uri = getArguments().getParcelable(EXTRA_FILE_URI);
                 CFileUtils.takeUriPermission(getContext(), uri);
-                pdfView.openPDF(uri, password, callback);
+                pdfView.openPDF(uri, password, pageIndex, callback);
             }
         }
     }
@@ -391,16 +405,17 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 addAnnotCallback.onAddAnnotation(cpdfPageView, cpdfBaseAnnot);
             }
 
+            FormsConfig formsConfig = cpdfConfiguration.formsConfig;
             // Annotation creation completed listener, you can use cpdfBaseAnnot.getAnnotType() to determine the type of the added annotation
-            if (cpdfBaseAnnot instanceof CPDFListboxWidgetImpl) {
+            if (cpdfBaseAnnot instanceof CPDFListboxWidgetImpl && formsConfig.showCreateListBoxOptionsDialog) {
                 // When the ListBox form is created, display an editing dialog for adding list data
                 CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
                 annotationManager.showFormListEditFragment(getChildFragmentManager(), cpdfBaseAnnot, cpdfPageView, false);
-            } else if (cpdfBaseAnnot instanceof CPDFComboboxWidgetImpl) {
+            } else if (cpdfBaseAnnot instanceof CPDFComboboxWidgetImpl && formsConfig.showCreateComboBoxOptionsDialog) {
                 // When the ComboBox form is created, display an editing dialog for adding list data
                 CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
                 annotationManager.showFormComboBoxEditFragment(getChildFragmentManager(), cpdfBaseAnnot, cpdfPageView, true);
-            } else if (cpdfBaseAnnot instanceof CPDFPushbuttonWidgetImpl) {
+            } else if (cpdfBaseAnnot instanceof CPDFPushbuttonWidgetImpl && formsConfig.showCreatePushButtonOptionsDialog) {
                 // When the PushButton form is created, display a dialog for editing the action method
                 CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
                 annotationManager.showPushButtonActionDialog(getChildFragmentManager(), pdfView.getCPdfReaderView(),
@@ -459,33 +474,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     }
     protected void initToolBarView() {
         pdfToolBar.setPreviewModeChangeListener(this::setPreviewMode);
-        if (cpdfConfiguration != null) {
-            ToolbarConfig toolbarConfig = cpdfConfiguration.toolbarConfig;
-            for (ToolbarConfig.ToolbarAction androidAvailableAction : toolbarConfig.androidAvailableActions) {
-                switch (androidAvailableAction) {
-                    case Back:
-                        pdfToolBar.addBackPressedAction(v -> onBackPressedCallback.handleOnBackPressed());
-                        break;
-                    case Thumbnail:
-                        pdfToolBar.addAction(R.drawable.tools_ic_thumbnail, v -> {
-                            CPDFThumbnailConfig thumbnailConfig = cpdfConfiguration.globalConfig.thumbnail;
-                            showPageEdit(false, thumbnailConfig.editMode);
-                        });
-                        break;
-                    case Search:
-                        pdfToolBar.addAction(R.drawable.tools_ic_search, v -> showTextSearchView());
-                        break;
-                    case Bota:
-                        pdfToolBar.addAction(R.drawable.tools_ic_bookmark, v -> showBOTA());
-                        break;
-                    case Menu:
-                        pdfToolBar.addAction(R.drawable.tools_ic_more, this::showToolbarMenuDialog);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        ModeConfig modeConfig = cpdfConfiguration.modeConfig;
+        pdfToolBar.addModes(modeConfig.availableViewModes);
+        pdfToolBar.selectMode(modeConfig.initialViewMode);
+        pdfToolBar.setMenuItems(this, cpdfConfiguration.toolbarConfig);
     }
 
     protected void requestStoragePermissions(CRequestPermissionListener permissionListener) {
@@ -508,7 +500,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     protected void initAnnotToolbar() {
         annotationToolbar.initWithPDFView(pdfView);
-        annotationToolbar.setAnnotationChangeListener(type -> {
+        annotationToolbar.addAnnotationChangeListener(type -> {
             screenManager.changeWindowStatus(type);
             //You are required to grant recording permission when selecting voice notes
             if (type == CAnnotationType.SOUND) {
@@ -561,19 +553,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             return;
         }
         editToolBar.initWithPDFView(pdfView);
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(ContextCompat.getColor(requireContext(), R.color.tools_color_accent_50));
-        CPDFEditConfig editConfig = pdfView.getCPdfReaderView()
-                .getEditManager()
-                .getEditConfigBuilder()
-                .setScreenshotRectColor(Color.TRANSPARENT)
-                .setScreenshotBorderColor(ContextCompat.getColor(requireContext(), R.color.tools_dark_color_accent))
-                .setScreenshotBorderDash(new float[]{8.0F, 4F})
-                .setFormPreviewPaint(paint)
-                .setRotateAnnotationDrawableRes(R.drawable.tools_rotate)
-                .build();
-        pdfView.getCPdfReaderView().getEditManager().updateEditConfig(editConfig);
+
 
         editToolBar.setEditPropertyBtnClickListener((view) -> {
             int type = pdfView.getCPdfReaderView().getSelectAreaType();
@@ -598,8 +578,13 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 menuHelper.dismissContextMenu();
             }
         });
-        pdfView.getCPdfReaderView().setSelectImageCallback(() -> imageResultLauncher.launch(RequestType.PHOTO_ALBUM,
-                result -> pdfView.getCPdfReaderView().addEditImage(result)));
+
+        pdfView.getCPdfReaderView().setSelectImageCallback(() -> {
+            if (cpdfConfiguration != null && cpdfConfiguration.readerViewConfig.enableCreateImagePickerDialog){
+                imageResultLauncher.launch(RequestType.PHOTO_ALBUM,
+                    result -> pdfView.getCPdfReaderView().addEditImage(result));
+            }
+        });
     }
 
     protected void initSignatureToolbar() {
@@ -614,61 +599,16 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         signatureToolBar.getVerifySignButton().setOnClickListener(v -> verifyDocumentSignStatus());
     }
 
-    protected void showToolbarMenuDialog(View anchorView) {
+    public void showToolbarMenuDialog(View anchorView) {
         //Show the PDF settings dialog fragment
         menuWindow = new CPopupMenuWindow(getContext());
         if (cpdfConfiguration != null && cpdfConfiguration.toolbarConfig != null) {
-            List<ToolbarConfig.MenuAction> menuActions = cpdfConfiguration.toolbarConfig.availableMenus;
+            List<ToolBarAction> menuActions = cpdfConfiguration.toolbarConfig.availableMenus;
             if (menuActions == null || menuActions.isEmpty()) {
                 return;
             }
             anchorView.setSelected(true);
-            for (ToolbarConfig.MenuAction menuAction : menuActions) {
-                switch (menuAction) {
-                    case ViewSettings:
-                        menuWindow.addItem(R.drawable.tools_ic_preview_settings, R.string.tools_view_setting, v1 -> showDisplaySettings(pdfView));
-                        break;
-                    case DocumentEditor:
-                        menuWindow.addItem(R.drawable.tools_page_edit, R.string.tools_page_edit_toolbar_title, v1 -> showPageEdit(true, true));
-                        break;
-                    case Security:
-                        menuWindow.addItem(R.drawable.tools_ic_add_security, R.string.tools_security, v1 -> showSecurityDialog());
-                        break;
-                    case Watermark:
-                        menuWindow.addItem(R.drawable.tools_ic_add_watermark, R.string.tools_watermark, v1 -> showAddWatermarkDialog());
-                        break;
-                    case DocumentInfo:
-                        menuWindow.addItem(R.drawable.tools_ic_document_info, R.string.tools_document_info, v1 -> showDocumentInfo(pdfView));
-                        break;
-                    case Save:
-                        menuWindow.addItem(R.drawable.tools_ic_menu_save, R.string.tools_save, v1 -> {
-                            CLoadingDialog loadingDialog = CLoadingDialog.newInstance();
-                            loadingDialog.show(getChildFragmentManager(), "saveLoadingDialog");
-                            pdfView.savePDF((filePath, pdfUri) -> {
-                                loadingDialog.dismiss();
-                                CToastUtil.showLongToast(getContext(), R.string.tools_save_success);
-                            }, e -> loadingDialog.dismiss());
-                        });
-                        break;
-                    case Share:
-                        menuWindow.addItem(R.drawable.tools_ic_share, R.string.tools_share, v1 -> {
-                            editToolBar.resetStatus();
-                            sharePDF(pdfView);
-                        });
-                        break;
-                    case OpenDocument:
-                        menuWindow.addItem(R.drawable.tools_ic_new_file, R.string.tools_open_document, v1 -> selectDocument());
-                        break;
-                    case Flattened:
-                        menuWindow.addItem(R.drawable.tools_ic_flattened, R.string.tools_flattened, v1 -> showFlattenedDialog());
-                        break;
-                    case Snip:
-                        menuWindow.addItem(R.drawable.tools_ic_snap, R.string.tools_snap, v -> enterSnipMode());
-                        break;
-                    default:
-                        break;
-                }
-            }
+            pdfToolBar.setMoreMenuActions(this, cpdfConfiguration.toolbarConfig);
         }
         menuWindow.setOnDismissListener(() -> anchorView.setSelected(false));
         menuWindow.showAsDropDown(anchorView);
@@ -745,7 +685,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         }
     }
 
-    protected void selectDocument() {
+    public void selectDocument() {
         if (pdfToolBar.getMode() == CPreviewMode.Edit) {
             pdfView.exitEditMode();
         }
@@ -760,12 +700,16 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         }
         CAlertDialog alertDialog = CAlertDialog.newInstance(getString(R.string.tools_save_title), getString(R.string.tools_save_message));
         alertDialog.setConfirmClickListener(v -> {
+            alertDialog.dismiss();
             // save pdf document
+            if (cpdfConfiguration != null && cpdfConfiguration.globalConfig.fileSaveExtraFontSubset){
+                showLoadingDialog(getString(R.string.tools_saveing));
+            }
             pdfView.savePDF((filePath, pdfUri) -> {
-                alertDialog.dismiss();
+                dismissLoadingDialog();
                 selectDocumentLauncher.launch(null);
             }, e -> {
-                alertDialog.dismiss();
+                dismissLoadingDialog();
                 selectDocumentLauncher.launch(null);
             });
         });
@@ -816,6 +760,8 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     protected void applyConfiguration() {
         CPDFApplyConfigUtil.getInstance().applyConfiguration(this, cpdfConfiguration);
+        CPDFApplyConfigUtil.getInstance().applyModeConfig(this, cpdfConfiguration);
+        CPDFApplyConfigUtil.getInstance().applyReaderViewUiStyle(pdfView.getCPdfReaderView(), cpdfConfiguration.readerViewConfig.uiStyle);
     }
 
     @Override
@@ -858,7 +804,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             curEditMode = CPDFEditPage.LoadNone;
         }
         pdfView.exitEditMode();
-        if (flTool.getVisibility() == GONE && !cpdfConfiguration.toolbarConfig.mainToolbarVisible){
+        if (flTool.getVisibility() == GONE && !cpdfConfiguration.toolbarConfig.mainToolbarVisible) {
             screenManager.fillScreenManager.showFromTop(flTool, 200);
         }
         pdfToolBar.setVisibility(View.GONE);
@@ -874,7 +820,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         }
     }
 
-    public void hideTextSearchView(){
+    public void hideTextSearchView() {
         if (curEditMode > CPDFEditPage.LoadNone) {
             restoreEdit();
             editToolBar.updateUndoRedo();
@@ -932,12 +878,12 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             restoreEdit();
             int pageCount = pdfView.getCPdfReaderView().getPageCount();
             CPDFConfiguration configuration = pdfView.getCPDFConfiguration();
-            if (configuration != null){
+            if (configuration != null) {
                 boolean enableSliderBar = configuration.readerViewConfig.enableSliderBar;
-                if (enableSliderBar){
+                if (enableSliderBar) {
                     boolean show = pageCount > 1;
                     pdfView.enableSliderBar(show);
-                    if (show && !screenManager.isFillScreen){
+                    if (show && !screenManager.isFillScreen) {
                         screenManager.fillScreenManager.showFromRight(pdfView.slideBar, CFillScreenManager.CONFIG_SHORT_ANIM_TIME);
                     }
                 }
@@ -1055,8 +1001,13 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     @Override
     public void onDestroy() {
         try {
-            CViewUtils.hideKeyboard(getActivity().getWindow().getDecorView());
             CLog.e("ComPDFKit", "CPDFDocumentFragment:onDestroy() document close()");
+            CViewUtils.hideKeyboard(getActivity().getWindow().getDecorView());
+            onBackPressedCallback = null;
+            initListener = null;
+            fillScreenChangeListener = null;
+            addAnnotCallback = null;
+            dismissLoadingDialog();
             pdfView.close();
             if (menuWindow != null) {
                 menuWindow.dismiss();

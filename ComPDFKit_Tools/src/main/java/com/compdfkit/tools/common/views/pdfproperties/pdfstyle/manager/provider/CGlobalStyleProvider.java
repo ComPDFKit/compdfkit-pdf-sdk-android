@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -346,7 +346,7 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     signatureWidgetAttr.setBorderColor(params.getLineColor());
                     signatureWidgetAttr.setBorderStyle(params.getSignFieldsBorderStyle());
                     signatureWidgetAttr.setFillColor(params.getFillColor());
-                    signatureWidgetAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Signature__"));
+                    signatureWidgetAttr.setiAttributeUpdateCallback(() -> getDefaultFiledName("Signature_"));
                     callback = signatureWidgetAttr;
                     break;
                 default:
@@ -573,6 +573,30 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                 style.setFontItalic(CPDFTextAttribute.FontNameHelper.isItalic(pushButtonAttr.getFontName()));
                 style.setFontSize((int) pushButtonAttr.getFontSize());
                 style.setFormDefaultValue(pushButtonAttr.getButtonTitle());
+                break;
+            case FORM_CHECK_BOX:
+                CPDFCheckboxAttr checkboxAttr = attribute.getCheckboxAttr();
+                style.setBorderWidth(checkboxAttr.getBorderWidth());
+                style.setColor(checkboxAttr.getColor());
+                style.setBorderColor(checkboxAttr.getBorderColor());
+                style.setFillColor(checkboxAttr.getFillColor());
+                style.setChecked(checkboxAttr.isChecked());
+                style.setCheckStyle(checkboxAttr.getCheckStyle());
+                break;
+            case FORM_RADIO_BUTTON:
+                CPDFRadiobuttonAttr radiobuttonAttr = attribute.getRadiobuttonAttr();
+                style.setBorderWidth(radiobuttonAttr.getBorderWidth());
+                style.setColor(radiobuttonAttr.getColor());
+                style.setBorderColor(radiobuttonAttr.getBorderColor());
+                style.setFillColor(radiobuttonAttr.getFillColor());
+                style.setChecked(radiobuttonAttr.isChecked());
+                style.setCheckStyle(radiobuttonAttr.getCheckStyle());
+                break;
+            case FORM_SIGNATURE_FIELDS:
+                CPDFSignatureWidgetAttr signatureWidgetAttr = attribute.getSignatureWidgetAttr();
+                style.setBorderWidth(signatureWidgetAttr.getBorderWidth());
+                style.setBorderColor(signatureWidgetAttr.getBorderColor());
+                style.setFillColor(signatureWidgetAttr.getFillColor());
                 break;
             default:
                 break;

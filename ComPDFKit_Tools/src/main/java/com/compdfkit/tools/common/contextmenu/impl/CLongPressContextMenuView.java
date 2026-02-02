@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -20,8 +20,11 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuLongPressPro
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
 import com.compdfkit.tools.common.utils.CStringUtils;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -49,7 +52,7 @@ public class CLongPressContextMenuView implements ContextMenuLongPressProvider {
             switch (contextMenuActionItem.key) {
                 case "paste":
                     if (!TextUtils.isEmpty(CPDFTextUtils.getClipData(pageView.getContext()))) {
-                        menuView.addItem(R.string.tools_paste, v -> {
+                        menuView.addItem(contextMenuActionItem, R.string.tools_paste, v -> {
                             CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
                             String content = CStringUtils.filterEmoji(CPDFTextUtils.getClipData(pageView.getContext()));
 
@@ -59,21 +62,21 @@ public class CLongPressContextMenuView implements ContextMenuLongPressProvider {
                     }
                     break;
                 case "note":
-                    menuView.addItem(R.string.tools_annot_note, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_annot_note, v -> {
                         CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
                         annotationManager.addNote(helper.getReaderView(), pageView, pointF);
                         helper.dismissContextMenu();
                     });
                     break;
                 case "textBox":
-                    menuView.addItem(R.string.tools_context_menu_text, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_text, v -> {
                         CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
                         annotationManager.addFreeTextInputBox(helper.getReaderView(), pageView, pointF);
                         helper.dismissContextMenu();
                     });
                     break;
                 case "stamp":
-                    menuView.addItem(R.string.tools_annot_stamp, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_annot_stamp, v -> {
                         CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
                         CStyleDialogFragment dialogFragment = showAnnotStyleFragment(helper, CStyleType.ANNOT_STAMP);
                         dialogFragment.setStyleDialogDismissListener(() -> {
@@ -94,7 +97,7 @@ public class CLongPressContextMenuView implements ContextMenuLongPressProvider {
                     });
                     break;
                 case "image":
-                    menuView.addItem(R.string.tools_image, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_image, v -> {
                         CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
                         CStyleDialogFragment dialogFragment = showAnnotStyleFragment(helper, CStyleType.ANNOT_PIC);
                         dialogFragment.setStyleDialogDismissListener(() -> {
@@ -104,6 +107,16 @@ public class CLongPressContextMenuView implements ContextMenuLongPressProvider {
                             }
                             helper.dismissContextMenu();
                         });
+                    });
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new java.util.HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.POINT, helper.convertPagePoint(pageView, pointF));
+                        extraMap.put(CPDFCustomEventField.PAGE_INDEX, pageView.getPageNum());
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
+                        helper.dismissContextMenu();
                     });
                     break;
             }

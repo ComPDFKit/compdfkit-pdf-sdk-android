@@ -541,5 +541,12 @@
     <string name="tools_keep_editing">继续编辑</string>
     <string name="tools_yes">是</string>
     <string name="tools_no">否</string>
+    <string name="tools_back">退出</string>
+    <string name="tools_thumbnail">缩略图</string>
+    <string name="tools_search">搜索</string>
+    <string name="tools_bota">BOTA</string>
+    <string name="tools_menu">菜单</string>
+    <string name="tools_saveing">保存中…</string>
+
 
 </resources>

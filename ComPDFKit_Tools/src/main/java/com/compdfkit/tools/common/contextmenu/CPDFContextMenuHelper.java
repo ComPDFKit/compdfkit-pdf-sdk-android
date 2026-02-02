@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditManager;
 import com.compdfkit.core.edit.CPDFEditPage;
+import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.impl.CCheckBoxContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CFreeTextContextMenuView;
@@ -381,6 +382,14 @@ public class CPDFContextMenuHelper extends CPDFContextMenuShowHelper {
         CPDFDocument document = getReaderView().getPDFDocument();
         return document.getPermissions() == CPDFDocument.PDFDocumentPermissions.PDFDocumentPermissionsOwner ||
                 document.getPermissionsInfo().isAllowsCopying();
+    }
+
+    public PointF convertPagePoint(CPDFPageView pageView, PointF screenPoint){
+        CPDFReaderView readerView = getReaderView();
+        CPDFDocument document = readerView.getPDFDocument();
+        RectF size = readerView.getPageNoZoomSize(pageView.getPageNum());
+        CPDFPage page = document.pageAtIndex(pageView.getPageNum());
+        return page.convertPointToPage(readerView.isCropMode(), size.width(), size.height(), screenPoint);
     }
 
     public static class Builder{

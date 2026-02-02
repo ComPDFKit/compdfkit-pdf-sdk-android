@@ -64,9 +64,10 @@ public class ContentEditorConfig implements Serializable {
 
         private boolean isItalic;
 
-        private CPDFTextAttribute.FontNameHelper.FontType typeface = CPDFTextAttribute.FontNameHelper.FontType.Helvetica;
 
         private int fontColorAlpha = 255;
+
+        private String psName;
 
         private CPDFEditTextArea.PDFEditAlignType alignment = CPDFEditTextArea.PDFEditAlignType.PDFEditAlignLeft;
 
@@ -110,12 +111,12 @@ public class ContentEditorConfig implements Serializable {
             isItalic = italic;
         }
 
-        public CPDFTextAttribute.FontNameHelper.FontType getTypeface() {
-            return typeface;
+        public void setPsName(String psName) {
+            this.psName = psName;
         }
 
-        public void setTypeface(CPDFTextAttribute.FontNameHelper.FontType typeface) {
-            this.typeface = typeface;
+        public String getPsName() {
+            return psName;
         }
 
         public int getFontColorAlpha() {

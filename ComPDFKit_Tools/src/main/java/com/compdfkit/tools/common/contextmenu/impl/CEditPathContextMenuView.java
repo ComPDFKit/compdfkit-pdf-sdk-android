@@ -3,14 +3,19 @@ package com.compdfkit.tools.common.contextmenu.impl;
 import android.graphics.RectF;
 import android.view.View;
 
+import com.compdfkit.core.edit.CPDFEditArea;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditPathProvider;
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.ui.reader.CPDFPageView;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +33,19 @@ public class CEditPathContextMenuView implements ContextMenuEditPathProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : editPathContent) {
             switch (contextMenuActionItem.key) {
                 case "delete":
-                    menuView.addItem(R.string.tools_delete, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_delete, v -> {
                         pageView.operateEditPathArea(CPDFPageView.EditPathFuncType.DELETE);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new HashMap<>();
+                        CPDFEditArea editArea = helper.getReaderView().getSelectEditArea();
+                        extraMap.put(CPDFCustomEventField.EDIT_AREA, editArea);
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
+                        pageView.cancelSelections();
                         helper.dismissContextMenu();
                     });
                     break;

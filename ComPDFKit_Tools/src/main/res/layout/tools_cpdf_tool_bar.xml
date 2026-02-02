@@ -9,33 +9,17 @@
     android:elevation="4dp"
     tools:layout_height="?android:attr/actionBarSize">
 
+
     <LinearLayout
-        android:id="@+id/ll_menu"
-        android:layout_width="match_parent"
+        android:id="@+id/ll_left_menu"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
         android:gravity="end|center_vertical"
         android:orientation="horizontal"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ll_title"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_back_action"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/tools_common_oval_ripple_in_widget"
-        android:padding="6dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/tools_ic_back"
-        app:tint="?attr/colorOnPrimary"
         tools:visibility="visible" />
 
     <LinearLayout
@@ -44,15 +28,14 @@
         android:layout_height="match_parent"
         android:layout_marginVertical="4dp"
         android:layout_marginStart="4dp"
+        android:animateLayoutChanges="false"
         android:background="@drawable/tools_common_btn_corner_ripple_in_widget"
         android:gravity="center_vertical"
+        android:minWidth="80dp"
         android:paddingHorizontal="4dp"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/ll_menu"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@id/iv_back_action"
+        app:layout_constraintStart_toEndOf="@id/ll_left_menu"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginStart="16dp">
 
@@ -71,6 +54,21 @@
             tools:text="@string/tools_pdf_edit_mode" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/ll_title"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

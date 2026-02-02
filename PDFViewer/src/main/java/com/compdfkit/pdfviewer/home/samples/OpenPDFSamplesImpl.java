@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -10,6 +10,13 @@
 package com.compdfkit.pdfviewer.home.samples;
 
 
+import static com.compdfkit.tools.common.pdf.CPDFDocumentActivity.EXTRA_CONFIGURATION;
+import static com.compdfkit.tools.common.pdf.CPDFDocumentActivity.EXTRA_FILE_PASSWORD;
+import static com.compdfkit.tools.common.pdf.CPDFDocumentActivity.EXTRA_FILE_PATH;
+import static com.compdfkit.tools.common.pdf.CPDFDocumentActivity.EXTRA_PAGE_INDEX;
+import static com.compdfkit.tools.common.pdf.CPDFDocumentFragment.EXTRA_FILE_URI;
+
+import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -45,13 +52,14 @@ public class OpenPDFSamplesImpl extends BasicFeaturesSamples {
     }
 
     protected void startPDFActivity(String filePath, Uri uri, String password) {
-        if (!TextUtils.isEmpty(filePath)) {
-            CPDFDocumentActivity.startActivity(fragment.getContext(), filePath, password,
-                    FunDatas.getConfiguration(fragment.getContext(), getPreviewMode()));
-        } else {
-            CPDFDocumentActivity.startActivity(fragment.getContext(), uri, password,
-                    FunDatas.getConfiguration(fragment.getContext(), getPreviewMode()));
-        }
+        Intent intent = new Intent(fragment.getContext(), CPDFDocumentActivity.class);
+        intent.setData(uri);
+        intent.putExtra(EXTRA_FILE_PASSWORD, password);
+        intent.putExtra(EXTRA_CONFIGURATION, FunDatas.getConfiguration(fragment.getContext(), getPreviewMode()));
+        intent.putExtra(EXTRA_FILE_PATH, filePath);
+        intent.putExtra(EXTRA_PAGE_INDEX, 0);
+        intent.putExtra(EXTRA_FILE_URI, uri);
+        fragment.getContext().startActivity(intent);
     }
 
     protected CPreviewMode getPreviewMode() {

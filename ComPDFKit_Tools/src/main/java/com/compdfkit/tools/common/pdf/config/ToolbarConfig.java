@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -8,6 +8,7 @@
  */
 package com.compdfkit.tools.common.pdf.config;
 
+import com.compdfkit.tools.common.views.CPDFToolBarMenuHelper.ToolBarAction;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -21,69 +22,26 @@ public class ToolbarConfig implements Serializable {
 
     public static ToolbarConfig normal(){
         ToolbarConfig toolbarConfig = new ToolbarConfig();
-        toolbarConfig.androidAvailableActions = Arrays.asList(
-                ToolbarAction.Thumbnail,
-                ToolbarAction.Search,
-                ToolbarAction.Bota,
-                ToolbarAction.Menu
+        toolbarConfig.toolbarRightItems = Arrays.asList(
+            ToolBarAction.Thumbnail,
+            ToolBarAction.Search,
+            ToolBarAction.Bota,
+            ToolBarAction.Menu
         );
         toolbarConfig.availableMenus = Arrays.asList(
-                MenuAction.ViewSettings,
-                MenuAction.DocumentEditor,
-                MenuAction.Watermark,
-                MenuAction.Security,
-                MenuAction.DocumentInfo,
-                MenuAction.Save,
-                MenuAction.Share,
-                MenuAction.OpenDocument
+            ToolBarAction.ViewSettings,
+            ToolBarAction.DocumentEditor,
+            ToolBarAction.Watermark,
+            ToolBarAction.Security,
+            ToolBarAction.DocumentInfo,
+            ToolBarAction.Save,
+            ToolBarAction.Share,
+            ToolBarAction.OpenDocument
         );
         return toolbarConfig;
     }
 
-    public enum ToolbarAction {
-        Back,
-        Thumbnail,
-        Search,
-        Bota,
-        Menu;
 
-        public static ToolbarAction fromString(String str) {
-            try {
-                String firstLetter = str.substring(0, 1).toUpperCase();
-                String result = firstLetter + str.substring(1);
-
-                return ToolbarAction.valueOf(result);
-
-            } catch (Exception e) {
-                return null;
-            }
-        }
-    }
-
-    public enum MenuAction {
-        ViewSettings,
-        DocumentEditor,
-        Security,
-        Watermark,
-        DocumentInfo,
-        Save,
-        Share,
-        OpenDocument,
-
-        Flattened,
-
-        Snip;
-
-        public static MenuAction fromString(String str) {
-            try {
-                String firstLetter = str.substring(0, 1).toUpperCase();
-                String result = firstLetter + str.substring(1);
-                return MenuAction.valueOf(result);
-            } catch (Exception e) {
-                return null;
-            }
-        }
-    }
     public boolean mainToolbarVisible = true;
 
     public boolean annotationToolbarVisible = true;
@@ -94,11 +52,21 @@ public class ToolbarConfig implements Serializable {
 
     public boolean signatureToolbarVisible = true;
 
-    public List<ToolbarAction> androidAvailableActions;
+    public List<ToolBarAction> toolbarLeftItems;
+    public List<ToolBarAction> toolbarRightItems;
 
-    public List<MenuAction> availableMenus;
+    public List<ToolBarAction> availableMenus;
+
+    public List<CustomToolbarItem> customToolbarLeftItems;
+
+    public List<CustomToolbarItem> customToolbarRightItems;
+
+    public List<CustomToolbarItem> customMoreMenuItems;
 
     public boolean showInkToggleButton = true;
 
+    public List<ToolBarAction> getMainToolbarActions(){
+        return toolbarRightItems;
+    }
 
 }

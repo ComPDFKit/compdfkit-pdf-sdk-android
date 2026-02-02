@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -19,6 +19,10 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSelectConten
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.ui.reader.CPDFPageView;
 
 import java.util.List;
@@ -41,7 +45,7 @@ public class CSelectContentContextMenuView implements ContextMenuSelectContentPr
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : textSelect) {
             switch (contextMenuActionItem.key) {
                 case "copy":
-                    menuView.addItem(R.string.tools_copy, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_copy, v -> {
                         CPDFDocumentPermissionInfo permissionInfo = helper.getReaderView().getPDFDocument().getPermissionsInfo();
                         if (permissionInfo.isAllowsCopying()) {
                             pageView.operateSelections(CPDFPageView.SelectFuncType.COPY);
@@ -55,23 +59,35 @@ public class CSelectContentContextMenuView implements ContextMenuSelectContentPr
                     });
                     break;
                 case "highlight":
-                    menuView.addItem(R.string.tools_annot_highlight, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_annot_highlight, v -> {
                         pageView.operateSelections(CPDFPageView.SelectFuncType.HIGHLIGHT);
                     });
                     break;
                 case "underline":
-                    menuView.addItem(R.string.tools_annot_underline, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_annot_underline, v -> {
                         pageView.operateSelections(CPDFPageView.SelectFuncType.UNDERLINE);
                     });
                     break;
                 case "strikeout":
-                    menuView.addItem(R.string.tools_context_menu_strikethrough, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_strikethrough, v -> {
                         pageView.operateSelections(CPDFPageView.SelectFuncType.STRIKEOUT);
                     });
                     break;
                 case "squiggly":
-                    menuView.addItem(R.string.tools_annot_squiggly, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_annot_squiggly, v -> {
                         pageView.operateSelections(CPDFPageView.SelectFuncType.SQUIGGLY);
+                    });
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new java.util.HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.TEXT, CPDFAnnotationManager.getSelectionText(helper.getReaderView(), pageView));
+                        extraMap.put(CPDFCustomEventField.RECT, CPDFAnnotationManager.getSelectionRect(helper.getReaderView(), pageView));
+                        extraMap.put(CPDFCustomEventField.PAGE_INDEX, pageView.getPageNum());
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
+                        pageView.getSelectionHelper().cancelSelections();
+                        helper.dismissContextMenu();
                     });
                     break;
             }

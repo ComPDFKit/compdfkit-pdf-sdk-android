@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -47,7 +47,12 @@ public class ReaderViewConfig implements Serializable {
 
     public boolean annotationsVisible = true;
 
-    public boolean enableAutoCreateEditTextInput = true;
+    public boolean enableCreateEditTextInput = true;
+    public boolean enableCreateImagePickerDialog = true;
+
+    public boolean enableDoubleTapZoom = true;
+
+    public CPDFUiStyleConfig uiStyle;
 
     @NonNull
     @Override
@@ -68,7 +73,8 @@ public class ReaderViewConfig implements Serializable {
                 "enableMinScale:" + enableMinScale + ", " +
                 "margins:" + margins.toString() + ", " +
                 "annotationsVisible:" + annotationsVisible + ", " +
-                "enableAutoCreateEditTextInput:" + enableAutoCreateEditTextInput +
+                "enableCreateEditTextInput:" + enableCreateEditTextInput +
+                "enableCreateImagePickerDialog:" + enableCreateImagePickerDialog +
                 "]";
         return stringBuilder;
     }

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -129,7 +129,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
         infoDialogFragment.show(getChildFragmentManager(), "documentInfoDialogFragment");
     }
 
-    protected void sharePDF(CPDFViewCtrl pdfView) {
+    public void sharePDF(CPDFViewCtrl pdfView) {
         curEditMode = pdfView.getCPdfReaderView().getLoadType();
         pdfView.savePDF((filePath, pdfUri) -> {
             restoreEdit(pdfView,true);
@@ -211,6 +211,14 @@ public class CBasicPDFFragment extends CPermissionFragment {
             loadingDialog.dismiss();
         }
         loadingDialog = CLoadingDialog.newInstance();
+        loadingDialog.show(getChildFragmentManager(), "loadingDialog");
+    }
+
+    protected void showLoadingDialog(String title) {
+        if (loadingDialog != null && loadingDialog.isVisible()) {
+            loadingDialog.dismiss();
+        }
+        loadingDialog = CLoadingDialog.newInstance(title);
         loadingDialog.show(getChildFragmentManager(), "loadingDialog");
     }
 

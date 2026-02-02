@@ -53,6 +53,8 @@ public class GlobalConfig  implements Serializable {
      */
     public boolean fileSaveExtraFontSubset = true;
 
+    public boolean useSaveIncremental = true;
+
     public CPDFWatermarkConfig watermark = new CPDFWatermarkConfig();
 
     public CSignatureType signatureType = CSignatureType.Manual;

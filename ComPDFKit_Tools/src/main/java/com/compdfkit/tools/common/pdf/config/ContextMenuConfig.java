@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -26,6 +26,14 @@ import java.util.Map;
 
 public class ContextMenuConfig implements Serializable {
 
+    public String backgroundColor;
+
+    public int fontSize = 14;
+
+    public List<Double> padding = new ArrayList<>();
+
+    public int iconSize;
+
     public Map<String, List<ContextMenuActionItem>> global;
     public Map<String, List<ContextMenuActionItem>> viewMode;
     public Map<String, List<ContextMenuActionItem>> annotationMode;
@@ -35,6 +43,15 @@ public class ContextMenuConfig implements Serializable {
 
     public static ContextMenuConfig fromJson(JSONObject rootJsonObject) {
         ContextMenuConfig contextMenuConfig = new ContextMenuConfig();
+        contextMenuConfig.backgroundColor = rootJsonObject.optString("backgroundColor", "");
+        contextMenuConfig.fontSize = rootJsonObject.optInt("fontSize", 14);
+        JSONArray paddingArray = rootJsonObject.optJSONArray("padding");
+        if (paddingArray != null) {
+            for (int i = 0; i < paddingArray.length(); i++) {
+                contextMenuConfig.padding.add(paddingArray.optDouble(i, 0));
+            }
+        }
+        contextMenuConfig.iconSize = rootJsonObject.optInt("iconSize", 36);
         contextMenuConfig.global = parseMode(rootJsonObject, "global");
         contextMenuConfig.viewMode = parseMode(rootJsonObject, "viewMode");
         contextMenuConfig.annotationMode = parseMode(rootJsonObject, "annotationMode");
@@ -44,9 +61,23 @@ public class ContextMenuConfig implements Serializable {
         return contextMenuConfig;
     }
 
-    public static class ContextMenuActionItem implements Serializable{
+    public static class ContextMenuActionItem implements Serializable {
+
+        public enum ShowType {
+            text,
+
+            icon;
+        }
 
         public String key;
+
+        public String identifier;
+
+        public String title;
+
+        public ShowType showType = ShowType.text;
+
+        public String icon;
 
         public List<String> subItems;
 
@@ -89,8 +120,19 @@ public class ContextMenuConfig implements Serializable {
                             subItems.add(subArray.getString(j));
                         }
                     }
+                    String identifier = obj.optString("identifier", "");
+                    String title = obj.optString("title", "");
+                    String showTypeStr = obj.optString("showType", "text");
+                    ContextMenuActionItem.ShowType showType = ContextMenuActionItem.ShowType.valueOf(showTypeStr);
 
-                    itemList.add(new ContextMenuActionItem(itemKey, subItems));
+                    String icon = obj.optString("icon", "");
+
+                    ContextMenuActionItem item = new ContextMenuActionItem(itemKey, subItems);
+                    item.showType = showType;
+                    item.identifier = identifier;
+                    item.title = title;
+                    item.icon = icon;
+                    itemList.add(item);
                 }
                 resultMap.put(key, itemList);
             }

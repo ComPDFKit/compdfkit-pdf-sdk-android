@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -210,5 +210,23 @@ public class CViewUtils {
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         return bounds.width() < dm.widthPixels || bounds.height() < dm.heightPixels;
+    }
+
+
+    public static int getAlphaFromHex(String hexColor) {
+        if (hexColor == null) {
+            return 255;
+        }
+
+        hexColor = hexColor.replace("#", "").trim();
+
+        if (hexColor.length() == 6) {
+            return 255; // defalut alpha
+        } else if (hexColor.length() == 8) {
+            String alphaStr = hexColor.substring(0, 2);
+            return Integer.parseInt(alphaStr, 16);
+        } else {
+            return 255;
+        }
     }
 }

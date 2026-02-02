@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -25,10 +25,12 @@ public interface CStyleProvider {
     public CAnnotStyle getStyle(CStyleType type);
 
     default public String getAnnotStyleFontName(CAnnotStyle annotStyle){
+        CLog.e("ComPDFKit", "Type：" + annotStyle.getType().name() +" Update PsName：" + annotStyle.getExternFontName());
         return annotStyle.getExternFontName();
     }
 
     default public void updateAnnotStyleFont(CAnnotStyle annotStyle, String attrFontName){
+        CLog.e("ComPDFKit", "Type：" + annotStyle.getType().name() +" get PsName：" + attrFontName);
         annotStyle.setExternFontName(attrFontName);
     }
 }

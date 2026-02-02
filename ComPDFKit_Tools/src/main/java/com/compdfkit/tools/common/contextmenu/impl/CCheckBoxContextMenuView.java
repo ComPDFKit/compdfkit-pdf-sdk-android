@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -17,6 +17,9 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuCheckBoxProv
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -42,7 +45,7 @@ public class CCheckBoxContextMenuView implements ContextMenuCheckBoxProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : checkBoxContent) {
             switch (contextMenuActionItem.key) {
                 case "properties":
-                    menuView.addItem(R.string.tools_context_menu_properties, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_properties, v -> {
                         CStyleManager styleManager = new CStyleManager(checkboxWidgetImpl, pageView);
                         CAnnotStyle style = styleManager.getStyle(CStyleType.FORM_CHECK_BOX);
                         CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(style);
@@ -53,14 +56,23 @@ public class CCheckBoxContextMenuView implements ContextMenuCheckBoxProvider {
                     });
                     break;
                 case "delete":
-                    menuView.addItem(R.string.tools_delete, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_delete, v -> {
                         pageView.deleteAnnotation(checkboxWidgetImpl);
                         helper.dismissContextMenu();
                     });
                     break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new java.util.HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.WIDGET, checkboxWidgetImpl.onGetAnnotation());
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                default:break;
             }
         }
-
         return menuView;
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -18,6 +18,7 @@ import com.compdfkit.core.annotation.CPDFInkAnnotation;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFMarkupAnnotation;
 import com.compdfkit.core.annotation.CPDFSquareAnnotation;
+import com.compdfkit.core.annotation.CPDFTextAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.tools.common.views.pdfproperties.CTypeUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
@@ -59,7 +60,18 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
             if (annotation == null){
                 continue;
             }
-            if (annotation instanceof CPDFMarkupAnnotation) {
+            if (annotation instanceof CPDFTextAnnotation) {
+                CPDFTextAnnotation textAnnotation = (CPDFTextAnnotation) annotation;
+                textAnnotation.setColor(style.getColor());
+                textAnnotation.setAlpha(style.getOpacity());
+                textAnnotation.updateAp();
+                if (annotImpl != null){
+                    annotImpl.onAnnotAttrChange();
+                }
+                if (pageView != null) {
+                    pageView.invalidate();
+                }
+            } else if (annotation instanceof CPDFMarkupAnnotation) {
                 CPDFMarkupAnnotation markupAnnotation = (CPDFMarkupAnnotation) annotation;
                 markupAnnotation.setColor(style.getColor());
                 markupAnnotation.setAlpha(style.getOpacity());
@@ -164,6 +176,11 @@ public class CSelectedAnnotStyleProvider implements CStyleProvider {
     public CAnnotStyle getStyle(CStyleType type) {
         CAnnotStyle style = new CAnnotStyle(type);
         switch (type) {
+            case ANNOT_TEXT:
+                CPDFTextAnnotation textAnnotation = (CPDFTextAnnotation) annotation;
+                style.setColor(textAnnotation.getColor());
+                style.setOpacity(textAnnotation.getAlpha());
+                break;
             case ANNOT_HIGHLIGHT:
             case ANNOT_UNDERLINE:
             case ANNOT_SQUIGGLY:

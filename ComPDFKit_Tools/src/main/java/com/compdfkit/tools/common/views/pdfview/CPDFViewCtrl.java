@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -51,6 +52,7 @@ import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
 import com.compdfkit.ui.reader.CPDFReaderView;
+import com.compdfkit.ui.reader.IDocumentStatusCallback;
 import com.compdfkit.ui.reader.IReaderViewCallback;
 import com.compdfkit.ui.reader.OnFocusedTypeChangedListener;
 
@@ -160,6 +162,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   private boolean isHiding = false;
 
+  private boolean isInitOpenPDF = true;
+
+  private int initPageIndex = 0;
+
   private Runnable hideIndicatorRunnable = () -> {
     if (pageIndicatorAnimator != null) {
       isScrolling = false;
@@ -224,6 +230,8 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     cPdfReaderView.setDoublePageMode(false);
     cPdfReaderView.setReaderViewCallback(this);
     cPdfReaderView.setOnFocusedTypeChangedListener(this);
+    addView(cPdfReaderView);
+
     CPDFEditManager editManager = cPdfReaderView.getEditManager();
     editManager.disable();
     editManager.addEditStatusChangeListener(new OnEditStatusChangeListener() {
@@ -255,7 +263,30 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       }
     });
 
-    addView(cPdfReaderView);
+    cPdfReaderView.setDocumentStatusCallback(new IDocumentStatusCallback() {
+      @Override
+      public void onLoading() {
+
+      }
+
+      @Override
+      public void onLoadFailed() {
+
+      }
+
+      @Override
+      public void onLoadComplete() {
+        if (isInitOpenPDF){
+          initCPDFSliderBar();
+          cPdfReaderView.post(()-> {
+            if (cPdfReaderView.getPageNum() != initPageIndex){
+              cPdfReaderView.setDisplayPageIndex(initPageIndex);
+            }
+          });
+        }
+      }
+    });
+
   }
 
   private void setErrorCallback() {
@@ -309,10 +340,19 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   }
 
   public void openPDF(String pdfFilePath, String password) {
-    openPDF(pdfFilePath, password, null);
+    openPDF(pdfFilePath, password, 0,  null);
   }
 
-  public void openPDF(String pdfFilePath, String password,
+  public void openPDF(String pdfFilePath, String password, int pageIndex) {
+    openPDF(pdfFilePath, password, pageIndex, null);
+  }
+
+  public void openPDF(String pdfFilePath, String password, COnOpenPdfFinishCallback openPdfFinishCallback){
+      openPDF(pdfFilePath, password, 0, openPdfFinishCallback);
+  }
+
+
+  public void openPDF(String pdfFilePath, String password, int pageIndex,
       COnOpenPdfFinishCallback openPdfFinishCallback) {
     CThreadPoolUtils.getInstance().executeIO(() -> {
       // Create a new instance of the CPDFDocument class, passing in the current context.
@@ -320,7 +360,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
 
       CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfFilePath, password);
-      CThreadPoolUtils.getInstance().executeMain(() -> setPDFDocument(cpdfDocument, pdfFilePath, pdfDocumentError, openPdfFinishCallback));
+      CThreadPoolUtils.getInstance().executeMain(() -> setPDFDocument(cpdfDocument, pdfFilePath, pageIndex, pdfDocumentError, openPdfFinishCallback));
     });
   }
 
@@ -329,21 +369,31 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   }
 
   public void openPDF(Uri pdfUri, String password) {
-    openPDF(pdfUri, password, null);
+    openPDF(pdfUri, password,0, null);
+  }
+
+  public void openPDF(Uri pdfUri, String password, int pageIndex) {
+    openPDF(pdfUri, password, pageIndex, null);
   }
 
   public void openPDF(Uri pdfUri, String password, COnOpenPdfFinishCallback openPdfFinishCallback) {
+      openPDF(pdfUri, password, 0, openPdfFinishCallback);
+  }
+
+  public void openPDF(Uri pdfUri, String password, int pageIndex, COnOpenPdfFinishCallback openPdfFinishCallback) {
     CThreadPoolUtils.getInstance().executeIO(() -> {
       // Create a new instance of the CPDFDocument class, passing in the current context.
       CPDFDocument cpdfDocument = new CPDFDocument(getContext());
       // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
       CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfUri, password);
-      CThreadPoolUtils.getInstance().executeMain(() -> setPDFDocument(cpdfDocument, pdfUri, pdfDocumentError, openPdfFinishCallback));
+      CThreadPoolUtils.getInstance().executeMain(() -> setPDFDocument(cpdfDocument, pdfUri, pageIndex, pdfDocumentError, openPdfFinishCallback));
     });
   }
 
-  public void setPDFDocument(CPDFDocument cpdfDocument, Object pdf,
+  public void setPDFDocument(CPDFDocument cpdfDocument, Object pdf, int pageIndex,
       CPDFDocument.PDFDocumentError error, COnOpenPdfFinishCallback openPdfFinishCallback) {
+    isInitOpenPDF = true;
+    initPageIndex = pageIndex;
     CLog.e("ComPDFKit", "CPDFViewCtrl-openPDF:" + error.name());
     // Switch on the result of the open method to handle the different possible outcomes.
     switch (error) {
@@ -352,9 +402,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         CLog.e("ComPDFKit", "canWrite:" + cpdfDocument.isCanWrite() + ", hasRepaired:"
             + cpdfDocument.hasRepaired());
         cPdfReaderView.setPDFDocument(cpdfDocument);
-        cPdfReaderView.setDisplayPageIndex(0);
         updateScaleForLayout();
-        initCPDFSliderBar();
         addPageIndicator();
         if (cPdfReaderView.getEditManager() != null) {
           cPdfReaderView.getEditManager().disable();
@@ -387,9 +435,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         });
         verifyPasswordDialogFragment.setVerifyCompleteListener(document -> {
           cPdfReaderView.setPDFDocument(document);
-          cPdfReaderView.setDisplayPageIndex(0);
           updateScaleForLayout();
-          initCPDFSliderBar();
           addPageIndicator();
           if (cPdfReaderView.getEditManager() != null) {
             cPdfReaderView.getEditManager().disable();
@@ -445,6 +491,16 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   }
 
   public void savePDF(COnSaveCallback callback, COnSaveError error) {
+    boolean saveFileExtraFontSubset = false;
+    boolean saveIncremental = true;
+    if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null) {
+      saveFileExtraFontSubset = cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
+      saveIncremental = cpdfConfiguration.globalConfig.useSaveIncremental;
+    }
+    savePDF(saveIncremental, saveFileExtraFontSubset, callback, error);
+  }
+
+  public void savePDF(boolean saveIncremental, boolean fontSubset, COnSaveCallback callback, COnSaveError error) {
     CThreadPoolUtils.getInstance().executeMain(() -> {
       cPdfReaderView.getInkDrawHelper().onSave();
       cPdfReaderView.pauseAllRenderProcess();
@@ -462,17 +518,13 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         }
         return;
       }
-      exitEditMode();
       if (document.hasChanges()) {
         CThreadPoolUtils.getInstance().executeIO(() -> {
+          exitEditMode();
           try {
-            boolean saveFileExtraFontSubset = false;
-            if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null) {
-              saveFileExtraFontSubset = cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
-            }
-            CLog.e("ComPDFKit", "save pdf extra font subset:" + saveFileExtraFontSubset);
-            document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental,
-                saveFileExtraFontSubset);
+            CLog.e("ComPDFKit", "useSaveIncremental: " + saveIncremental + ", extraFontSubset:" + fontSubset);
+            document.save(saveIncremental ? CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental : CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveNoIncremental,
+                    fontSubset);
             if (document.shouleReloadDocument()) {
               document.reload();
               CThreadPoolUtils.getInstance().executeMain(() -> cPdfReaderView.reloadPages2());
@@ -560,8 +612,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   @Override
   public void onMoveToChild(int pageIndex) {
     currentPageIndex = pageIndex;
+    int duration = isInitOpenPDF ? 0 : 500;
+    isInitOpenPDF = false;
     if (slideBar != null) {
-      slideBar.setPageIndexByAnimation(pageIndex, 500);
+      slideBar.setPageIndexByAnimation(pageIndex, duration);
     }
     if (indicatorView != null) {
       indicatorView.setCurrentPageIndex(pageIndex);
@@ -779,15 +833,16 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   public void close(){
     try {
-      if (getCPdfReaderView().getPDFDocument() != null) {
-        getCPdfReaderView().getPDFDocument().close();
-      }
       getCPdfReaderView().getContextMenuShowListener().dismissContextMenu();
       saveGlobalCallback = null;
       saveGlobalErrorCallback = null;
       editStatusChangeListeners.clear();
       selectEditAreaChangeListeners.clear();
       pdfViewFocusedListenerList.clear();
+      if (getCPdfReaderView().getPDFDocument() != null) {
+        getCPdfReaderView().getPDFDocument().close();
+      }
+
     } catch (Exception ignored){
 
     }

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -32,6 +32,7 @@ import com.compdfkit.tools.annotation.pdfannotationbar.adapter.CPDFAnnotationToo
 import com.compdfkit.tools.annotation.pdfannotationbar.bean.CAnnotToolBean;
 import com.compdfkit.tools.annotation.pdfannotationbar.data.CAnnotationToolDatas;
 import com.compdfkit.tools.common.interfaces.COnAnnotationChangeListener;
+import com.compdfkit.tools.common.interfaces.COnAnnotationCreatePreparedListener;
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.utils.CListUtil;
 import com.compdfkit.tools.common.utils.CLog;
@@ -50,9 +51,11 @@ import com.compdfkit.ui.proxy.attach.IInkDrawCallback.Mode;
 import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.reader.CPDFReaderView.ViewMode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class CAnnotationToolbar extends FrameLayout {
 
@@ -71,7 +74,10 @@ public class CAnnotationToolbar extends FrameLayout {
 
     private CPDFViewCtrl pdfView;
 
-    private COnAnnotationChangeListener annotationChangeListener;
+
+    private List<COnAnnotationChangeListener> annotationChangeListeners = new ArrayList<>();
+
+    private List<COnAnnotationCreatePreparedListener> annotationCreatePreparedListeners = new ArrayList<>();
 
     private LinearLayout llAnnotTools;
 
@@ -219,9 +225,7 @@ public class CAnnotationToolbar extends FrameLayout {
         pdfView.resetAnnotationType();
         pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
         pdfView.getCPdfReaderView().getInkDrawHelper().setMode(Mode.DRAW);
-        if (annotationChangeListener != null) {
-            annotationChangeListener.change(CAnnotationType.UNKNOWN);
-        }
+        annotationChangeListenersChanged(CAnnotationType.UNKNOWN);
     }
 
     public void switchAnnotationType(CAnnotationType type) {
@@ -233,7 +237,7 @@ public class CAnnotationToolbar extends FrameLayout {
         if (ivSetting != null) {
             ivSetting.setEnabled(toolListAdapter.annotEnableSetting());
         }
-
+        AnnotationsConfig annotationsConfig = pdfView.getCPDFConfiguration().annotationsConfig;
         pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
         pdfView.getCPdfReaderView().removeAllAnnotFocus();
         switch (type) {
@@ -264,17 +268,45 @@ public class CAnnotationToolbar extends FrameLayout {
                 styleManager.updateStyle(style);
                 break;
             case SIGNATURE:
+                pdfView.changeAnnotationType(CPDFAnnotation.Type.STAMP);
+                if (annotationsConfig.autoShowSignPicker){
+                    showAnnotStyleDialog();
+                } else {
+                    annotationCreatePreparedListenersChanged(CAnnotationType.SIGNATURE, null);
+                }
+                break;
             case STAMP:
+                pdfView.changeAnnotationType(CPDFAnnotation.Type.STAMP);
+                if (annotationsConfig.autoShowStampPicker){
+                    showAnnotStyleDialog();
+                } else {
+                    annotationCreatePreparedListenersChanged(CAnnotationType.STAMP, null);
+                }
+                break;
             case PIC:
                 pdfView.changeAnnotationType(CPDFAnnotation.Type.STAMP);
-                showAnnotStyleDialog();
+                if (annotationsConfig.autoShowPicPicker){
+                    showAnnotStyleDialog();
+                } else {
+                    annotationCreatePreparedListenersChanged(CAnnotationType.PIC, null);
+                }
                 break;
             default:
                 pdfView.changeAnnotationType(CPDFAnnotation.Type.valueOf(type.name()));
                 break;
         }
-        if (annotationChangeListener != null) {
-            annotationChangeListener.change(type);
+        annotationChangeListenersChanged(type);
+    }
+
+    public void annotationChangeListenersChanged(CAnnotationType type) {
+        for (COnAnnotationChangeListener listener : annotationChangeListeners) {
+            listener.change(type);
+        }
+    }
+
+    public void annotationCreatePreparedListenersChanged(CAnnotationType type,CPDFAnnotation annotation) {
+        for (COnAnnotationCreatePreparedListener listener : annotationCreatePreparedListeners) {
+            listener.prepared(type, annotation);
         }
     }
 
@@ -389,10 +421,6 @@ public class CAnnotationToolbar extends FrameLayout {
         toolListAdapter.updateItem(CAnnotationType.INK, inkStyle.getColor(), inkStyle.getOpacity());
     }
 
-    public void setAnnotationChangeListener(COnAnnotationChangeListener annotationChangeListener) {
-        this.annotationChangeListener = annotationChangeListener;
-    }
-
     public void setTools(List<AnnotationsConfig.AnnotationTools> tools) {
         llAnnotTools.setVisibility(tools != null && tools.size() > 0 ? VISIBLE : GONE);
         if (tools != null && tools.size() > 0) {
@@ -445,8 +473,6 @@ public class CAnnotationToolbar extends FrameLayout {
             }
         }
     }
-
-
 
     public AppCompatImageView getSettingButton() {
         return ivSetting;
@@ -526,4 +552,14 @@ public class CAnnotationToolbar extends FrameLayout {
         rvAnnotationList.scrollToPosition(0);
         redoUndoManager();
     }
+
+    public void addAnnotationChangeListener(COnAnnotationChangeListener listener) {
+        annotationChangeListeners.add(listener);
+    }
+
+    public void addAnnotationCreatePreparedListener(COnAnnotationCreatePreparedListener listener) {
+        annotationCreatePreparedListeners.add(listener);
+    }
+
+
 }

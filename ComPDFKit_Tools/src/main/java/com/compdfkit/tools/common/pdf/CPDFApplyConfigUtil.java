@@ -1,10 +1,10 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
- * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
- * This notice may not be removed from this file.
+ * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES. This notice
+ * may not be removed from this file.
  */
 
 package com.compdfkit.tools.common.pdf;
@@ -13,6 +13,12 @@ package com.compdfkit.tools.common.pdf;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.Rect;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
@@ -22,11 +28,18 @@ import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.document.CPDFDocument;
+import com.compdfkit.core.edit.CPDFEditConfig.Builder;
+import com.compdfkit.core.edit.CPDFEditManager;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.CPDFSearchConfig;
 import com.compdfkit.tools.common.pdf.config.CPDFUIVisibilityMode;
+import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig;
+import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.FormPreview;
+import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.Icons;
+import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.RectStyle;
+import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.ScreenshotRectStyle;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.pdf.config.ModeConfig;
@@ -43,6 +56,7 @@ import com.compdfkit.tools.common.pdf.config.forms.FormsListBoxAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsPushButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsRadioButtonAttr;
 import com.compdfkit.tools.common.pdf.config.forms.FormsTextFieldAttr;
+import com.compdfkit.tools.common.utils.image.CBitmapUtil;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
@@ -83,7 +97,7 @@ public class CPDFApplyConfigUtil {
     }
 
     public int getGlobalThemeId() {
-        if (themeId == 0){
+        if (themeId == 0) {
             themeId = R.style.ComPDFKit_Theme_Light;
         }
         return themeId;
@@ -92,13 +106,14 @@ public class CPDFApplyConfigUtil {
     public void applyConfiguration(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
         this.configuration = configuration;
         applyReaderViewConfig(fragment, configuration);
-        applyModeConfig(fragment, configuration);
+//        applyModeConfig(fragment, configuration);
         applyAnnotationConfig(fragment, configuration);
         applyContentEditorConfig(fragment, configuration);
         applyFormsConfig(fragment, configuration);
     }
 
-    private void applyReaderViewConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
+    private void applyReaderViewConfig(CPDFDocumentFragment fragment,
+        CPDFConfiguration configuration) {
         CPDFReaderView readerView = fragment.pdfView.getCPdfReaderView();
         if (configuration.readerViewConfig != null) {
             ReaderViewConfig readerViewConfig = configuration.readerViewConfig;
@@ -125,31 +140,44 @@ public class CPDFApplyConfigUtil {
             readerView.setCropMode(readerViewConfig.cropMode);
             readerView.setPageSameWidth(readerViewConfig.pageSameWidth);
             readerView.setMinScaleEnable(readerViewConfig.enableMinScale);
+            readerView.setEnableDoubleClickScale(readerViewConfig.enableDoubleTapZoom);
             switch (readerViewConfig.themes) {
                 case Dark:
-                    int darkColor = ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_dark);
+                    int darkColor = ContextCompat.getColor(fragment.getContext(),
+                        R.color.tools_themes_dark);
                     readerView.setReadBackgroundColor(darkColor);
-                    fragment.pdfView.setBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_pdf_view_ctrl_background_color_dark));
+                    fragment.pdfView.setBackgroundColor(
+                        ContextCompat.getColor(fragment.getContext(),
+                            R.color.tools_pdf_view_ctrl_background_color_dark));
                     break;
                 case Sepia:
-                    int sepiaColor = ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_sepia);
+                    int sepiaColor = ContextCompat.getColor(fragment.getContext(),
+                        R.color.tools_themes_sepia);
                     readerView.setReadBackgroundColor(sepiaColor);
-                    fragment.pdfView.setBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_pdf_view_ctrl_background_color_sepia));
+                    fragment.pdfView.setBackgroundColor(
+                        ContextCompat.getColor(fragment.getContext(),
+                            R.color.tools_pdf_view_ctrl_background_color_sepia));
                     break;
                 case Reseda:
-                    int resedaColor = ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_reseda);
+                    int resedaColor = ContextCompat.getColor(fragment.getContext(),
+                        R.color.tools_themes_reseda);
                     readerView.setReadBackgroundColor(resedaColor);
-                    fragment.pdfView.setBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_pdf_view_ctrl_background_color_reseda));
+                    fragment.pdfView.setBackgroundColor(
+                        ContextCompat.getColor(fragment.getContext(),
+                            R.color.tools_pdf_view_ctrl_background_color_reseda));
                     break;
                 default:
-                    readerView.setReadBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_light));
-                    fragment.pdfView.setBackgroundColor(ContextCompat.getColor(fragment.getContext(), R.color.tools_pdf_view_ctrl_background_color));
+                    readerView.setReadBackgroundColor(
+                        ContextCompat.getColor(fragment.getContext(), R.color.tools_themes_light));
+                    fragment.pdfView.setBackgroundColor(
+                        ContextCompat.getColor(fragment.getContext(),
+                            R.color.tools_pdf_view_ctrl_background_color));
                     break;
             }
             readerView.setPageSpacing(readerViewConfig.pageSpacing);
             readerView.setScale(readerViewConfig.pageScale);
             ArrayList<Integer> margins = readerViewConfig.margins;
-            if (margins != null && margins.size() == 4){
+            if (margins != null && margins.size() == 4) {
                 int left = margins.get(0);
                 int top = margins.get(1);
                 int right = margins.get(2);
@@ -159,7 +187,7 @@ public class CPDFApplyConfigUtil {
                 readerView.setReaderViewBottomMargin(bottom);
             }
             readerView.setAnnotationsVisible(readerViewConfig.annotationsVisible);
-            readerView.setEnableAutoTextInput(readerViewConfig.enableAutoCreateEditTextInput);
+            readerView.setEnableAutoTextInput(readerViewConfig.enableCreateEditTextInput);
             // set search text rect color
             CPDFSearchConfig searchConfig = configuration.globalConfig.search;
             CPDFReaderAttribute readerAttribute = readerView.getReaderAttribute();
@@ -179,10 +207,9 @@ public class CPDFApplyConfigUtil {
         }
     }
 
-    private void applyModeConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
+    public void applyModeConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
         if (configuration.modeConfig != null) {
             ModeConfig modeConfig = configuration.modeConfig;
-            fragment.pdfToolBar.addModes(modeConfig.availableViewModes);
             if (modeConfig.initialViewMode != CPreviewMode.PageEdit) {
                 if (!modeConfig.availableViewModes.contains(modeConfig.initialViewMode)) {
                     fragment.setPreviewMode(CPreviewMode.Viewer);
@@ -201,7 +228,7 @@ public class CPDFApplyConfigUtil {
         }
     }
 
-    public void appleUiConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration){
+    public void appleUiConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
         ModeConfig modeConfig = configuration.modeConfig;
         ToolbarConfig toolbarConfig = configuration.toolbarConfig;
         if (modeConfig.uiVisibilityMode == CPDFUIVisibilityMode.NEVER) {
@@ -244,19 +271,144 @@ public class CPDFApplyConfigUtil {
         }
     }
 
-    private void applyAnnotationConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
+    public void applyReaderViewUiStyle(CPDFReaderView readerView, CPDFUiStyleConfig uiStyleConfig) {
+        CPDFEditManager editManager = readerView.getEditManager();
+        Builder builder = editManager.getEditConfigBuilder();
+
+        // set icons
+        Icons icons = uiStyleConfig.icons;
+        if (icons != null) {
+            int selectTextLeftIconResId = CBitmapUtil.getBitmapResId(readerView.getContext(),
+                icons.selectTextLeftIcon);
+            if (selectTextLeftIconResId != 0) {
+                builder.setSelectLeftDrawableRes(selectTextLeftIconResId);
+            }
+            int selectTextRightIconResId = CBitmapUtil.getBitmapResId(readerView.getContext(),
+                icons.selectTextRightIcon);
+            if (selectTextRightIconResId != 0) {
+                builder.setSelectRightDrawableRes(selectTextRightIconResId);
+            }
+            int selectTextIconResId = CBitmapUtil.getBitmapResId(readerView.getContext(),
+                icons.selectTextIcon);
+            if (selectTextIconResId != 0) {
+                builder.setSelectDrawableRes(selectTextIconResId);
+            }
+            int rotationAnnotationIconResId = CBitmapUtil.getBitmapResId(readerView.getContext(),
+                icons.rotationAnnotationIcon);
+            if (rotationAnnotationIconResId != 0) {
+                builder.setRotateAnnotationDrawableRes(rotationAnnotationIconResId);
+            }
+        }
+
+        // set select text color
+        if (!TextUtils.isEmpty(uiStyleConfig.selectTextColor)) {
+            builder.setSelectTextColor(Color.parseColor(uiStyleConfig.selectTextColor));
+        }
+
+
+        // set display page rect style
+        if (uiStyleConfig.displayPageRect != null) {
+            RectStyle rectStyle = uiStyleConfig.displayPageRect;
+            builder.setDisplayPageRectBorderColor(rectStyle.getBorderColor("#1460F3"));
+            builder.setDisplayPageRectBorderAlpha(
+                CViewUtils.getAlphaFromHex(rectStyle.borderColor));
+            builder.setDisplayPageRectBorderWidth(rectStyle.borderWidth);
+            builder.setDisplayPageRectFillColor(rectStyle.getFillColor("#4D1460F3"));
+            builder.setDisplayPageRectFillAlpha(CViewUtils.getAlphaFromHex(rectStyle.fillColor));
+            builder.setDisplayPageRectDashArr(rectStyle.borderDashPattern);
+        }
+
+        // set screenshot rect style
+        if (uiStyleConfig.screenshot != null) {
+            ScreenshotRectStyle screenshot = uiStyleConfig.screenshot;
+            builder.setScreenshotOutsideColor(screenshot.getOutSideColor("#00000000"));
+            builder.setScreenshotBorderColor(screenshot.getBorderColor("#FF0000FF"));
+            builder.setScreenshotBorderDash(screenshot.borderDashPattern);
+            builder.setScreenshotRectColor(screenshot.getFillColor("#CCE5E5FF"));
+            builder.setScreenshotBorderWidth(screenshot.borderWidth);
+        }
+
+        // set form preview style
+        if (uiStyleConfig.formPreview != null) {
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            FormPreview formPreview = uiStyleConfig.formPreview;
+            paint.setColor(formPreview.getColor("#4D1460F3"));
+            paint.setStrokeWidth(formPreview.strokeWidth);
+            switch (formPreview.style) {
+                case "stroke":
+                    paint.setStyle(Style.STROKE);
+                    break;
+                case "fill_and_stroke":
+                    paint.setStyle(Style.FILL_AND_STROKE);
+                    break;
+                default:
+                    paint.setStyle(Style.FILL);
+                    break;
+            }
+            builder.setFormPreviewPaint(paint);
+        }
+
+        // set default border style
+        if (uiStyleConfig.defaultBorderStyle != null) {
+            CPDFUiStyleConfig.BorderStyle borderStyle = uiStyleConfig.defaultBorderStyle;
+            builder.setDefalutBoardColor(borderStyle.getBorderColor("#FF888888"));
+            builder.setDefalutBoardWidth(borderStyle.borderWidth);
+            builder.setDefaultBorderDashArr(borderStyle.borderDashPattern);
+        }
+
+        // set focus border style
+        if (uiStyleConfig.focusBorderStyle != null) {
+            CPDFUiStyleConfig.FocusBorderStyle focusBorderStyle = uiStyleConfig.focusBorderStyle;
+            builder.setFocusBorderColor(focusBorderStyle.getBorderColor("#FF2C69DE"));
+            builder.setFocusBorderWidth(focusBorderStyle.borderWidth);
+            builder.setFocusBorderDashArr(focusBorderStyle.borderDashPattern);
+            builder.setTouchNodeColor(focusBorderStyle.getNodeColor("#FF2C69DE"));
+        }
+
+        // set crop image style
+        if (uiStyleConfig.cropImageStyle != null) {
+            CPDFUiStyleConfig.BorderStyle cropImageStyle = uiStyleConfig.cropImageStyle;
+            builder.setCropImageBorderColor(cropImageStyle.getBorderColor("#FF2C69DE"));
+            builder.setCropImageBorderWidth(cropImageStyle.borderWidth);
+            builder.setCropImageBorderDashArr(cropImageStyle.borderDashPattern);
+        }
+
+        editManager.updateEditConfig(builder.build());
+        if (!TextUtils.isEmpty(uiStyleConfig.bookmarkIcon)){
+            int bookmarkTag = CBitmapUtil.getBitmapResId(readerView.getContext(),
+                uiStyleConfig.bookmarkIcon);
+            if (bookmarkTag != 0){
+                Bitmap bookmarkBitmap = CBitmapUtil.decodeBitmap(readerView.getContext(), bookmarkTag);
+                if (bookmarkBitmap != null && !bookmarkBitmap.isRecycled()) {
+                    Rect bookmarkImageRect = new Rect(0, 0, bookmarkBitmap.getWidth(), bookmarkBitmap.getHeight());
+                    CPDFReaderAttribute readerAttribute = readerView.getReaderAttribute();
+                    readerAttribute.bookmarkImage = bookmarkBitmap;
+                    readerAttribute.bookmarkImageRect = bookmarkImageRect;
+                }
+            }
+        }
+
+    }
+
+    private void applyAnnotationConfig(CPDFDocumentFragment fragment,
+        CPDFConfiguration configuration) {
         AnnotationsConfig annotationsConfig = configuration.annotationsConfig;
         AnnotationsAttributes attributes = annotationsConfig.initAttribute;
 
         //-----  note and markup attr --------------------------------
         CStyleManager.Builder builder = new CStyleManager.Builder()
-                .setNote(attributes.note.getColor(), attributes.note.getAlpha())
-                .setMarkup(CStyleType.ANNOT_HIGHLIGHT, attributes.highlight.getColor(), attributes.highlight.getAlpha())
-                .setMarkup(CStyleType.ANNOT_UNDERLINE, attributes.underline.getColor(), attributes.underline.getAlpha())
-                .setMarkup(CStyleType.ANNOT_SQUIGGLY, attributes.squiggly.getColor(), attributes.squiggly.getAlpha())
-                .setMarkup(CStyleType.ANNOT_STRIKEOUT, attributes.strikeout.getColor(), attributes.strikeout.getAlpha())
-                .setInkAttribute(attributes.ink.getColor(), attributes.ink.getAlpha(),
-                        (int) attributes.ink.getBorderWidth(), (int) attributes.ink.getEraserWidth());
+            .setNote(attributes.note.getColor(), attributes.note.getAlpha())
+            .setMarkup(CStyleType.ANNOT_HIGHLIGHT, attributes.highlight.getColor(),
+                attributes.highlight.getAlpha())
+            .setMarkup(CStyleType.ANNOT_UNDERLINE, attributes.underline.getColor(),
+                attributes.underline.getAlpha())
+            .setMarkup(CStyleType.ANNOT_SQUIGGLY, attributes.squiggly.getColor(),
+                attributes.squiggly.getAlpha())
+            .setMarkup(CStyleType.ANNOT_STRIKEOUT, attributes.strikeout.getColor(),
+                attributes.strikeout.getAlpha())
+            .setInkAttribute(attributes.ink.getColor(), attributes.ink.getAlpha(),
+                (int) attributes.ink.getBorderWidth(), (int) attributes.ink.getEraserWidth());
 
         //-----  shape attr --------------------------------
         applyAnnotShapeAttr(CStyleType.ANNOT_SQUARE, attributes.square, builder);
@@ -277,41 +429,43 @@ public class CPDFApplyConfigUtil {
         //----- update --------------------------------
         builder.init(fragment.pdfView, true);
 
-        fragment.annotationToolbar.setAnnotationList(annotationsConfig.availableTypes.toArray(new CAnnotationType[0]));
+        fragment.annotationToolbar.setAnnotationList(
+            annotationsConfig.availableTypes.toArray(new CAnnotationType[0]));
         fragment.annotationToolbar.setTools(annotationsConfig.availableTools);
     }
 
-    private void applyAnnotShapeAttr(CStyleType styleType, AnnotShapeAttr shapeAttr, CStyleManager.Builder builder) {
+    private void applyAnnotShapeAttr(CStyleType styleType, AnnotShapeAttr shapeAttr,
+        CStyleManager.Builder builder) {
         AnnotShapeAttr.ShapeBorderStyle shapeBorderStyle = shapeAttr.getBorderStyle();
         if (styleType == CStyleType.ANNOT_ARROW) {
             builder.setShapeArrow(
-                    shapeAttr.getBorderColor(),
-                    shapeAttr.getBorderAlpha(),
-                    shapeAttr.getFillColor(),
-                    shapeAttr.getBorderAlpha(),
+                shapeAttr.getBorderColor(),
+                shapeAttr.getBorderAlpha(),
+                shapeAttr.getFillColor(),
+                shapeAttr.getBorderAlpha(),
+                shapeAttr.getBorderWidth(),
+                CPDFLineAnnotation.LineType.valueOf(shapeAttr.getStartLineType().id),
+                CPDFLineAnnotation.LineType.valueOf(shapeAttr.getTailLineType().id),
+                new CPDFBorderStyle(CPDFBorderStyle.Style.valueOf(shapeBorderStyle.borderStyle.id),
                     shapeAttr.getBorderWidth(),
-                    CPDFLineAnnotation.LineType.valueOf(shapeAttr.getStartLineType().id),
-                    CPDFLineAnnotation.LineType.valueOf(shapeAttr.getTailLineType().id),
-                    new CPDFBorderStyle(CPDFBorderStyle.Style.valueOf(shapeBorderStyle.borderStyle.id),
-                            shapeAttr.getBorderWidth(),
-                            new float[]{
-                                    shapeBorderStyle.dashWidth,
-                                    shapeBorderStyle.dashGap,
-                            }
-                    ));
+                    new float[]{
+                        shapeBorderStyle.dashWidth,
+                        shapeBorderStyle.dashGap,
+                    }
+                ));
         } else if (styleType == CStyleType.ANNOT_LINE) {
             builder.setShape(styleType,
-                    shapeAttr.getBorderColor(),
-                    shapeAttr.getBorderAlpha(),
-                    shapeAttr.getFillColor(),
-                    shapeAttr.getBorderAlpha(),
+                shapeAttr.getBorderColor(),
+                shapeAttr.getBorderAlpha(),
+                shapeAttr.getFillColor(),
+                shapeAttr.getBorderAlpha(),
+                shapeAttr.getBorderWidth(),
+                new CPDFBorderStyle(CPDFBorderStyle.Style.valueOf(shapeBorderStyle.borderStyle.id),
                     shapeAttr.getBorderWidth(),
-                    new CPDFBorderStyle(CPDFBorderStyle.Style.valueOf(shapeBorderStyle.borderStyle.id),
-                            shapeAttr.getBorderWidth(),
-                            new float[]{
-                                    shapeBorderStyle.dashWidth,
-                                    shapeBorderStyle.dashGap,
-                            })
+                    new float[]{
+                        shapeBorderStyle.dashWidth,
+                        shapeBorderStyle.dashGap,
+                    })
             );
         } else {
             CAnnotStyle shapeAnnotStyle = new CAnnotStyle(styleType);
@@ -321,22 +475,25 @@ public class CPDFApplyConfigUtil {
             shapeAnnotStyle.setFillColorOpacity(shapeAttr.getColorAlpha());
             shapeAnnotStyle.setBorderWidth(shapeAttr.getBorderWidth());
 
-            CPDFBorderStyle borderStyle = new CPDFBorderStyle(CPDFBorderStyle.Style.valueOf(shapeBorderStyle.borderStyle.id),
-                    shapeAttr.getBorderWidth(),
-                    new float[]{
-                            shapeBorderStyle.dashWidth,
-                            shapeBorderStyle.dashGap,
-                    });
+            CPDFBorderStyle borderStyle = new CPDFBorderStyle(
+                CPDFBorderStyle.Style.valueOf(shapeBorderStyle.borderStyle.id),
+                shapeAttr.getBorderWidth(),
+                new float[]{
+                    shapeBorderStyle.dashWidth,
+                    shapeBorderStyle.dashGap,
+                });
             shapeAnnotStyle.setBorderStyle(borderStyle);
             shapeAnnotStyle.setBordEffectType(shapeAttr.getBorderEffectType());
             builder.setAnnotStyle(shapeAnnotStyle);
         }
     }
 
-    private void applyContentEditorConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
+    private void applyContentEditorConfig(CPDFDocumentFragment fragment,
+        CPDFConfiguration configuration) {
         ContentEditorConfig editorConfig = configuration.contentEditorConfig;
         fragment.editToolBar.setTools(editorConfig.availableTools);
-        fragment.editToolBar.setEditType(editorConfig.availableTypes.toArray(new ContentEditorConfig.ContentEditorType[0]));
+        fragment.editToolBar.setEditType(
+            editorConfig.availableTypes.toArray(new ContentEditorConfig.ContentEditorType[0]));
 
         ContentEditorConfig.ContentEditorAttr contentEditorAttr = editorConfig.initAttribute;
         ContentEditorConfig.TextAttr textAttr = contentEditorAttr.text;
@@ -347,13 +504,15 @@ public class CPDFApplyConfigUtil {
         editorTextAttr.setAlpha(textAttr.getFontColorAlpha());
         editorTextAttr.setAlignment(textAttr.getAlignment());
 
-        String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(textAttr.getTypeface(), textAttr.isBold(), textAttr.isItalic());
-        editorTextAttr.setTextAttribute(new CPDFTextAttribute(psName, textAttr.getFontSize(), textAttr.getFontColor()));
+        editorTextAttr.setTextAttribute(
+            new CPDFTextAttribute(textAttr.getPsName(), textAttr.getFontSize(),
+                textAttr.getFontColor()));
         editorTextAttr.onstore();
     }
 
     private void applyFormsConfig(CPDFDocumentFragment fragment, CPDFConfiguration configuration) {
-        fragment.formToolBar.setFormList(configuration.formsConfig.availableTypes.toArray(new CPDFWidget.WidgetType[0]));
+        fragment.formToolBar.setFormList(
+            configuration.formsConfig.availableTypes.toArray(new CPDFWidget.WidgetType[0]));
         fragment.formToolBar.setTools(configuration.formsConfig.availableTools);
 
         FormsAttributes initAttribute = configuration.formsConfig.initAttribute;
@@ -375,13 +534,13 @@ public class CPDFApplyConfigUtil {
 
         FormsCheckBoxAttr checkBox = initAttribute.checkBox;
         builder.setCheckBox(checkBox.getBorderColor(), checkBox.getFillColor(),
-                        checkBox.getCheckedColor(), (int) checkBox.getBorderWidth(),
-                        checkBox.checkedStyle, checkBox.isChecked)
-                .setRadioButton(
-                        radioButtonAttr.getBorderColor(), radioButtonAttr.getFillColor(),
-                        radioButtonAttr.getCheckedColor(), (int) radioButtonAttr.getBorderWidth(),
-                        radioButtonAttr.checkedStyle, radioButtonAttr.isChecked
-                );
+                checkBox.getCheckedColor(), (int) checkBox.getBorderWidth(),
+                checkBox.checkedStyle, checkBox.isChecked)
+            .setRadioButton(
+                radioButtonAttr.getBorderColor(), radioButtonAttr.getFillColor(),
+                radioButtonAttr.getCheckedColor(), (int) radioButtonAttr.getBorderWidth(),
+                radioButtonAttr.checkedStyle, radioButtonAttr.isChecked
+            );
 
         FormsListBoxAttr listBoxAttr = initAttribute.listBox;
         CAnnotStyle listBoxStyle = new CAnnotStyle(CStyleType.FORM_LIST_BOX);
@@ -428,7 +587,7 @@ public class CPDFApplyConfigUtil {
         builder.init(fragment.pdfView, true);
     }
 
-    public int getGlobalThemeId(Context context, CPDFConfiguration configuration){
+    public int getGlobalThemeId(Context context, CPDFConfiguration configuration) {
         switch (configuration.globalConfig.themeMode) {
             case Light:
                 themeId = R.style.ComPDFKit_Theme_Light;
@@ -447,8 +606,15 @@ public class CPDFApplyConfigUtil {
         return themeId;
     }
 
+    public ContextMenuConfig getContextMenuConfig() {
+        if (configuration == null) {
+            return null;
+        }
+        return configuration.contextMenuConfig;
+    }
+
     public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getGlobalContextMenuConfig() {
-        if (configuration == null){
+        if (configuration == null) {
             return new HashMap<>();
         }
         ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
@@ -456,7 +622,7 @@ public class CPDFApplyConfigUtil {
     }
 
     public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getViewModeContextMenuConfig() {
-        if (configuration == null){
+        if (configuration == null) {
             return new HashMap<>();
         }
         ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
@@ -464,7 +630,7 @@ public class CPDFApplyConfigUtil {
     }
 
     public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getAnnotationModeContextMenuConfig() {
-        if (configuration == null){
+        if (configuration == null) {
             return new HashMap<>();
         }
         ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
@@ -472,7 +638,7 @@ public class CPDFApplyConfigUtil {
     }
 
     public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getContentEditorModeContextMenuConfig() {
-        if (configuration == null){
+        if (configuration == null) {
             return new HashMap<>();
         }
         ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
@@ -480,7 +646,7 @@ public class CPDFApplyConfigUtil {
     }
 
     public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getFormsModeContextMenuConfig() {
-        if (configuration == null){
+        if (configuration == null) {
             return new HashMap<>();
         }
         ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;
@@ -488,7 +654,7 @@ public class CPDFApplyConfigUtil {
     }
 
     public Map<String, List<ContextMenuConfig.ContextMenuActionItem>> getSignatureModeContextMenuConfig() {
-        if (configuration == null){
+        if (configuration == null) {
             return new HashMap<>();
         }
         ContextMenuConfig contextMenuConfig = configuration.contextMenuConfig;

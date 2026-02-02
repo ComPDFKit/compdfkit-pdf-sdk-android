@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  *
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -18,8 +18,13 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSelectConten
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.ui.reader.CPDFPageView;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +41,7 @@ public class CopyContextMenuView implements ContextMenuSelectContentProvider {
         for (ContextMenuConfig.ContextMenuActionItem item : textSelectMenu) {
             switch (item.key){
                 case "copy":
-                    menuView.addItem(R.string.tools_copy, v -> {
+                    menuView.addItem(item, R.string.tools_copy, v -> {
                         if (helper.isAllowsCopying()){
                             pageView.operateSelections(CPDFPageView.SelectFuncType.COPY);
                             helper.dismissContextMenu();
@@ -48,9 +53,23 @@ public class CopyContextMenuView implements ContextMenuSelectContentProvider {
                         }
                     });
                     break;
+                case "custom":
+                    menuView.addItem(item, v -> {
+                        Map<String, Object> extraMap = new HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.TEXT, CPDFAnnotationManager.getSelectionText(helper.getReaderView(), pageView));
+                        extraMap.put(CPDFCustomEventField.RECT, CPDFAnnotationManager.getSelectionRect(helper.getReaderView(), pageView));
+                        extraMap.put(CPDFCustomEventField.PAGE_INDEX, pageView.getPageNum());
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(item.identifier, extraMap);
+                        pageView.getSelectionHelper().cancelSelections();
+                        helper.dismissContextMenu();
+                    });
+                    break;
             }
         }
 
         return menuView;
     }
+
+
 }

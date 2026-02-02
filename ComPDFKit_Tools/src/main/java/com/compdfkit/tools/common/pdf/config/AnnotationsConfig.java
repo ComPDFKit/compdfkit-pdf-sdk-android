@@ -1,10 +1,10 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
- * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
- * This notice may not be removed from this file.
+ * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES. This notice
+ * may not be removed from this file.
  */
 
 package com.compdfkit.tools.common.pdf.config;
@@ -59,13 +59,25 @@ public class AnnotationsConfig implements Serializable {
      */
     public AnnotationsAttributes initAttribute = new AnnotationsAttributes();
 
+    public boolean autoShowSignPicker = true;
+
+    public boolean autoShowStampPicker = true;
+
+    public boolean autoShowLinkDialog = true;
+
+    public boolean autoShowPicPicker = true;
+
     @NonNull
     @Override
     public String toString() {
         return "[annotationsConfig: availableTypes:" + availableTypes.toString() +
-                ", availableTools:" + availableTools.toString() +
-                "initAttribute: " + initAttribute.toString() +
-                " ]";
+            ", availableTools:" + availableTools.toString() +
+            ", initAttribute: " + initAttribute.toString() +
+            ", autoShowSignPicker: " + autoShowSignPicker +
+            ", autoShowStampPicker: " + autoShowStampPicker +
+            ", autoShowLinkDialog: " + autoShowLinkDialog +
+            ", autoShowPicPicker: " + autoShowPicPicker +
+            " ]";
     }
 
     public enum AnnotationTools implements Serializable {

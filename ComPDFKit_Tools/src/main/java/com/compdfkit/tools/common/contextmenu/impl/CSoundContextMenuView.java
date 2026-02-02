@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -23,11 +23,15 @@ import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuSoundContent
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.ui.proxy.CPDFSoundAnnotImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,20 +54,20 @@ public class CSoundContextMenuView implements ContextMenuSoundContentProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : soundContent) {
             switch (contextMenuActionItem.key) {
                 case "reply":
-                    menuView.addItem(R.string.tools_reply, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_reply, v -> {
                         new CPDFAnnotationManager().showAddReplyDialog(pageView, soundAnnotImpl, helper, true);
                         helper.dismissContextMenu();
                     });
                     break;
                 case "viewReply":
-                    menuView.addItem(R.string.tools_view_reply, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_view_reply, v -> {
                         new CPDFAnnotationManager().showReplyDetailsDialog(pageView, soundAnnotImpl, helper);
                         helper.dismissContextMenu();
                     });
                     break;
                 case "play":
                     if (soundAnnotation.isRecorded()) {
-                        menuView.addItem(R.string.tools_play, v -> {
+                        menuView.addItem(contextMenuActionItem, R.string.tools_play, v -> {
                             new SimpleBackgroundTask<String>(helper.getReaderView().getContext()) {
                                 @Override
                                 protected String onRun() {
@@ -87,7 +91,7 @@ public class CSoundContextMenuView implements ContextMenuSoundContentProvider {
                     break;
                 case "record":
                     if (!soundAnnotation.isRecorded()){
-                        menuView.addItem(R.string.tools_record, v -> {
+                        menuView.addItem(contextMenuActionItem, R.string.tools_record, v -> {
                             helper.setPopupWindowDismissListener(null);
                             helper.dismissContextMenu();
                             CRecordVoicePopupWindow voicePopupWindow = new CRecordVoicePopupWindow(pageView.getContext(),
@@ -104,8 +108,17 @@ public class CSoundContextMenuView implements ContextMenuSoundContentProvider {
                     }
                     break;
                 case "delete":
-                    menuView.addItem(R.string.tools_delete, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_delete, v -> {
                         pageView.deleteAnnotation(soundAnnotImpl);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.ANNOTATION, soundAnnotation);
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
                         helper.dismissContextMenu();
                     });
                     break;

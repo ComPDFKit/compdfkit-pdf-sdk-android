@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -75,11 +75,14 @@ public class ConstraintSetUtils {
         constraintSet.setVisibility(view.getId(), ConstraintSet.GONE);
     }
 
-    public void apply(ConstraintSet constraintSet, ConstraintLayout rootView){
+
+    public void apply(ConstraintSet constraintSet, ConstraintLayout rootView, boolean enableTransition){
         AutoTransition autoTransition = new AutoTransition();
         autoTransition.setDuration(200);
         autoTransition.setInterpolator(new LinearOutSlowInInterpolator());
-        TransitionManager.beginDelayedTransition(rootView, autoTransition);
+        if (enableTransition){
+            TransitionManager.beginDelayedTransition(rootView, autoTransition);
+        }
         constraintSet.applyTo(rootView);
     }
 

@@ -554,4 +554,11 @@
     <string name="tools_keep_editing">Keep editing</string>
     <string name="tools_yes">Yes</string>
     <string name="tools_no">No</string>
+
+    <string name="tools_back">Exit</string>
+    <string name="tools_thumbnail">Thumbnail</string>
+    <string name="tools_search">Search</string>
+    <string name="tools_bota">BOTA</string>
+    <string name="tools_menu">Menu</string>
+    <string name="tools_saveing">Saving…</string>
 </resources>

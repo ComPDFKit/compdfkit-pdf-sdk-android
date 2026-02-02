@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -20,6 +20,9 @@ import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.pdf.config.GlobalConfig;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.signature.CSignaturesUtils;
 import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
 import com.compdfkit.ui.proxy.form.CPDFSignatureWidgetImpl;
@@ -46,7 +49,7 @@ public class CSignatureContextMenuView implements ContextMenuFormSignProvider {
             switch (contextMenuActionItem.key) {
                 case "startToSign":
                     if (!signatureWidget.isSigned()) {
-                        menuView.addItem(R.string.tools_sign, view -> {
+                        menuView.addItem(contextMenuActionItem, R.string.tools_sign, view -> {
                             CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
                             if (configuration == null) {
                                 CSignaturesUtils.manualSelectSignature((CPDFSignatureWidgetImpl) annotImpl, helper.getReaderView(), pageView);
@@ -69,8 +72,17 @@ public class CSignatureContextMenuView implements ContextMenuFormSignProvider {
                     }
                     break;
                 case "delete":
-                    menuView.addItem(R.string.tools_delete, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_delete, v -> {
                         pageView.deleteAnnotation(annotImpl);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new java.util.HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.WIDGET, signatureWidget);
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
                         helper.dismissContextMenu();
                     });
                     break;

@@ -1,10 +1,10 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
- * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
- * This notice may not be removed from this file.
+ * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES. This notice
+ * may not be removed from this file.
  */
 
 package com.compdfkit.tools.common.views;
@@ -57,6 +57,7 @@ import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
  * @see CToolBar#setBackBtnClickListener(OnClickListener)
  */
 public class CToolBar extends FrameLayout {
+
     private AppCompatTextView tvToolBarTitle;
 
     private AppCompatImageView ivToolBarBackBtn;
@@ -83,20 +84,20 @@ public class CToolBar extends FrameLayout {
 
     private void initAttributes(Context context, @Nullable AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CToolBar);
-        if (typedArray != null) {
-            String toolBarTitle = typedArray.getString(R.styleable.CToolBar_android_title);
-            float textSize = typedArray.getDimensionPixelSize(R.styleable.CToolBar_android_textSize, CDimensUtils.spToPx(22, getContext()));
-            tvToolBarTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-            if (!TextUtils.isEmpty(toolBarTitle)) {
-                tvToolBarTitle.setText(toolBarTitle);
-            }
-            Drawable backIconDrawable = CViewUtils.loadDrawableFromAttributes(getContext(), typedArray, R.styleable.CToolBar_tools_toolbar_back_icon, R.drawable.tools_ic_back);
-            if (backIconDrawable != null) {
-                ivToolBarBackBtn.setImageDrawable(backIconDrawable);
-            }
-            CViewUtils.applyViewBackground(this);
-            typedArray.recycle();
+        String toolBarTitle = typedArray.getString(R.styleable.CToolBar_android_title);
+        float textSize = typedArray.getDimensionPixelSize(R.styleable.CToolBar_android_textSize,
+            CDimensUtils.spToPx(20, getContext()));
+        tvToolBarTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        if (!TextUtils.isEmpty(toolBarTitle)) {
+            tvToolBarTitle.setText(toolBarTitle);
         }
+        Drawable backIconDrawable = CViewUtils.loadDrawableFromAttributes(getContext(), typedArray,
+            R.styleable.CToolBar_tools_toolbar_back_icon, R.drawable.tools_ic_back);
+        if (backIconDrawable != null) {
+            ivToolBarBackBtn.setImageDrawable(backIconDrawable);
+        }
+        CViewUtils.applyViewBackground(this);
+        typedArray.recycle();
     }
 
     public void setBackBtnClickListener(OnClickListener clickListener) {

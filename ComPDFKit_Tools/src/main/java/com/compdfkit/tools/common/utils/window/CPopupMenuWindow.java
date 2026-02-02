@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -54,6 +54,12 @@ public class CPopupMenuWindow extends CBasePopupWindow {
 
     @Override
     protected void onClickListener(View view) {
+    }
+
+    public void addItem(View view) {
+        if (llRoot != null) {
+            llRoot.addView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CDimensUtils.dp2px(mContext, 48)));
+        }
     }
 
     public void addItem(@DrawableRes int iconResId, @StringRes int stringResId, View.OnClickListener clickListener){

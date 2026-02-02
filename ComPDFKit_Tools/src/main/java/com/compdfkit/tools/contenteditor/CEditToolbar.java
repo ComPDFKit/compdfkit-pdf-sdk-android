@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -40,6 +40,8 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
     public static final int SELECT_AREA_NONE = 0;
     public static final int SELECT_AREA_TEXT = 1;
     public static final int SELECT_AREA_IMAGE = 2;
+
+    public static final int SELECT_PATH_AREA = 3;
 
     private ConstraintLayout clEdit;
     private LinearLayout llTools;
@@ -175,7 +177,7 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
         editManager.enable();
         pdfView.addSelectEditAreaChangeListener(selectType -> {
             if (ivProper != null) {
-                if (selectType == SELECT_AREA_NONE) {
+                if (selectType == SELECT_AREA_NONE || selectType == SELECT_PATH_AREA) {
                     ivProper.setEnabled(false);
                 } else {
                     ivProper.setEnabled(true);

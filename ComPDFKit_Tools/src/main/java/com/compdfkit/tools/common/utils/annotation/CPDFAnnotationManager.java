@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -15,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
@@ -38,6 +39,8 @@ import com.compdfkit.core.document.action.CPDFUriAction;
 import com.compdfkit.core.edit.CPDFEditArea;
 import com.compdfkit.core.edit.CPDFEditTextArea;
 import com.compdfkit.core.page.CPDFPage;
+import com.compdfkit.core.page.CPDFTextPage;
+import com.compdfkit.core.page.CPDFTextSelection;
 import com.compdfkit.core.utils.TMathUtils;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfannotationlist.dialog.CPDFEditReplyDialogFragment;
@@ -54,7 +57,9 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider.CEditSelectionsProvider;
 import com.compdfkit.tools.forms.pdfproperties.option.edit.CFormOptionEditFragment;
+import com.compdfkit.ui.attribute.CPDFAnnotAttribute;
 import com.compdfkit.ui.attribute.CPDFFreetextAttr;
+import com.compdfkit.ui.attribute.CPDFReaderAttribute;
 import com.compdfkit.ui.attribute.CPDFTextAttr;
 import com.compdfkit.ui.edit.CPDFEditTextSelections;
 import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
@@ -62,6 +67,9 @@ import com.compdfkit.ui.proxy.CPDFFreetextAnnotImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.utils.CPDFTextUtils;
+import com.compdfkit.ui.widget.selection.ISelectionHelper;
+
+import java.util.List;
 
 public class CPDFAnnotationManager {
 
@@ -423,6 +431,89 @@ public class CPDFAnnotationManager {
                 (CPDFReaderView) pageView.getParentView());
         }
         dialogFragment.show(fragmentManager, "propertiesDialog");
+    }
+
+    public static RectF getSelectionRect(CPDFReaderView readerView, CPDFPageView pageView){
+        RectF annotRect = new RectF();
+        CPDFDocument document = readerView.getPDFDocument();
+        if (document == null) return annotRect;
+
+        CPDFPage page = document.pageAtIndex(pageView.getPageNum());
+        if (page == null) return annotRect;
+
+        CPDFTextPage textPage = page.getTextPage();
+        if (textPage == null || !textPage.isValid()) return annotRect;
+
+        ISelectionHelper selectionHelper = pageView.getSelectionHelper();
+        if (selectionHelper == null) return annotRect;
+
+        List<CPDFTextSelection> selections = selectionHelper.getSelections();
+        if (selections == null || selections.size() <= 0) return annotRect;
+
+        RectF size = readerView.getPageNoZoomSize(pageView.getPageNum());
+        if (size.isEmpty()) return annotRect;
+
+        int len = selections.size();
+        for (int i = 0; i < len; i++) {
+            CPDFTextSelection textSelection = selections.get(i);
+            if (textSelection == null) {
+                continue;
+            }
+            RectF rect = new RectF(textSelection.getRectF());
+            rect = page.convertRectFromPage(readerView.isCropMode(), size.width(), size.height(), rect);
+            if (annotRect.isEmpty()) {
+                annotRect.set(rect);
+            } else {
+                annotRect.union(rect);
+            }
+        }
+        annotRect = page.convertRectToPage(readerView.isCropMode(), size.width(), size.height(), annotRect);
+        return annotRect;
+    }
+
+    public static String getSelectionText(CPDFReaderView readerView, CPDFPageView pageView){
+
+        CPDFDocument document = readerView.getPDFDocument();
+        if (document == null) return "";
+
+        CPDFPage page = document.pageAtIndex(pageView.getPageNum());
+        if (page == null) return "";
+
+        CPDFTextPage textPage = page.getTextPage();
+        if (textPage == null || !textPage.isValid()) return "";
+
+        ISelectionHelper selectionHelper = pageView.getSelectionHelper();
+        if (selectionHelper == null) return "";
+
+        List<CPDFTextSelection> selections = selectionHelper.getSelections();
+        if (selections == null || selections.size() <= 0) return "";
+
+        RectF size = readerView.getPageNoZoomSize(pageView.getPageNum());
+        if (size.isEmpty()) return "";
+
+        int len = selections.size();
+        RectF annotRect = new RectF();
+        RectF[] quadRects = new RectF[selections.size()];
+        StringBuilder markedTextSb = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            CPDFTextSelection textSelection = selections.get(i);
+            if (textSelection == null) {
+                continue;
+            }
+            RectF rect = new RectF(textSelection.getRectF());
+            rect = page.convertRectFromPage(readerView.isCropMode(), size.width(), size.height(), rect);
+            if (annotRect.isEmpty()) {
+                annotRect.set(rect);
+            } else {
+                annotRect.union(rect);
+            }
+            quadRects[i] = new RectF(textSelection.getRectF());
+            String text = textPage.getText(textSelection.getTextRange());
+            if (!TextUtils.isEmpty(text)) {
+                markedTextSb.append(text);
+            }
+        }
+        return markedTextSb.toString();
     }
 
 

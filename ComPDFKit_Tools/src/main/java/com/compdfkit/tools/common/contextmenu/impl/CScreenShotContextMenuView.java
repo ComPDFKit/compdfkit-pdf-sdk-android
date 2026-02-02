@@ -1,5 +1,5 @@
 /**
- * Copyright © 2014-2025 PDF Technologies, Inc. All Rights Reserved.
+ * Copyright © 2014-2026 PDF Technologies, Inc. All Rights Reserved.
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
@@ -26,6 +26,9 @@ import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.CPDFDocumentFragment;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.date.CDateUtil;
 import com.compdfkit.tools.common.utils.image.CImageUtil;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
@@ -33,6 +36,7 @@ import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,10 +55,10 @@ public class CScreenShotContextMenuView implements ContextMenuScreenShotProvider
         for (ContextMenuConfig.ContextMenuActionItem item : screenShotMenu) {
             switch (item.key) {
                 case "exit":
-                    menuView.addItem(R.string.tools_exit, v -> exitScreenShot(helper));
+                    menuView.addItem(item, R.string.tools_exit, v -> exitScreenShot(helper));
                     break;
                 case "share":
-                    menuView.addItem(R.string.tools_share, v -> {
+                    menuView.addItem(item, R.string.tools_share, v -> {
                         try {
                             Bitmap bitmap = pageView.getScreenshotBitmap();
                             if (bitmap == null) {
@@ -68,6 +72,16 @@ public class CScreenShotContextMenuView implements ContextMenuScreenShotProvider
                         } catch (Exception e) {
                             exitScreenShot(helper);
                         }
+                    });
+                    break;
+                case "custom":
+                    menuView.addItem(item, v -> {
+                        Bitmap bitmap = pageView.getScreenshotBitmap();
+                        Map<String, Object> extraMap = new HashMap<>();
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        extraMap.put(CPDFCustomEventField.IMAGE, bitmap);
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(item.identifier, extraMap);
+                        exitScreenShot(helper);
                     });
                     break;
             }

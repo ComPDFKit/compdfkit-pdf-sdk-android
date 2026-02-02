@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.compdfkit.core.edit.CPDFEditArea;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
 import com.compdfkit.tools.common.contextmenu.interfaces.ContextMenuEditImageProvider;
@@ -18,8 +19,11 @@ import com.compdfkit.tools.common.contextmenu.provider.ContextMenuMultipleLineVi
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.dialog.CImportImageDialogFragment;
 import com.compdfkit.tools.common.utils.image.CImageUtil;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
@@ -32,6 +36,7 @@ import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +58,7 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : imageAreaContent) {
             switch (contextMenuActionItem.key) {
                 case "properties":
-                    menuView.addItem(R.string.tools_context_menu_properties, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_properties, v -> {
                         CStyleManager styleManager = new CStyleManager(new CEditSelectionsProvider(null, pageView));
                         CAnnotStyle annotStyle = styleManager.getStyle(CStyleType.EDIT_IMAGE);
                         CStyleDialogFragment dialogFragment = CStyleDialogFragment.newInstance(annotStyle);
@@ -70,17 +75,17 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
                     });
                     break;
                 case "rotateLeft":
-                    menuView.addItem(R.string.tools_edit_image_property_rotate_left, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_edit_image_property_rotate_left, v -> {
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.ROTATE, 90.0f);
                     });
                     break;
                 case "rotateRight":
-                    menuView.addItem(R.string.tools_edit_image_property_rotate_right, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_edit_image_property_rotate_right, v -> {
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.ROTATE, -90.0f);
                     });
                     break;
                 case "replace":
-                    menuView.addItem(R.string.tools_context_menu_image_replace, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_image_replace, v -> {
                         CImportImageDialogFragment fragment = CImportImageDialogFragment.quickStart(CImageResultContracts.RequestType.PHOTO_ALBUM);
                         fragment.setImportImageListener(imageUri -> {
                             fragment.dismiss();
@@ -96,7 +101,7 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
                     });
                     break;
                 case "export":
-                    menuView.addItem(R.string.tools_context_menu_image_extract, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_image_extract, v -> {
                         try {
                             Context context = pageView.getContext();
                             String sdPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
@@ -120,7 +125,7 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
                         menuView.showSecondView(false);
                     });
                     menuView.addItemToSecondView(view);
-                    menuView.addItem(R.string.tools_context_menu_image_transparancy, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_image_transparancy, v -> {
                         menuView.showSecondView(true);
                     });
 
@@ -157,17 +162,17 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
                     }
                     break;
                 case "flipHorizontal":
-                    menuView.addItem(R.string.tools_context_menu_image_horizental_mirror, v -> {
+                    menuView.addItem(contextMenuActionItem,R.string.tools_context_menu_image_horizental_mirror, v -> {
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.HORIZENTAL_MIRROR, null);
                     });
                     break;
                 case "flipVertical":
-                    menuView.addItem(R.string.tools_context_menu_image_vertical_mirror, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_image_vertical_mirror, v -> {
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.VERTICLE_MIRROR, null);
                     });
                     break;
                 case "crop":
-                    menuView.addItem(R.string.tools_crop, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_crop, v -> {
                         pageView.setCropRectChangeCallback(rect -> {
                         });
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.ENTER_CROP, null);
@@ -175,22 +180,33 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
                     });
                     break;
                 case "delete":
-                    menuView.addItem(R.string.tools_delete, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_delete, v -> {
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.DELETE, null);
                         updateEditToolbar(helper);
                         helper.dismissContextMenu();
                     });
                     break;
                 case "copy":
-                    menuView.addItem(R.string.tools_context_menu_image_copy, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_image_copy, v -> {
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.COPY, null);
                         helper.dismissContextMenu();
                     });
                     break;
                 case "cut":
-                    menuView.addItem(R.string.tools_context_menu_image_cut, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_image_cut, v -> {
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.CUT, null);
                         updateEditToolbar(helper);
+                        helper.dismissContextMenu();
+                    });
+                    break;
+                case "custom":
+                    menuView.addItem(contextMenuActionItem, v -> {
+                        Map<String, Object> extraMap = new HashMap<>();
+                        CPDFEditArea editArea = helper.getReaderView().getSelectEditArea();
+                        extraMap.put(CPDFCustomEventField.EDIT_AREA, editArea);
+                        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTEXT_MENU_ITEM_TAPPED);
+                        CPDFCustomEventCallbackHelper.getInstance().notifyClick(contextMenuActionItem.identifier, extraMap);
+                        pageView.cancelSelections();
                         helper.dismissContextMenu();
                     });
                     break;
@@ -216,13 +232,13 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
         for (ContextMenuConfig.ContextMenuActionItem contextMenuActionItem : imageCropMode) {
             switch (contextMenuActionItem.key) {
                 case "done":
-                    menuView.addItem(R.string.tools_context_menu_image_crop_done, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_image_crop_done, v -> {
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.CROP, null);
                         helper.dismissContextMenu();
                     });
                     break;
                 case "cancel":
-                    menuView.addItem(R.string.tools_context_menu_image_crop_cancel, v -> {
+                    menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_image_crop_cancel, v -> {
                         pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.EXIT_CROP, null);
                         helper.dismissContextMenu();
                     });

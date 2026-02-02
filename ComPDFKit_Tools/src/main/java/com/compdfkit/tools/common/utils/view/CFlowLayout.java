@@ -1,33 +1,38 @@
+// java
 package com.compdfkit.tools.common.utils.view;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- *
- * @author RAW
- */
 public class CFlowLayout extends ViewGroup {
 
     private int line_height;
-
     private int maxWidth = Integer.MAX_VALUE;
 
-    public static class LayoutParams extends ViewGroup.LayoutParams {
-
+    public static class LayoutParams extends ViewGroup.MarginLayoutParams {
         public final int horizontal_spacing;
         public final int vertical_spacing;
 
-        /**
-         * @param horizontal_spacing Pixels between items, horizontally
-         * @param vertical_spacing Pixels between items, vertically
-         */
         public LayoutParams(int horizontal_spacing, int vertical_spacing) {
-            super(0, 0);
+            super(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             this.horizontal_spacing = horizontal_spacing;
             this.vertical_spacing = vertical_spacing;
+        }
+
+        public LayoutParams(ViewGroup.LayoutParams src) {
+            super(src);
+            this.horizontal_spacing = 1;
+            this.vertical_spacing = 1;
+        }
+
+        public LayoutParams(Context c, AttributeSet attrs) {
+            super(c, attrs);
+            // Default spacing when created from XML without explicit spacing
+            this.horizontal_spacing = 1;
+            this.vertical_spacing = 1;
         }
     }
 
@@ -50,46 +55,57 @@ public class CFlowLayout extends ViewGroup {
         int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
         int parentHeightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        int widthLimit = (parentWidthMode == MeasureSpec.UNSPECIFIED ? Integer.MAX_VALUE : parentWidth)
-                - getPaddingLeft() - getPaddingRight();
-
-        widthLimit = Math.min(widthLimit, maxWidth - getPaddingLeft() - getPaddingRight());
+        int availableWidth = (parentWidthMode == MeasureSpec.UNSPECIFIED ? Integer.MAX_VALUE : parentWidth);
+        availableWidth = Math.min(availableWidth, maxWidth);
+        int widthLimit = availableWidth - getPaddingLeft() - getPaddingRight();
 
         int xpos = getPaddingLeft();
         int ypos = getPaddingTop();
         int lineHeight = 0;
         int maxLineWidth = 0;
 
-        int childHeightMeasureSpec = (parentHeightMode == MeasureSpec.AT_MOST)
-                ? MeasureSpec.makeMeasureSpec(parentHeight, MeasureSpec.AT_MOST)
-                : MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
-            if (child.getVisibility() != GONE) {
-                LayoutParams lp = (LayoutParams) child.getLayoutParams();
-                child.measure(MeasureSpec.makeMeasureSpec(widthLimit, MeasureSpec.AT_MOST), childHeightMeasureSpec);
-                int childWidth = child.getMeasuredWidth();
-                int childHeight = child.getMeasuredHeight();
-                lineHeight = Math.max(lineHeight, childHeight + lp.vertical_spacing);
+            if (child.getVisibility() == GONE) continue;
 
-                if (xpos + childWidth > widthLimit + getPaddingLeft()) {
-                    // New line
-                    maxLineWidth = Math.max(maxLineWidth, xpos - lp.horizontal_spacing);
-                    xpos = getPaddingLeft();
-                    ypos += lineHeight;
-                    lineHeight = childHeight + lp.vertical_spacing;
-                }
+            LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
-                xpos += childWidth + lp.horizontal_spacing;
+            int childWidthSpec = getChildMeasureSpec(
+                    MeasureSpec.makeMeasureSpec(widthLimit, MeasureSpec.AT_MOST),
+                    0,
+                    lp.width
+            );
+            int childHeightSpec = getChildMeasureSpec(
+                    heightMeasureSpec,
+                    0,
+                    lp.height
+            );
+            child.measure(childWidthSpec, childHeightSpec);
+
+            int childWidth = child.getMeasuredWidth();
+            int childHeight = child.getMeasuredHeight();
+
+            // Include margins in width/height used
+            int childTotalWidth = childWidth + lp.leftMargin + lp.rightMargin;
+            int childTotalHeight = childHeight + lp.topMargin + lp.bottomMargin + lp.vertical_spacing;
+
+            lineHeight = Math.max(lineHeight, childHeight + lp.topMargin + lp.bottomMargin + lp.vertical_spacing);
+
+            if ((xpos - getPaddingLeft()) + childTotalWidth > widthLimit) {
+                maxLineWidth = Math.max(maxLineWidth, xpos - lp.horizontal_spacing);
+                xpos = getPaddingLeft();
+                ypos += lineHeight;
+                lineHeight = childTotalHeight; // start new line height with this child
             }
+
+            xpos += childTotalWidth + lp.horizontal_spacing;
         }
 
         maxLineWidth = Math.max(maxLineWidth, xpos);
 
         int measuredWidth = (parentWidthMode == MeasureSpec.EXACTLY)
                 ? parentWidth
-                : maxLineWidth + getPaddingRight();
+                : Math.min(maxLineWidth + getPaddingRight(), availableWidth);
 
         int measuredHeight;
         if (parentHeightMode == MeasureSpec.EXACTLY) {
@@ -104,45 +120,106 @@ public class CFlowLayout extends ViewGroup {
         this.line_height = lineHeight;
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
+
     @Override
     protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
-        return new LayoutParams(1, 1); // default of 1px spacing
+        return new LayoutParams(1, 1);
     }
 
     @Override
-    protected android.view.ViewGroup.LayoutParams generateLayoutParams(
-            android.view.ViewGroup.LayoutParams p) {
-        return new LayoutParams(1,1);
+    public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new LayoutParams(getContext(), attrs);
+    }
+
+    @Override
+    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
+        return new LayoutParams(p);
     }
 
     @Override
     protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-        if (p instanceof LayoutParams) {
-            return true;
-        }
-        return false;
+        return p instanceof LayoutParams;
     }
 
+    // java
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        final int count = getChildCount();
         final int width = r - l;
+        final int widthLimit = width - getPaddingLeft() - getPaddingRight();
+
         int xpos = getPaddingLeft();
         int ypos = getPaddingTop();
 
+        // Temporarily store the current line's views and their LayoutParams
+        java.util.ArrayList<View> lineViews = new java.util.ArrayList<>();
+        java.util.ArrayList<LayoutParams> lineLPs = new java.util.ArrayList<>();
+        int lineMaxHeight = 0; // Maximum total height of the current line (including top/bottom margin, excluding vertical_spacing)
+
+        final int count = getChildCount();
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
-            if (child.getVisibility() != GONE) {
-                final int childw = child.getMeasuredWidth();
-                final int childh = child.getMeasuredHeight();
-                final LayoutParams lp = (LayoutParams) child.getLayoutParams();
-                if (xpos + childw > width) {
-                    xpos = getPaddingLeft();
-                    ypos += line_height;
+            if (child.getVisibility() == GONE) continue;
+
+            final LayoutParams lp = (LayoutParams) child.getLayoutParams();
+            final int childw = child.getMeasuredWidth();
+            final int childh = child.getMeasuredHeight();
+
+            int childTotalWidth = childw + lp.leftMargin + lp.rightMargin;
+            int childTotalHeight = childh + lp.topMargin + lp.bottomMargin; // Not including vertical_spacing
+
+            // Check if a new line is needed (based on widthLimit excluding padding)
+            if ((xpos - getPaddingLeft()) + childTotalWidth > widthLimit && !lineViews.isEmpty()) {
+                // Layout the previous line first: vertically center according to the line's maximum height, and consider margin
+                int x = getPaddingLeft();
+                for (int j = 0; j < lineViews.size(); j++) {
+                    View v = lineViews.get(j);
+                    LayoutParams vlp = lineLPs.get(j);
+                    int vw = v.getMeasuredWidth();
+                    int vh = v.getMeasuredHeight();
+
+                    int itemTotalHeight = vh + vlp.topMargin + vlp.bottomMargin;
+                    int vCenterOffset = (lineMaxHeight - itemTotalHeight) / 2;
+                    int top = ypos + vCenterOffset + vlp.topMargin;
+                    int left = x + vlp.leftMargin;
+                    v.layout(left, top, left + vw, top + vh);
+
+                    x += vw + vlp.leftMargin + vlp.rightMargin + vlp.horizontal_spacing;
                 }
-                child.layout(xpos, ypos, xpos + childw, ypos + childh);
-                xpos += childw + lp.horizontal_spacing;
+
+                // Wrap to new line: advance y, reset line data (add previous line's vertical_spacing)
+                ypos += lineMaxHeight + (lineLPs.isEmpty() ? 0 : lineLPs.get(0).vertical_spacing);
+                xpos = getPaddingLeft();
+                lineViews.clear();
+                lineLPs.clear();
+                lineMaxHeight = 0;
+            }
+
+            // Add to the current line
+            lineViews.add(child);
+            lineLPs.add(lp);
+            lineMaxHeight = Math.max(lineMaxHeight, childTotalHeight);
+            xpos += childTotalWidth + lp.horizontal_spacing;
+        }
+
+        // Layout the last line (if any)
+        if (!lineViews.isEmpty()) {
+            int x = getPaddingLeft();
+            for (int j = 0; j < lineViews.size(); j++) {
+                View v = lineViews.get(j);
+                LayoutParams vlp = lineLPs.get(j);
+                int vw = v.getMeasuredWidth();
+                int vh = v.getMeasuredHeight();
+
+                int itemTotalHeight = vh + vlp.topMargin + vlp.bottomMargin;
+                int vCenterOffset = (lineMaxHeight - itemTotalHeight) / 2;
+                int top = ypos + vCenterOffset + vlp.topMargin;
+                int left = x + vlp.leftMargin;
+                v.layout(left, top, left + vw, top + vh);
+
+                x += vw + vlp.leftMargin + vlp.rightMargin + vlp.horizontal_spacing;
             }
         }
     }
+
+
 }
