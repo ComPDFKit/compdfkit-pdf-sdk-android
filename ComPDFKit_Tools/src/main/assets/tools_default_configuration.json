@@ -53,6 +53,8 @@
     "autoShowStampPicker": true,
     "autoShowPicPicker": true,
     "autoShowLinkDialog": true,
+    "interceptNoteAction": false,
+    "interceptLinkAction": false,
     "availableTypes": [
       "note",
       "highlight",
@@ -180,6 +182,9 @@
     "showCreateListBoxOptionsDialog": true,
     "showCreateComboBoxOptionsDialog": true,
     "showCreatePushButtonOptionsDialog": true,
+    "interceptListBoxAction": false,
+    "interceptComboBoxAction": false,
+    "interceptPushButtonAction": false,
     "availableTypes": [
       "textField",
       "checkBox",

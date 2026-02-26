@@ -2,13 +2,7 @@ plugins {
     id 'com.android.library'
 }
 
-def getProductName() {
-    return "ComPDFKitDemo"
-}
 
-def releaseTime() {
-    return new Date().format("yyyy-MM-dd_hh-mm-ss", TimeZone.getTimeZone("GMT+08:00"))
-}
 
 android {
     namespace 'com.compdfkit.tools'
@@ -35,6 +29,13 @@ android {
             minifyEnabled true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.libraryVariants.all { variant ->
+                variant.outputs.all {
+                    if (outputFileName.toLowerCase(Locale.US).endsWith('release.aar')) {
+                        outputFileName = "ComPDFKit_Tools.aar"
+                    }
+                }
+            }
         }
     }
 
@@ -54,8 +55,8 @@ dependencies {
 //    api project(path:':ComPDFKit_Repo:compdfkit')
 //    api project(path:':ComPDFKit_Repo:compdfkit-ui')
     // or use
-   api ('com.compdf:compdfkit:2.6.1')
-   api ('com.compdf:compdfkit-ui:2.6.1')
+    api ('com.compdf:compdfkit:2.6.2')
+    api ('com.compdf:compdfkit-ui:2.6.2')
     api 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     api "androidx.print:print:1.1.0"

@@ -18,12 +18,14 @@ import com.compdfkit.core.annotation.CPDFLinkAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAnnotation;
 import com.compdfkit.core.annotation.form.CPDFComboboxWidget;
 import com.compdfkit.core.annotation.form.CPDFListboxWidget;
+import com.compdfkit.core.annotation.form.CPDFPushbuttonWidget;
 import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditManager;
 import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfproperties.pdflink.CLinkAnnotAttachHelper;
+import com.compdfkit.tools.annotation.pdfproperties.pdflink.CPDFCustomLinkAnnotImpl;
 import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CPDFtextAnnotAttachHelper;
 import com.compdfkit.tools.annotation.pdfproperties.pdfnote.CPDFtextAnnotImpl;
 import com.compdfkit.tools.common.contextmenu.CPDFContextMenuHelper;
@@ -41,6 +43,7 @@ import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment;
 import com.compdfkit.tools.forms.pdfproperties.pdfcombobox.CustomComboBoxWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdflistbox.CustomListBoxWidgetImpl;
+import com.compdfkit.tools.forms.pdfproperties.pdfpushbutton.CPushButtonWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdfsign.SignatureWidgetImpl;
 import com.compdfkit.tools.viewer.contextmenu.CopyContextMenuView;
 import com.compdfkit.tools.viewer.pdfdisplaysettings.CPDFDisplaySettingDialogFragment;
@@ -101,8 +104,9 @@ public class CBasicPDFFragment extends CPermissionFragment {
 
     protected void registerAnnotHelper(CPDFViewCtrl pdfView) {
         pdfView.getCPdfReaderView().getAnnotImplRegistry().registAttachHelper(CPDFTextAnnotation.class, CPDFtextAnnotAttachHelper.class);
-        pdfView.getCPdfReaderView().getAnnotImplRegistry().registImpl(CPDFTextAnnotation.class, CPDFtextAnnotImpl.class);
         pdfView.getCPdfReaderView().getAnnotImplRegistry().registAttachHelper(CPDFLinkAnnotation.class, CLinkAnnotAttachHelper.class);
+        pdfView.getCPdfReaderView().getAnnotImplRegistry().registImpl(CPDFTextAnnotation.class, CPDFtextAnnotImpl.class);
+        pdfView.getCPdfReaderView().getAnnotImplRegistry().registImpl(CPDFLinkAnnotation.class, CPDFCustomLinkAnnotImpl.class);
     }
 
     protected void registerFormHelper(CPDFViewCtrl pdfView) {
@@ -111,6 +115,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
                 .registImpl(CPDFComboboxWidget.class, CustomComboBoxWidgetImpl.class)
                 // Register the CustomListBoxWidgetImpl.class to implement a custom dropdown options popup.
                 .registImpl(CPDFListboxWidget.class, CustomListBoxWidgetImpl.class)
+                .registImpl(CPDFPushbuttonWidget.class, CPushButtonWidgetImpl.class)
                 // Register the CustomSignatureWidgetImpl.class to implement a custom dropdown options popup.
                 .registImpl(CPDFSignatureWidget.class, SignatureWidgetImpl.class);
     }

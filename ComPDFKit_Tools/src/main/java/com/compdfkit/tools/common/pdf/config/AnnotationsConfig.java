@@ -67,6 +67,10 @@ public class AnnotationsConfig implements Serializable {
 
     public boolean autoShowPicPicker = true;
 
+    public boolean interceptNoteAction = false;
+
+    public boolean interceptLinkAction = false;
+
     @NonNull
     @Override
     public String toString() {

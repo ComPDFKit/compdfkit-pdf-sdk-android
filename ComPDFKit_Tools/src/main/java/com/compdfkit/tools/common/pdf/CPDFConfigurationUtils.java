@@ -377,6 +377,8 @@ public class CPDFConfigurationUtils {
         annotationsConfig.autoShowStampPicker = jsonObject.optBoolean("autoShowStampPicker", true);
         annotationsConfig.autoShowLinkDialog = jsonObject.optBoolean("autoShowLinkDialog", true);
         annotationsConfig.autoShowPicPicker = jsonObject.optBoolean("autoShowPicPicker", true);
+        annotationsConfig.interceptNoteAction = jsonObject.optBoolean("interceptNoteAction", false);
+        annotationsConfig.interceptLinkAction = jsonObject.optBoolean("interceptLinkAction", false);
         return annotationsConfig;
     }
 
@@ -612,6 +614,9 @@ public class CPDFConfigurationUtils {
         formsConfig.showCreateListBoxOptionsDialog = jsonObject.optBoolean("showCreateListBoxOptionsDialog", true);
         formsConfig.showCreateComboBoxOptionsDialog = jsonObject.optBoolean("showCreateComboBoxOptionsDialog", true);
         formsConfig.showCreatePushButtonOptionsDialog = jsonObject.optBoolean("showCreatePushButtonOptionsDialog", true);
+        formsConfig.interceptListBoxAction = jsonObject.optBoolean("interceptListBoxAction", false);
+        formsConfig.interceptComboBoxAction = jsonObject.optBoolean("interceptComboBoxAction", false);
+        formsConfig.interceptPushButtonAction = jsonObject.optBoolean("interceptPushButtonAction", false);
         return formsConfig;
     }
 

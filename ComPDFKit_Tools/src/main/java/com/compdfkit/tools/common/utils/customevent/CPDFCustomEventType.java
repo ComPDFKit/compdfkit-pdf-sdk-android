@@ -12,5 +12,7 @@ package com.compdfkit.tools.common.utils.customevent;
 public class CPDFCustomEventType {
     public static final String TOOLBAR_ITEM_TAPPED = "CustomToolbarItemTapped";
     public static final String CONTEXT_MENU_ITEM_TAPPED = "ContextMenuItem";
+    public static final String INTERCEPT_ANNOTATION_DO_ACTION = "InterceptAnnotationDoAction";
+    public static final String INTERCEPT_WIDGET_DO_ACTION = "InterceptWidgetDoAction";
 
 }

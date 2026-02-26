@@ -23,9 +23,8 @@
 -optimizationpasses 5
 -dontskipnonpubliclibraryclasses
 #-dontskipnonpubliclibraryclassmembers
--dontoptimize
+# -dontoptimize
 -dontpreverify
--ignorewarnings
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 -keepattributes *Annotation*
 -keepattributes Signature

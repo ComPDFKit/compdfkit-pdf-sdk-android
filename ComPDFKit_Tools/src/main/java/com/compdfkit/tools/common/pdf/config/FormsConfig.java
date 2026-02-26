@@ -55,6 +55,10 @@ public class FormsConfig implements Serializable {
 
     public boolean showCreatePushButtonOptionsDialog = true;
 
+    public boolean interceptListBoxAction = false;
+    public boolean interceptComboBoxAction = false;
+    public boolean interceptPushButtonAction = false;
+
     public enum FormsTools implements Serializable {
 
         Undo,
