@@ -18,7 +18,10 @@ android {
 
     buildTypes {
         release {
+            debuggable false
             minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
@@ -57,5 +60,5 @@ dependencies {
     api project(path: ':ComPDFKit_Tools')
 
     // or
-//  implementation ('com.compdf:compdfkit-tools:2.6.0')
+    // implementation ('com.compdf:compdfkit-tools:2.6.4')
 }

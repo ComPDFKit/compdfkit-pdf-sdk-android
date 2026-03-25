@@ -4,10 +4,10 @@ ext {
             MINSDK: 21,
             TARGETSDK: 36,
             VERSIONCODE: 1031,
-            VERSIONNAME: "2.6.2"
+            VERSIONNAME: "2.6.4"
     ]
     sdk = [
-            COMPDFKIT_SDK_VERSION : "2.6.2",
-            COMPDFKIT_SDK_BUILD_TAG : "build_dev_2.6.2_beef731b2_202602261435"
+            COMPDFKIT_SDK_VERSION : "2.6.4",
+            COMPDFKIT_SDK_BUILD_TAG : "build_dev_2.6.4_8f4df8e20_202603251744"
     ]
 }
