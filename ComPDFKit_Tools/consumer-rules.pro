@@ -1,0 +1,3 @@
+-keep class com.compdfkit.ui.** {*;}
+-keep class com.compdfkit.core.** {*;}
+-keep class com.compdfkit.tools.** {*;}
