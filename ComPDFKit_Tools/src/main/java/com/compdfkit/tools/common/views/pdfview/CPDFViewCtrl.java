@@ -38,6 +38,7 @@ import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditManager;
+import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.core.edit.OnEditStatusChangeListener;
 import com.compdfkit.core.edit.OnSelectEditAreaChangeListener;
 import com.compdfkit.tools.R;
@@ -518,9 +519,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         }
         return;
       }
+      int contentEditorLoadType = getCPdfReaderView().getLoadType();
+      exitEditMode();
       if (document.hasChanges()) {
         CThreadPoolUtils.getInstance().executeIO(() -> {
-          exitEditMode();
           try {
             CLog.e("ComPDFKit", "useSaveIncremental: " + saveIncremental + ", extraFontSubset:" + fontSubset);
             document.save(saveIncremental ? CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental : CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveNoIncremental,
@@ -530,6 +532,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
               CThreadPoolUtils.getInstance().executeMain(() -> cPdfReaderView.reloadPages2());
             }
             CThreadPoolUtils.getInstance().executeMain(() -> {
+              restoreEdit(contentEditorLoadType);
               if (callback != null) {
                 callback.callback(document.getAbsolutePath(), document.getUri());
               }
@@ -548,6 +551,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
           }
         });
       } else {
+        restoreEdit(contentEditorLoadType);
         if (callback != null) {
           callback.callback(document.getAbsolutePath(), document.getUri());
         }
@@ -584,6 +588,15 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     CPDFEditManager editManager = cPdfReaderView.getEditManager();
     if (editManager != null && editManager.isEditMode()) {
       editManager.endEdit();
+    }
+  }
+
+  private void restoreEdit(int curEditMode) {
+    if (curEditMode > CPDFEditPage.LoadNone && getCPdfReaderView().getViewMode() == CPDFReaderView.ViewMode.PDFEDIT) {
+      CPDFEditManager editManager = getCPdfReaderView().getEditManager();
+      if (!editManager.isEditMode()) {
+        editManager.beginEdit(curEditMode);
+      }
     }
   }
 

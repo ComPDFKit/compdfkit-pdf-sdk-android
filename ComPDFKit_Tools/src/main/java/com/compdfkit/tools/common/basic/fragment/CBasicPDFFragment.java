@@ -121,14 +121,17 @@ public class CBasicPDFFragment extends CPermissionFragment {
     }
 
     public void showDisplaySettings(CPDFViewCtrl pdfView) {
+        curEditMode = pdfView.getCPdfReaderView().getLoadType();
         pdfView.exitEditMode();
         CPDFDisplaySettingDialogFragment displaySettingDialogFragment = CPDFDisplaySettingDialogFragment.newInstance();
         displaySettingDialogFragment.initWithPDFView(pdfView);
+        displaySettingDialogFragment.setDismissListener(()->{
+            restoreEdit(pdfView,true);
+        });
         displaySettingDialogFragment.show(getChildFragmentManager(), "displaySettingsDialog");
     }
 
     public void showDocumentInfo(CPDFViewCtrl pdfView) {
-        pdfView.exitEditMode();
         CPDFDocumentInfoDialogFragment infoDialogFragment = CPDFDocumentInfoDialogFragment.newInstance();
         infoDialogFragment.initWithPDFView(pdfView);
         infoDialogFragment.show(getChildFragmentManager(), "documentInfoDialogFragment");
@@ -200,7 +203,7 @@ public class CBasicPDFFragment extends CPermissionFragment {
         pageEditDialogFragment.show(getChildFragmentManager(), "pageEditDialogFragment");
     }
 
-    protected void restoreEdit(CPDFViewCtrl pdfView, boolean isEditMode) {
+    public void restoreEdit(CPDFViewCtrl pdfView, boolean isEditMode) {
         if (curEditMode > CPDFEditPage.LoadNone && isEditMode) {
             CPDFEditManager editManager = pdfView.getCPdfReaderView().getEditManager();
             if (!editManager.isEditMode()) {

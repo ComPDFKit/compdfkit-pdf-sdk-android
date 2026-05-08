@@ -14,5 +14,11 @@ public class CPDFCustomEventType {
     public static final String CONTEXT_MENU_ITEM_TAPPED = "ContextMenuItem";
     public static final String INTERCEPT_ANNOTATION_DO_ACTION = "InterceptAnnotationDoAction";
     public static final String INTERCEPT_WIDGET_DO_ACTION = "InterceptWidgetDoAction";
+    public static final String SEARCH_BACK_BUTTON_TAPPED = "SearchBackButtonTapped";
+    public static final String ANNOTATION_STYLE_DIALOG_DISMISSED = "AnnotationStyleDialogDismissed";
+    public static final String FORM_STYLE_DIALOG_DISMISSED = "FormStyleDialogDismissed";
+    public static final String CONTENT_EDITOR_STYLE_DIALOG_DISMISSED = "ContentEditorStyleDialogDismissed";
+
+    public static final String ADD_WATERMARK_DIALOG_DISMISSED = "AddWatermarkDialogDismissed";
 
 }

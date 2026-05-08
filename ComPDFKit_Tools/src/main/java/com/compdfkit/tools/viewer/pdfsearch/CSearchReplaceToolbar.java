@@ -30,6 +30,9 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CToastUtil;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
@@ -44,7 +47,9 @@ import com.compdfkit.ui.reader.CPDFReaderView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -103,6 +108,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * @see ContentEditorSearchReplaceDecorator
  */
 public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickListener {
+    private static final String IDENTIFIER_SEARCH_BACK_BUTTON = "search_back_button";
+    private static final String SOURCE_SEARCH_TOOLBAR = "searchToolbar";
 
     private CLoadingDialog loadingDialog;
 
@@ -335,18 +342,31 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
                 });
             }
         } else if (v.getId() == toolBar.getIvToolBarBackBtn().getId()) {
-            cancelTask();
-            resetSearch();
-            hideKeyboard();
-            tabLayout.selectTab(tabLayout.getTabAt(0), true);
-            etSearch.clearFocus();
-            etSearch.setText("");
-            etReplace.clearFocus();
-            etReplace.setText("");
-            if (null != onExitSearchListener) {
-                onExitSearchListener.exitSearch();
-            }
+            closeSearch(true);
         }
+    }
+
+    private void closeSearch(boolean notifyCustomEvent) {
+        cancelTask();
+        resetSearch();
+        hideKeyboard();
+        tabLayout.selectTab(tabLayout.getTabAt(0), true);
+        etSearch.clearFocus();
+        etSearch.setText("");
+        etReplace.clearFocus();
+        etReplace.setText("");
+        if (notifyCustomEvent) {
+            notifySearchBackButtonTapped();
+        }
+        if (null != onExitSearchListener) {
+            onExitSearchListener.exitSearch();
+        }
+    }
+
+    private void notifySearchBackButtonTapped() {
+        Map<String, Object> extraMap = new HashMap<>();
+        extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.SEARCH_BACK_BUTTON_TAPPED);
+        CPDFCustomEventCallbackHelper.getInstance().notifyClick(IDENTIFIER_SEARCH_BACK_BUTTON, extraMap);
     }
 
     public void setViewType(ViewType viewType) {
@@ -532,7 +552,7 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
     }
 
     public void exitSearch() {
-        toolBar.getIvToolBarBackBtn().performClick();
+        closeSearch(false);
     }
 
     public void setExitSearchListener(OnExitSearchListener onExitSearchListener) {

@@ -10,6 +10,7 @@
 package com.compdfkit.tools.viewer.pdfthumbnail.adpater;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +23,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
+import com.compdfkit.tools.common.utils.glide.CPDFGlideLogUtils;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 
@@ -58,11 +61,16 @@ public class CPDFThumbnailListAdapter extends RecyclerView.Adapter<CPDFThumbnail
             @NonNull CPDFThumbnailItemViewHolder holder, int position) {
 
         int[] size = calculateItemSize(holder, holder.getAdapterPosition());
+        CPDFWrapper wrapper = CPDFWrapper.fromDocument(cPdfDocument, holder.getAdapterPosition());
+        CPDFGlideLogUtils.logRequestStart(wrapper, size[0], size[1]);
 
-        Glide.with(holder.itemView.getContext())
-                .load(CPDFWrapper.fromDocument(cPdfDocument, holder.getAdapterPosition()))
+        RequestBuilder<Bitmap> requestBuilder = Glide.with(holder.itemView.getContext())
+                .asBitmap()
+                .load(wrapper)
+                .listener(CPDFGlideLogUtils.createRequestListener(wrapper))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .override(size[0], size[1])
+                .override(size[0], size[1]);
+        requestBuilder
                 .into(holder.ivThumbnailImage);
 
         holder.tvPageIndex.setText(String.valueOf(holder.getAdapterPosition() + 1));

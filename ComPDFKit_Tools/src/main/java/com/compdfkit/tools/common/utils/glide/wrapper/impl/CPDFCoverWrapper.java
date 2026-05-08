@@ -19,6 +19,8 @@ import androidx.annotation.Nullable;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.common.utils.glide.wrapper.CIPDFWrapper;
 
+import java.io.File;
+
 public class CPDFCoverWrapper implements CIPDFWrapper {
     private String pdfFilePath;
 
@@ -57,9 +59,10 @@ public class CPDFCoverWrapper implements CIPDFWrapper {
     @Override
     public String cacheKey() {
         if (!TextUtils.isEmpty(pdfFilePath)){
-            return pdfFilePath;
+            File file = new File(pdfFilePath);
+            return pdfFilePath + "_" + file.lastModified() + "_" + file.length();
         } else if (pdfFileUri != null) {
-            return pdfFileUri.toString();
+            return "uri_" + pdfFileUri;
         }else {
             return "";
         }

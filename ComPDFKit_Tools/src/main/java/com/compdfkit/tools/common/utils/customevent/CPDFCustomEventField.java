@@ -23,6 +23,6 @@ public class CPDFCustomEventField {
     public static final String IMAGE = "image";
     public static final String TEXT = "text";
     public static final String RECT = "rect";
-
+    public static final String STYLE_TYPE = "styleType";
 
 }

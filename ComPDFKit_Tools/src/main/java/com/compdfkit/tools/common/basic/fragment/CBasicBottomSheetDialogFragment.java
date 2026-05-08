@@ -34,9 +34,12 @@ public abstract class CBasicBottomSheetDialogFragment extends BottomSheetDialogF
 
     protected COnDialogDismissListener dismissListener;
 
+    private boolean dismissCallbackDispatched;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dismissCallbackDispatched = false;
         int styleId = CViewUtils.getThemeStyle(getContext(), themeResId());
         if (styleId != 0){
             setStyle(STYLE_NORMAL, styleId);
@@ -117,20 +120,26 @@ public abstract class CBasicBottomSheetDialogFragment extends BottomSheetDialogF
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
-        if (dismissListener != null) {
-            dismissListener.dismiss();
-        }
+        notifyDismissListenerOnce();
     }
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        if (dismissListener != null){
-            dismissListener.dismiss();
-        }
+        notifyDismissListenerOnce();
     }
 
     public void setDismissListener(COnDialogDismissListener dismissListener) {
         this.dismissListener = dismissListener;
+    }
+
+    private void notifyDismissListenerOnce() {
+        if (dismissCallbackDispatched) {
+            return;
+        }
+        dismissCallbackDispatched = true;
+        if (dismissListener != null) {
+            dismissListener.dismiss();
+        }
     }
 }

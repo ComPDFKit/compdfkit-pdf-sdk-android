@@ -11,7 +11,7 @@ package com.compdfkit.tools.common.utils.glide;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.RectF;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -19,12 +19,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
-import com.bumptech.glide.request.target.Target;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.common.utils.glide.wrapper.impl.CPDFDocumentPageWrapper;
 
 class CPDFFether implements DataFetcher<Bitmap> {
-    private static final int MAXIMUM_REDIRECTS = 1;
+    private static final String TAG = "CPDFGlide";
+    private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
 
     private CPDFDocumentPageWrapper cpdfWrapper;
 
@@ -32,48 +32,61 @@ class CPDFFether implements DataFetcher<Bitmap> {
 
     private CPDFDocument tpdfDocument;
 
-    private Context context;
+    private final Context context;
 
-    private int loadImageWidth;
+    private final boolean ownsDocument;
 
-    private int loadImageHeight;
+    private final int loadImageWidth;
 
-    public CPDFFether(CPDFDocumentPageWrapper cpdfWrapper, int width, int height) {
+    private final int loadImageHeight;
+
+    public CPDFFether(CPDFDocumentPageWrapper cpdfWrapper, int width, int height, boolean ownsDocument) {
         this.cpdfWrapper = cpdfWrapper;
         tpdfDocument = cpdfWrapper.getDocument();
         context = tpdfDocument.getContext();
         this.loadImageWidth = width;
         this.loadImageHeight = height;
+        this.ownsDocument = ownsDocument;
     }
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super Bitmap> callback) {
         try {
             isCancelled = false;
-            Bitmap result = loadDataWithRedirects(cpdfWrapper.getPageIndex(),
-                    loadImageWidth,loadImageHeight,
-                    0);
+            if (tpdfDocument == null || cpdfWrapper == null || isCancelled) {
+                return;
+            }
+            Log.d(TAG, "renderStart: page=" + cpdfWrapper.getPageIndex()
+                    + ", size=" + loadImageWidth + "x" + loadImageHeight
+                    + ", message=start render or re-render after cache miss");
+            Bitmap result = renderPage(cpdfWrapper.getPageIndex(), loadImageWidth, loadImageHeight);
+            if (isCancelled) {
+                if (result != null && !result.isRecycled()) {
+                    Glide.get(context).getBitmapPool().put(result);
+                }
+                return;
+            }
+            Log.d(TAG, "renderSuccess: page=" + cpdfWrapper.getPageIndex()
+                    + ", size=" + result.getWidth() + "x" + result.getHeight());
             callback.onDataReady(result);
         } catch (Exception e) {
+            if (isCancelled) {
+                return;
+            }
+            Log.e(TAG, "renderFailed: page="
+                    + (cpdfWrapper == null ? -1 : cpdfWrapper.getPageIndex())
+                    + ", size=" + loadImageWidth + "x" + loadImageHeight
+                    + ", message=" + e.getMessage(), e);
             callback.onLoadFailed(e);
         }
     }
 
-    private Bitmap loadDataWithRedirects(int pageIndex, int width, int height, int redirects) throws Exception {
-        if (redirects >= MAXIMUM_REDIRECTS) {
-            throw new Exception("Too many (> " + MAXIMUM_REDIRECTS + ") redirects!");
-        }
+    @NonNull
+    private Bitmap renderPage(int pageIndex, int width, int height) throws Exception {
         if (tpdfDocument == null) {
             throw new Exception("CPDFDocument is null!");
         }
-        RectF sizeRect = tpdfDocument.pageAtIndex(pageIndex).getSize();
-        if (width == Target.SIZE_ORIGINAL ){
-            width = (int) sizeRect.width();
-        }
-        if (height == Target.SIZE_ORIGINAL){
-            height = (int) sizeRect.height();
-        }
-        Bitmap bitmap = Glide.get(context).getBitmapPool().get(width, height, Bitmap.Config.ARGB_4444);
+        Bitmap bitmap = Glide.get(context).getBitmapPool().get(width, height, BITMAP_CONFIG);
         boolean res = tpdfDocument.renderPageAtIndex(bitmap,
                 pageIndex,
                 width,
@@ -88,14 +101,22 @@ class CPDFFether implements DataFetcher<Bitmap> {
                 cpdfWrapper.isDrawAnnotation(),
                 cpdfWrapper.isDrawForms());
 
-        if (!res || (null == bitmap) || bitmap.isRecycled()) {
-            return loadDataWithRedirects(pageIndex, width, height, ++redirects);
+        if (!res || bitmap.isRecycled()) {
+            if (!bitmap.isRecycled()) {
+                Glide.get(context).getBitmapPool().put(bitmap);
+            }
+            throw new Exception("Failed to render PDF page " + pageIndex + ".");
         }
-        return isCancelled ? null : bitmap;
+        return bitmap;
     }
 
     @Override
     public void cleanup() {
+        Log.d(TAG, "cleanup: page=" + (cpdfWrapper == null ? -1 : cpdfWrapper.getPageIndex())
+                + ", ownsDocument=" + ownsDocument);
+        if (ownsDocument && tpdfDocument != null) {
+            tpdfDocument.close();
+        }
         cpdfWrapper = null;
         tpdfDocument = null;
     }
@@ -109,11 +130,12 @@ class CPDFFether implements DataFetcher<Bitmap> {
     @NonNull
     @Override
     public DataSource getDataSource() {
-        return DataSource.REMOTE;
+        return DataSource.LOCAL;
     }
 
     @Override
     public void cancel() {
         isCancelled = true;
+        Log.d(TAG, "cancel: page=" + (cpdfWrapper == null ? -1 : cpdfWrapper.getPageIndex()));
     }
 }

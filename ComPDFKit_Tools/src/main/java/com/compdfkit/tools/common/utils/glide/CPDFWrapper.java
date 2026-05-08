@@ -12,32 +12,14 @@ package com.compdfkit.tools.common.utils.glide;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.load.Key;
-import com.bumptech.glide.load.model.Headers;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.common.utils.glide.wrapper.CIPDFWrapper;
 import com.compdfkit.tools.common.utils.glide.wrapper.impl.CPDFCoverWrapper;
 import com.compdfkit.tools.common.utils.glide.wrapper.impl.CPDFDocumentPageWrapper;
 
-import java.security.MessageDigest;
+public class CPDFWrapper {
 
-
-public class CPDFWrapper implements Key {
-
-    public CIPDFWrapper wrapper;
-
-    private final Headers headers = Headers.DEFAULT;
-
-    private int hashCode;
-
-    @Nullable
-    private volatile byte[] cacheKeyBytes;
-
-    private int width;
-
-    private int height;
+    private final CIPDFWrapper wrapper;
 
     public CPDFWrapper(CIPDFWrapper cipdfWrapper) {
         this.wrapper = cipdfWrapper;
@@ -55,42 +37,34 @@ public class CPDFWrapper implements Key {
         return new CPDFWrapper(new CPDFDocumentPageWrapper(cPdfDocument, pageIndex));
     }
 
-    public void setSize(int width, int height) {
-        this.width = width;
-        this.height = height;
-    }
-
-    public String getCacheKey() {
-        return wrapper.cacheKey() + "_" + width + "_" + height;
-    }
-
-    @Override
-    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
-        messageDigest.update(getCacheKeyBytes());
-    }
-
-    private byte[] getCacheKeyBytes() {
-        if (cacheKeyBytes == null) {
-            cacheKeyBytes = getCacheKey().getBytes(CHARSET);
+    public int getLogPageIndex() {
+        if (wrapper instanceof CPDFDocumentPageWrapper) {
+            return ((CPDFDocumentPageWrapper) wrapper).getPageIndex();
         }
-        return cacheKeyBytes;
+        return 0;
+    }
+
+    @NonNull
+    public String getLogSource() {
+        return wrapper.cacheKey();
+    }
+
+    @NonNull
+    CIPDFWrapper getWrapper() {
+        return wrapper;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof CPDFWrapper) {
             CPDFWrapper other = (CPDFWrapper) o;
-            return getCacheKey().equals(other.getCacheKey());
+            return getLogSource().equals(other.getLogSource());
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        if (hashCode == 0) {
-            hashCode = getCacheKey().hashCode();
-            hashCode = 31 * hashCode + headers.hashCode();
-        }
-        return hashCode;
+        return getLogSource().hashCode();
     }
 }

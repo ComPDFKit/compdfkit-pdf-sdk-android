@@ -30,11 +30,13 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.dialog.CEditDialog;
+import com.compdfkit.tools.common.utils.glide.CPDFGlideLogUtils;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
 import com.compdfkit.tools.common.utils.glide.wrapper.impl.CPDFDocumentPageWrapper;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
@@ -197,13 +199,16 @@ public class CWatermarkPageView extends FrameLayout {
 
     private void initDocumentThumbnail() {
         if (document != null && currentPageWidth != 0 && currentPageHeight != 0) {
-            CPDFDocumentPageWrapper pageWrapper = new CPDFDocumentPageWrapper(document, pageIndex);
-            pageWrapper.setDrawAnnotation(true);
+            CPDFDocumentPageWrapper pageWrapper = new CPDFDocumentPageWrapper(document, pageIndex, Color.WHITE, true, false);
             CPDFWrapper wrapper = new CPDFWrapper(pageWrapper);
-            Glide.with(getContext())
+            CPDFGlideLogUtils.logRequestStart(wrapper, (int) currentPageWidth, (int) currentPageHeight);
+            RequestBuilder<Bitmap> requestBuilder = Glide.with(getContext())
+                    .asBitmap()
                     .load(wrapper)
+                    .listener(CPDFGlideLogUtils.createRequestListener(wrapper))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .override((int) currentPageWidth, (int) currentPageHeight)
+                    .override((int) currentPageWidth, (int) currentPageHeight);
+            requestBuilder
                     .into(ivPageView);
         }
     }

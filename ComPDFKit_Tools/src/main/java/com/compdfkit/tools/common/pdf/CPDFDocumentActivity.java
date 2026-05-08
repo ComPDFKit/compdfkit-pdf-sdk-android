@@ -13,15 +13,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.activity.CPermissionActivity;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
-import com.compdfkit.tools.common.utils.CFileUtils;
-import java.security.PublicKey;
 
 public class CPDFDocumentActivity extends CPermissionActivity {
 

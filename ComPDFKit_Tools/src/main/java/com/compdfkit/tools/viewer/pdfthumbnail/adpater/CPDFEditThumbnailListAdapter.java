@@ -8,6 +8,7 @@
  */
 package com.compdfkit.tools.viewer.pdfthumbnail.adpater;
 
+import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.util.SparseIntArray;
@@ -22,10 +23,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.compdfkit.core.document.CPDFAbility;
+import com.compdfkit.core.document.CPDFAbility.Ability;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
+import com.compdfkit.tools.common.utils.glide.CPDFGlideLogUtils;
+import com.compdfkit.tools.common.utils.glide.CPDFThumbnailCacheRevisionManager;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
@@ -49,9 +55,12 @@ public class CPDFEditThumbnailListAdapter
 
     private OnPageEditListener onPageEditListener = null;
 
+    private boolean hasEditAbility = false;
+
     public CPDFEditThumbnailListAdapter(CPDFDocument cPdfDocument, int currentPageIndex) {
         this.cPdfDocument = cPdfDocument;
         this.currentPageIndex = currentPageIndex;
+        hasEditAbility = CPDFAbility.checkAbility(Ability.EDIT_IMAGE) || CPDFAbility.checkAbility(Ability.EDIT_TEXT) || CPDFAbility.checkAbility(Ability.EDIT_PATH);
     }
 
     @NonNull
@@ -106,13 +115,20 @@ public class CPDFEditThumbnailListAdapter
             @NonNull CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder holder, int position) {
 
         int[] size = calculateItemSize(holder, holder.getAdapterPosition());
+        CPDFWrapper wrapper = CPDFWrapper.fromDocument(cPdfDocument, holder.getAdapterPosition());
+        CPDFGlideLogUtils.logRequestStart(wrapper, size[0], size[1]);
 
-        Glide.with(holder.itemView.getContext())
-                .load(CPDFWrapper.fromDocument(cPdfDocument, holder.getAdapterPosition()))
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .override(size[0], size[1])
+        RequestBuilder<Bitmap> requestBuilder = Glide.with(holder.itemView.getContext())
+                .asBitmap()
+                .load(wrapper)
+                .listener(CPDFGlideLogUtils.createRequestListener(wrapper))
+                .override(size[0], size[1]);
+        if (hasEditAbility){
+            requestBuilder = requestBuilder
+                .diskCacheStrategy(DiskCacheStrategy.NONE);
+        }
+        requestBuilder
                 .into(holder.ivThumbnailImage);
-
         holder.tvPageIndex.setText(String.valueOf(holder.getAdapterPosition() + 1));
         updateSelectStatus(holder);
     }
@@ -239,6 +255,9 @@ public class CPDFEditThumbnailListAdapter
                         boolean isSuccess;
                         try {
                             isSuccess = cPdfDocument.movePage(sourcePosition, targetPosition);
+                            if (isSuccess) {
+                                CPDFThumbnailCacheRevisionManager.bumpRevision(cPdfDocument);
+                            }
                             if (sourcePosition < targetPosition) { 
                                 List<Integer> selected = new ArrayList<>();
                                 for (int i = sourcePosition; i <= targetPosition; i++) {

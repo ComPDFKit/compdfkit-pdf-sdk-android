@@ -28,16 +28,23 @@ import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.interfaces.COnDialogDismissListener;
 import com.compdfkit.tools.common.utils.CWrapHeightPageChangeCallback;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.dialog.CDialogFragmentUtil;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.common.views.pdfproperties.CTypeUtil;
 import com.compdfkit.tools.common.views.pdfproperties.basic.CBasicPropertiesFragment;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class CStyleDialogFragment extends CBasicBottomSheetDialogFragment implements CBasicPropertiesFragment.OnSwitchFragmentListener {
+    private static final String IDENTIFIER_ANNOTATION_STYLE_DIALOG = "annotation_style_dialog";
 
     protected ConstraintLayout clToolbar;
 
@@ -261,6 +268,7 @@ public class CStyleDialogFragment extends CBasicBottomSheetDialogFragment implem
     @Override
     public void dismiss() {
         super.dismiss();
+        notifyAnnotationStyleDialogDismissed(getAnnotStyle());
         if (styleDialogDismissListener != null) {
             styleDialogDismissListener.dismiss();
         }
@@ -269,6 +277,7 @@ public class CStyleDialogFragment extends CBasicBottomSheetDialogFragment implem
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
+        notifyAnnotationStyleDialogDismissed(getAnnotStyle());
         if (styleDialogDismissListener != null) {
             styleDialogDismissListener.dismiss();
         }
@@ -294,6 +303,19 @@ public class CStyleDialogFragment extends CBasicBottomSheetDialogFragment implem
 
     public void setStyleDialogDismissListener(COnDialogDismissListener styleDialogDismissListener) {
         this.styleDialogDismissListener = styleDialogDismissListener;
+    }
+
+    private void notifyAnnotationStyleDialogDismissed(CAnnotStyle style) {
+        Map<String, Object> extraMap = new HashMap<>();
+        if (CTypeUtil.isAnnotationType(style.getType())){
+            extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.ANNOTATION_STYLE_DIALOG_DISMISSED);
+        } else if (CTypeUtil.isFormType(style.getType())){
+            extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.FORM_STYLE_DIALOG_DISMISSED);
+        } else if (CTypeUtil.isContentEditorType(style.getType())){
+            extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.CONTENT_EDITOR_STYLE_DIALOG_DISMISSED);
+        }
+        extraMap.put(CPDFCustomEventField.STYLE_TYPE, style.getType().name());
+        CPDFCustomEventCallbackHelper.getInstance().notifyClick(IDENTIFIER_ANNOTATION_STYLE_DIALOG, extraMap);
     }
 
     @Override

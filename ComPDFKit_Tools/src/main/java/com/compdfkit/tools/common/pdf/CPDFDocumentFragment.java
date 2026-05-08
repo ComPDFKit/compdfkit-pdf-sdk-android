@@ -11,6 +11,7 @@ package com.compdfkit.tools.common.pdf;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType.ADD_WATERMARK_DIALOG_DISMISSED;
 import static com.compdfkit.tools.contenteditor.CEditToolbar.SELECT_AREA_IMAGE;
 import static com.compdfkit.tools.contenteditor.CEditToolbar.SELECT_AREA_TEXT;
 
@@ -60,6 +61,9 @@ import com.compdfkit.tools.common.utils.activitycontracts.CImageResultLauncher;
 import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
 import com.compdfkit.tools.common.utils.animation.CFillScreenManager;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 import com.compdfkit.tools.common.utils.dialog.CExitTipsDialog;
 import com.compdfkit.tools.common.utils.glide.CPDFGlideInitializer;
@@ -102,7 +106,9 @@ import com.compdfkit.ui.reader.CPDFReaderView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class CPDFDocumentFragment extends CBasicPDFFragment {
@@ -337,7 +343,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             initEditBar();
             initSignatureToolbar();
             applyConfiguration();
-            onDoNext();
             if (initListener != null) {
                 initListener.compile(pdfView);
             }
@@ -478,24 +483,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         pdfToolBar.addModes(modeConfig.availableViewModes);
         pdfToolBar.selectMode(modeConfig.initialViewMode);
         pdfToolBar.setMenuItems(this, cpdfConfiguration.toolbarConfig);
-    }
-
-    protected void requestStoragePermissions(CRequestPermissionListener permissionListener) {
-        if (Build.VERSION.SDK_INT >= CPermissionUtil.VERSION_TIRAMISU) {
-            CPermissionUtil.openManageAllFileAppSettings(getContext());
-        } else {
-            multiplePermissionResultLauncher.launch(STORAGE_PERMISSIONS, result -> {
-                if (CPermissionUtil.hasStoragePermissions(getContext())) {
-                    if (permissionListener != null) {
-                        permissionListener.request();
-                    }
-                } else {
-                    if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        showPermissionsRequiredDialog();
-                    }
-                }
-            });
-        }
     }
 
     protected void initAnnotToolbar() {
@@ -720,12 +707,6 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         alertDialog.show(getChildFragmentManager(), "alertDialog");
     }
 
-    protected void onDoNext() {
-        multiplePermissionResultLauncher.launch(STORAGE_PERMISSIONS, result -> {
-
-        });
-    }
-
     protected void showSettingEncryptionDialog() {
         CDocumentEncryptionDialog documentEncryptionDialog = CDocumentEncryptionDialog.newInstance();
         documentEncryptionDialog.setDocument(pdfView.getCPdfReaderView().getPDFDocument());
@@ -932,6 +913,11 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
             if (saveAsNewFile1) {
                 pdfView.openPDF(pdfFile);
             }
+        });
+        watermarkEditDialog.setDismissListener(()-> {
+            Map<String, Object> extraMap = new HashMap<>();
+            extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, ADD_WATERMARK_DIALOG_DISMISSED);
+            CPDFCustomEventCallbackHelper.getInstance().notifyClick("", extraMap);
         });
         watermarkEditDialog.show(getChildFragmentManager(), "watermarkEditDialog");
     }

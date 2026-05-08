@@ -176,13 +176,15 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
         }
         editManager.enable();
         pdfView.addSelectEditAreaChangeListener(selectType -> {
-            if (ivProper != null) {
-                if (selectType == SELECT_AREA_NONE || selectType == SELECT_PATH_AREA) {
-                    ivProper.setEnabled(false);
-                } else {
-                    ivProper.setEnabled(true);
+            CThreadPoolUtils.getInstance().executeMain(()-> {
+                if (ivProper != null) {
+                    if (selectType == SELECT_AREA_NONE || selectType == SELECT_PATH_AREA) {
+                        ivProper.setEnabled(false);
+                    } else {
+                        ivProper.setEnabled(true);
+                    }
                 }
-            }
+            });
         });
         pdfView.addEditStatusChangeListener(new OnEditStatusChangeListener() {
             @Override
@@ -192,7 +194,6 @@ public class CEditToolbar extends RelativeLayout implements View.OnClickListener
                         return;
                     }
                     updateTypeStatus();
-
                 });
             }
 

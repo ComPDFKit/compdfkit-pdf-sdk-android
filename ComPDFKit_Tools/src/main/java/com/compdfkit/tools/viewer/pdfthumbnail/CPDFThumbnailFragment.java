@@ -36,20 +36,20 @@ import com.compdfkit.tools.viewer.pdfthumbnail.adpater.CPDFThumbnailListAdapter;
  * you can refer to the code in "CPDFThumbnailListAdapter" for implementation.
  * <p/>
  * You can use Glide SDK to load the thumbnail of a PDF document.<br/>
- * GlideApp.with(context) <br/>
+ * Glide.with(context) <br/>
  *      .load(CPDFWrapper.fromDocument(CPDFDocument document, int pageIndex) <br/>
  *      .diskCacheStrategy(DiskCacheStrategy.NONE) <br/>
  *      .into(imageView) <br/>
  * <p/>
  *  <br/>
  * - fromFile <br/>
- * GlideApp.with(context) <br/>
+ * Glide.with(context) <br/>
  *      .load(CPDFWrapper.fromFile(String pdfFilePath)) <br/>
  *      .diskCacheStrategy(DiskCacheStrategy.NONE) <br/>
  *      .into(imageView) <br/>
  * <p/>
  * - fromUri <br/>
- * GlideApp.with(context) <br/>
+ * Glide.with(context) <br/>
  *      .load(CPDFWrapper.fromUri(Uri pdfFileUri)) <br/>
  *      .diskCacheStrategy(DiskCacheStrategy.NONE) <br/>
  *      .into(imageview) <br/>
@@ -104,7 +104,8 @@ public class CPDFThumbnailFragment extends CBasicThemeFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         if (pdfView != null) {
-            CPDFThumbnailListAdapter thumbnailListAdapter = new CPDFThumbnailListAdapter(pdfView.getCPdfReaderView().getPDFDocument(),  pdfView.currentPageIndex);
+            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+            CPDFThumbnailListAdapter thumbnailListAdapter = new CPDFThumbnailListAdapter(document,  pdfView.currentPageIndex);
             thumbnailListAdapter.setPDFDisplayPageIndexListener(displayPageIndexListener);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 6);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

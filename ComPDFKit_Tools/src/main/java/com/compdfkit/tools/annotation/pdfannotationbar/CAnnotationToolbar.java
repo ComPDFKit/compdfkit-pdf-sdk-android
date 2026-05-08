@@ -36,9 +36,13 @@ import com.compdfkit.tools.common.interfaces.COnAnnotationCreatePreparedListener
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.utils.CListUtil;
 import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
+import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.CAnnotationType;
+import com.compdfkit.tools.common.views.pdfproperties.CTypeUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CBasicOnStyleChangeListener;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -54,6 +58,7 @@ import com.compdfkit.ui.reader.CPDFReaderView.ViewMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -212,6 +217,12 @@ public class CAnnotationToolbar extends FrameLayout {
         if (fragmentActivity != null) {
             dialogFragment.show(fragmentActivity.getSupportFragmentManager(), "annotStyleDialogFragment");
         }
+    }
+
+    private boolean hasAnnotationStyleSelection(CAnnotStyle style) {
+        return style.getTextStamp() != null
+                || style.getStandardStamp() != null
+                || !TextUtils.isEmpty(style.getImagePath());
     }
 
     public void switchAnnotationUnknown(){

@@ -26,6 +26,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.R;
@@ -36,6 +37,7 @@ import com.compdfkit.tools.common.pdf.config.CPDFThumbnailConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.CUriUtil;
+import com.compdfkit.tools.common.utils.glide.CPDFThumbnailCacheRevisionManager;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
@@ -356,6 +358,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
             CInsertBlankPageDialogFragment blankPageDialogFragment = CInsertBlankPageDialogFragment.newInstance();
             blankPageDialogFragment.setDocument(pdfView.getCPdfReaderView().getPDFDocument());
             blankPageDialogFragment.setOnEditDoneCallback(() -> {
+                CPDFThumbnailCacheRevisionManager.bumpRevision(pdfView.getCPdfReaderView().getPDFDocument());
                 int[] pageNum = new int[1];
                 pageNum[0] = blankPageDialogFragment.getInsertPageIndex();
                 editThumbnailFragment.setSelectPages(pageNum);
@@ -377,6 +380,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         pdfPageDialogFragment.initWithPDFView(pdfView);
         pdfPageDialogFragment.setInsertDocument(document);
         pdfPageDialogFragment.setOnEditDoneCallback(() -> {
+            CPDFThumbnailCacheRevisionManager.bumpRevision(pdfView.getCPdfReaderView().getPDFDocument());
             int[] pageNum = pdfPageDialogFragment.getInsertPagesArr();
             if (pageNum != null && pageNum.length > 0) {
                 editThumbnailFragment.setSelectPages(pageNum);
@@ -420,6 +424,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         if (!res) {
             return false;
         }
+        CPDFThumbnailCacheRevisionManager.bumpRevision(document);
 
         int[] insertPages = new int[insertPageNum.length];
         for (int i = pageNum[pageNum.length - 1] + 1 - pageNum.length; i <= insertPageNum.length + (pageNum[pageNum.length - 1] + 1) - 1 - pageNum.length; i++) {
@@ -482,6 +487,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
             for (int i = pageList.size() - 1; i >= 0; i--) {
                 document.addPage(pageList.get(i), pagesArr.keyAt(pagesArr.size() - 1) + 1);
             }
+            CPDFThumbnailCacheRevisionManager.bumpRevision(document);
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> pdfView.getCPdfReaderView().reloadPages());
             }
@@ -523,6 +529,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
             }
             hasEdit = true;
         }
+        CPDFThumbnailCacheRevisionManager.bumpRevision(document);
         editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_ROTATE);
         return true;
     }
@@ -546,12 +553,15 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         deleteing = true;
         editThumbnailFragment.setRecyclerViewTouchable(false);
         CThreadPoolUtils.getInstance().executeIO(()->{
-            document.removePages(pageNum);
+            boolean removed = document.removePages(pageNum);
             CThreadPoolUtils.getInstance().executeMain(()->{
                 editThumbnailFragment.setSelectAll(false);
-                editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_DELETE);
+                if (removed) {
+                    CPDFThumbnailCacheRevisionManager.bumpRevision(document);
+                    editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_DELETE);
+                }
                 editThumbnailFragment.setRecyclerViewTouchable(true);
-                hasEdit = true;
+                hasEdit = removed || hasEdit;
                 deleteing = false;
             });
         });
@@ -589,6 +599,16 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
 
     private void intEditThumbnailFragment() {
         editThumbnailFragment.initFragment();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        try {
+            Glide.get(getContext().getApplicationContext()).clearMemory();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
