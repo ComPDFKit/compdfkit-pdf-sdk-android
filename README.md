@@ -1,82 +1,74 @@
 # ComPDF SDK for Android (PDF Library)
 
-As part of the KDAN ecosystem, [ComPDF SDK for Android](https://www.compdf.com/android?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android) enables developers to quickly and seamlessly integrate advanced PDF functionalities—such as PDF generating  viewing, editing, annotating, and signing—into any Android application.
+As part of the KDAN ecosystem, [ComPDF SDK for Android](https://www.compdf.com/android?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit) enables developers to quickly and seamlessly integrate advanced PDF functionalities—such as PDF generating viewing, editing, annotating, and signing—into any Android application.
 
-The ComPDF Android PDF Library provides an easy-to-use Java API that allows direct access to a wide range of PDF features without the need for complex configurations. By [registering for a free ComPDF API account](https://api.compdf.com/signup?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android), developers can process up to 200+ API calls monthly for free.
+The ComPDF Android PDF Library provides an easy-to-use Java API that allows direct access to a wide range of PDF features without the need for complex configurations. By [registering for a free ComPDF API account](https://api.compdf.com/signup?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit), developers can process up to 200+ API calls monthly for free.
 
-
-
-[ComPDF SDK](https://www.compdf.com/?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android) seamlessly operates on [Web](https://www.compdf.com/web?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android), [Windows](https://www.compdf.com/windows?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android), [Android](https://www.compdf.com/android?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android), [iOS](https://www.compdf.com/ios?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android), [Mac](https://www.compdf.com/contact-sales?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android), and [Server](https://www.compdf.com/server?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android), with support for cross-platform frameworks such as [React Native](https://www.compdf.com/react-native?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android), [Flutter](https://www.compdf.com/flutter?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android), etc.
-
-
+[ComPDF SDK](https://www.compdf.com/?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit) seamlessly operates on [Web](https://www.compdf.com/web?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit), [Windows](https://www.compdf.com/windows?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit), [Android](https://www.compdf.com/android?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit), [iOS](https://www.compdf.com/ios?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit), [Mac](https://www.compdf.com/contact-sales?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit), and [Server](https://www.compdf.com/server?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit), with support for cross-platform frameworks such as [React Native](https://www.compdf.com/react-native?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit), [Flutter](https://www.compdf.com/flutter?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit), etc.
 
 If you find ComPDF SDK useful, please consider giving us a ⭐ **Star** on GitHub — it helps us grow and improve! Got questions or ideas? Join the conversation in our [Discussions](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/discussions).
 
-<img src="./image-android/Android Demo GIF.gif" title="" alt="Android Demo GIF" data-align="center">
-
----
+![Android Demo GIF](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Android%20Demo%20GIF.gif)
 
 **Why ComPDF SDK for Android?**
 
-- **Easy to Integrate:** Integrate PDF functionalities easily with our powerful SDK and clear documentation and guides with few lines of code.
-
-- **Fully Customizable UI:** Design a unique interface for your products with fully customizable UI source code by a high-performing SDK.
-
-- **[Comprehensive PDF Features:](https://www.compdf.com/pdf-sdk/features-list?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android)** Supports generation, viewing, annotation, page editing, content editing, conversion, OCR, redaction, signing, forms, parsing, measurement, compression, comparison, color separation, batch processing, and more.
-
-- **Faster Time-to-Market:** Comprehensive SDK libraries save your time and expenses and roll out your applications and projects.
-
-- **High-quality Service:** We provide 24/7 professional one-to-one technical support, including onsite service and remote assistance via phone and email.
-
----
+* **Easy to Integrate:** Integrate PDF functionalities easily with our powerful SDK and clear documentation and guides with few lines of code.
+  
+* **Fully Customizable UI:** Design a unique interface for your products with fully customizable UI source code by a high-performing SDK.
+  
+* **[Comprehensive PDF Features:](https://www.compdf.com/pdf-sdk/features-list?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit)** Supports generation, viewing, annotation, page editing, content editing, conversion, OCR, redaction, signing, forms, parsing, measurement, compression, comparison, color separation, batch processing, and more.
+  
+* **Faster Time-to-Market:** Comprehensive SDK libraries save your time and expenses and roll out your applications and projects.
+  
+* **High-quality Service:** We provide 24/7 professional one-to-one technical support, including onsite service and remote assistance via phone and email.
+  
 
 ## Table of Contents
 
-- [Related](#related)
-- [Preview](#preview)
-- [Requirements](#requirements)
-- [How to Make an Android PDF Viewer in Java](#how-to-make-an-android-pdf-viewer-in-java)
-  - [Installation](#installation)
-- [Changelog](#changelog)
-- [Free Trial & License](#free-trial)
-- [Support](#support)
+* [Related](#related)
+* [Preview](#preview)
+* [Requirements](#requirements)
+* [How to Make an Android PDF Viewer in Java](#how-to-make-an-android-pdf-viewer-in-java)
+  * [Installation](#installation)
+* [Changelog](#changelog)
+* [Free Trial and License](#free-trial-and-license)
+* [Support](#support)
 
 ## Related
 
-- [ComPDF SDK for Android Documentation Guide](https://www.compdf.com/guides/pdf-sdk/android/overview?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android)
-- [ComPDF SDK for iOS](https://github.com/ComPDFKit/compdfkit-pdf-sdk-ios-swift)
-- [How to Build an Android PDF Viewer or Editor in Java](https://www.compdf.com/blog/build-an-android-pdf-viewer-or-editor-in-java?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android)
-- [Code Samples for Android](https://www.compdf.com/guides/pdf-sdk/android/examples?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android)
-- [ComPDF API Reference](https://api.compdf.com/api-reference/overview?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android)
+* [ComPDF SDK for Android Documentation Guide](https://www.compdf.com/guides/pdf-sdk/android/overview?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit)
+* [ComPDF SDK for iOS](https://github.com/ComPDFKit/compdfkit-pdf-sdk-ios-swift)
+* [How to Build an Android PDF Viewer or Editor in Java](https://www.compdf.com/blog/build-an-android-pdf-viewer-or-editor-in-java?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit)
+* [Code Samples for Android](https://www.compdf.com/guides/pdf-sdk/android/examples?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit)
+* [ComPDF API Reference](https://api.compdf.com/api-reference/overview?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit)
 
 ## Preview
 
 ComPDF SDK for Android delivers a smooth, feature-rich PDF experience on mobile devices.
 
-![ComPDF SDK for Android UI](./image-android/ComPDF SDK for Android UI.png)
+![ComPDF SDK for Android UI](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/ComPDF%20SDK%20for%20Android%20UI.png)
 
 ## Requirements
 
-[ComPDF SDK for Android](https://www.compdf.com/guides/pdf-sdk/android/overview?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android) supports Android devices running API level 19 or newer and targets the latest stable Android 4.4 or later. In addition, it requires applications to be built with Java 8 language features enabled.
+[ComPDF SDK for Android](https://www.compdf.com/guides/pdf-sdk/android/overview?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit) supports Android devices running API level 19 or newer and targets the latest stable Android 4.4 or later. In addition, it requires applications to be built with Java 8 language features enabled.
 
-- Android Studio 3.2 or newer (support AndroidX).
-- Project specifications:
-  - A `minSdkVersion` of `19` or higher.
-  - A `compileSdkVersion` of `30` or higher.
-  - A `targetSdkVersion` of `34` or higher.
-  - Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
+* Android Studio 3.2 or newer (support AndroidX).
+* Project specifications:
+  * A `minSdkVersion` of `19` or higher.
+  * A `compileSdkVersion` of `30` or higher.
+  * A `targetSdkVersion` of `34` or higher.
+  * Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
 
 ## How to Make an Android PDF Viewer in Java
 
 This section will help you quickly get started with ComPDF SDK to make an Android app in Java with step-by-step instructions. Through the following steps, you will get a simple application that can display the contents of a specified PDF file.
 
 ### Video Guide: Build an Android PDF Editor in Java [![image-youtube-20250615](./image-android/1776838379387.png)](https://youtu.be/SgBidb_eYjA?si=_UX7oECMc7NvC_nv)
-
 ### Create a New Project
 
 1. Use Android Studio to create a Phone & Tablet project. Here we create a **No Activity** project.
 
-![Create a New Android Project](./image-android/Create a New Android Project.png)
+![Create a New Android Project](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Create%20a%20New%20Android%20Project.png)
 
 ### Installation
 
@@ -84,89 +76,74 @@ This section will help you quickly get started with ComPDF SDK to make an Androi
 
 1. Open the `settings.gradle` file located in your project's root directory and add the `mavenCentral` repository:
 
-```diff
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-+       mavenCentral()
+    dependencyResolutionManagement {
+        repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+        repositories {
+            google()
+    +       mavenCentral()
+        }
     }
-}
-```
 
 2. Open the `build.gradle` file in the application module directory:
 
-![Integrate With Gradle](./image-android/Integrate With Gradle.png)
+![Integrate With Gradle](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Integrate%20With%20Gradle.png)
 
 Edit it and add the complete `ComPDF SDK` dependency:
 
-```groovy
-dependencies {
-  implementation 'com.compdf:compdfkit:2.6.7'
-  implementation 'com.compdf:compdfkit-ui:2.6.7'
-}
-```
+    dependencies {
+      implementation 'com.compdf:compdfkit:2.6.1'
+      implementation 'com.compdf:compdfkit-ui:2.6.1'
+    }
 
 3. Apply for read and write permissions in `AndroidManifest.xml`:
 
-```xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-```
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 **Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permissions to external storage at runtime.*
 
 4. If you use an online license, please add network access permissions in `AndroidManifest.xml`:
 
-```xml
-<uses-permission android:name="android.permission.INTERNET"/>
-```
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 #### Integrate Manually
 
 1. Copy ***"ComPDFKit.aar"*** and ***"ComPDFKit-UI.aar"*** to the ***"libs"*** directory of the **app**.
 
-![Integrate Manually](./image-android/Integrate%20Manually.png)
+![Integrate Manually](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%201.png))
+
 
 2. Add the following code into the **app** dictionary's ***"build.gradle"*** file:
 
-```groovy
-...
-dependencies {
-    /*ComPDF SDK*/
-    implementation(fileTree('libs'))
     ...
-}
-...
-```
-
-3. Add [ComPDF SDK for Android](https://www.compdf.com/android?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android) as a dependency to the project. Inside the **app** dictionary's ***"build.gradle"***, add ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"***, and the related support libraries to the `dependencies`. For simplicity, update the dependencies as follows:
-
-```groovy
-dependencies {
+    dependencies {
+        /*ComPDF SDK*/
+        implementation(fileTree('libs'))
+        ...
+    }
     ...
-    //glide
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
-    implementation 'androidx.documentfile:documentfile:1.0.1'
-}
-```
+3. Add [ComPDF SDK for Android](https://www.compdf.com/android?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit) as a dependency to the project. Inside the **app** dictionary's ***"build.gradle"***, add ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"***, and the related support libraries to the `dependencies`. For simplicity, update the dependencies as follows:
+
+    dependencies {
+        ...
+        //glide
+        implementation 'com.github.bumptech.glide:glide:4.12.0'
+        annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    
+        implementation 'androidx.documentfile:documentfile:1.0.1'
+    }
 
 4. Apply for read and write permissions in `AndroidManifest.xml`:
 
-```xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-```
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 **Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permissions to external storage at runtime.*
 
 5. If you use an online license, please add network access permissions in `AndroidManifest.xml`:
 
-```xml
-<uses-permission android:name="android.permission.INTERNET"/>
-```
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 ### Apply the License Key
 
@@ -174,68 +151,58 @@ Add this license in the **AndroidManifest.xml** of the main module. In version *
 
 * **Online license**
 
-```xml
-<!-- Each ComPDF license is bound to a specific applicationId -->
-<!-- For example: com.compdfkit.pdfviewer -->
-<meta-data
-    android:name="compdfkit_key_online"
-    android:value="Your ComPDF Key" />
-```
+    <!-- Each ComPDF license is bound to a specific applicationId -->
+    <!-- For example: com.compdfkit.pdfviewer -->
+    <meta-data
+        android:name="compdfkit_key_online"
+        android:value="Your ComPDF Key" />
 
 You can also initialize ComPDF SDK in code using:
 
-```java
-CPDFSdk.init(context, "your compdfkit license", false);
-```
+    CPDFSdk.init(context, "your compdfkit license", false);
 
 * **Offline license**
 
-```xml
-<!-- Each ComPDF license is bound to a specific applicationId -->
-<!-- For example: com.compdfkit.pdfviewer -->
-<meta-data
-    android:name="compdfkit_key"
-    android:value="Your ComPDF Key" />
-```
+    <!-- Each ComPDF license is bound to a specific applicationId -->
+    <!-- For example: com.compdfkit.pdfviewer -->
+    <meta-data
+        android:name="compdfkit_key"
+        android:value="Your ComPDF Key" />
 
 You can also initialize ComPDF SDK in code using:
 
-```java
-CPDFSdk.init(context, "your compdfkit license");
-```
+    CPDFSdk.init(context, "your compdfkit license");
 
 ### Add Proguard Rules
 
 In the `proguard-rules.pro` file, please add the obfuscation configuration information for `compdfkit` as follows:
 
-```
--keep class com.compdfkit.ui.** {*;}
--keep class com.compdfkit.core.** {*;}
-```
+    -keep class com.compdfkit.ui.** {*;}
+    -keep class com.compdfkit.core.** {*;}
 
 ### Display a PDF Document
 
 1. Copy a PDF document into the **assets** directory of your Android project. For example, import the file ***"Quick Start Guide.pdf"*** to the path **src/main/assets**.
 
-![Display a PDF Document - 1](./image-android/Display%20a%20PDF%20Document%20-%201.png)
+![Display a PDF Document  1](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%201.png)
 
 2. Create a new **Empty Activity** under your package, and set the activity name to **MainActivity**.
 
-![Display a PDF Document - 2](./image-android/Display%20a%20PDF%20Document%20-%202.png)
+![Display a PDF Document  2](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%202.png)
 
 Android Studio will automatically generate a source file called ***"MainActivity.java"*** and a layout file called ***"activity_main.xml"***.
 
 The source file:
 
-![Display a PDF Document - 3](./image-android/Display%20a%20PDF%20Document%20-%203.png)
+![Display a PDF Document  3](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%203.png)
 
 The layout file:
 
-![Display a PDF Document - 4](./image-android/Display%20a%20PDF%20Document%20-%204.png)
+![Display a PDF Document  4](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%204.png)
 
 3. Create a `CPDFReaderView` in your ***"activity_main.xml"*** to display the contents of the PDF document:
 
-```xml
+ ```xml
 <!-- Your activity_main.xml file -->
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -256,7 +223,6 @@ The layout file:
 ```
 
 Get the `CPDFReaderView` from the layout or create a `CPDFReaderView` directly in the code in the corresponding ***MainActivity.java*** file:
-
 ```Java
 // Your MainActivity.java file
 
@@ -460,32 +426,33 @@ public class MainActivity extends AppCompatActivity {
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
+
 7. Run the application.
 
-![Display a PDF Document - 5](./image-android/Display%20a%20PDF%20Document%20-%205.png)
+![Display a PDF Document  5](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%205.png)
 
 Now, with the help of ComPDF SDK, you can get a simple application to display a PDF file.
 
 ## Changelog
 
-Keep up with the latest updates, improvements, and bug fixes for ComPDF SDK for Android: [View Android Changelog](https://www.compdf.com/pdf-sdk/changelog-android?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android)
+Keep up with the latest updates, improvements, and bug fixes for ComPDF SDK for Android: [View Android Changelog](https://www.compdf.com/pdf-sdk/changelog-android?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit)
 
-## Free Trial & License
+## Free Trial and License
 
-[ComPDF SDK](https://www.compdf.com/?utm_source=github_readme_sdk_apple_package&utm_medium=referral&utm_campaign=github_readme_sdk_apple_package) offers a **30-day free trial** so you can evaluate core PDF capabilities in your own application.
+[ComPDF SDK](https://www.compdf.com/?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit) offers a **30-day free trial** so you can evaluate core PDF capabilities in your own application.
 
 To get started:
 
-1. Apply for a [free trial](https://www.compdf.com/pricing?utm_source=github_readme_sdk_apple_package&utm_medium=referral&utm_campaign=github_readme_sdk_apple_package)
+1. Apply for a [free trial](https://www.compdf.com/pricing?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit)
 2. Review supported trial features and licensing details
 3. Follow the integration and license steps above to activate the SDK in your project
 
-For custom deployments, advanced features, or volume licensing, please [contact our sales team](https://www.compdf.com/contact-sales?utm_source=github_readme_sdk_apple_package&utm_medium=referral&utm_campaign=github_readme_sdk_apple_package)
+For custom deployments, advanced features, or volume licensing, please [contact our sales team](https://www.compdf.com/contact-sales?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit)
 
 ## Support
 
 ComPDF offers professional technical support and 5×24 responsive service.
 
-- For detailed information, please visit our [Guides](https://www.compdf.com/guides/pdf-sdk/android/overview?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android) page.
-- For technical assistance, please reach out to our [Technical Support](https://www.compdf.com/support?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android).
-- To get more details and an accurate quote, please contact our [Sales Team](https://compdf.com/contact-us?utm_source=github_readme_sdk_android&utm_medium=referral&utm_campaign=github_readme_sdk_android) or [Send an Email](mailto:support@compdf.com) to us.
+* For detailed information, please visit our [Guides](https://www.compdf.com/guides/pdf-sdk/android/overview?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit) page.
+* For technical assistance, please reach out to our [Technical Support](https://www.compdf.com/support?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit).
+* To get more details and an accurate quote, please contact our [Sales Team](https://compdf.com/contact-us?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit) or [Send an Email](mailto:support@compdf.com) to us.
