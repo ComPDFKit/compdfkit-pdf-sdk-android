@@ -270,6 +270,7 @@
     "cropMode": false,
     "themes": "light",
     "enableSliderBar": true,
+    "slideBarPosition": "right",
     "enablePageIndicator": true,
     "pageSpacing": 10,
     "margins": [0, 0, 0, 0],

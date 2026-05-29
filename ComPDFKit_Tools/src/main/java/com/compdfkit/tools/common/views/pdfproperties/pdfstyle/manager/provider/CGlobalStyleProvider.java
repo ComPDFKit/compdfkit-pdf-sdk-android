@@ -18,6 +18,8 @@ import com.compdfkit.core.annotation.CPDFFreetextAnnotation;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAlignment;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
+import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CBasicOnStyleChangeListener;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
@@ -257,7 +259,12 @@ public class CGlobalStyleProvider extends CBasicOnStyleChangeListener implements
                     } else if (params.getTextStamp() != null) {
                         stampAttr1.setTextStamp(params.getTextStamp());
                     } else if (!TextUtils.isEmpty(params.getImagePath())) {
+                        CLog.e("ImageAnnot", "global set stamp image path, styleType="
+                                + params.getType() + ", path=" + params.getImagePath());
+                        CUriUtil.logImageFileInfo("global stamp image file", params.getImagePath());
                         stampAttr1.setImagePath(params.getImagePath(), false);
+                    } else {
+                        CLog.e("ImageAnnot", "global stamp image path empty, styleType=" + params.getType());
                     }
                     break;
                 case FORM_TEXT_FIELD:

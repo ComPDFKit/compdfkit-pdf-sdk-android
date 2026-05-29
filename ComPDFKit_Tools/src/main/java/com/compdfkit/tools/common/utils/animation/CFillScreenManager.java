@@ -21,6 +21,18 @@ import java.util.LinkedHashSet;
 
 public class CFillScreenManager {
 
+    public interface DirectionAwareToolView {
+
+        ToolViewDirection getToolViewDirection();
+    }
+
+    public enum ToolViewDirection {
+        TOP,
+        BOTTOM,
+        LEFT,
+        RIGHT
+    }
+
     public static final long CONFIG_SHORT_ANIM_TIME = 200L;
 
     public LinkedHashSet<View> topToolViewList = new LinkedHashSet<>();
@@ -31,7 +43,52 @@ public class CFillScreenManager {
 
     private LinkedHashSet<View> rightToolViewList = new LinkedHashSet<>();
 
-    public void showFromTop(View view, long duration) {
+    private ToolViewDirection resolveDirection(View view, ToolViewDirection fallbackDirection) {
+        if (view instanceof DirectionAwareToolView) {
+            return ((DirectionAwareToolView) view).getToolViewDirection();
+        }
+        return fallbackDirection;
+    }
+
+    private void show(View view, long duration, ToolViewDirection defaultDirection, boolean resolveDynamicDirection) {
+        ToolViewDirection direction = resolveDynamicDirection ? resolveDirection(view, defaultDirection) : defaultDirection;
+        switch (direction) {
+            case TOP:
+                showFromTopInternal(view, duration);
+                break;
+            case BOTTOM:
+                showFromBottomInternal(view, duration);
+                break;
+            case LEFT:
+                showFromLeftInternal(view, duration);
+                break;
+            case RIGHT:
+            default:
+                showFromRightInternal(view, duration);
+                break;
+        }
+    }
+
+    private void hide(View view, long duration, ToolViewDirection defaultDirection, boolean resolveDynamicDirection) {
+        ToolViewDirection direction = resolveDynamicDirection ? resolveDirection(view, defaultDirection) : defaultDirection;
+        switch (direction) {
+            case TOP:
+                hideFromTopInternal(view, duration);
+                break;
+            case BOTTOM:
+                hideFromBottomInternal(view, duration);
+                break;
+            case LEFT:
+                hideFromLeftInternal(view, duration);
+                break;
+            case RIGHT:
+            default:
+                hideFromRightInternal(view, duration);
+                break;
+        }
+    }
+
+    private void showFromTopInternal(View view, long duration) {
         if (view.getVisibility() == android.view.View.VISIBLE) {
             return;
         }
@@ -61,7 +118,7 @@ public class CFillScreenManager {
                 });
     }
 
-    public void hideFromTop(View view, long duration) {
+    private void hideFromTopInternal(View view, long duration) {
         if (view.getVisibility() != android.view.View.VISIBLE) {
             return;
         }
@@ -85,7 +142,7 @@ public class CFillScreenManager {
                 });
     }
 
-    public void showFromBottom(View view, long duration) {
+    private void showFromBottomInternal(View view, long duration) {
         if (view.getVisibility() == android.view.View.VISIBLE) {
             return;
         }
@@ -110,7 +167,7 @@ public class CFillScreenManager {
                 });
     }
 
-    public void hideFromBottom(View view, long duration) {
+    private void hideFromBottomInternal(View view, long duration) {
         if (view.getVisibility() != android.view.View.VISIBLE) {
             return;
         }
@@ -134,8 +191,7 @@ public class CFillScreenManager {
                 });
     }
 
-
-    public void showFromLeft(View view,long duration) {
+    private void showFromLeftInternal(View view,long duration) {
         if (view.getVisibility() == View.VISIBLE) {
             return;
         }
@@ -162,7 +218,7 @@ public class CFillScreenManager {
                 });
     }
 
-    public void hideFromLeft(View view, long duration) {
+    private void hideFromLeftInternal(View view, long duration) {
         if (view.getVisibility() != View.VISIBLE) {
             return;
         }
@@ -186,7 +242,7 @@ public class CFillScreenManager {
                 });
     }
 
-    public void showFromRight(View view, long duration) {
+    private void showFromRightInternal(View view, long duration) {
         if (view.getVisibility() == View.VISIBLE) {
             return;
         }
@@ -212,7 +268,7 @@ public class CFillScreenManager {
                 });
     }
 
-    public void hideFromRight(View view, long duration) {
+    private void hideFromRightInternal(View view, long duration) {
         if (view.getVisibility() != View.VISIBLE) {
             return;
         }
@@ -234,6 +290,39 @@ public class CFillScreenManager {
                         view.setVisibility(View.INVISIBLE);
                     }
                 });
+    }
+
+    public void showFromTop(View view, long duration) {
+        show(view, duration, ToolViewDirection.TOP, true);
+    }
+
+    public void hideFromTop(View view, long duration) {
+        hide(view, duration, ToolViewDirection.TOP, true);
+    }
+
+    public void showFromBottom(View view, long duration) {
+        show(view, duration, ToolViewDirection.BOTTOM, true);
+    }
+
+    public void hideFromBottom(View view, long duration) {
+        hide(view, duration, ToolViewDirection.BOTTOM, true);
+    }
+
+
+    public void showFromLeft(View view,long duration) {
+        show(view, duration, ToolViewDirection.LEFT, true);
+    }
+
+    public void hideFromLeft(View view, long duration) {
+        hide(view, duration, ToolViewDirection.LEFT, true);
+    }
+
+    public void showFromRight(View view, long duration) {
+        show(view, duration, ToolViewDirection.RIGHT, true);
+    }
+
+    public void hideFromRight(View view, long duration) {
+        hide(view, duration, ToolViewDirection.RIGHT, true);
     }
 
     public void bindTopToolView(View... topToolView) {
@@ -291,22 +380,22 @@ public class CFillScreenManager {
 
     public void removeAndHideToolView(View view){
         if (topToolViewList.contains(view)) {
-            hideFromTop(view, 200);
+            hide(view, 200, ToolViewDirection.TOP, true);
             topToolViewList.remove(view);
             return;
         }
         if (leftToolViewList.contains(view)) {
-            hideFromLeft(view, 200);
+            hide(view, 200, ToolViewDirection.LEFT, true);
             leftToolViewList.remove(view);
             return;
         }
         if (rightToolViewList.contains(view)) {
-            hideFromRight(view, 200);
+            hide(view, 200, ToolViewDirection.RIGHT, true);
             rightToolViewList.remove(view);
             return;
         }
         if (bottomToolViewList.contains(view)) {
-            hideFromBottom(view, 200);
+            hide(view, 200, ToolViewDirection.BOTTOM, true);
             bottomToolViewList.remove(view);
         }
     }

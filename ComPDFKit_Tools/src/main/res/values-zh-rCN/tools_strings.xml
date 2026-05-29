@@ -339,6 +339,7 @@
     <string name="tools_enter_the_name_of_the_organization">请输入单位名称</string>
     <string name="tools_email_address">电子邮件地址</string>
     <string name="tools_email_address_hint">请输入电子邮箱地址</string>
+    <string name="tools_email_address_error">邮箱地址格式不正确</string>
     <string name="tools_country_region">国家/地区</string>
     <string name="tools_country_region_hint">请选择国家/地区</string>
     <string name="tools_save_to_file">保存到文件</string>

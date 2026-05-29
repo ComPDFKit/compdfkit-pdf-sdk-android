@@ -192,14 +192,14 @@ public class CPDFDisplaySettingDialogFragment extends CBasicBottomSheetDialogFra
             }
         } else if (checkedId == R.id.r_btn_vertical){
             if (pdfView != null) {
-                pdfView.getCPdfReaderView().setVerticalMode(true);
+                pdfView.setVerticalMode(true);
                 updateContinueStatus();
                 checkAndAdjustScaleToFitHeight();
 
             }
         } else if (checkedId == R.id.r_btn_horizontal) {
             if (pdfView != null) {
-                pdfView.getCPdfReaderView().setVerticalMode(false);
+                pdfView.setVerticalMode(false);
                 updateContinueStatus();
                 checkAndAdjustScaleToFitHeight();
 

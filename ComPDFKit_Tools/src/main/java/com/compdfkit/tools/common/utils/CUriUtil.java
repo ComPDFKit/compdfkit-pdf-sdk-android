@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -13,10 +14,16 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.compdfkit.tools.BuildConfig;
+
 import java.io.File;
 import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CUriUtil {
+
+    private static final ExecutorService IMAGE_LOG_EXECUTOR = Executors.newSingleThreadExecutor();
 
     public static String getUriType(Context context, Uri uri) {
 
@@ -85,6 +92,167 @@ public class CUriUtil {
             }
         }
         return "";
+    }
+
+    public static void logImageUriInfo(Context context, String stage, Uri uri) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
+        if (context == null || uri == null) {
+            CLog.e("ImageAnnot", stage + ", uri is null");
+            return;
+        }
+        Context appContext = context.getApplicationContext();
+        IMAGE_LOG_EXECUTOR.execute(() -> logImageUriInfoInternal(appContext, stage, uri));
+    }
+
+    private static void logImageUriInfoInternal(Context context, String stage, Uri uri) {
+        InputStream inputStream = null;
+        try {
+            String mime = context.getContentResolver().getType(uri);
+            String name = getUriFileName(context, uri);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            inputStream = context.getContentResolver().openInputStream(uri);
+            BitmapFactory.decodeStream(inputStream, null, options);
+            CLog.e("ImageAnnot", stage
+                    + ", uri=" + safeUri(uri)
+                    + ", name=" + name
+                    + ", resolverMime=" + mime
+                    + ", bitmapMime=" + options.outMimeType
+                    + ", width=" + options.outWidth
+                    + ", height=" + options.outHeight);
+        } catch (Exception e) {
+            CLog.e("ImageAnnot", stage + ", uri=" + uri + ", error=" + e.getMessage());
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    public static void logImageFileInfo(String stage, String path) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
+        if (TextUtils.isEmpty(path)) {
+            CLog.e("ImageAnnot", stage + ", path is empty");
+            return;
+        }
+        IMAGE_LOG_EXECUTOR.execute(() -> logImageFileInfoInternal(stage, path));
+    }
+
+    private static void logImageFileInfoInternal(String stage, String path) {
+        try {
+            File file = new File(path);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, options);
+            CLog.e("ImageAnnot", stage
+                    + ", fileName=" + file.getName()
+                    + ", exists=" + file.exists()
+                    + ", size=" + (file.exists() ? file.length() : -1)
+                    + ", bitmapMime=" + options.outMimeType
+                    + ", width=" + options.outWidth
+                    + ", height=" + options.outHeight);
+        } catch (Exception e) {
+            CLog.e("ImageAnnot", stage + ", path=" + path + ", error=" + e.getMessage());
+        }
+    }
+
+    public static String getImageExtension(Context context, Uri uri) {
+        String mimeType = "";
+        try {
+            mimeType = context.getContentResolver().getType(uri);
+        } catch (Exception ignored) {
+        }
+        String extension = extensionFromMime(mimeType);
+        if (!TextUtils.isEmpty(extension)) {
+            return extension;
+        }
+
+        extension = extensionFromMime(getUriType(context, uri));
+        if (!TextUtils.isEmpty(extension)) {
+            return extension;
+        }
+
+        extension = extensionFromFileName(getUriFileName(context, uri));
+        if (!TextUtils.isEmpty(extension)) {
+            return extension;
+        }
+
+        InputStream inputStream = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            inputStream = context.getContentResolver().openInputStream(uri);
+            BitmapFactory.decodeStream(inputStream, null, options);
+            extension = extensionFromMime(options.outMimeType);
+            if (!TextUtils.isEmpty(extension)) {
+                return extension;
+            }
+        } catch (Exception ignored) {
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return ".jpg";
+    }
+
+    private static String extensionFromMime(String mimeType) {
+        if ("image/png".equalsIgnoreCase(mimeType)) {
+            return ".png";
+        }
+        if ("image/jpeg".equalsIgnoreCase(mimeType) || "image/jpg".equalsIgnoreCase(mimeType)) {
+            return ".jpg";
+        }
+        if ("image/heic".equalsIgnoreCase(mimeType)) {
+            return ".heic";
+        }
+        if ("image/heif".equalsIgnoreCase(mimeType)) {
+            return ".heif";
+        }
+        if ("image/webp".equalsIgnoreCase(mimeType)) {
+            return ".webp";
+        }
+        return "";
+    }
+
+    private static String extensionFromFileName(String fileName) {
+        if (TextUtils.isEmpty(fileName)) {
+            return "";
+        }
+        String lowerName = fileName.toLowerCase();
+        if (lowerName.endsWith(".png")) {
+            return ".png";
+        }
+        if (lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg")) {
+            return ".jpg";
+        }
+        if (lowerName.endsWith(".heic")) {
+            return ".heic";
+        }
+        if (lowerName.endsWith(".heif")) {
+            return ".heif";
+        }
+        if (lowerName.endsWith(".webp")) {
+            return ".webp";
+        }
+        return "";
+    }
+
+    private static String safeUri(Uri uri) {
+        if (uri == null) {
+            return "null";
+        }
+        return uri.getScheme() + "://" + uri.getAuthority();
     }
 
     public static String copyUriToInternalCache(Context context, Uri uri) {

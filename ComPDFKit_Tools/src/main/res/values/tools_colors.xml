@@ -20,6 +20,7 @@
     <color name="tools_secondary">#1460F3</color>
     <color name="tools_on_secondary">#FFFFFF</color>
     <color name="tools_error">#FA1E5D</color>
+    <color name="tools_error_soft">#D64E6D</color>
     <color name="tools_color_background">#FFFFFF</color>
     <color name="tools_subtitle_1_color">#1C1B1F</color>
     <color name="tools_text_color_primary">#43474D</color>

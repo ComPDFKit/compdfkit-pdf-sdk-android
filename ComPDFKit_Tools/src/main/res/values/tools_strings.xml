@@ -342,6 +342,7 @@
     <string name="tools_enter_the_name_of_the_organization">Enter the name of the organization</string>
     <string name="tools_email_address">Email Address</string>
     <string name="tools_email_address_hint">Please enter your email address</string>
+    <string name="tools_email_address_error">Invalid email address</string>
     <string name="tools_country_region">Country Region</string>
     <string name="tools_country_region_hint">Please select your country/region</string>
     <string name="tools_save_to_file">Save to File</string>

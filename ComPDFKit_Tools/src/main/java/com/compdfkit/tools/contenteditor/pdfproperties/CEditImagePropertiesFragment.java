@@ -40,7 +40,7 @@ public class CEditImagePropertiesFragment extends CBasicPropertiesFragment imple
     private ConstraintLayout rlExport;
     private ConstraintLayout rlCrop;
 
-    private ActivityResultLauncher<CImageResultContracts.RequestType> imageLauncher = registerForActivityResult(new CImageResultContracts(), result -> {
+    private ActivityResultLauncher<CImageResultContracts.Request> imageLauncher = registerForActivityResult(new CImageResultContracts(), result -> {
         if (result != null) {
             if (viewModel != null) {
                 viewModel.getStyle().setUpdatePropertyType(CAnnotStyle.EditUpdatePropertyType.ReplaceImage);
@@ -138,7 +138,7 @@ public class CEditImagePropertiesFragment extends CBasicPropertiesFragment imple
                 viewModel.getStyle().setMirror(CAnnotStyle.Mirror.Vertical);
             }
         } else if (id == R.id.rl_replace) {
-            imageLauncher.launch(CImageResultContracts.RequestType.PHOTO_ALBUM);
+            imageLauncher.launch(new CImageResultContracts.Request(CImageResultContracts.RequestType.PHOTO_ALBUM));
         } else if (id == R.id.rl_crop) {
             if (viewModel != null) {
                 viewModel.getStyle().setUpdatePropertyType(CAnnotStyle.EditUpdatePropertyType.Crop, true);

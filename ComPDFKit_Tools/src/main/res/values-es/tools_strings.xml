@@ -313,6 +313,7 @@
     <string name="tools_enter_the_name_of_the_organization">Ingrese el nombre de la organización</string>
     <string name="tools_email_address">Dirección de correo</string>
     <string name="tools_email_address_hint">Ingrese su dirección de correo</string>
+    <string name="tools_email_address_error">La dirección de correo no es válida</string>
     <string name="tools_country_region">País o región</string>
     <string name="tools_country_region_hint">Seleccione su país/región</string>
     <string name="tools_save_to_file">Guardar en archivo</string>

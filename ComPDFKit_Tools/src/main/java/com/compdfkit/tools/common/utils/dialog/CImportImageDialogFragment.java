@@ -38,7 +38,7 @@ public class CImportImageDialogFragment extends CBasicBottomSheetDialogFragment 
         return fragment;
     }
 
-    private ActivityResultLauncher<CImageResultContracts.RequestType> imageLauncher = registerForActivityResult(new CImageResultContracts(), result -> {
+    private ActivityResultLauncher<CImageResultContracts.Request> imageLauncher = registerForActivityResult(new CImageResultContracts(), result -> {
         if (importImageListener != null) {
             importImageListener.image(result);
         }
@@ -71,15 +71,15 @@ public class CImportImageDialogFragment extends CBasicBottomSheetDialogFragment 
         ConstraintLayout clFromAlbum = rootView.findViewById(R.id.cl_from_album);
         ConstraintLayout clFromCamera = rootView.findViewById(R.id.cl_from_camera);
         clFromAlbum.setOnClickListener(v -> {
-            imageLauncher.launch(CImageResultContracts.RequestType.PHOTO_ALBUM);
+            imageLauncher.launch(new CImageResultContracts.Request(CImageResultContracts.RequestType.PHOTO_ALBUM));
         });
         clFromCamera.setOnClickListener(v -> {
             if (!CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.CAMERA)){
-                imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
+                imageLauncher.launch(new CImageResultContracts.Request(CImageResultContracts.RequestType.CAMERA));
             }else {
                 permissionResultLauncher.launch(Manifest.permission.CAMERA, granted -> {
                     if (granted) {
-                        imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
+                        imageLauncher.launch(new CImageResultContracts.Request(CImageResultContracts.RequestType.CAMERA));
                     } else {
                         if (getActivity() != null) {
                             if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
@@ -96,7 +96,7 @@ public class CImportImageDialogFragment extends CBasicBottomSheetDialogFragment 
     protected void onViewCreate() {
         if (isQuickStart()) {
             CImageResultContracts.RequestType requestType = CImageResultContracts.RequestType.valueOf(getArguments().getString("extra_quick_start_type"));
-            imageLauncher.launch(requestType);
+            imageLauncher.launch(new CImageResultContracts.Request(requestType));
         }
     }
 

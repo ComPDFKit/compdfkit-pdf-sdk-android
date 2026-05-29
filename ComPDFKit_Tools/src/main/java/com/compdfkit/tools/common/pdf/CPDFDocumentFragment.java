@@ -217,7 +217,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                 editToolBar.setEditMode(false);
                 boolean enableSliderBar = pdfView.isEnableSliderBar();
                 if (enableSliderBar && !screenManager.isFillScreen) {
-                    screenManager.fillScreenManager.showFromRight(pdfView.slideBar, CFillScreenManager.CONFIG_SHORT_ANIM_TIME);
+                    screenManager.fillScreenManager.showFromRight(pdfView.getSlideBarView(), CFillScreenManager.CONFIG_SHORT_ANIM_TIME);
                 }
             });
         }
@@ -865,7 +865,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
                     boolean show = pageCount > 1;
                     pdfView.enableSliderBar(show);
                     if (show && !screenManager.isFillScreen) {
-                        screenManager.fillScreenManager.showFromRight(pdfView.slideBar, CFillScreenManager.CONFIG_SHORT_ANIM_TIME);
+                        screenManager.fillScreenManager.showFromRight(pdfView.getSlideBarView(), CFillScreenManager.CONFIG_SHORT_ANIM_TIME);
                     }
                 }
             }

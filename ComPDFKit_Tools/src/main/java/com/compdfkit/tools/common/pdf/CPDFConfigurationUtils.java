@@ -223,6 +223,20 @@ public class CPDFConfigurationUtils {
             default:break;
         }
         readerViewConfig.enableSliderBar = jsonObject.optBoolean("enableSliderBar", true);
+        switch (jsonObject.optString("slideBarPosition", "right").toLowerCase()) {
+            case "left":
+                readerViewConfig.slideBarPosition = ReaderViewConfig.SlideBarPosition.Left;
+                break;
+            case "top":
+                readerViewConfig.slideBarPosition = ReaderViewConfig.SlideBarPosition.Top;
+                break;
+            case "bottom":
+                readerViewConfig.slideBarPosition = ReaderViewConfig.SlideBarPosition.Bottom;
+                break;
+            default:
+                readerViewConfig.slideBarPosition = ReaderViewConfig.SlideBarPosition.Right;
+                break;
+        }
         readerViewConfig.enablePageIndicator = jsonObject.optBoolean("enablePageIndicator", true);
         readerViewConfig.pageSpacing = jsonObject.optInt("pageSpacing", 10);
         readerViewConfig.pageScale = (float) jsonObject.optDouble("pageScale", 1.0);

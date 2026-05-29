@@ -17,11 +17,8 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -56,6 +53,7 @@ import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.reader.IDocumentStatusCallback;
 import com.compdfkit.ui.reader.IReaderViewCallback;
 import com.compdfkit.ui.reader.OnFocusedTypeChangedListener;
+import com.compdfkit.ui.widget.CPDFPageNavigator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -105,13 +103,9 @@ import java.util.UUID;
  * custom attributes:<br/>
  * app:tools_enable_slider_bar="true|false"  <br/>
  * <p/>
- * app:tools_slider_bar_position="left|right"
+ * app:tools_slider_bar_position="left|top|right|bottom"
  * <p/>
  * app:tools_slider_bar_icon="@drawable/xxx"
- * <p/>
- * app:tools_slider_bar_thumbnail_width="120dp"
- * <p/>
- * app:tools_slider_bar_thumbnail_hei="200dp"
  * <p/>
  * app:tools_enable_page_indicator="true|false"
  */
@@ -122,17 +116,15 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   public CPDFPageIndicatorView indicatorView;
 
-  public CPDFSlideBar slideBar;
+  private final CPDFSlideBarController slideBarController = new CPDFSlideBarController(this);
 
   public int currentPageIndex = 0;
 
   private boolean enableSliderBar = true;
 
-  private CPDFSlideBar.SlideBarPosition slideBarPosition = CPDFSlideBar.SlideBarPosition.RIGHT;
+  private CPDFPageNavigator.NavigatorPosition slideBarPosition = CPDFPageNavigator.NavigatorPosition.RIGHT;
 
-  private int sliderBarThumbnailWidth = 314;
-
-  private int sliderBarThumbnailHeight = 444;
+  private boolean hasExplicitSlideBarPositionAttr = false;
 
   @DrawableRes
   private int sliderBarIconResId = R.drawable.tools_ic_pdf_slider_bar;
@@ -192,36 +184,59 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     try {
       TypedArray typedArray = context.obtainStyledAttributes(attributeSet,
           R.styleable.CPDFViewCtrl);
-        enableSliderBar = typedArray.getBoolean(R.styleable.CPDFViewCtrl_tools_enable_slider_bar,
-                true);
-        int sliderBarPositionEnum = typedArray.getInt(
-            R.styleable.CPDFViewCtrl_tools_slider_bar_position, 1);
-        if (sliderBarPositionEnum == 0) {
-          slideBarPosition = CPDFSlideBar.SlideBarPosition.LEFT;
-        } else {
-          slideBarPosition = CPDFSlideBar.SlideBarPosition.RIGHT;
-        }
-        sliderBarThumbnailWidth = typedArray.getDimensionPixelOffset(
-            R.styleable.CPDFViewCtrl_tools_slider_bar_thumbnail_width, 314);
-        sliderBarThumbnailHeight = typedArray.getDimensionPixelOffset(
-            R.styleable.CPDFViewCtrl_tools_slider_bar_thumbnail_height, 444);
-        sliderBarIconResId = typedArray.getResourceId(
-            R.styleable.CPDFViewCtrl_tools_slider_bar_icon, R.drawable.tools_ic_pdf_slider_bar);
-        enablePageIndicator = typedArray.getBoolean(
-            R.styleable.CPDFViewCtrl_tools_enable_page_indicator, true);
-        pageIndicatorMarginBottom = typedArray.getDimensionPixelOffset(
-            R.styleable.CPDFViewCtrl_tools_page_indicator_margin_bottom, 0);
-        if (enableSliderBar) {
-          slideBar = new CPDFSliderBarView(getContext());
-        }
-        if (enablePageIndicator) {
-          indicatorView = new CPDFPageIndicatorView(getContext());
-        }
-        CViewUtils.applyViewBackground(this,
-            ContextCompat.getColor(getContext(), R.color.tools_pdf_view_ctrl_background_color));
-        typedArray.recycle();
+      enableSliderBar = typedArray.getBoolean(R.styleable.CPDFViewCtrl_tools_enable_slider_bar,
+          true);
+        hasExplicitSlideBarPositionAttr = typedArray.hasValue(
+          R.styleable.CPDFViewCtrl_tools_slider_bar_position);
+        slideBarPosition = parseSlideBarPosition(
+          typedArray.getInt(R.styleable.CPDFViewCtrl_tools_slider_bar_position, 2));
+      slideBarController.setPosition(slideBarPosition);
+      sliderBarIconResId = typedArray.getResourceId(
+          R.styleable.CPDFViewCtrl_tools_slider_bar_icon, R.drawable.tools_ic_pdf_slider_bar);
+      enablePageIndicator = typedArray.getBoolean(
+          R.styleable.CPDFViewCtrl_tools_enable_page_indicator, true);
+      pageIndicatorMarginBottom = typedArray.getDimensionPixelOffset(
+          R.styleable.CPDFViewCtrl_tools_page_indicator_margin_bottom, 0);
+      if (enablePageIndicator) {
+        indicatorView = new CPDFPageIndicatorView(getContext());
+      }
+      CViewUtils.applyViewBackground(this,
+          ContextCompat.getColor(getContext(), R.color.tools_pdf_view_ctrl_background_color));
+      typedArray.recycle();
     } catch (Exception ignored) {
 
+    }
+  }
+
+  private CPDFPageNavigator.NavigatorPosition parseSlideBarPosition(int value) {
+    switch (value) {
+      case 0:
+        return CPDFPageNavigator.NavigatorPosition.LEFT;
+      case 1:
+        return CPDFPageNavigator.NavigatorPosition.TOP;
+      case 3:
+        return CPDFPageNavigator.NavigatorPosition.BOTTOM;
+      case 2:
+      default:
+        return CPDFPageNavigator.NavigatorPosition.RIGHT;
+    }
+  }
+
+  private CPDFPageNavigator.NavigatorPosition parseSlideBarPosition(
+      @Nullable com.compdfkit.tools.common.pdf.config.ReaderViewConfig.SlideBarPosition position) {
+    if (position == null) {
+      return CPDFPageNavigator.NavigatorPosition.RIGHT;
+    }
+    switch (position) {
+      case Left:
+        return CPDFPageNavigator.NavigatorPosition.LEFT;
+      case Top:
+        return CPDFPageNavigator.NavigatorPosition.TOP;
+      case Bottom:
+        return CPDFPageNavigator.NavigatorPosition.BOTTOM;
+      case Right:
+      default:
+        return CPDFPageNavigator.NavigatorPosition.RIGHT;
     }
   }
 
@@ -278,11 +293,13 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       @Override
       public void onLoadComplete() {
         if (isInitOpenPDF){
-          initCPDFSliderBar();
+          currentPageIndex = initPageIndex;
+          syncSlideBar();
           cPdfReaderView.post(()-> {
             if (cPdfReaderView.getPageNum() != initPageIndex){
               cPdfReaderView.setDisplayPageIndex(initPageIndex);
             }
+            cPdfReaderView.post(slideBarController::syncReaderViewState);
           });
         }
       }
@@ -329,6 +346,25 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   public void setViewMode(CPDFReaderView.ViewMode viewMode) {
     cPdfReaderView.setViewMode(viewMode);
+  }
+
+  public void setVerticalMode(boolean verticalMode) {
+    cPdfReaderView.setVerticalMode(verticalMode);
+    syncSlideBarPositionWithVerticalMode(verticalMode);
+  }
+
+  private void syncSlideBarPositionWithVerticalMode(boolean verticalMode) {
+    CPDFPageNavigator.NavigatorPosition targetPosition = verticalMode
+        ? CPDFPageNavigator.NavigatorPosition.RIGHT
+        : CPDFPageNavigator.NavigatorPosition.BOTTOM;
+    if (slideBarPosition == targetPosition) {
+      return;
+    }
+    slideBarPosition = targetPosition;
+    slideBarController.setPosition(slideBarPosition);
+    if (cPdfReaderView != null && cPdfReaderView.getPDFDocument() != null) {
+      syncSlideBar();
+    }
   }
 
   /**
@@ -625,11 +661,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   @Override
   public void onMoveToChild(int pageIndex) {
     currentPageIndex = pageIndex;
-    int duration = isInitOpenPDF ? 0 : 500;
     isInitOpenPDF = false;
-    if (slideBar != null) {
-      slideBar.setPageIndexByAnimation(pageIndex, duration);
-    }
     if (indicatorView != null) {
       indicatorView.setCurrentPageIndex(pageIndex);
     }
@@ -674,50 +706,79 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
   }
 
-  private void initCPDFSliderBar() {
+  private void syncSlideBar() {
     CPDFDocument document = cPdfReaderView.getPDFDocument();
-    if (document != null && document.getPageCount() == 1){
-      enableSliderBar = false;
-    }else {
-      if (cpdfConfiguration != null){
-        enableSliderBar = cpdfConfiguration.readerViewConfig.enableSliderBar;
-      }
-    }
-    if (!enableSliderBar) {
-      if (slideBar.getParent() != null) {
-        ViewGroup viewGroup = (ViewGroup) slideBar.getParent();
-        viewGroup.removeAllViews();
-      }
+    enableSliderBar = shouldEnableSlideBar(document);
+    if (!enableSliderBar || document == null) {
+      detachSlideBar();
       return;
     }
-    CPDFSliderBarView cpdfSliderBarView = (CPDFSliderBarView) slideBar;
-    cpdfSliderBarView.initWithPDFView(this);
-    cpdfSliderBarView.initSliderBar(CPDFSlideBar.SlideBarPosition.RIGHT, sliderBarThumbnailWidth,
-        sliderBarThumbnailHeight);
-    cpdfSliderBarView.setSlideBarBitmap(sliderBarIconResId);
-    setSliderBar(cpdfSliderBarView);
+    ensureSlideBarAttached();
+    applySlideBarAppearance(document);
+    syncSlideBarDocumentState(document);
   }
 
-  private void setSliderBar(CPDFSlideBar cpdfSlideBar) {
-    enableSliderBar = true;
-    if (slideBar.getParent() != null) {
-      ViewGroup viewGroup = (ViewGroup) slideBar.getParent();
-      viewGroup.removeAllViews();
+  private boolean shouldEnableSlideBar(@Nullable CPDFDocument document) {
+    if (document != null && document.getPageCount() <= 1) {
+      return false;
     }
-    slideBar = cpdfSlideBar;
-    LinearLayout linearLayout = new LinearLayout(getContext());
-    linearLayout.setId(View.generateViewId());
-    LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
-        LayoutParams.MATCH_CONSTRAINT);
-    linearLayout.setLayoutParams(layoutParams);
-    int actionBarHeight = CViewUtils.getActionBarSize(getContext());
-    if (actionBarHeight > 0) {
-      layoutParams.setMargins(0, actionBarHeight, 0, actionBarHeight);
+    return cpdfConfiguration == null || cpdfConfiguration.readerViewConfig.enableSliderBar;
+  }
+
+  private void ensureSlideBarAttached() {
+    slideBarController.setPosition(slideBarPosition);
+    slideBarController.attachToParent();
+  }
+
+  private void applySlideBarAppearance(@NonNull CPDFDocument document) {
+    int labelTextSize = CPDFPageNumberPreviewRenderer.getDefaultTextSizePx(getContext());
+    int labelWidth = CPDFPageNumberPreviewRenderer.calculatePreviewWidth(getContext(), document, labelTextSize);
+    slideBarController.configureAppearance(
+            cPdfReaderView,
+        sliderBarIconResId,
+        labelWidth,
+        labelTextSize * 3 / 2,
+        new CPDFPageNumberPreviewRenderer(
+            ContextCompat.getColor(getContext(), R.color.tools_page_indicator_bg_color),
+            labelTextSize,
+            CDimensUtils.dp2px(getContext(), 3)),
+        new CPDFPageNavigator.OnDragListener() {
+      @Override
+      public void onDragBegin(int pageIndex) {
+        if (cPdfReaderView != null) {
+          cPdfReaderView.removeAllAnnotFocus();
+        }
+      }
+        });
+  }
+
+  private void syncSlideBarDocumentState(@NonNull CPDFDocument document) {
+    slideBarController.syncDocumentState(document.getPageCount(), currentPageIndex);
+  }
+
+  private void syncSlideBarPage(int pageIndex, int duration) {
+    if (!enableSliderBar || !slideBarController.hasNavigator()) {
+      return;
     }
-    linearLayout.addView(slideBar);
-    slideBar.setLayoutParams(
-        new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-    addView(linearLayout);
+    slideBarController.animateToPage(pageIndex, duration);
+  }
+
+  private void detachSlideBar() {
+    slideBarController.detachFromParent();
+  }
+
+  public void refreshSlideBarDocumentState() {
+    CPDFDocument document = cPdfReaderView != null ? cPdfReaderView.getPDFDocument() : null;
+    if (document == null) {
+      detachSlideBar();
+      return;
+    }
+    currentPageIndex = Math.min(currentPageIndex, Math.max(document.getPageCount() - 1, 0));
+    syncSlideBar();
+  }
+
+  public View getSlideBarView() {
+    return slideBarController.getView();
   }
 
   /**
@@ -802,7 +863,15 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   public void enableSliderBar(boolean enableSliderBar) {
     this.enableSliderBar = enableSliderBar;
-    initCPDFSliderBar();
+    syncSlideBar();
+  }
+
+  public void setSlideBarPosition(@Nullable com.compdfkit.tools.common.pdf.config.ReaderViewConfig.SlideBarPosition position) {
+    slideBarPosition = parseSlideBarPosition(position);
+    slideBarController.setPosition(slideBarPosition);
+    if (cPdfReaderView != null && cPdfReaderView.getPDFDocument() != null) {
+      syncSlideBar();
+    }
   }
 
   public boolean isEnableSliderBar() {
@@ -819,6 +888,11 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   public void setCPDFConfiguration(CPDFConfiguration cpdfConfiguration) {
     this.cpdfConfiguration = cpdfConfiguration;
+    if (!hasExplicitSlideBarPositionAttr
+        && cpdfConfiguration != null
+        && cpdfConfiguration.readerViewConfig != null) {
+      setSlideBarPosition(cpdfConfiguration.readerViewConfig.slideBarPosition);
+    }
   }
 
   public CPDFConfiguration getCPDFConfiguration() {
@@ -834,10 +908,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         getCPdfReaderView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
           updateScaleForLayout();
-          slideBar.refreshLayoutPosition();
+          refreshSlideBarDocumentState();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
           updateScaleForLayout();
-          slideBar.refreshLayoutPosition();
+          refreshSlideBarDocumentState();
         }
       }
     });
@@ -852,6 +926,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       editStatusChangeListeners.clear();
       selectEditAreaChangeListeners.clear();
       pdfViewFocusedListenerList.clear();
+      detachSlideBar();
       if (getCPdfReaderView().getPDFDocument() != null) {
         getCPdfReaderView().getPDFDocument().close();
       }

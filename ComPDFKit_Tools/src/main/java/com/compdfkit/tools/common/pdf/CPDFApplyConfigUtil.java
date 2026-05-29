@@ -136,7 +136,7 @@ public class CPDFApplyConfigUtil {
                     break;
             }
             readerView.setContinueMode(readerViewConfig.continueMode);
-            readerView.setVerticalMode(readerViewConfig.verticalMode);
+            fragment.pdfView.setVerticalMode(readerViewConfig.verticalMode);
             readerView.setCropMode(readerViewConfig.cropMode);
             readerView.setPageSameWidth(readerViewConfig.pageSameWidth);
             readerView.setMinScaleEnable(readerViewConfig.enableMinScale);

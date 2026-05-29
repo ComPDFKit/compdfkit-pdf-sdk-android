@@ -67,8 +67,21 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/tools_email_address_hint"
                 android:imeOptions="actionDone"
+                android:inputType="textEmailAddress"
                 android:title="@string/tools_email_address"
                 app:showKeyTag="true" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_email_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/tools_email_address_error"
+                android:textColor="@color/tools_error_soft"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_country_regin_title"
@@ -175,5 +188,3 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
-
-

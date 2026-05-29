@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -90,6 +91,8 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
     private String customSavePath;
 
     private AppCompatTextView tvPasswordError;
+
+    private AppCompatTextView tvEmailError;
 
     private COnSelectCertFileListener selectCertFileListener;
 
@@ -170,6 +173,7 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
         etConfirmPassword = view.findViewById(R.id.et_confirm_password);
         AppCompatButton btnConfirmCreate = view.findViewById(R.id.btn_save);
         tvPasswordError = view.findViewById(R.id.tv_password_error);
+        tvEmailError = view.findViewById(R.id.tv_email_error);
         btnOk.setOnClickListener(this);
         tvSaveAddress.setOnClickListener(this);
         btnConfirmCreate.setOnClickListener(this);
@@ -185,7 +189,10 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
         initPurpose();
         etName.addTextChangedListener((s, start, before, count) -> enableConfirmButton());
         etOrganizationUnit.addTextChangedListener((s, start, before, count) -> enableConfirmButton());
-        etEmailAddress.addTextChangedListener((s, start, before, count) -> enableConfirmButton());
+        etEmailAddress.addTextChangedListener((s, start, before, count) -> {
+            enableConfirmButton();
+            clearEmailError();
+        });
         etOrganizationName.addTextChangedListener((s, start, before, count) -> enableConfirmButton());
         swSaveToFile.setOnCheckedChangeListener((buttonView, isChecked) -> {
             llSaveAddress.setVisibility(isChecked ? View.VISIBLE : View.GONE);
@@ -198,6 +205,9 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
+            if (!validateEmail(true)) {
+                return;
+            }
             callback.setEnabled(true);
             showSaveStatusView();
             showSaveStatus = true;
@@ -222,12 +232,19 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
             String name = etName.getText();
             String grantor = etOrganizationUnit.getText();
             String sectoral = etOrganizationName.getText();
-            String email = etEmailAddress.getText();
+            String email = etEmailAddress.getText().trim();
             String countryArea = countryReginSpinnerAdapter.getSelectCountryRegin();
             CPDFSignature.CertUsage certUsage = purposeSpinnerAdapter.getSelectUsage();
 
             String password = etPassword.getText();
             String verifyPassword = etConfirmPassword.getText();
+
+            if (!validateEmail(true)) {
+                showInfoStatusView();
+                showSaveStatus = false;
+                callback.setEnabled(false);
+                return;
+            }
 
             if (TextUtils.isEmpty(password) || TextUtils.isEmpty(verifyPassword) || !password.equals(verifyPassword)) {
                 etPassword.setError(true);
@@ -334,9 +351,26 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
 
     private void enableConfirmButton() {
         String name = etName.getText();
-        String email = etEmailAddress.getText();
+        String email = etEmailAddress.getText().trim();
         boolean enable = !TextUtils.isEmpty(name) && !TextUtils.isEmpty(email);
         btnOk.setEnabled(enable);
+    }
+
+    private boolean validateEmail(boolean showError) {
+        String email = etEmailAddress.getText().trim();
+        boolean valid = !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        if (valid || !showError) {
+            clearEmailError();
+        } else {
+            etEmailAddress.getEditText().setBackgroundResource(R.drawable.tools_bg_import_certificate_digital_id_email_error_item);
+            tvEmailError.setVisibility(View.VISIBLE);
+        }
+        return valid;
+    }
+
+    private void clearEmailError() {
+        etEmailAddress.setError(false);
+        tvEmailError.setVisibility(View.GONE);
     }
 
     private void showSaveStatusView() {

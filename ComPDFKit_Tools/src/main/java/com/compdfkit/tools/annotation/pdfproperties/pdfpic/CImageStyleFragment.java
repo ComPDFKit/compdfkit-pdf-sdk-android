@@ -10,7 +10,9 @@
 package com.compdfkit.tools.annotation.pdfproperties.pdfpic;
 
 import android.Manifest;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,7 +22,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
+import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts;
 import com.compdfkit.tools.common.utils.activitycontracts.CPermissionResultLauncher;
 import com.compdfkit.tools.common.utils.date.CDateUtil;
@@ -31,12 +35,24 @@ import java.io.File;
 
 public class CImageStyleFragment extends CBasicPropertiesFragment {
 
-    private ActivityResultLauncher<CImageResultContracts.RequestType> imageLauncher = registerForActivityResult(new CImageResultContracts(), result -> {
+    private ActivityResultLauncher<CImageResultContracts.Request> imageLauncher = registerForActivityResult(new CImageResultContracts(), result -> {
         if (result != null && viewModel != null) {
+            CUriUtil.logImageUriInfo(getContext(), "pic result uri", result);
             File file = new File(getContext().getFilesDir(), CFileUtils.CACHE_FOLDER);
-            String path = CFileUtils.copyFileToInternalDirectory(getContext(), result, file.getAbsolutePath(), "pic_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ".png");
-            viewModel.getStyle().setImagePath(path);
-            dismissStyleDialog();
+            String ext = CUriUtil.getImageExtension(getContext(), result);
+            String path = CFileUtils.copyFileToInternalDirectory(getContext(), result, file.getAbsolutePath(), "pic_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ext);
+            CLog.e("ImageAnnot", "pic copied, uri=" + result + ", ext=" + ext + ", path=" + path);
+            CUriUtil.logImageFileInfo("pic copied file", path);
+            if (!TextUtils.isEmpty(path)) {
+                CLog.e("ImageAnnot", "pic setImagePath before, path=" + path);
+                viewModel.getStyle().setImagePath(path);
+                CLog.e("ImageAnnot", "pic setImagePath after, path=" + path);
+                dismissStyleDialog();
+            } else {
+                CLog.e("ImageAnnot", "pic copy failed, uri=" + result);
+            }
+        } else {
+            CLog.e("ImageAnnot", "pic result ignored, result=" + result + ", viewModel=" + viewModel);
         }
     });
 
@@ -56,15 +72,15 @@ public class CImageStyleFragment extends CBasicPropertiesFragment {
         ConstraintLayout clFromAlbum = rootView.findViewById(R.id.cl_from_album);
         ConstraintLayout clFromCamera = rootView.findViewById(R.id.cl_from_camera);
         clFromAlbum.setOnClickListener(v -> {
-            imageLauncher.launch(CImageResultContracts.RequestType.PHOTO_ALBUM);
+            imageLauncher.launch(new CImageResultContracts.Request(CImageResultContracts.RequestType.PHOTO_ALBUM));
         });
         clFromCamera.setOnClickListener(v -> {
             if (!CPermissionUtil.checkManifestPermission(getContext(), Manifest.permission.CAMERA)){
-                imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
+                launchCamera();
             }else {
                 permissionResultLauncher.launch(Manifest.permission.CAMERA, granted -> {
                     if (granted){
-                        imageLauncher.launch(CImageResultContracts.RequestType.CAMERA);
+                        launchCamera();
                     } else {
                         if (getActivity() != null) {
                             if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
@@ -75,6 +91,15 @@ public class CImageStyleFragment extends CBasicPropertiesFragment {
                 });
             }
         });
+    }
+
+    private void launchCamera() {
+        Uri outputUri = CImageResultContracts.createCameraOutputUri(getContext());
+        if (outputUri == null) {
+            CLog.e("ImageAnnot", "pic camera output uri is null");
+            return;
+        }
+        imageLauncher.launch(new CImageResultContracts.Request(CImageResultContracts.RequestType.CAMERA, outputUri));
     }
 
     @Override

@@ -17,10 +17,10 @@
         <attr name="tools_enable_slider_bar" format="boolean"/>
         <attr name="tools_slider_bar_position" format="enum">
             <enum name="left" value="0"/>
-            <enum name="right" value="1"/>
+            <enum name="top" value="1"/>
+            <enum name="right" value="2"/>
+            <enum name="bottom" value="3"/>
         </attr>
-        <attr name="tools_slider_bar_thumbnail_width" format="dimension"/>
-        <attr name="tools_slider_bar_thumbnail_height" format="dimension"/>
         <attr name="tools_slider_bar_icon" format="reference"/>
         <attr name="tools_enable_page_indicator" format="boolean"/>
         <attr name="tools_page_indicator_margin_bottom" format="dimension"/>

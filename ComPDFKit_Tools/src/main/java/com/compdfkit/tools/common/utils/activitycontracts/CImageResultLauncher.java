@@ -11,12 +11,21 @@ package com.compdfkit.tools.common.utils.activitycontracts;
 import android.net.Uri;
 
 import androidx.activity.result.ActivityResultCaller;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.NonNull;
 
 
-public class CImageResultLauncher extends BaseActivityResultLauncher<CImageResultContracts.RequestType, Uri> {
+public class CImageResultLauncher extends BaseActivityResultLauncher<CImageResultContracts.Request, Uri> {
 
     public CImageResultLauncher(@NonNull ActivityResultCaller caller) {
         super(caller, new CImageResultContracts());
+    }
+
+    public void launch(CImageResultContracts.RequestType requestType, @NonNull ActivityResultCallback<Uri> callback) {
+        launch(new CImageResultContracts.Request(requestType), callback);
+    }
+
+    public void launch(CImageResultContracts.RequestType requestType) {
+        launch(new CImageResultContracts.Request(requestType));
     }
 }

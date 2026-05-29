@@ -10,6 +10,7 @@
 package com.compdfkit.tools.common.utils.activitycontracts;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,11 +23,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.date.CDateUtil;
 
 import java.io.File;
 
-public class CImageResultContracts extends ActivityResultContract<CImageResultContracts.RequestType, Uri> {
+public class CImageResultContracts extends ActivityResultContract<CImageResultContracts.Request, Uri> {
 
     public enum RequestType {
 
@@ -40,10 +42,47 @@ public class CImageResultContracts extends ActivityResultContract<CImageResultCo
 
     private RequestType requestType;
 
+    public static class Request {
+
+        private final RequestType requestType;
+
+        private final Uri outputUri;
+
+        public Request(RequestType requestType) {
+            this(requestType, null);
+        }
+
+        public Request(RequestType requestType, Uri outputUri) {
+            this.requestType = requestType;
+            this.outputUri = outputUri;
+        }
+
+        public RequestType getRequestType() {
+            return requestType;
+        }
+
+        public Uri getOutputUri() {
+            return outputUri;
+        }
+    }
+
+    public static Uri createCameraOutputUri(@NonNull Context context) {
+        File file;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            file = new File(Environment.getExternalStorageDirectory(), CFileUtils.CACHE_FOLDER + File.separator +"camera_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ".jpg");
+        }else {
+            file = new File(context.getFilesDir(), CFileUtils.CACHE_FOLDER + File.separator +"camera_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ".jpg");
+        }
+        file.getParentFile().mkdirs();
+        Uri uri = CFileUtils.getUriBySystem(context, file);
+        CLog.e("ImageAnnot", "camera output uri created, uri=" + uri);
+        return uri;
+    }
+
     @NonNull
     @Override
-    public Intent createIntent(@NonNull Context context, RequestType requestType) {
-        this.requestType = requestType;
+    public Intent createIntent(@NonNull Context context, Request request) {
+        this.requestType = request.getRequestType();
         if (requestType == RequestType.PHOTO_ALBUM) {
             Intent intent = new Intent();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -55,31 +94,33 @@ public class CImageResultContracts extends ActivityResultContract<CImageResultCo
             return intent;
         } else {
             Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                intentCamera.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            cameraUri = request.getOutputUri();
+            if (cameraUri == null) {
+                cameraUri = createCameraOutputUri(context);
             }
-            intentCamera.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            File file = null;
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-                file = new File(Environment.getExternalStorageDirectory(), CFileUtils.CACHE_FOLDER + File.separator +"camera_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ".png");
-            }else {
-                file = new File(context.getFilesDir(), CFileUtils.CACHE_FOLDER + File.separator +"camera_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ".png");
+            if (cameraUri == null) {
+                CLog.e("ImageAnnot", "camera createIntent, cameraUri is null");
+                return intentCamera;
             }
-            file.getParentFile().mkdirs();
-            cameraUri = CFileUtils.getUriBySystem(context, file);
+            intentCamera.setClipData(ClipData.newUri(context.getContentResolver(), "camera_output", cameraUri));
+            intentCamera.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
+            CLog.e("ImageAnnot", "camera createIntent, outputUri=" + cameraUri);
             return intentCamera;
         }
     }
 
     @Override
     public Uri parseResult(int resultCode, @Nullable Intent intent) {
+        CLog.e("ImageAnnot", "parseResult, requestType=" + requestType
+                + ", resultCode=" + resultCode
+                + ", intentData=" + (intent != null ? intent.getData() : null)
+                + ", cameraUri=" + cameraUri);
+        if (resultCode != Activity.RESULT_OK) {
+            return null;
+        }
         if (requestType == RequestType.CAMERA){
-            if (resultCode == Activity.RESULT_OK){
-                return cameraUri;
-            }else {
-                return null;
-            }
+            return cameraUri;
         }else {
             return intent != null ? intent.getData() : null;
         }

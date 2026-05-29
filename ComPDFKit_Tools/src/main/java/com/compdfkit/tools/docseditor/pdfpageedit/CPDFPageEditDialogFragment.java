@@ -639,9 +639,9 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
                 int pageCount = readerView.getPDFDocument().getPageCount();
                 int jumpIndex = pdfView.currentPageIndex >= pageCount ? pageCount - 1 : pdfView.currentPageIndex;
                 readerView.reloadPages(refreshHQApList);
+                pdfView.currentPageIndex = jumpIndex;
                 readerView.setDisplayPageIndex(jumpIndex);
-                pdfView.slideBar.setPageCount(pageCount);
-                pdfView.slideBar.requestLayout();
+                pdfView.refreshSlideBarDocumentState();
                 pdfView.indicatorView.setTotalPage(pageCount);
             }
         }

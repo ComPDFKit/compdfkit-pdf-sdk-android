@@ -37,7 +37,7 @@ public class CSampleScreenManager {
     public void bind(CPDFDocumentFragment documentFragment){
         this.documentFragment = documentFragment;
         constraintSet.clone(documentFragment.clRoot);
-        fillScreenManager.bindRightToolViewList(documentFragment.pdfView.slideBar);
+        fillScreenManager.bindRightToolViewList(documentFragment.pdfView.getSlideBarView());
         fillScreenManager.bindBottomToolViewList(documentFragment.pdfView.indicatorView);
         fillScreenManager.bindBottomToolViewList(documentFragment.flBottomToolBar);
     }
