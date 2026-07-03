@@ -21,7 +21,7 @@ import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.ui.widget.CPDFPageNavigator;
 
-final class CPDFPageNumberPreviewRenderer implements CPDFPageNavigator.DragPreviewRenderer {
+public final class CPDFPageNumberPreviewRenderer implements CPDFPageNavigator.DragPreviewRenderer {
 
   private static final float DEFAULT_TEXT_SP = 14F;
 
@@ -29,7 +29,7 @@ final class CPDFPageNumberPreviewRenderer implements CPDFPageNavigator.DragPrevi
   private final Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final float cornerRadius;
 
-  CPDFPageNumberPreviewRenderer(int backgroundColor, int textSize, int cornerRadius) {
+  public CPDFPageNumberPreviewRenderer(int backgroundColor, int textSize, int cornerRadius) {
     this.cornerRadius = cornerRadius;
     textBgPaint.setStyle(Paint.Style.FILL);
     textBgPaint.setColor(backgroundColor);
@@ -39,11 +39,11 @@ final class CPDFPageNumberPreviewRenderer implements CPDFPageNavigator.DragPrevi
     textPaint.setTextAlign(Paint.Align.CENTER);
   }
 
-  static int getDefaultTextSizePx(Context context) {
+  public static int getDefaultTextSizePx(Context context) {
     return (int) (DEFAULT_TEXT_SP * context.getResources().getDisplayMetrics().scaledDensity);
   }
 
-  static int calculatePreviewWidth(Context context, CPDFDocument document, int textSizePx) {
+  public static int calculatePreviewWidth(Context context, CPDFDocument document, int textSizePx) {
     int labelWidth = CDimensUtils.dp2px(context, 56);
     Paint measurePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     measurePaint.setTextSize(textSizePx);

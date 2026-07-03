@@ -10,7 +10,7 @@
 package com.compdfkit.tools.signature.pdfproperties.pdfsign;
 
 import android.content.Context;
-import android.os.Environment;
+import android.text.TextUtils;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -20,8 +20,10 @@ import com.compdfkit.core.signature.CPDFSignature;
 import com.compdfkit.core.signature.CPDFX509;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CToastUtil;
+import com.compdfkit.tools.common.utils.storage.CPDFPublicFileSaver;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.signature.CertificateDigitalDatas;
 import com.compdfkit.tools.signature.importcert.create.CPDFSelectDigitalSignatureDialog;
@@ -29,7 +31,6 @@ import com.compdfkit.tools.signature.info.CertDigitalSignInfoDialog;
 import com.compdfkit.tools.signature.preview.CDigitalSignStylePreviewDialog;
 import com.compdfkit.ui.proxy.form.CPDFSignatureWidgetImpl;
 
-import java.io.File;
 import java.util.UUID;
 
 
@@ -60,7 +61,7 @@ public class CDigitalSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                 try {
                     Context context = readerView.getContext();
                     CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(
-                            Environment.getExternalStorageDirectory().getAbsolutePath(),
+                            CPDFStorageManager.getDefaultDirectoryDialogPath(),
                             context.getString(R.string.tools_select_folder),
                             context.getString(R.string.tools_save_to_this_directory)
                     );
@@ -92,11 +93,7 @@ public class CDigitalSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
 
         String uuid = UUID.randomUUID().toString().substring(0, 4);
         String fileName = readerView.getPDFDocument().getFileName();
-        File saveFile = new File(saveDir + File.separator + fileName + "_" + uuid, readerView.getPDFDocument().getFileName());
-        File parentFile = saveFile.getParentFile();
-        if (parentFile != null) {
-            boolean result = parentFile.mkdirs();
-        }
+        String subDir = fileName + "_" + uuid;
         boolean updateSignApResult = cpdfSignatureWidget.updateApWithDigitalSigConfig(config);
         if (!updateSignApResult){
             return;
@@ -108,16 +105,24 @@ public class CDigitalSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
             }
         }
 
-        // sign this pdf document
-        boolean result = CertificateDigitalDatas.writeSignature(readerView.getPDFDocument(),
-                cpdfSignatureWidget, location, reason,
-                certFilePath, certPassword, saveFile.getAbsolutePath());
-        if (result) {
+        CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.savePdfToSelectedDirectory(
+                readerView.getContext(),
+                saveDir,
+                subDir,
+                fileName,
+                false,
+                tempPath -> CertificateDigitalDatas.writeSignature(readerView.getPDFDocument(),
+                        cpdfSignatureWidget, location, reason,
+                        certFilePath, certPassword, tempPath));
+        if (saveResult.isSuccess()) {
             CToastUtil.showToast(readerView.getContext(), readerView.getContext().getString(R.string.tools_digital_sign_success));
             if (readerView.getParent() instanceof CPDFViewCtrl) {
-                // open signed pdf document
                 CPDFViewCtrl pdfView = (CPDFViewCtrl) readerView.getParent();
-                pdfView.openPDF(saveFile.getAbsolutePath());
+                if (saveResult.getPublicUri() != null) {
+                    pdfView.openPDF(saveResult.getPublicUri());
+                } else if (!TextUtils.isEmpty(saveResult.getOpenPath())) {
+                    pdfView.openPDF(saveResult.getOpenPath());
+                }
             }
         } else {
             CToastUtil.showToast(readerView.getContext(), "Signature Fail");

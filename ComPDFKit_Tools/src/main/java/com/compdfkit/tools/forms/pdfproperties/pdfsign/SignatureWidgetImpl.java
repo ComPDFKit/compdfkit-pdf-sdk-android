@@ -18,6 +18,7 @@ import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.GlobalConfig;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.forms.pdfproperties.CFormWidgetActionInterceptor;
 import com.compdfkit.tools.signature.CSignaturesUtils;
 import com.compdfkit.tools.signature.info.CertDigitalSignInfoDialog;
 import com.compdfkit.ui.proxy.form.CPDFSignatureWidgetImpl;
@@ -40,6 +41,9 @@ public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
 
     @Override
     public void onSignatureWidgetFocused(CPDFSignatureWidget cpdfSignatureWidget) {
+        if (CFormWidgetActionInterceptor.intercept(cpdfSignatureWidget)) {
+            return;
+        }
         FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());
         if (!cpdfSignatureWidget.isSigned()) {
 

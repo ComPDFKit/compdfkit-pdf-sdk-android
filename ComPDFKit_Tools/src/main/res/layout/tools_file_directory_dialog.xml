@@ -49,6 +49,56 @@
         app:layout_constraintTop_toBottomOf="@id/line"
         tools:listitem="@layout/tools_file_directory_list_item" />
 
+    <LinearLayout
+        android:id="@+id/layout_permission_denied"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_permission_denied_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tools_directory_permission_denied_title"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_permission_denied_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/tools_directory_permission_denied_tips"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            android:lineSpacingExtra="2dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_open_settings"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/tools_file_directory_done_btn_selector"
+            android:foreground="@drawable/tools_common_btn_corner_ripple"
+            android:gravity="center"
+            android:text="@string/tools_open_app_settings"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_ok"

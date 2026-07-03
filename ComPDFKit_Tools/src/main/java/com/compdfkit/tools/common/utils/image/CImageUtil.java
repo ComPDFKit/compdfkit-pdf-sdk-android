@@ -37,29 +37,47 @@ public class CImageUtil {
     }
 
     public static Bitmap convertLongTextToBitmap(EditText editText) {
+        if (editText == null || editText.getText() == null || editText.getText().length() == 0) {
+            return null;
+        }
         String text = editText.getText().toString();
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setTextSize(editText.getTextSize());
-        paint.setColor(editText.getCurrentTextColor());
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTypeface(editText.getTypeface());
+        TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setTextSize(editText.getTextSize());
+        textPaint.setColor(editText.getCurrentTextColor());
+        textPaint.setTypeface(editText.getTypeface());
         int width = editText.getWidth() - editText.getPaddingLeft() - editText.getPaddingRight();
+        if (width <= 0) {
+            width = (int) Math.ceil(Layout.getDesiredWidth(text, textPaint));
+        }
+        if (width <= 0) {
+            return null;
+        }
 
+        StaticLayout measureLayout = new StaticLayout(
+                text, textPaint, width,
+                Layout.Alignment.ALIGN_CENTER, editText.getLineSpacingMultiplier(), editText.getLineSpacingExtra(), false);
+        float maxLineWidth = 0F;
+        for (int i = 0; i < measureLayout.getLineCount(); i++) {
+            maxLineWidth = Math.max(maxLineWidth, measureLayout.getLineWidth(i));
+        }
+        if (maxLineWidth <= 0F) {
+            return null;
+        }
+        int contentWidth = Math.min(width, Math.max(1, (int) Math.ceil(maxLineWidth) + 2));
         StaticLayout staticLayout = new StaticLayout(
-                text, new TextPaint(paint), width,
-                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+                text, textPaint, contentWidth,
+                Layout.Alignment.ALIGN_CENTER, editText.getLineSpacingMultiplier(), editText.getLineSpacingExtra(), false);
         int height = staticLayout.getHeight();
+        if (height <= 0) {
+            return null;
+        }
 
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int padding = (int) (editText.getResources().getDisplayMetrics().density * 2 + 0.5F);
+        Bitmap bitmap = Bitmap.createBitmap(contentWidth + padding * 2, height + padding * 2, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        canvas.drawColor(Color.TRANSPARENT); 
-
-        float centerX = width / 2f;
-
-        canvas.save();
-        canvas.translate(centerX, 0);
+        canvas.drawColor(Color.TRANSPARENT);
+        canvas.translate(padding, padding);
         staticLayout.draw(canvas);
-        canvas.restore();
         return bitmap;
     }
 

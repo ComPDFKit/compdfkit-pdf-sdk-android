@@ -63,7 +63,7 @@ public class DocumentEncryptionSamplesImpl extends OpenPDFSamplesImpl {
         CDocumentEncryptionDialog encryptionDialog = CDocumentEncryptionDialog.newInstance();
         encryptionDialog.setDocument(document);
         encryptionDialog.setSaveFileExtraFontSubset(SettingDatas.isExtraFontSet(fragment.getContext()));
-        encryptionDialog.setEncryptionResultListener((isRemoveSecurity, result, file, password) -> {
+        encryptionDialog.setEncryptionResultListener((isRemoveSecurity, result, file, uri, password) -> {
             encryptionDialog.dismiss();
             int tipsResId;
             if (isRemoveSecurity){
@@ -74,7 +74,11 @@ public class DocumentEncryptionSamplesImpl extends OpenPDFSamplesImpl {
             if (!result){
                 showResultDialog(fragment.getActivity().getString(tipsResId));
             }else {
-                startPDFActivity(file, null, null);
+                if (uri != null) {
+                    startPDFActivity(null, uri, null);
+                } else {
+                    startPDFActivity(file, null, null);
+                }
                 CToastUtil.showLongToast(fragment.getContext(), tipsResId);
             }
         });

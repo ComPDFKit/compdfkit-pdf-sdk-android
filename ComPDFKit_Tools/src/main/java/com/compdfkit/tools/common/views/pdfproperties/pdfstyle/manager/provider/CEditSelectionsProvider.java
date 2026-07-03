@@ -10,7 +10,6 @@
 package com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.provider;
 
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
@@ -18,8 +17,10 @@ import com.compdfkit.core.edit.CPDFEditArea;
 import com.compdfkit.core.edit.CPDFEditImageArea;
 import com.compdfkit.core.edit.CPDFEditTextArea;
 import com.compdfkit.tools.R;
+import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
-import com.compdfkit.tools.common.utils.image.CImageUtil;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.ui.edit.CPDFEditSelections;
@@ -170,10 +171,25 @@ public class CEditSelectionsProvider implements CStyleProvider {
                         try {
                             if (pageView != null) {
                                 Context context = pageView.getContext();
-                                String sdPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-                                File file = new File(sdPath, "ComPDFKit" + File.separator + System.currentTimeMillis() + ".png");
+                                File file = CPDFStorageManager.createTempFile(context, System.currentTimeMillis() + ".png");
+                                CLog.d("CPDFStorage", "CEditSelectionsProvider extract image before path=" + file.getAbsolutePath());
                                 pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.EXTRACT_IMAGE, file.getAbsolutePath());
-                                CImageUtil.scanFile(context, file.getAbsolutePath(),"image/png");
+                                CLog.d("CPDFStorage", "CEditSelectionsProvider extract image after path=" + file.getAbsolutePath()
+                                        + ", exists=" + file.exists()
+                                        + ", size=" + (file.exists() ? file.length() : -1));
+                                CUriUtil.MediaStoreSaveResult result = CUriUtil.publishFileToMediaStore(context,
+                                        file,
+                                        CPDFStorageManager.getImageRelativePath(),
+                                        file.getName(),
+                                        "image/png",
+                                        true);
+                                if (!result.isSuccess()) {
+                                    CLog.e("CPDFStorage", "CEditSelectionsProvider export image failed path=" + file.getAbsolutePath()
+                                            + ", exists=" + file.exists()
+                                            + ", size=" + (file.exists() ? file.length() : -1)
+                                            + ", error=" + result.getErrorMessage());
+                                    CToastUtil.showLongToast(pageView.getContext(), R.string.tools_page_edit_extract_fail);
+                                }
                             }
                         }catch (Exception e){
                             CToastUtil.showLongToast(pageView.getContext(), R.string.tools_page_edit_extract_fail);

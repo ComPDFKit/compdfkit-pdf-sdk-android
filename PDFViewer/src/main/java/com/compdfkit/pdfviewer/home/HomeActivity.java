@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.compdfkit.core.document.CPDFAbility;
@@ -56,14 +57,17 @@ public class HomeActivity extends AppCompatActivity {
             Log.e("ComPDFKit", "verifyCode: " + verifyCode + ", verifyMsg: " + verifyMsg);
             CPDFAbility.checkLicenseAllAbility();
         });
-    }
 
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
-            super.onBackPressed();
-        } else {
-            getSupportFragmentManager().popBackStack();
-        }
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    getSupportFragmentManager().popBackStack();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
     }
 }

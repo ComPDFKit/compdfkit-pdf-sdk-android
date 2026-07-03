@@ -11,7 +11,6 @@ package com.compdfkit.tools.signature;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import androidx.fragment.app.FragmentActivity;
@@ -23,7 +22,9 @@ import com.compdfkit.core.signature.CPDFX509;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.image.CBitmapUtil;
+import com.compdfkit.tools.common.utils.storage.CPDFPublicFileSaver;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -38,7 +39,6 @@ import com.compdfkit.ui.proxy.form.CPDFSignatureWidgetImpl;
 import com.compdfkit.ui.reader.PageView;
 import com.compdfkit.ui.reader.ReaderView;
 
-import java.io.File;
 import java.util.UUID;
 
 public class CSignaturesUtils {
@@ -80,7 +80,7 @@ public class CSignaturesUtils {
                 try {
                     Context context = pageView.getContext();
                     CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(
-                            Environment.getExternalStorageDirectory().getAbsolutePath(),
+                            CPDFStorageManager.getDefaultDirectoryDialogPath(),
                             context.getString(R.string.tools_select_folder),
                             context.getString(R.string.tools_save_to_this_directory)
                     );
@@ -116,8 +116,7 @@ public class CSignaturesUtils {
         String uuid = UUID.randomUUID().toString().substring(0, 4);
         Context context = readerView.getContext();
         String fileName = readerView.getPDFDocument().getFileName();
-        File saveFile = new File(saveDir + File.separator + fileName + "_" + uuid, readerView.getPDFDocument().getFileName());
-        saveFile.getParentFile().mkdirs();
+        String subDir = fileName + "_" + uuid;
 
         boolean updateSignApResult = cpdfSignatureWidget.updateApWithDigitalSigConfig(config);
         if (!updateSignApResult){
@@ -130,16 +129,24 @@ public class CSignaturesUtils {
             }
         }
 
-        // sign this pdf document
-        boolean result = CertificateDigitalDatas.writeSignature(readerView.getPDFDocument(),
-                cpdfSignatureWidget, location, reason,
-                certFilePath, certPassword, saveFile.getAbsolutePath());
-        if (result) {
+        CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.savePdfToSelectedDirectory(
+                context,
+                saveDir,
+                subDir,
+                fileName,
+                false,
+                tempPath -> CertificateDigitalDatas.writeSignature(readerView.getPDFDocument(),
+                        cpdfSignatureWidget, location, reason,
+                        certFilePath, certPassword, tempPath));
+        if (saveResult.isSuccess()) {
             CToastUtil.showToast(context, context.getString(R.string.tools_digital_sign_success));
             if (readerView.getParent() instanceof CPDFViewCtrl) {
-                // open signed pdf document
                 CPDFViewCtrl pdfView = (CPDFViewCtrl) readerView.getParent();
-                pdfView.openPDF(saveFile.getAbsolutePath());
+                if (saveResult.getPublicUri() != null) {
+                    pdfView.openPDF(saveResult.getPublicUri());
+                } else if (!TextUtils.isEmpty(saveResult.getOpenPath())) {
+                    pdfView.openPDF(saveResult.getOpenPath());
+                }
             }
         } else {
             cpdfSignatureWidget.resetForm();

@@ -9,9 +9,9 @@
 package com.compdfkit.tools.security.encryption;
 
 import android.Manifest;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -41,13 +41,14 @@ import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
+import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
+import com.compdfkit.tools.common.utils.storage.CPDFPublicFileSaver;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
 import com.google.android.material.color.MaterialColors;
-
-import java.io.File;
 
 /**
  * Document encryption related settings dialog
@@ -267,7 +268,7 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
                 CToastUtil.showLongToast(getContext(), R.string.tools_password_must_be_different);
                 return;
             }
-            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+            if (CPDFStorageManager.shouldRequestLegacyWritePermission()) {
                 multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
                     if (CPermissionUtil.hasStoragePermissions(getContext())) {
                         showSelectDirDialog();
@@ -367,7 +368,7 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
 
     private void showSelectDirDialog(){
         // Display the system folder directory and select a directory to save.
-        String rootDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String rootDir = CPDFStorageManager.getDefaultDirectoryDialogPath();
         CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(rootDir,
                 getString(R.string.tools_saving_path), getString(R.string.tools_okay));
         directoryDialog.setSelectFolderListener(this::encryptionDocument);
@@ -379,11 +380,13 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
         if (document == null) {
             return;
         }
+        CLoadingDialog loadingDialog = showSaveLoadingDialog();
         CThreadPoolUtils.getInstance().executeIO(() -> {
             boolean removeUserPassword = false;
             boolean removeOwnerPassword = false;
             String userPassword = !TextUtils.isEmpty(etUserPassword.getText()) ? etUserPassword.getText().toString() : "";
             String ownerPassword = !TextUtils.isEmpty(etOwnerPassword.getText()) ? etOwnerPassword.getText().toString() : "";
+            boolean hasResultCallback = false;
             try {
                 CPDFDocument.PDFDocumentPermissions permissions = document.getPermissions();
                 if (swUserPassword.isChecked()) {
@@ -417,37 +420,79 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
                 document.setEncryptAlgorithm(algorithmSpinnerAdapter.getSelectEncryptAlgo());
                 boolean result;
                 boolean isRemoveSecurity = removeUserPassword && removeOwnerPassword;
-                File file;
+                String fileName;
                 if (isRemoveSecurity){
-                    file = new File(dir, CFileUtils.getFileNameNoExtension(document.getFileName()) + getString(R.string.tools_document_encryption_remove_suffix));
+                    fileName = CFileUtils.getFileNameNoExtension(document.getFileName()) + getString(R.string.tools_document_encryption_remove_suffix);
                 }else {
-                    file = new File(dir, CFileUtils.getFileNameNoExtension(document.getFileName()) + getString(R.string.tools_document_encryption_suffix));
+                    fileName = CFileUtils.getFileNameNoExtension(document.getFileName()) + getString(R.string.tools_document_encryption_suffix);
                 }
-                String filePath = CFileUtils.renameNameSuffix(file).getAbsolutePath();
-                if (isRemoveSecurity) {
-                    // remove security
-                    result = document.saveAs(filePath, true, false, saveFileExtraFontSubset);
-                } else {
-                    // Save to specified directory
-                    result = document.saveAs(filePath, false, false, saveFileExtraFontSubset);
-                }
-                boolean shouldReloadDocument = document.shouleReloadDocument();
-                if (shouldReloadDocument) {
-                    document.reload();
-                }
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        if (encryptionResultListener != null) {
-                            encryptionResultListener.result(isRemoveSecurity,
-                                    result,
-                                    filePath,
-                                    !TextUtils.isEmpty(ownerPassword) ? ownerPassword : userPassword);
-                        }
-                    });
+                CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.savePdfToSelectedDirectory(
+                        getContext(),
+                       dir,
+                       fileName,
+                        false,
+                       tempPath -> {
+                            if (isRemoveSecurity) {
+                                return document.saveAs(tempPath, true, false, saveFileExtraFontSubset);
+                            }
+                            return document.saveAs(tempPath, false, false, saveFileExtraFontSubset);
+                        });
+               result = saveResult.isSuccess();
+               String filePath = saveResult.getOpenPath();
+               Uri fileUri = saveResult.getPublicUri();
+               boolean shouldReloadDocument = document.shouleReloadDocument();
+               if (shouldReloadDocument) {
+                   document.reload();
+               }
+               if (getActivity() != null) {
+                   boolean finalResult = result;
+                   String finalFilePath = filePath;
+                   Uri finalFileUri = fileUri;
+                   getActivity().runOnUiThread(() -> {
+                       dismissSaveLoadingDialog(loadingDialog);
+                       if (encryptionResultListener != null) {
+                           encryptionResultListener.result(isRemoveSecurity,
+                                   finalResult,
+                                   finalFilePath,
+                                   finalFileUri,
+                                   !TextUtils.isEmpty(ownerPassword) ? ownerPassword : userPassword);
+                       }
+                   });
+                    hasResultCallback = true;
                 }
             } catch (Exception ignored) {
+            } finally {
+                if (!hasResultCallback) {
+                    dismissSaveLoadingDialog(loadingDialog);
+                }
             }
         });
+    }
+
+    private CLoadingDialog showSaveLoadingDialog() {
+        if (!saveFileExtraFontSubset || !isAdded() || getChildFragmentManager().isStateSaved()) {
+            return null;
+        }
+        CLoadingDialog loadingDialog = CLoadingDialog.newInstance(getString(R.string.tools_saveing));
+        loadingDialog.show(getChildFragmentManager(), "encryptionSaveLoadingDialog");
+        return loadingDialog;
+    }
+
+    private void dismissSaveLoadingDialog(CLoadingDialog loadingDialog) {
+        if (loadingDialog == null) {
+            return;
+        }
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            if (loadingDialog.isAdded()) {
+                loadingDialog.dismissAllowingStateLoss();
+            }
+        } else if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                if (loadingDialog.isAdded()) {
+                    loadingDialog.dismissAllowingStateLoss();
+                }
+            });
+        }
     }
 
 
@@ -456,6 +501,6 @@ public class CDocumentEncryptionDialog extends CBasicBottomSheetDialogFragment i
     }
 
     public interface CEncryptionResultListener {
-        void result(boolean isRemoveSecurity, boolean result, String filePath, String password);
+        void result(boolean isRemoveSecurity, boolean result, String filePath, Uri uri, String password);
     }
 }

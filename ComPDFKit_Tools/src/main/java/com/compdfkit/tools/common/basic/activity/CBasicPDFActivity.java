@@ -10,10 +10,7 @@
 package com.compdfkit.tools.common.basic.activity;
 
 
-import android.Manifest;
 import android.graphics.Color;
-import android.os.Build;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import androidx.core.content.ContextCompat;
@@ -22,9 +19,13 @@ import com.compdfkit.core.annotation.CPDFBorderStyle;
 import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFLinkAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAnnotation;
+import com.compdfkit.core.annotation.form.CPDFCheckboxWidget;
 import com.compdfkit.core.annotation.form.CPDFComboboxWidget;
 import com.compdfkit.core.annotation.form.CPDFListboxWidget;
+import com.compdfkit.core.annotation.form.CPDFPushbuttonWidget;
+import com.compdfkit.core.annotation.form.CPDFRadiobuttonWidget;
 import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
+import com.compdfkit.core.annotation.form.CPDFTextWidget;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
@@ -40,15 +41,18 @@ import com.compdfkit.tools.common.contextmenu.impl.CEditTextContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSearchReplaceContextMenuView;
 import com.compdfkit.tools.common.contextmenu.impl.CSignatureContextMenuView;
 import com.compdfkit.tools.common.utils.CFileUtils;
-import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.tools.common.views.pdfview.CPreviewMode;
 import com.compdfkit.tools.docseditor.pdfpageedit.CPDFPageEditDialogFragment;
+import com.compdfkit.tools.forms.pdfproperties.pdfcheckbox.CustomCheckBoxWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdfcombobox.CustomComboBoxWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdflistbox.CustomListBoxWidgetImpl;
+import com.compdfkit.tools.forms.pdfproperties.pdfpushbutton.CPushButtonWidgetImpl;
+import com.compdfkit.tools.forms.pdfproperties.pdfradiobutton.CustomRadioButtonWidgetImpl;
 import com.compdfkit.tools.forms.pdfproperties.pdfsign.CustomSignatureWidgetImpl;
+import com.compdfkit.tools.forms.pdfproperties.pdftextfield.CustomTextWidgetImpl;
 import com.compdfkit.tools.viewer.contextmenu.CopyContextMenuView;
 import com.compdfkit.tools.viewer.pdfdisplaysettings.CPDFDisplaySettingDialogFragment;
 import com.compdfkit.tools.viewer.pdfinfo.CPDFDocumentInfoDialogFragment;
@@ -137,10 +141,14 @@ public class CBasicPDFActivity extends CPermissionActivity {
 
     protected void registerFormHelper(CPDFViewCtrl pdfView) {
         pdfView.getCPdfReaderView().getAnnotImplRegistry()
+                .registImpl(CPDFTextWidget.class, CustomTextWidgetImpl.class)
+                .registImpl(CPDFCheckboxWidget.class, CustomCheckBoxWidgetImpl.class)
+                .registImpl(CPDFRadiobuttonWidget.class, CustomRadioButtonWidgetImpl.class)
                 //Register the CustomComboBoxWidgetImpl.class to implement a custom dropdown options popup.
                 .registImpl(CPDFComboboxWidget.class, CustomComboBoxWidgetImpl.class)
                 // Register the CustomListBoxWidgetImpl.class to implement a custom dropdown options popup.
                 .registImpl(CPDFListboxWidget.class, CustomListBoxWidgetImpl.class)
+                .registImpl(CPDFPushbuttonWidget.class, CPushButtonWidgetImpl.class)
                 // Register the CustomSignatureWidgetImpl.class to implement a custom dropdown options popup.
                 .registImpl(CPDFSignatureWidget.class, CustomSignatureWidgetImpl.class);
     }
@@ -164,14 +172,6 @@ public class CBasicPDFActivity extends CPermissionActivity {
         CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
         if (document == null){
             return;
-        }
-        boolean isExternalFile = !TextUtils.isEmpty(document.getAbsolutePath()) &&
-                document.getAbsolutePath().startsWith("/storage/emulated/0");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && isExternalFile) {
-            if (CPermissionUtil.checkManifestPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE) && !Environment.isExternalStorageManager()) {
-                CPermissionUtil.openManageAllFileAppSettings(this);
-                return;
-            }
         }
         pdfView.savePDF((filePath, pdfUri) -> {
             if (!TextUtils.isEmpty(filePath)) {

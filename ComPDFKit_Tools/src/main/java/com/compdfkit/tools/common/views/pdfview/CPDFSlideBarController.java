@@ -23,7 +23,7 @@ import com.compdfkit.tools.common.utils.animation.CFillScreenManager;
 import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.widget.CPDFPageNavigator;
 
-final class CPDFSlideBarController {
+public final class CPDFSlideBarController {
 
   private final ConstraintLayout parent;
   private CPDFPageNavigator.NavigatorPosition position = CPDFPageNavigator.NavigatorPosition.RIGHT;
@@ -42,11 +42,11 @@ final class CPDFSlideBarController {
     return navigator;
   }
 
-  boolean hasNavigator() {
+  public boolean hasNavigator() {
     return navigator != null;
   }
 
-  void setPosition(@NonNull CPDFPageNavigator.NavigatorPosition position) {
+  public void setPosition(@NonNull CPDFPageNavigator.NavigatorPosition position) {
     if (this.position == position) {
       ensureContainer().setNavigatorPosition(position);
       updateContainerLayout();
@@ -135,7 +135,7 @@ final class CPDFSlideBarController {
     }
   }
 
-  void configureAppearance(CPDFReaderView readerView, @DrawableRes int handleResId, int previewWidth, int previewHeight,
+  public void configureAppearance(CPDFReaderView readerView, @DrawableRes int handleResId, int previewWidth, int previewHeight,
                            @NonNull CPDFPageNavigator.DragPreviewRenderer renderer,
                            @NonNull CPDFPageNavigator.OnDragListener dragListener) {
     CPDFPageNavigator slideBar = getNavigator();
@@ -148,24 +148,24 @@ final class CPDFSlideBarController {
     slideBar.setOnDragListener(dragListener);
   }
 
-  void syncDocumentState(int pageCount, int currentPageIndex) {
+  public void syncDocumentState(int pageCount, int currentPageIndex) {
     CPDFPageNavigator slideBar = getNavigator();
     slideBar.setPageCount(pageCount);
     slideBar.setPageIndex(currentPageIndex);
     slideBar.requestLayout();
   }
 
-  void syncReaderViewState() {
+  public void syncReaderViewState() {
     if (navigator != null) {
       navigator.syncReaderViewState();
     }
   }
 
-  void animateToPage(int pageIndex, int duration) {
+  public void animateToPage(int pageIndex, int duration) {
     getNavigator().animateToPage(pageIndex, duration);
   }
 
-  void attachToParent() {
+  public void attachToParent() {
     CPDFPageNavigator slideBar = getNavigator();
     SlideBarHostLayout hostContainer = ensureContainer();
     if (slideBar.getParent() instanceof ViewGroup && slideBar.getParent() != container) {
@@ -187,7 +187,7 @@ final class CPDFSlideBarController {
     }
   }
 
-  void detachFromParent() {
+  public void detachFromParent() {
     if (navigator != null && navigator.getParent() instanceof ViewGroup) {
       ((ViewGroup) navigator.getParent()).removeView(navigator);
     }
@@ -196,7 +196,7 @@ final class CPDFSlideBarController {
     }
   }
 
-  View getView() {
+  public View getView() {
     return ensureContainer();
   }
 

@@ -11,9 +11,7 @@ package com.compdfkit.tools.signature.importcert.create;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -36,9 +34,13 @@ import com.compdfkit.core.signature.CPDFSignature;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CFileUtils;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
+import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
+import com.compdfkit.tools.common.utils.storage.CPDFPublicFileSaver;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.view.CEditText;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
@@ -49,12 +51,18 @@ import com.compdfkit.tools.signature.interfaces.COnSelectCertFileListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 
 public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragment implements View.OnClickListener {
+
+    private static final String TAG = "CPDFStorage";
+
+    private static final String CERTIFICATE_MIME_TYPE = "application/x-pkcs12";
 
     private AppCompatTextView tvTitle;
 
@@ -214,7 +222,7 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
         } else if (v.getId() == R.id.iv_tool_bar_close) {
             dismiss();
         } else if (v.getId() == R.id.tv_save_address) {
-            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+            if (CPDFStorageManager.shouldRequestLegacyWritePermission()) {
                 multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
                     if (CPermissionUtil.hasStoragePermissions(getContext())) {
                         showDirectoryDialog();
@@ -229,59 +237,196 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
             }
 
         } else if (v.getId() == R.id.btn_save) {
-            String name = etName.getText();
-            String grantor = etOrganizationUnit.getText();
-            String sectoral = etOrganizationName.getText();
-            String email = etEmailAddress.getText().trim();
-            String countryArea = countryReginSpinnerAdapter.getSelectCountryRegin();
-            CPDFSignature.CertUsage certUsage = purposeSpinnerAdapter.getSelectUsage();
 
-            String password = etPassword.getText();
-            String verifyPassword = etConfirmPassword.getText();
-
-            if (!validateEmail(true)) {
-                showInfoStatusView();
-                showSaveStatus = false;
-                callback.setEnabled(false);
-                return;
-            }
-
-            if (TextUtils.isEmpty(password) || TextUtils.isEmpty(verifyPassword) || !password.equals(verifyPassword)) {
-                etPassword.setError(true);
-                etConfirmPassword.setError(true);
-                tvPasswordError.setVisibility(View.VISIBLE);
-                return;
-            }
-            etPassword.setError(false);
-            etConfirmPassword.setError(false);
-            tvPasswordError.setVisibility(View.GONE);
-
-            CPDFOwnerInfo ownerInfo = new CPDFOwnerInfo();
-            ownerInfo.setCommonName(name);
-            ownerInfo.setOrgnizeUnit(grantor);
-            ownerInfo.setOrgnize(sectoral);
-            ownerInfo.setEmail(email);
-            ownerInfo.setCountry(countryArea);
-            String saveDir = getSaveAddress();
-            File certFile = new File(saveDir, fileName);
-            if (certFile.getParentFile() != null) {
-                certFile.getParentFile().mkdirs();
-            }
-            boolean success = CertificateDigitalDatas.generatePKCS12Cert(
-                    ownerInfo,
-                    etPassword.getText(),
-                    saveDir,
-                    fileName,
-                    certUsage);
-            boolean exists = certFile.exists();
-            if (success && exists) {
-                if (selectCertFileListener != null) {
-                    selectCertFileListener.certificateFile(certFile.getAbsolutePath(), etPassword.getText());
-                }
-            } else {
-                CToastUtil.showToast(getContext(), R.string.tools_digital_create_error);
+            if (CPDFStorageManager.shouldRequestLegacyWritePermission()) {
+                multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
+                    if (CPermissionUtil.hasStoragePermissions(getContext())) {
+                        createCertificate();
+                    } else {
+                        if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
+                        }
+                    }
+                });
+            }else {
+                createCertificate();
             }
         }
+    }
+
+    private void createCertificate(){
+        String name = etName.getText();
+        String grantor = etOrganizationUnit.getText();
+        String sectoral = etOrganizationName.getText();
+        String email = etEmailAddress.getText().trim();
+        String countryArea = countryReginSpinnerAdapter.getSelectCountryRegin();
+        CPDFSignature.CertUsage certUsage = purposeSpinnerAdapter.getSelectUsage();
+
+        String password = etPassword.getText();
+        String verifyPassword = etConfirmPassword.getText();
+
+        if (!validateEmail(true)) {
+            showInfoStatusView();
+            showSaveStatus = false;
+            callback.setEnabled(false);
+            return;
+        }
+
+        if (TextUtils.isEmpty(password) || TextUtils.isEmpty(verifyPassword) || !password.equals(verifyPassword)) {
+            etPassword.setError(true);
+            etConfirmPassword.setError(true);
+            tvPasswordError.setVisibility(View.VISIBLE);
+            return;
+        }
+        etPassword.setError(false);
+        etConfirmPassword.setError(false);
+        tvPasswordError.setVisibility(View.GONE);
+
+        CPDFOwnerInfo ownerInfo = new CPDFOwnerInfo();
+        ownerInfo.setCommonName(name);
+        ownerInfo.setOrgnizeUnit(grantor);
+        ownerInfo.setOrgnize(sectoral);
+        ownerInfo.setEmail(email);
+        ownerInfo.setCountry(countryArea);
+        File certFile = CPDFStorageManager.createTempFile(requireContext(), fileName);
+        String saveDir = certFile.getParent();
+        CLog.d(TAG, "CreateCertificateDigitalDialog create certificate temp start file="
+                + certFile.getAbsolutePath()
+                + ", saveToFile=" + swSaveToFile.isChecked()
+                + ", customSavePath=" + customSavePath);
+        boolean success = CertificateDigitalDatas.generatePKCS12Cert(
+                ownerInfo,
+                etPassword.getText(),
+                saveDir,
+                fileName,
+                certUsage);
+        boolean exists = certFile.exists();
+        if (success && exists) {
+            File workFile = copyCertificateToWorkFile(certFile);
+            if (workFile == null || !workFile.exists()) {
+                CLog.e(TAG, "CreateCertificateDigitalDialog copy work file failed source="
+                        + certFile.getAbsolutePath());
+                CToastUtil.showToast(getContext(), R.string.tools_digital_create_error);
+                deleteTempCertificate(certFile);
+                return;
+            }
+            if (swSaveToFile.isChecked()) {
+                boolean published = publishCertificate(certFile);
+                if (!published) {
+                    CToastUtil.showToast(getContext(), R.string.tools_digital_create_error);
+                    deleteTempCertificate(certFile);
+                    return;
+                }
+            } else {
+                deleteTempCertificate(certFile);
+            }
+            if (selectCertFileListener != null) {
+                selectCertFileListener.certificateFile(workFile.getAbsolutePath(), etPassword.getText());
+            }
+        } else {
+            CLog.e(TAG, "CreateCertificateDigitalDialog create certificate failed file="
+                    + certFile.getAbsolutePath()
+                    + ", success=" + success
+                    + ", exists=" + exists
+                    + ", size=" + (exists ? certFile.length() : -1));
+            CToastUtil.showToast(getContext(), R.string.tools_digital_create_error);
+            deleteTempCertificate(certFile);
+        }
+    }
+
+    private File copyCertificateToWorkFile(File sourceFile) {
+        File workDir = new File(requireContext().getCacheDir(), CPDFStorageManager.getStorageConfig().getCacheFolderName() + File.separator + "certFile");
+        if (!workDir.exists()) {
+            boolean created = workDir.mkdirs();
+            CLog.d(TAG, "CreateCertificateDigitalDialog create work dir=" + workDir.getAbsolutePath()
+                    + ", created=" + created);
+        }
+        File workFile = CFileUtils.renameNameSuffix(new File(workDir, sourceFile.getName()));
+        try {
+            boolean copied = CFileUtils.writeFile(
+                    new FileInputStream(sourceFile),
+                    new FileOutputStream(workFile)
+            );
+            CLog.d(TAG, "CreateCertificateDigitalDialog copy work file source="
+                    + sourceFile.getAbsolutePath()
+                    + ", target=" + workFile.getAbsolutePath()
+                    + ", copied=" + copied
+                    + ", size=" + (workFile.exists() ? workFile.length() : -1));
+            return copied ? workFile : null;
+        } catch (Exception e) {
+            CLog.e(TAG, "CreateCertificateDigitalDialog copy work file exception source="
+                    + sourceFile.getAbsolutePath()
+                    + ", error=" + e.getMessage());
+            return null;
+        }
+    }
+
+    private boolean publishCertificate(File sourceFile) {
+        String publicDirectory = getCertificatePublicDirectory();
+        if (TextUtils.isEmpty(publicDirectory)) {
+            return copyCertificateToCustomPath(sourceFile);
+        }
+        CUriUtil.MediaStoreSaveResult result = CUriUtil.publishFileToMediaStore(
+                requireContext(),
+                sourceFile,
+                publicDirectory,
+                sourceFile.getName(),
+                CERTIFICATE_MIME_TYPE,
+                true
+        );
+        CLog.d(TAG, "CreateCertificateDigitalDialog publish certificate result success="
+                + result.isSuccess()
+                + ", uri=" + result.getUri()
+                + ", path=" + result.getPath()
+                + ", error=" + result.getErrorMessage());
+        return result.isSuccess();
+    }
+
+    private String getCertificatePublicDirectory() {
+        if (TextUtils.isEmpty(customSavePath)) {
+            return CPDFStorageManager.getCertificateRelativePath();
+        }
+        String relativePath = CPDFStorageManager.toPublicRelativePath(customSavePath);
+        CLog.d(TAG, "CreateCertificateDigitalDialog custom certificate path="
+                + customSavePath
+                + ", relativePath=" + relativePath);
+        return relativePath;
+    }
+
+    private boolean copyCertificateToCustomPath(File sourceFile) {
+        CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.saveToSelectedDirectory(
+                requireContext(),
+                customSavePath,
+                null,
+                sourceFile.getName(),
+                CERTIFICATE_MIME_TYPE,
+                false,
+                tempPath -> {
+                    try {
+                        return CFileUtils.writeFile(
+                                new FileInputStream(sourceFile),
+                                new FileOutputStream(tempPath)
+                        );
+                    } catch (Exception e) {
+                        CLog.e(TAG, "copyCertificateToCustomPath exception=" + e.getMessage());
+                        return false;
+                    }
+                });
+        boolean success = saveResult.isSuccess();
+        if (success) {
+            deleteTempCertificate(sourceFile);
+        }
+        return success;
+    }
+
+    private void deleteTempCertificate(File file) {
+        if (file == null || !file.exists()) {
+            return;
+        }
+        boolean deleted = file.delete();
+        CLog.d(TAG, "CreateCertificateDigitalDialog delete temp certificate file="
+                + file.getAbsolutePath()
+                + ", deleted=" + deleted);
     }
 
     private void initCountryReginData() {
@@ -338,7 +483,7 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
 
     private void showDirectoryDialog(){
         CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(
-                Environment.getExternalStorageDirectory().getAbsolutePath(),
+                CPDFStorageManager.getDefaultDirectoryDialogPath(),
                 getString(R.string.tools_select_folder),
                 getString(R.string.tools_save_to_this_directory)
         );
@@ -394,9 +539,9 @@ public class CreateCertificateDigitalDialog extends CBasicBottomSheetDialogFragm
         }
         File file;
         if (swSaveToFile.isChecked()) {
-            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CFileUtils.ROOT_FOLDER);
+            file = new File(CPDFStorageManager.getLegacyPublicDirectoryPath(CPDFStorageManager.getCertificateRelativePath()));
         } else {
-            file = new File(getContext().getCacheDir(), CFileUtils.CACHE_FOLDER);
+            file = new File(getContext().getCacheDir(), CPDFStorageManager.getStorageConfig().getCacheFolderName());
         }
         return file.getAbsolutePath();
     }

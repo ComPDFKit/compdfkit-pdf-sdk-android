@@ -12,16 +12,10 @@ package com.compdfkit.tools.forms.pdfproperties.pdfcombobox;
 import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.core.annotation.form.CPDFComboboxWidget;
-import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
-import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
-import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
-import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
-import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
+import com.compdfkit.tools.forms.pdfproperties.CFormWidgetActionInterceptor;
 import com.compdfkit.tools.forms.pdfproperties.option.select.CFormOptionSelectDialogFragment;
 import com.compdfkit.ui.proxy.form.CPDFComboboxWidgetImpl;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class CustomComboBoxWidgetImpl extends CPDFComboboxWidgetImpl {
@@ -29,14 +23,7 @@ public class CustomComboBoxWidgetImpl extends CPDFComboboxWidgetImpl {
 
     @Override
     public void onComboboxFocused(CPDFComboboxWidget cpdfComboboxWidget) {
-        CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
-        if (configuration != null && configuration.formsConfig != null
-            && configuration.formsConfig.interceptListBoxAction) {
-            Map<String, Object> extraMap = new HashMap<>();
-            extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE,
-                CPDFCustomEventType.INTERCEPT_WIDGET_DO_ACTION);
-            extraMap.put(CPDFCustomEventField.WIDGET, cpdfComboboxWidget);
-            CPDFCustomEventCallbackHelper.getInstance().notifyClick("", extraMap);
+        if (CFormWidgetActionInterceptor.intercept(cpdfComboboxWidget)) {
             return;
         }
         CFormOptionSelectDialogFragment selectDialogFragment = CFormOptionSelectDialogFragment.newInstance();

@@ -12,6 +12,7 @@
   },
   "toolbarConfig": {
     "mainToolbarVisible": true,
+    "mainToolbarTitleVisible": true,
     "contentEditorToolbarVisible": true,
     "annotationToolbarVisible": true,
     "formToolbarVisible": true,
@@ -53,6 +54,7 @@
     "autoShowStampPicker": true,
     "autoShowPicPicker": true,
     "autoShowLinkDialog": true,
+    "autoShowNoteEditDialog": true,
     "interceptNoteAction": false,
     "interceptLinkAction": false,
     "availableTypes": [
@@ -182,9 +184,8 @@
     "showCreateListBoxOptionsDialog": true,
     "showCreateComboBoxOptionsDialog": true,
     "showCreatePushButtonOptionsDialog": true,
-    "interceptListBoxAction": false,
-    "interceptComboBoxAction": false,
-    "interceptPushButtonAction": false,
+    "interceptAllFormWidgetActions": false,
+    "interceptFormWidgetActions": [],
     "availableTypes": [
       "textField",
       "checkBox",

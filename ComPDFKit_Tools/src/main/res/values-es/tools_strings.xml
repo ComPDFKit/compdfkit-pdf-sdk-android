@@ -382,8 +382,12 @@
     <string name="tools_trusted_2">Certificar documento</string>
     <string name="tools_trust">Confiar</string>
     <string name="tools_add_to_trusted_cert">Agregar a certificados de confianza</string>
+    <string name="tools_storage_space">Almacenamiento local</string>
     <string name="tools_select_folder">Seleccionar carpeta</string>
     <string name="tools_save_to_this_directory">Guardar en este directorio</string>
+    <string name="tools_directory_permission_denied_title">Se requiere acceso a carpetas</string>
+    <string name="tools_directory_permission_denied_tips">Se requiere permiso de almacenamiento para explorar carpetas en esta versión de Android. Abra los ajustes de la app, permita el permiso de almacenamiento y vuelva para continuar.</string>
+    <string name="tools_open_app_settings">Abrir ajustes de la app</string>
     <string name="tools_digital_signatures">Firmas digitales</string>
     <string name="tools_data_encryption">Cifrado de datos</string>
     <string name="tools_digital_signatures_and_data_encryption">Firmas digitales y cifrado de datos</string>
@@ -510,4 +514,9 @@
     <string name="tools_no">No</string>
 
     <string name="tools_saveing">Guardando…</string>
+    <string name="tools_back">Salir</string>
+    <string name="tools_thumbnail">Miniatura</string>
+    <string name="tools_search">Buscar</string>
+    <string name="tools_bota">BOTA</string>
+    <string name="tools_menu">Menú</string>
 </resources>

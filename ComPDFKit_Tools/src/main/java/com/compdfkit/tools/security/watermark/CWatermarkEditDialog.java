@@ -14,9 +14,7 @@ import static android.view.View.GONE;
 import android.Manifest;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -34,6 +32,8 @@ import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.dialog.CLoadingDialog;
+import com.compdfkit.tools.common.utils.storage.CPDFPublicFileSaver;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
@@ -189,12 +189,12 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
             if (!watermarkConfig.saveAsNewFile){
                 boolean success = ((CWatermarkPageFragment) fragment).applyWatermark();
                 if (completeListener != null) {
-                    completeListener.complete(success,false, null);
+                    completeListener.complete(success, false, null, null);
                 }
                 return;
             }
 
-            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+            if (CPDFStorageManager.shouldRequestLegacyWritePermission()) {
                 multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
                     if (CPermissionUtil.hasStoragePermissions(getContext())) {
                         save();
@@ -282,8 +282,8 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
                     if (document.shouleReloadDocument()) {
                         document.reload();
                     }
-                    if (completeListener != null) {
-                        completeListener.complete(!TextUtils.isEmpty(result) , true, result);
+                   if (completeListener != null) {
+                        completeListener.complete(!TextUtils.isEmpty(result), true, result, null);
                     }
                 }
             }.execute();
@@ -294,14 +294,52 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
             saveTask(savePath);
             return;
         }
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String dirPath = CPDFStorageManager.getDefaultDirectoryDialogPath();
         CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(dirPath, getString(R.string.tools_saving_path), getString(R.string.tools_okay));
         directoryDialog.setSelectFolderListener(dir -> {
-            File file = new File(dir, CFileUtils.getFileNameNoExtension(document.getFileName()) + getString(R.string.tools_watermark_suffix));
-            File pdfFile = CFileUtils.renameNameSuffix(file);
-            saveTask(pdfFile.getAbsolutePath());
+            String fileName = CFileUtils.getFileNameNoExtension(document.getFileName()) + getString(R.string.tools_watermark_suffix);
+            saveTaskToSelectedDirectory(dir, fileName);
         });
         directoryDialog.show(getChildFragmentManager(), "dirDialog");
+    }
+
+    private void saveTaskToSelectedDirectory(String selectedDirectory, String fileName) {
+        Fragment fragment = getChildFragmentManager().findFragmentByTag("f" + tabLayout.getSelectedTabPosition());
+        CLoadingDialog loadingDialog = CLoadingDialog.newInstance();
+        loadingDialog.show(getChildFragmentManager(), "saveDialog");
+        if (fragment != null && fragment instanceof CWatermarkPageFragment) {
+            new SimpleBackgroundTask<CPDFPublicFileSaver.SaveResult>(getContext()) {
+
+                @Override
+                protected CPDFPublicFileSaver.SaveResult onRun() {
+                    return CPDFPublicFileSaver.savePdfToSelectedDirectory(
+                            getContext(),
+                            selectedDirectory,
+                            fileName,
+                            false,
+                            tempPath -> {
+                                boolean success = ((CWatermarkPageFragment) fragment).applyWatermark();
+                                return success && document.saveAs(tempPath, false, false, saveFileExtraFontSubset);
+                            });
+                }
+
+                @Override
+                protected void onSuccess(CPDFPublicFileSaver.SaveResult saveResult) {
+                    if (loadingDialog != null) {
+                        loadingDialog.dismiss();
+                    }
+                    if (document.shouleReloadDocument()) {
+                        document.reload();
+                    }
+                    if (completeListener != null) {
+                        completeListener.complete(saveResult.isSuccess(),
+                                true,
+                                saveResult.getOpenPath(),
+                                saveResult.getPublicUri());
+                    }
+                }
+            }.execute();
+        }
     }
 
     private void initDocument(String filePath, Uri uri) {
@@ -346,6 +384,6 @@ public class CWatermarkEditDialog extends CBasicBottomSheetDialogFragment implem
     }
 
     public interface CEditCompleteListener {
-        void complete(boolean result,  boolean saveAsNewFile, String pdfFile);
+        void complete(boolean result, boolean saveAsNewFile, String pdfFile, Uri pdfUri);
     }
 }

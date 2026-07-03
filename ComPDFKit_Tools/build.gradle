@@ -2,19 +2,10 @@ plugins {
     id 'com.android.library'
 }
 
-
-
 android {
     namespace 'com.compdfkit.tools'
     compileSdk rootProject.ext.android.COMPILESDK
     resourcePrefix 'tools_'
-
-    publishing {
-        singleVariant('release') {
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
 
     defaultConfig {
         minSdk rootProject.ext.android.MINSDK
@@ -51,12 +42,8 @@ android {
 dependencies {
 
     api fileTree(include: ['*.jar'], dir: 'libs')
-    // use this
-//    api project(path:':ComPDFKit_Repo:compdfkit')
-//    api project(path:':ComPDFKit_Repo:compdfkit-ui')
-    // or use
-    api ('com.compdf:compdfkit:2.6.8')
-    api ('com.compdf:compdfkit-ui:2.6.8')
+    api project(path:':ComPDFKit_Repo:compdfkit')
+    api project(path:':ComPDFKit_Repo:compdfkit-ui')
     api 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     api "androidx.print:print:1.0.0"

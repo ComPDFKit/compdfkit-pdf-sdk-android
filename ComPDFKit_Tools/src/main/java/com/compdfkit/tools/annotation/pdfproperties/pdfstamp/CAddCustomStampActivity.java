@@ -99,7 +99,7 @@ public class CAddCustomStampActivity extends AppCompatActivity implements View.O
         ivShapeLeftTriangle.setOnClickListener(this);
         ivShapeRightTriangle.setOnClickListener(this);
         btnSave.setOnClickListener(this);
-        cToolBar.setBackBtnClickListener(v -> onBackPressed());
+       cToolBar.setBackBtnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         colorListView.setOnColorSelectListener(color -> stampTextView.setColor(color));
         swDate.setOnCheckedChangeListener((buttonView, isChecked) -> {
             stampTextView.setDateSwitch(isChecked);
@@ -188,10 +188,10 @@ public class CAddCustomStampActivity extends AppCompatActivity implements View.O
         String savePath = CStampDatas.saveTextStamp(this, textStampBean);
         if (savePath != null) {
             Intent intent = new Intent();
-            intent.putExtra("file_path", savePath);
-            setResult(Activity.RESULT_OK, intent);
-            onBackPressed();
-        }
+           intent.putExtra("file_path", savePath);
+           setResult(Activity.RESULT_OK, intent);
+            getOnBackPressedDispatcher().onBackPressed();
+       }
     }
 
     @Override

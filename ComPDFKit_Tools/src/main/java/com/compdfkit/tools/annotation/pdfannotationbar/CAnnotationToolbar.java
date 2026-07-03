@@ -36,6 +36,7 @@ import com.compdfkit.tools.common.interfaces.COnAnnotationCreatePreparedListener
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
 import com.compdfkit.tools.common.utils.CListUtil;
 import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
 import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
 import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
 import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
@@ -52,8 +53,12 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleMan
 import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.ui.proxy.attach.IInkDrawCallback;
 import com.compdfkit.ui.proxy.attach.IInkDrawCallback.Mode;
+import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
+import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
 import com.compdfkit.ui.reader.CPDFReaderView.ViewMode;
+import com.compdfkit.ui.reader.CPDFSelectAnnotCallback;
+import com.compdfkit.ui.reader.OnViewModeChangedListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,6 +90,20 @@ public class CAnnotationToolbar extends FrameLayout {
     private List<COnAnnotationCreatePreparedListener> annotationCreatePreparedListeners = new ArrayList<>();
 
     private LinearLayout llAnnotTools;
+
+    @Nullable
+    private CPDFBaseAnnotImpl<CPDFAnnotation> selectedAnnotImpl;
+
+    @Nullable
+    private CPDFPageView selectedAnnotPageView;
+
+    @Nullable
+    private CPDFSelectAnnotCallback selectAnnotCallback;
+
+    @Nullable
+    private OnViewModeChangedListener viewModeChangedListener;
+
+    private boolean listeningSelectAnnot = false;
 
     public enum UndoManagerType {
         AnnotUndo,
@@ -131,15 +150,15 @@ public class CAnnotationToolbar extends FrameLayout {
     public void initWithPDFView(CPDFViewCtrl pdfView) {
         this.pdfView = pdfView;
         toolListAdapter.setList(CAnnotationToolDatas.getAnnotationList(pdfView));
+        setupSelectedAnnotationCallbacks();
         this.pdfView.addOnPDFFocusedTypeChangeListener(type -> {
             if (type == CPDFAnnotation.Type.UNKNOWN) {
+                clearSelectedAnnotationStyleTarget();
                 if (toolListAdapter.hasSelectAnnotType()) {
                     if (toolListAdapter.getCurrentAnnotType() != CAnnotationType.INK_ERASER){
                         toolListAdapter.selectByType(CAnnotationType.UNKNOWN);
                     }
-                    if (ivSetting != null) {
-                        ivSetting.setEnabled(toolListAdapter.annotEnableSetting());
-                    }
+                    updateSettingButtonState();
                 }
                 if (toolListAdapter.getCurrentAnnotType() != CAnnotationType.INK_ERASER) {
                     setUndoManagerType(UndoManagerType.AnnotUndo);
@@ -152,6 +171,108 @@ public class CAnnotationToolbar extends FrameLayout {
                 setUndoManagerType(UndoManagerType.AnnotUndo);
             }
         });
+        syncSelectAnnotListenerWithViewMode(pdfView.getCPdfReaderView().getViewMode());
+    }
+
+    private void setupSelectedAnnotationCallbacks() {
+        if (selectAnnotCallback == null) {
+            selectAnnotCallback = new CPDFSelectAnnotCallback() {
+                @Override
+                public void onAnnotationSelected(CPDFPageView pageView,
+                                                 CPDFBaseAnnotImpl<CPDFAnnotation> annotImpl) {
+                    if (canShowSelectedAnnotationStyleDialog(annotImpl)) {
+                        selectedAnnotPageView = pageView;
+                        selectedAnnotImpl = annotImpl;
+                    } else {
+                        clearSelectedAnnotationStyleTarget();
+                    }
+                    updateSettingButtonState();
+                }
+
+                @Override
+                public void onAnnotationDeselected(CPDFPageView pageView,
+                                                   CPDFBaseAnnotImpl<CPDFAnnotation> annotImpl) {
+                    if (selectedAnnotImpl == annotImpl
+                            || (selectedAnnotImpl != null && annotImpl != null
+                            && selectedAnnotImpl.getId() == annotImpl.getId())) {
+                        clearSelectedAnnotationStyleTarget();
+                        updateSettingButtonState();
+                    }
+                }
+            };
+        }
+        if (viewModeChangedListener == null) {
+            viewModeChangedListener = this::syncSelectAnnotListenerWithViewMode;
+            pdfView.addOnPDFViewModeChangeListener(viewModeChangedListener);
+        }
+    }
+
+    private void syncSelectAnnotListenerWithViewMode(ViewMode viewMode) {
+        if (viewMode == ViewMode.ANNOT) {
+            startListenSelectAnnot();
+        } else {
+            stopListenSelectAnnot();
+            clearSelectedAnnotationStyleTarget();
+            updateSettingButtonState();
+        }
+    }
+
+    private void startListenSelectAnnot() {
+        if (!listeningSelectAnnot && pdfView != null && selectAnnotCallback != null) {
+            pdfView.addOnPDFSelectAnnotChangeListener(selectAnnotCallback);
+            listeningSelectAnnot = true;
+        }
+    }
+
+    private void stopListenSelectAnnot() {
+        if (listeningSelectAnnot && pdfView != null && selectAnnotCallback != null) {
+            pdfView.removeOnPDFSelectAnnotChangeListener(selectAnnotCallback);
+            listeningSelectAnnot = false;
+        }
+    }
+
+    private void clearSelectedAnnotationStyleTarget() {
+        selectedAnnotImpl = null;
+        selectedAnnotPageView = null;
+    }
+
+    private boolean hasSelectedAnnotationStyleTarget() {
+        return isAnnotationMode()
+                && selectedAnnotImpl != null
+                && selectedAnnotPageView != null
+                && canShowSelectedAnnotationStyleDialog(selectedAnnotImpl);
+    }
+
+    private boolean isAnnotationMode() {
+        return pdfView != null && pdfView.getCPdfReaderView().getViewMode() == ViewMode.ANNOT;
+    }
+
+    private boolean canShowSelectedAnnotationStyleDialog(@Nullable CPDFBaseAnnotImpl<CPDFAnnotation> annotImpl) {
+        if (annotImpl == null) {
+            return false;
+        }
+        switch (annotImpl.getAnnotType()) {
+            case TEXT:
+            case HIGHLIGHT:
+            case UNDERLINE:
+            case SQUIGGLY:
+            case STRIKEOUT:
+            case INK:
+            case SQUARE:
+            case CIRCLE:
+            case LINE:
+            case FREETEXT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void updateSettingButtonState() {
+        if (ivSetting != null) {
+            ivSetting.setEnabled(hasSelectedAnnotationStyleTarget()
+                    || toolListAdapter.annotEnableSetting());
+        }
     }
     private void setUndoManagerType(UndoManagerType undoManagerType) {
         this.undoManagerType = undoManagerType;
@@ -176,8 +297,24 @@ public class CAnnotationToolbar extends FrameLayout {
     }
 
     private void showAnnotStyleDialog() {
+        if (hasSelectedAnnotationStyleTarget()) {
+            showSelectedAnnotStyleDialog();
+            return;
+        }
         CStyleType styleType = toolListAdapter.getCurrentAnnotType().getStyleType();
         showAnnotStyleDialog(styleType);
+    }
+
+    private void showSelectedAnnotStyleDialog() {
+        saveInk();
+        CViewUtils.hideKeyboard(this);
+        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
+        CPDFBaseAnnotImpl<CPDFAnnotation> annotImpl = selectedAnnotImpl;
+        CPDFPageView pageView = selectedAnnotPageView;
+        if (fragmentActivity != null && annotImpl != null && pageView != null) {
+            CPDFAnnotationManager.showPropertiesDialog(
+                    fragmentActivity.getSupportFragmentManager(), annotImpl, pageView);
+        }
     }
 
     public void showAnnotStyleDialog(CStyleType styleType) {
@@ -230,9 +367,8 @@ public class CAnnotationToolbar extends FrameLayout {
             setUndoManagerType(UndoManagerType.AnnotUndo);
         }
         toolListAdapter.selectByType(CAnnotationType.UNKNOWN);
-        if (ivSetting != null) {
-            ivSetting.setEnabled(toolListAdapter.annotEnableSetting());
-        }
+        clearSelectedAnnotationStyleTarget();
+        updateSettingButtonState();
         pdfView.resetAnnotationType();
         pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
         pdfView.getCPdfReaderView().getInkDrawHelper().setMode(Mode.DRAW);
@@ -245,9 +381,8 @@ public class CAnnotationToolbar extends FrameLayout {
             return;
         }
         toolListAdapter.selectByType(type);
-        if (ivSetting != null) {
-            ivSetting.setEnabled(toolListAdapter.annotEnableSetting());
-        }
+        clearSelectedAnnotationStyleTarget();
+        updateSettingButtonState();
         AnnotationsConfig annotationsConfig = pdfView.getCPDFConfiguration().annotationsConfig;
         pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
         pdfView.getCPdfReaderView().removeAllAnnotFocus();
@@ -453,6 +588,7 @@ public class CAnnotationToolbar extends FrameLayout {
                         showAnnotStyleDialog();
                     });
                     ivSetting = toolView;
+                    updateSettingButtonState();
                     break;
                 case Undo:
                     toolView.setImageResource(R.drawable.tools_ic_annotation_undo);
@@ -560,6 +696,8 @@ public class CAnnotationToolbar extends FrameLayout {
 
     public void reset() {
         toolListAdapter.selectByType(CAnnotationType.UNKNOWN);
+        clearSelectedAnnotationStyleTarget();
+        updateSettingButtonState();
         rvAnnotationList.scrollToPosition(0);
         redoUndoManager();
     }
@@ -570,6 +708,16 @@ public class CAnnotationToolbar extends FrameLayout {
 
     public void addAnnotationCreatePreparedListener(COnAnnotationCreatePreparedListener listener) {
         annotationCreatePreparedListeners.add(listener);
+    }
+
+    public void release() {
+        stopListenSelectAnnot();
+        if (pdfView != null && viewModeChangedListener != null) {
+            pdfView.removeOnPDFViewModeChangeListener(viewModeChangedListener);
+        }
+        viewModeChangedListener = null;
+        clearSelectedAnnotationStyleTarget();
+        updateSettingButtonState();
     }
 
 

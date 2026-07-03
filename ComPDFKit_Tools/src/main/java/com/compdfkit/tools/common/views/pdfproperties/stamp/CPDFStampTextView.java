@@ -211,7 +211,7 @@ public class CPDFStampTextView extends View {
         if (content != null && content.contains("\n")) {
             content = content.replace("\n", " ");
         }
-        this.content = content;
+        this.content = content == null ? "" : content;
         requestLayout();
     }
 
@@ -373,11 +373,11 @@ public class CPDFStampTextView extends View {
         requestLayout();
     }
 
-    private RectF getTextRectf(String contentStr, TextPaint paint) {
+    private RectF getTextRectf(String contentStr, TextPaint paint, float layoutWidth) {
         CPDFStaticLayout staticLayout = new CPDFStaticLayout(
                 contentStr,//text content
                 paint,
-                (int) maxWidth,
+                Math.max(1, (int) layoutWidth),
                 Layout.Alignment.ALIGN_NORMAL,
                 SPACING_MULT,
                 SPACING_ADD,
@@ -391,34 +391,44 @@ public class CPDFStampTextView extends View {
         return rectF;
     }
 
-    private void calculateWidthAndHeight() {
+    private void calculateWidthAndHeight(float availableMaxWidth) {
         setTextSize(defaultTextSize);
+        availableMaxWidth = Math.max(1, availableMaxWidth);
         RectF dateRect;
-        if ("".equals(content) || content == null) {
-            dateRect = getTextRectf(getDateStr(), textPaint);
+        if ("".equals(content)) {
+            dateRect = getTextRectf(getDateStr(), textPaint, availableMaxWidth);
         } else {
-            dateRect = getTextRectf(getDateStr(), datePaint);
+            dateRect = getTextRectf(getDateStr(), datePaint, availableMaxWidth);
         }
-        RectF textRect = getTextRectf(content.length() > 0 ? content : defaultContent, textPaint);
-        float maxContentLan = maxWidth - 2 * gap;
+        RectF textRect = getTextRectf(content.length() > 0 ? content : defaultContent, textPaint, availableMaxWidth);
+        currentHeight = textRect.bottom + 2 * gap;
+        if (getTimeType() != TimeType.NULL) {
+            currentHeight = dateRect.bottom + (content.length() > 0 ? textRect.bottom : 0) + 2 * gap;
+        }
+        float maxContentLan = availableMaxWidth - 2 * gap;
         if (CPDFStampAnnotation.TextStampShape.TEXTSTAMP_NONE != getShape() && CPDFStampAnnotation.TextStampShape.TEXTSTAMP_RECT != getShape()) {
-            maxContentLan = maxWidth - currentHeight * RATE - 2 * gap;
+            maxContentLan = availableMaxWidth - currentHeight * RATE - 2 * gap;
         }
+        maxContentLan = Math.max(1, maxContentLan);
         float width = Math.max(dateRect.right, textRect.right);
         if (width > maxContentLan) {
-            currentWidth = maxWidth;
             textSize = textSize * maxContentLan / width;
             setTextSize(textSize);
             RectF dateRectTemp;
-            if ("".equals(content) || content == null) {
-                dateRectTemp = getTextRectf(getDateStr(), textPaint);
+            if ("".equals(content)) {
+                dateRectTemp = getTextRectf(getDateStr(), textPaint, maxContentLan);
             } else {
-                dateRectTemp = getTextRectf(getDateStr(), datePaint);
+                dateRectTemp = getTextRectf(getDateStr(), datePaint, maxContentLan);
             }
-            RectF textRectTemp = getTextRectf(content.length() > 0 ? content : defaultContent, textPaint);
+            RectF textRectTemp = getTextRectf(content.length() > 0 ? content : defaultContent, textPaint, maxContentLan);
             currentHeight = textRectTemp.bottom + 2 * gap;
             if (getTimeType() != TimeType.NULL) {
                 currentHeight = dateRectTemp.bottom + (content.length() > 0 ? textRectTemp.bottom : 0) + 2 * gap;
+            }
+            float scaleWidth = Math.max(dateRectTemp.right, textRectTemp.right);
+            currentWidth = Math.min(availableMaxWidth, scaleWidth + 2 * gap);
+            if (CPDFStampAnnotation.TextStampShape.TEXTSTAMP_NONE != getShape() && CPDFStampAnnotation.TextStampShape.TEXTSTAMP_RECT != getShape()) {
+                currentWidth = Math.min(availableMaxWidth, currentWidth + currentHeight * RATE);
             }
         } else {
             currentHeight = textRect.bottom + 2 * gap;
@@ -438,12 +448,20 @@ public class CPDFStampTextView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        calculateWidthAndHeight();
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int width = MeasureSpec.makeMeasureSpec((int) currentWidth, widthMode);
-        int height = MeasureSpec.makeMeasureSpec((int) currentHeight, heightMode);
-        setMeasuredDimension(width, height);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        float availableMaxWidth = maxWidth;
+        if (widthMode != MeasureSpec.UNSPECIFIED && widthSize > 0) {
+            availableMaxWidth = Math.min(maxWidth, widthSize);
+        }
+        calculateWidthAndHeight(availableMaxWidth);
+        int desiredWidth = (int) Math.ceil(currentWidth);
+        int desiredHeight = (int) Math.ceil(currentHeight);
+        int measuredWidth = resolveSize(desiredWidth, widthMeasureSpec);
+        int measuredHeight = resolveSize(desiredHeight, heightMeasureSpec);
+        currentWidth = measuredWidth;
+        currentHeight = measuredHeight;
+        setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
     @Override
@@ -466,7 +484,7 @@ public class CPDFStampTextView extends View {
         CPDFStaticLayout staticLayout = new CPDFStaticLayout(
                 content.length() > 0 ? content : defaultContent,
                 textPaint,
-                (int) currentWidth,
+                getContentLayoutWidth(),
                 Layout.Alignment.ALIGN_NORMAL,
                 SPACING_MULT,
                 SPACING_ADD,
@@ -489,7 +507,7 @@ public class CPDFStampTextView extends View {
             canvas.translate(gap, gap);
         }
         TextPaint paint;
-        if ("".equals(getContent()) || getContent() == null) {
+        if ("".equals(getContent())) {
             paint = textPaint;
         } else {
             paint = datePaint;
@@ -497,7 +515,7 @@ public class CPDFStampTextView extends View {
         CPDFStaticLayout staticLayout = new CPDFStaticLayout(
                 getDateStr(),
                 paint,
-                (int) currentWidth,
+                getContentLayoutWidth(),
                 Layout.Alignment.ALIGN_NORMAL,
                 SPACING_MULT,
                 SPACING_ADD,
@@ -505,6 +523,15 @@ public class CPDFStampTextView extends View {
         );
         staticLayout.draw(canvas);
         canvas.restore();
+    }
+
+    private int getContentLayoutWidth() {
+        float triangleWidth = 0;
+        if (CPDFStampAnnotation.TextStampShape.TEXTSTAMP_NONE != getShape()
+                && CPDFStampAnnotation.TextStampShape.TEXTSTAMP_RECT != getShape()) {
+            triangleWidth = currentHeight * RATE;
+        }
+        return Math.max(1, (int) (currentWidth - triangleWidth - 2 * gap));
     }
 
     private int getGradientColorStart(int color) {

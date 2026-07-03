@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.activity.ComponentDialog;
 import androidx.activity.OnBackPressedCallback;
@@ -18,6 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
+import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.CPermissionUtil;
+import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.utils.threadpools.SimpleBackgroundTask;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
@@ -30,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
+
+  private static final String TAG = "CPDFStorage";
 
   public static final String EXTRA_ROOT_DIR = "extra_root_dir";
 
@@ -45,6 +52,10 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
 
   private AppCompatButton btnConfirm;
 
+  private LinearLayout permissionDeniedLayout;
+
+  private AppCompatButton btnOpenSettings;
+
   private CFileDirectoryTitleAdapter titleAdapter;
 
   private CFileDirectoryAdapter directoryAdapter;
@@ -52,6 +63,11 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
   private COnSelectFolderListener selectFolderListener;
 
   private OnBackPressedCallback callback;
+
+  private boolean waitingForLegacyPermissionFromSettings = false;
+
+  private final CMultiplePermissionResultLauncher multiplePermissionResultLauncher =
+      new CMultiplePermissionResultLauncher(this);
 
   public static CFileDirectoryDialog newInstance(String rootDir, String title,
       String confirmBtnTitle) {
@@ -102,6 +118,14 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
   }
 
   private void back() {
+    if (permissionDeniedLayout != null && permissionDeniedLayout.getVisibility() == View.VISIBLE) {
+      dismiss();
+      return;
+    }
+    if (titleAdapter == null || titleAdapter.list == null || titleAdapter.list.isEmpty()) {
+      dismiss();
+      return;
+    }
     String dir = titleAdapter.getLastFolder();
     if (!TextUtils.isEmpty(dir) && titleAdapter.list.size() != 1) {
       titleAdapter.toupperLevel();
@@ -121,12 +145,41 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    if (!waitingForLegacyPermissionFromSettings) {
+      return;
+    }
+    waitingForLegacyPermissionFromSettings = false;
+    if (!CPDFStorageManager.shouldRequestLegacyWritePermission()
+        || CPermissionUtil.hasStoragePermissions(requireContext())) {
+      initFolderTitleList();
+      initDirectoriesList();
+    } else {
+      showPermissionDeniedView();
+    }
+  }
+
+  @Override
   protected void onCreateView(View rootView) {
     toolBar = rootView.findViewById(R.id.tool_bar);
     rvFolderTitle = rootView.findViewById(R.id.rv_folder_title);
     rvFolderList = rootView.findViewById(R.id.recycler_view);
     btnConfirm = rootView.findViewById(R.id.btn_ok);
+    permissionDeniedLayout = rootView.findViewById(R.id.layout_permission_denied);
+    btnOpenSettings = rootView.findViewById(R.id.btn_open_settings);
+    btnConfirm.setEnabled(false);
+    btnOpenSettings.setOnClickListener(v -> {
+      waitingForLegacyPermissionFromSettings = true;
+      CPermissionUtil.toSelfSetting(requireContext());
+    });
     btnConfirm.setOnClickListener(v -> {
+      if (permissionDeniedLayout != null && permissionDeniedLayout.getVisibility() == View.VISIBLE) {
+        return;
+      }
+      if (titleAdapter == null || titleAdapter.list == null || titleAdapter.list.isEmpty()) {
+        return;
+      }
       String dir = titleAdapter.getLastFolder();
       if (selectFolderListener != null) {
         if (!TextUtils.isEmpty(dir)) {
@@ -152,11 +205,34 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
         btnConfirm.setText(confirmButtonTitle);
       }
     }
-    initFolderTitleList();
-    initDirectoriesList();
+    prepareDirectoryAccess();
+  }
+
+  private void prepareDirectoryAccess() {
+    if (!CPDFStorageManager.shouldRequestLegacyWritePermission()) {
+      initFolderTitleList();
+      initDirectoriesList();
+      return;
+    }
+    if (CPermissionUtil.hasStoragePermissions(requireContext())) {
+      initFolderTitleList();
+      initDirectoriesList();
+      return;
+    }
+    CLog.d(TAG, "CFileDirectoryDialog request legacy storage permission");
+    multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
+      if (CPermissionUtil.hasStoragePermissions(requireContext())) {
+        initFolderTitleList();
+        initDirectoriesList();
+      } else {
+        CLog.d(TAG, "CFileDirectoryDialog legacy storage permission denied");
+        showPermissionDeniedView();
+      }
+    });
   }
 
   private void initFolderTitleList() {
+    showDirectoryListView();
     titleAdapter = new CFileDirectoryTitleAdapter();
     rvFolderTitle.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -179,17 +255,57 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
       File childDirectory = directoryAdapter.list.get(position);
       applyTitleList(childDirectory);
     });
-    String rootDir = createTitleList().get(0).getFile().getAbsolutePath();
+    String rootDir = titleAdapter.getLastFolder();
     refreshDirectories(rootDir);
   }
 
   private List<CFileDirectoryTitleBean> createTitleList() {
-    String rootDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+    String rootDir = CPDFStorageManager.getDefaultDirectoryDialogPath();
     if (getArguments() != null && !TextUtils.isEmpty(getArguments().getString(EXTRA_ROOT_DIR))) {
       rootDir = getArguments().getString(EXTRA_ROOT_DIR);
     }
+    if (Environment.getExternalStorageDirectory().getAbsolutePath().equals(rootDir)) {
+      rootDir = CPDFStorageManager.getDefaultDirectoryDialogPath();
+    }
+    CLog.d(TAG, "CFileDirectoryDialog createTitleList rootDir=" + rootDir);
+    return createPublicDirectoryBreadcrumb(rootDir, true);
+  }
+
+  private List<CFileDirectoryTitleBean> createPublicDirectoryBreadcrumb(String targetDir, boolean includeExternalRoot) {
     List<CFileDirectoryTitleBean> list = new ArrayList<>();
-    list.add(new CFileDirectoryTitleBean(new File(rootDir)));
+    File targetFile = new File(targetDir);
+    File externalRoot = Environment.getExternalStorageDirectory();
+    String normalizedTarget = targetFile.getAbsolutePath().replace('\\', '/');
+    String normalizedRoot = externalRoot.getAbsolutePath().replace('\\', '/');
+    if (!normalizedTarget.startsWith(normalizedRoot + "/")) {
+      list.add(new CFileDirectoryTitleBean(targetFile));
+      return list;
+    }
+    if (includeExternalRoot) {
+      list.add(new CFileDirectoryTitleBean(externalRoot));
+    }
+    String relativePath = normalizedTarget.substring(normalizedRoot.length() + 1);
+    if (TextUtils.isEmpty(relativePath)) {
+      if (list.isEmpty()) {
+        list.add(new CFileDirectoryTitleBean(targetFile));
+      }
+      return list;
+    }
+    String[] parts = relativePath.split("/");
+    File current = externalRoot;
+    for (String part : parts) {
+      if (TextUtils.isEmpty(part)) {
+        continue;
+      }
+      current = new File(current, part);
+      if (!list.isEmpty()) {
+        list.add(CFileDirectoryTitleBean.separator());
+      }
+      list.add(new CFileDirectoryTitleBean(current));
+    }
+    if (list.isEmpty()) {
+      list.add(new CFileDirectoryTitleBean(targetFile));
+    }
     return list;
   }
 
@@ -220,13 +336,35 @@ public class CFileDirectoryDialog extends CBasicBottomSheetDialogFragment {
   }
 
   private String getNormalFolder() {
-    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        .getAbsolutePath();
+    return CPDFStorageManager.getDefaultDirectoryDialogPath();
+  }
+
+  private void showPermissionDeniedView() {
+    rvFolderTitle.setVisibility(View.GONE);
+    rvFolderList.setVisibility(View.GONE);
+    permissionDeniedLayout.setVisibility(View.VISIBLE);
+    btnConfirm.setVisibility(View.GONE);
+    btnConfirm.setEnabled(false);
+  }
+
+  private void showDirectoryListView() {
+    rvFolderTitle.setVisibility(View.VISIBLE);
+    rvFolderList.setVisibility(View.VISIBLE);
+    permissionDeniedLayout.setVisibility(View.GONE);
+    btnConfirm.setVisibility(View.VISIBLE);
+    refreshConfirmBtn();
   }
 
   private void refreshConfirmBtn() {
+    if (btnConfirm == null) {
+      return;
+    }
+    if (titleAdapter == null || titleAdapter.list == null || titleAdapter.list.isEmpty()) {
+      btnConfirm.setEnabled(false);
+      return;
+    }
     String dir = titleAdapter.getLastFolder();
-    if (!TextUtils.isEmpty(dir) && titleAdapter.list.size() != 1) {
+    if (!TextUtils.isEmpty(dir) && !Environment.getExternalStorageDirectory().getAbsolutePath().equals(dir)) {
       btnConfirm.setEnabled(true);
     } else {
       btnConfirm.setEnabled(false);

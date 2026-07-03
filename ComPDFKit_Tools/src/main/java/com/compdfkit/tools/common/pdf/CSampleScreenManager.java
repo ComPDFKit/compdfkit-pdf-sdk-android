@@ -146,7 +146,7 @@ public class CSampleScreenManager {
             }
             isFillScreen = false;
         }
-        constraintSetUtils.apply(constraintSet, documentFragment.clRoot, true);
+        constraintSetUtils.apply(constraintSet, documentFragment.clRoot, false);
     }
 
     public void constraintShow(View view){

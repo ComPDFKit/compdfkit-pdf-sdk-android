@@ -23,6 +23,7 @@ import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragm
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleType;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleUIParams;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.manager.CStyleManager;
+import com.compdfkit.tools.forms.pdfproperties.CFormWidgetActionInterceptor;
 import com.compdfkit.ui.proxy.form.CPDFSignatureWidgetImpl;
 
 /**
@@ -32,6 +33,9 @@ public class CustomSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
 
     @Override
     public void onSignatureWidgetFocused(CPDFSignatureWidget cpdfSignatureWidget) {
+        if (CFormWidgetActionInterceptor.intercept(cpdfSignatureWidget)) {
+            return;
+        }
         CStyleManager styleManager = new CStyleManager(this, pageView);
         CStyleDialogFragment styleDialogFragment = CStyleDialogFragment.newInstance(styleManager.getStyle(CStyleType.FORM_SIGNATURE_FIELDS));
         CStyleUIParams styleUiParams = CStyleUIParams.defaultStyle(pageView.getContext(), CStyleType.FORM_SIGNATURE_FIELDS);

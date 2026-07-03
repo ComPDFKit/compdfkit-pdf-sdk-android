@@ -414,8 +414,12 @@
     <string name="tools_trusted_2">验证文档</string>
     <string name="tools_trust">信任</string>
     <string name="tools_add_to_trusted_cert">添加到可信任证书</string>
+    <string name="tools_storage_space">本机存储</string>
     <string name="tools_select_folder">选择文件夹</string>
     <string name="tools_save_to_this_directory">保存到该目录</string>
+    <string name="tools_directory_permission_denied_title">需要文件夹访问权限</string>
+    <string name="tools_directory_permission_denied_tips">当前 Android 版本需要存储权限才能浏览文件夹。请打开应用设置并允许存储权限，然后返回继续操作。</string>
+    <string name="tools_open_app_settings">打开应用设置</string>
     <string name="tools_digital_signatures">数字签名</string>
     <string name="tools_data_encryption">数据加密</string>
     <string name="tools_digital_signatures_and_data_encryption">数字签名和数据加密</string>

@@ -49,9 +49,16 @@ public class CFileDirectoryTitleAdapter extends CBaseQuickAdapter<CFileDirectory
         } else {
             File file = item.getFile();
             if (file.getAbsolutePath().equalsIgnoreCase(Environment.getExternalStorageDirectory().getAbsolutePath())){
-                holder.setText(R.id.tv_name, "SD Card");
+                holder.setText(R.id.tv_name, R.string.tools_storage_space);
             }else {
-                holder.setText(R.id.tv_name, item.getFile().getName());
+                String name = item.getFile().getName();
+                if (Environment.DIRECTORY_DOWNLOADS.equals(name)) {
+                    holder.setText(R.id.tv_name, "Downloads");
+                } else if (Environment.DIRECTORY_DOCUMENTS.equals(name)) {
+                    holder.setText(R.id.tv_name, "Documents");
+                } else {
+                    holder.setText(R.id.tv_name, name);
+                }
             }
         }
     }

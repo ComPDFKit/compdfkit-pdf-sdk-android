@@ -32,6 +32,8 @@ import java.util.List;
 
 public class CDigitalSignStylePreviewView extends FrameLayout {
 
+    private static final int MAX_CONFIG_IMAGE_LONG_SIDE = 512;
+
     private AppCompatImageView ivSignImage;
 
     private AppCompatTextView tvSignInfo;
@@ -49,8 +51,6 @@ public class CDigitalSignStylePreviewView extends FrameLayout {
     private String distinguishableName;
 
     private String date;
-
-    private CPDFDigitalSigConfig digitalSigConfig = new CPDFDigitalSigConfig();
 
     private ConstraintSet constraintSet = new ConstraintSet();
 
@@ -164,6 +164,7 @@ public class CDigitalSignStylePreviewView extends FrameLayout {
     }
 
     public CPDFDigitalSigConfig getConfig() {
+        CPDFDigitalSigConfig digitalSigConfig = new CPDFDigitalSigConfig();
         digitalSigConfig.setDrawLogo(showLogo);
         digitalSigConfig.setContentColor(0xFF000000);
         digitalSigConfig.setTextColor(0xFF000000);
@@ -171,17 +172,56 @@ public class CDigitalSignStylePreviewView extends FrameLayout {
         digitalSigConfig.setContent(getContent());
         digitalSigConfig.setDrawOnlyContent(TextUtils.isEmpty(signImagePath));
         if (!TextUtils.isEmpty(signImagePath)) {
-            Bitmap bitmap = BitmapFactory.decodeFile(signImagePath);
-            digitalSigConfig.setImage(bitmap);
+            Bitmap bitmap = decodeBitmap(signImagePath, MAX_CONFIG_IMAGE_LONG_SIDE);
+            try {
+                digitalSigConfig.setImage(bitmap);
+            } catch (OutOfMemoryError error) {
+                if (bitmap != null && !bitmap.isRecycled()) {
+                    bitmap.recycle();
+                }
+                digitalSigConfig.setDrawOnlyContent(true);
+            }
         }
         if (showLogo) {
             CFileUtils.copyFileFromAssets(getContext(), "tools_logo.png", getContext().getCacheDir().getAbsolutePath(), "tools_logo.png", true);
             File logoFile = new File(getContext().getCacheDir(), "tools_logo.png");
             if (logoFile.exists()) {
-                digitalSigConfig.setLogo(BitmapFactory.decodeFile(logoFile.getAbsolutePath()));
+                Bitmap logoBitmap = decodeBitmap(logoFile.getAbsolutePath(), MAX_CONFIG_IMAGE_LONG_SIDE);
+                try {
+                    digitalSigConfig.setLogo(logoBitmap);
+                } catch (OutOfMemoryError error) {
+                    if (logoBitmap != null && !logoBitmap.isRecycled()) {
+                        logoBitmap.recycle();
+                    }
+                    digitalSigConfig.setDrawLogo(false);
+                }
             }
         }
         return digitalSigConfig;
+    }
+
+    private Bitmap decodeBitmap(String path, int maxLongSide) {
+        try {
+            BitmapFactory.Options boundsOptions = new BitmapFactory.Options();
+            boundsOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, boundsOptions);
+            BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
+            decodeOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            decodeOptions.inSampleSize = calculateInSampleSize(boundsOptions, maxLongSide);
+            return BitmapFactory.decodeFile(path, decodeOptions);
+        } catch (OutOfMemoryError error) {
+            return null;
+        }
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int maxLongSide) {
+        int width = options.outWidth;
+        int height = options.outHeight;
+        int inSampleSize = 1;
+        while (width / inSampleSize > maxLongSide || height / inSampleSize > maxLongSide) {
+            inSampleSize *= 2;
+        }
+        return inSampleSize;
     }
 
     public String getLocation() {

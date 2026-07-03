@@ -12,7 +12,6 @@ package com.compdfkit.tools.signature.preview;
 import android.Manifest;
 import android.app.Dialog;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -35,6 +34,7 @@ import com.compdfkit.tools.annotation.pdfproperties.pdfsignature.data.CSignature
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.signature.pdfproperties.pdfsign.CDigitalSignStylePreviewView;
@@ -274,7 +274,7 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
             previewView.setContentAlignLeft(true);
         } else if (v.getId() == R.id.btn_save) {
             CViewUtils.hideKeyboard(getDialog());
-            if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+            if (CPDFStorageManager.shouldRequestLegacyWritePermission()) {
                 multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
                     if (CPermissionUtil.hasStoragePermissions(getContext())) {
                         save();
@@ -302,8 +302,18 @@ public class CDigitalSignStylePreviewDialog extends CBasicBottomSheetDialogFragm
             slMain.setVisibility(View.VISIBLE);
             return;
         }
-        Bitmap bitmap = previewView.getBitmap();
-        String imagePath = CSignatureDatas.saveDigitalSignatureBitmap(getContext(), bitmap);
+        String imagePath = null;
+        Bitmap bitmap = null;
+        try {
+            bitmap = previewView.getBitmap();
+            imagePath = CSignatureDatas.saveDigitalSignatureBitmap(getContext(), bitmap);
+        } catch (OutOfMemoryError error) {
+            imagePath = null;
+        } finally {
+            if (bitmap != null && !bitmap.isRecycled()) {
+                bitmap.recycle();
+            }
+        }
         if (resultDigitalSignListener != null) {
             resultDigitalSignListener.sign(imagePath, previewView.getConfig(), previewView.getLocation(), previewView.getReason());
         }

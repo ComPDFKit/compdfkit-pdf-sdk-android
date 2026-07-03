@@ -44,6 +44,8 @@ public class ToolbarConfig implements Serializable {
 
     public boolean mainToolbarVisible = true;
 
+    public boolean mainToolbarTitleVisible = true;
+
     public boolean annotationToolbarVisible = true;
 
     public boolean contentEditorToolbarVisible = true;

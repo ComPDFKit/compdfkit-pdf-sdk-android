@@ -198,6 +198,7 @@ public class CShapeStyleFragment extends CBasicPropertiesFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 CPDFAnnotation.CPDFBorderEffectType bordEffectType = bordEffectTypeAdapter.list.get(position);
                 viewModel.getStyle().setBordEffectType(bordEffectType);
+                dashedSliderBar.setProgress(0);
                 enableDashSeekBar(bordEffectType == CPDFAnnotation.CPDFBorderEffectType.CPDFBorderEffectTypeSolid);
                 stylePreviewView.setBorderEffectType(bordEffectType);
             }

@@ -221,9 +221,9 @@ public class CPDFToolBarMenuHelper {
   public static View.OnClickListener getDefaultClickListener(CPDFDocumentFragment fragment, ToolBarAction toolBarAction){
     return v -> {
       switch (toolBarAction){
-        case Back:
-          fragment.onBackPressedCallback.handleOnBackPressed();
-          break;
+       case Back:
+          fragment.requireActivity().getOnBackPressedDispatcher().onBackPressed();
+         break;
         case Thumbnail:
           CPDFThumbnailConfig thumbnailConfig = fragment.pdfView.getCPDFConfiguration().globalConfig.thumbnail;
           fragment.showPageEdit(false, thumbnailConfig.editMode);
@@ -293,11 +293,20 @@ public class CPDFToolBarMenuHelper {
       bitmapResId = getDefaultIconRes(customToolbarItem.action);
     }
     String title = customToolbarItem.title;
-    if (TextUtils.isEmpty(title) && customToolbarItem.action != ToolBarAction.Custom){
-      int titleResId = getDefaultTitleRes(customToolbarItem.action);
+    if (customToolbarItem.action == ToolBarAction.Custom) {
+      return ActionConfig.ofCustom(bitmapResId, title, customToolbarItem.identifier, clickListener);
+    }
+    int titleResId = 0;
+    if (TextUtils.isEmpty(title)) {
+      titleResId = getDefaultTitleRes(customToolbarItem.action);
       title = context.getString(titleResId);
     }
-    return ActionConfig.ofCustom(bitmapResId, title, customToolbarItem.identifier, clickListener);
+    return new ActionConfig(customToolbarItem.action,
+            bitmapResId,
+            titleResId,
+            title,
+            customToolbarItem.identifier,
+            clickListener);
   }
 
 }

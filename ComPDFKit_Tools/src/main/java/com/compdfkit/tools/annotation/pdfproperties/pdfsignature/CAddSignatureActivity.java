@@ -149,18 +149,18 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
                 importImageDialogFragment.dismiss();
             });
             importImageDialogFragment.show(getSupportFragmentManager(), "importImage");
-        } else if (v.getId() == R.id.iv_tool_bar_back) {
-            onBackPressed();
-        } else if (v.getId() == R.id.btn_save) {
+       } else if (v.getId() == R.id.iv_tool_bar_back) {
+            getOnBackPressedDispatcher().onBackPressed();
+       } else if (v.getId() == R.id.btn_save) {
             saveBitmap();
         } else if (v.getId() == R.id.btn_clean) {
             cleanSignature();
         } else if (v.getId() == R.id.iv_none){
             Intent intent = new Intent();
-            intent.putExtra(RESULT_NONE, true);
-            setResult(Activity.RESULT_OK, intent);
-            onBackPressed();
-        }
+           intent.putExtra(RESULT_NONE, true);
+           setResult(Activity.RESULT_OK, intent);
+            getOnBackPressedDispatcher().onBackPressed();
+       }
     }
 
     private void initListener() {
@@ -302,14 +302,24 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
             String savePath;
             if (ivAddDrawSignature.isSelected()) {
                 Bitmap resultBitmap = writingView.getBitmap();
-                if (resultBitmap == null){
+                if (resultBitmap == null) {
                     return;
                 }
-                savePath = CSignatureDatas.saveSignatureBitmap(this, resultBitmap);
+                try {
+                    savePath = CSignatureDatas.saveSignatureBitmap(this, resultBitmap);
+                } finally {
+                    resultBitmap.recycle();
+                }
             } else if (ivAddTextSignature.isSelected()) {
                 if (editText.getText() != null && editText.getText().length() > 0) {
                     Bitmap resultBitmap = CImageUtil.convertLongTextToBitmap(editText);
-                    savePath = CSignatureDatas.saveSignatureBitmap(this, resultBitmap);
+                    try {
+                        savePath = CSignatureDatas.saveSignatureBitmap(this, resultBitmap);
+                    } finally {
+                        if (resultBitmap != null) {
+                            resultBitmap.recycle();
+                        }
+                    }
                 } else {
                     savePath = null;
                 }
@@ -326,10 +336,10 @@ public class CAddSignatureActivity extends AppCompatActivity implements View.OnC
                 try {
                     if (!TextUtils.isEmpty(savePath)) {
                         Intent intent = new Intent();
-                        intent.putExtra("file_path", savePath);
-                        setResult(Activity.RESULT_OK, intent);
-                        onBackPressed();
-                    }
+                       intent.putExtra("file_path", savePath);
+                       setResult(Activity.RESULT_OK, intent);
+                        getOnBackPressedDispatcher().onBackPressed();
+                   }
                 }catch (Exception e){
 
                 }

@@ -15,7 +15,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
 
 import androidx.activity.result.contract.ActivityResultContract;
@@ -24,6 +23,7 @@ import androidx.annotation.Nullable;
 
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.utils.date.CDateUtil;
 
 import java.io.File;
@@ -67,12 +67,8 @@ public class CImageResultContracts extends ActivityResultContract<CImageResultCo
     }
 
     public static Uri createCameraOutputUri(@NonNull Context context) {
-        File file;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-            file = new File(Environment.getExternalStorageDirectory(), CFileUtils.CACHE_FOLDER + File.separator +"camera_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ".jpg");
-        }else {
-            file = new File(context.getFilesDir(), CFileUtils.CACHE_FOLDER + File.separator +"camera_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ".jpg");
-        }
+        File file = CPDFStorageManager.createTempFile(context,
+                "camera_" + CDateUtil.getDataTime(CDateUtil.NORMAL_DATE_FORMAT) + ".jpg");
         file.getParentFile().mkdirs();
         Uri uri = CFileUtils.getUriBySystem(context, file);
         CLog.e("ImageAnnot", "camera output uri created, uri=" + uri);

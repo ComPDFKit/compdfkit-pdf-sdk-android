@@ -11,8 +11,6 @@ package com.compdfkit.tools.compress;
 
 import android.Manifest;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
@@ -34,6 +32,8 @@ import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
+import com.compdfkit.tools.common.utils.storage.CPDFPublicFileSaver;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.utils.viewutils.EditTextUtils;
@@ -82,8 +82,7 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
   private List<AppCompatRadioButton> radioButtons = new ArrayList<>();
   protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
 
-  private String savePath = Environment.getExternalStoragePublicDirectory(
-      Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+  private String savePath = CPDFStorageManager.getDefaultDirectoryDialogPath();
 
   private COnCompressDocumentListener compressDocumentListener;
 
@@ -169,7 +168,7 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
     } else if (v.getId() == R.id.btn_cancel) {
       dismiss();
     } else if (v.getId() == R.id.btn_compress) {
-      if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
+      if (CPDFStorageManager.shouldRequestLegacyWritePermission()) {
         multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
           if (CPermissionUtil.hasStoragePermissions(getContext())) {
             startCompress();
@@ -184,30 +183,16 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
       }
 
     } else if (v.getId() == R.id.view_save_path) {
-
-      if (Build.VERSION.SDK_INT < CPermissionUtil.VERSION_R) {
-        multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
-          if (CPermissionUtil.hasStoragePermissions(getContext())) {
-            showSelectDirDialog();
-          } else {
-            if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-              CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
-            }
-          }
-        });
-      }else {
-        showSelectDirDialog();
-      }
-
+      showSelectDirDialog();
     }
   }
 
   private void startCompress(){
     CThreadPoolUtils.getInstance().executeIO(() -> {
-      compressPDF((result, path) -> {
+      compressPDF((result, path, uri) -> {
         CThreadPoolUtils.getInstance().executeMain(() -> {
           if (compressDocumentListener != null) {
-            compressDocumentListener.compress(result, path);
+            compressDocumentListener.compress(result, path, uri);
           }
         });
       });
@@ -215,13 +200,14 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
   }
 
   private void showSelectDirDialog(){
-    String rootDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+    String rootDir = CPDFStorageManager.getDefaultDirectoryDialogPath();
     CFileDirectoryDialog dialog = CFileDirectoryDialog.newInstance(rootDir,
         getContext().getString(R.string.tools_select_folder),
         getContext().getString(R.string.tools_save_to_this_directory));
     dialog.setSelectFolderListener(this::setSavePath);
     dialog.show(getChildFragmentManager(), "fileDirectoryDialog");
   }
+
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     if (isChecked) {
@@ -268,33 +254,28 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
   }
 
   private void compressPDF(COnCompressDocumentListener listener) {
-    String newSavePath = CFileUtils.renameNameSuffix(
-            new File(savePath + File.separator + document.getFileName()))
-        .getAbsolutePath();
-
     if (rbQualityCustom.isChecked()) {
       if (TextUtils.isEmpty(etCustomQuality.getText())) {
         CToastUtil.showLongToast(getContext(), R.string.tools_please_enter_percentage);
-        listener.compress(false, null);
+        listener.compress(false, null, null);
         return;
       }
       int quality = Integer.parseInt(etCustomQuality.getText().toString());
       loadingDialog = CPDFCompressLoadingDialog.newInstance(
           document.getPageCount());
       loadingDialog.show(getParentFragmentManager(), "compressLoadingDialog");
-      try {
-        CLog.e("ComPDFKit", "Compress:quality:" + quality);
-        boolean result = document.saveAsCompressOptimize(newSavePath, quality, pageIndex -> {
-            if (loadingDialog != null) {
-              loadingDialog.setCompressProgress(pageIndex);
-            }
-        });
-        loadingDialog.dismiss();
-        listener.compress(result, newSavePath);
-      } catch (Exception e) {
-        loadingDialog.dismiss();
-        listener.compress(false, null);
-      }
+      String fileName = document.getFileName();
+      CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.savePdfToSelectedDirectory(
+          getContext(), savePath, fileName, false, tempPath -> {
+            CLog.e("ComPDFKit", "Compress:quality:" + quality);
+            return document.saveAsCompressOptimize(tempPath, quality, pageIndex -> {
+              if (loadingDialog != null) {
+                loadingDialog.setCompressProgress(pageIndex);
+              }
+            });
+          });
+      loadingDialog.dismiss();
+      listener.compress(saveResult.isSuccess(), saveResult.getOpenPath(), saveResult.getPublicUri());
     } else {
       CPDFDocument.PDFDocumentCompressLevel level;
       if (rbQualityLow.isChecked()) {
@@ -306,25 +287,23 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
       } else {
         level = CPDFDocument.PDFDocumentCompressLevel.STANDARD;
       }
-      CLog.e("ComPDFKit", "Compress:level:" + level.name());
       loadingDialog = CPDFCompressLoadingDialog.newInstance(
           document.getPageCount());
       loadingDialog.show(getParentFragmentManager(), "compressLoadingDialog");
-      try {
-
-        boolean result = document.saveAsCompressOptimize(newSavePath, level,
-            pageIndex -> {
+      String fileName = document.getFileName();
+      CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.savePdfToSelectedDirectory(
+          getContext(), savePath, fileName, false, tempPath -> {
+            CLog.e("ComPDFKit", "Compress:level:" + level.name());
+            return document.saveAsCompressOptimize(tempPath, level, pageIndex -> {
                 if (loadingDialog != null) {
                   loadingDialog.setCompressProgress(pageIndex);
                 }
             });
-        loadingDialog.dismiss();
-        listener.compress(result, newSavePath);
-      } catch (Exception e) {
-        loadingDialog.dismiss();
-        listener.compress(false, null);
-      }
+          });
+      loadingDialog.dismiss();
+      listener.compress(saveResult.isSuccess(), saveResult.getOpenPath(), saveResult.getPublicUri());
     }
+
   }
 
 
@@ -366,7 +345,7 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
 
   public interface COnCompressDocumentListener {
 
-    void compress(boolean result, String path);
+    void compress(boolean result, String path, Uri uri);
   }
 
   public void setCompressDocumentListener(COnCompressDocumentListener compressDocumentListener) {

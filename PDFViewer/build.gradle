@@ -62,3 +62,4 @@ dependencies {
     // or
     // implementation ('com.compdf:compdfkit-tools:2.6.8')
 }
+configurations.all { resolutionStrategy.cacheChangingModulesFor 0, 'seconds' }

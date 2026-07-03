@@ -3,7 +3,6 @@ package com.compdfkit.tools.common.contextmenu.impl;
 
 import android.content.Context;
 import android.graphics.RectF;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -19,13 +18,16 @@ import com.compdfkit.tools.common.contextmenu.provider.ContextMenuMultipleLineVi
 import com.compdfkit.tools.common.contextmenu.provider.ContextMenuView;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.CLog;
+import com.compdfkit.tools.common.utils.CPermissionUtil;
+import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts;
 import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
 import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.dialog.CImportImageDialogFragment;
-import com.compdfkit.tools.common.utils.image.CImageUtil;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -104,10 +106,36 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
                     menuView.addItem(contextMenuActionItem, R.string.tools_context_menu_image_extract, v -> {
                         try {
                             Context context = pageView.getContext();
-                            String sdPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-                            File file = new File(sdPath, "ComPDFKit" + File.separator + System.currentTimeMillis() + ".png");
+                            if (CPDFStorageManager.shouldRequestLegacyWritePermission()
+                                    && !CPermissionUtil.hasStoragePermissions(context)) {
+                                FragmentManager fragmentManager = helper.getFragmentManager();
+                                if (fragmentManager != null) {
+                                    CPermissionUtil.showPermissionsRequiredDialog(fragmentManager, context);
+                                } else {
+                                    CToastUtil.showLongToast(pageView.getContext(), R.string.tools_page_edit_extract_fail);
+                                }
+                                return;
+                            }
+                            File file = CPDFStorageManager.createTempFile(context, System.currentTimeMillis() + ".png");
+                            CLog.d("CPDFStorage", "CEditImageContextMenuView extract image before path=" + file.getAbsolutePath());
                             pageView.operateEditImageArea(CPDFPageView.EditImageFuncType.EXTRACT_IMAGE, file.getAbsolutePath());
-                            CImageUtil.scanFile(context, file.getAbsolutePath(),"image/png");
+                            CLog.d("CPDFStorage", "CEditImageContextMenuView extract image after path=" + file.getAbsolutePath()
+                                    + ", exists=" + file.exists()
+                                    + ", size=" + (file.exists() ? file.length() : -1));
+                            CUriUtil.MediaStoreSaveResult result = CUriUtil.publishFileToMediaStore(context,
+                                    file,
+                                    CPDFStorageManager.getImageRelativePath(),
+                                    file.getName(),
+                                    "image/png",
+                                    true);
+                            if (!result.isSuccess()) {
+                                CLog.e("CPDFStorage", "CEditImageContextMenuView export image failed path=" + file.getAbsolutePath()
+                                        + ", exists=" + file.exists()
+                                        + ", size=" + (file.exists() ? file.length() : -1)
+                                        + ", error=" + result.getErrorMessage());
+                                CToastUtil.showLongToast(pageView.getContext(), R.string.tools_page_edit_extract_fail);
+                                return;
+                            }
                             helper.dismissContextMenu();
                             Toast.makeText(pageView.getContext(), R.string.tools_export_success, Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
@@ -136,15 +164,15 @@ public class CEditImageContextMenuView implements ContextMenuEditImageProvider {
                         switch (opacityItem) {
                             case "25%":
                                 titleRes = R.string.tools_context_menu_transparacy_25;
-                                opacityValue = 63.75F;
+                                opacityValue = 64F;
                                 break;
                             case "50%":
                                 titleRes = R.string.tools_context_menu_transparacy_50;
-                                opacityValue = 127.5F;
+                                opacityValue = 128F;
                                 break;
                             case "75%":
                                 titleRes = R.string.tools_context_menu_transparacy_75;
-                                opacityValue = 191.25F;
+                                opacityValue = 192F;
                                 break;
                             case "100%":
                                 titleRes = R.string.tools_context_menu_transparacy_100;

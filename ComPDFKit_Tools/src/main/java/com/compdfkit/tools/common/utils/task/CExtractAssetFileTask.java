@@ -2,8 +2,6 @@
 package com.compdfkit.tools.common.utils.task;
 
 import android.content.Context;
-import android.os.Build;
-import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,12 +45,7 @@ public class CExtractAssetFileTask {
             boolean overwriteExisting,
             @Nullable OnDocumentExtractedListener listener) {
         CThreadPoolUtils.getInstance().executeIO(() -> {
-            File pdfFile;
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-                 pdfFile = new File(Environment.getExternalStorageDirectory(),CFileUtils.CACHE_FOLDER + File.separator+ fileName);
-            }else {
-                 pdfFile = new File(context.getFilesDir().getAbsoluteFile(), fileName);
-            }
+            File pdfFile = new File(context.getFilesDir().getAbsoluteFile(), fileName);
             if (!pdfFile.exists()) {
                 CFileUtils.copyFileFromAssets(context, assetPath, pdfFile.getParent(), fileName, overwriteExisting);
             }

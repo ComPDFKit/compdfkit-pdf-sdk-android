@@ -106,13 +106,13 @@ public class CPDFReplyDetailsDialogFragment extends CBasicBottomSheetDialogFragm
         toolBar.setBackBtnClickListener(v -> dismiss());
         tvDeleteAnnotation.setOnClickListener(v -> {
             if (cpdfAnnotation != null) {
-                boolean result = cpdfAnnotation.removeFromPage();
-                if (result) {
+//                boolean result = cpdfAnnotation.removeFromPage();
+//                if (result) {
                     if (updateAnnotationListListener != null) {
                         updateAnnotationListListener.delete();
                     }
                     dismiss();
-                }
+//                }
             }else {
                 dismiss();
             }

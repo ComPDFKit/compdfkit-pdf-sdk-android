@@ -65,6 +65,8 @@ public class AnnotationsConfig implements Serializable {
 
     public boolean autoShowLinkDialog = true;
 
+    public boolean autoShowNoteEditDialog = true;
+
     public boolean autoShowPicPicker = true;
 
     public boolean interceptNoteAction = false;
@@ -80,6 +82,7 @@ public class AnnotationsConfig implements Serializable {
             ", autoShowSignPicker: " + autoShowSignPicker +
             ", autoShowStampPicker: " + autoShowStampPicker +
             ", autoShowLinkDialog: " + autoShowLinkDialog +
+            ", autoShowNoteEditDialog: " + autoShowNoteEditDialog +
             ", autoShowPicPicker: " + autoShowPicPicker +
             " ]";
     }

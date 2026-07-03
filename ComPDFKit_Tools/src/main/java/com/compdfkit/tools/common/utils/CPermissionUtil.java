@@ -17,7 +17,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.Settings;
 
 import androidx.core.app.ActivityCompat;
@@ -35,8 +34,6 @@ public class CPermissionUtil {
 
     public static final int VERSION_TIRAMISU = 33;
     public static final int VERSION_S_V2 = 32;
-    public static final int VERSION_R = 30;
-
     public final static String[] STORAGE_PERMISSIONS = new String[]{
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -46,27 +43,8 @@ public class CPermissionUtil {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
-        if (Build.VERSION.SDK_INT >= VERSION_TIRAMISU) {
-            if (CPermissionUtil.checkManifestPermission(context, Manifest.permission.MANAGE_EXTERNAL_STORAGE)){
-                return Environment.isExternalStorageManager();
-            }else {
-                return true;
-            }
-        }
-        if (Build.VERSION.SDK_INT >= VERSION_R) {
-            boolean hasPermission = true;
-            for (String perm : STORAGE_PERMISSIONS) {
-                if (ContextCompat.checkSelfPermission(context, perm)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    hasPermission = false;
-                    break;
-                }
-            }
-            if (CPermissionUtil.checkManifestPermission(context, Manifest.permission.MANAGE_EXTERNAL_STORAGE)){
-                return Environment.isExternalStorageManager() && hasPermission;
-            }else {
-                return hasPermission;
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return true;
         }
         for (String perm : STORAGE_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(context, perm)
@@ -75,16 +53,6 @@ public class CPermissionUtil {
             }
         }
         return true;
-    }
-
-    public static void openManageAllFileAppSettings(Context context){
-        try{
-            Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:"+context.getPackageName()));
-            context.startActivity(intent);
-        }catch (Exception e){
-            Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-            context.startActivity(intent);
-        }
     }
 
     public static void toSelfSetting(Context context) {

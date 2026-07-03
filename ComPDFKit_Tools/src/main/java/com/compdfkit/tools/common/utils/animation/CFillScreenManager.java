@@ -350,10 +350,10 @@ public class CFillScreenManager {
                 hideFromBottom(view, CONFIG_SHORT_ANIM_TIME);
             }
             for (View view : leftToolViewList) {
-                hideFromLeft(view, CONFIG_SHORT_ANIM_TIME);
+                hideImmediately(view, ToolViewDirection.LEFT);
             }
             for (View view : rightToolViewList) {
-                hideFromRight(view, CONFIG_SHORT_ANIM_TIME);
+                hideImmediately(view, ToolViewDirection.RIGHT);
             }
         } else {
             for (View view : topToolViewList) {
@@ -368,6 +368,30 @@ public class CFillScreenManager {
             for (View view : rightToolViewList) {
                 showFromRight(view, CONFIG_SHORT_ANIM_TIME);
             }
+        }
+    }
+
+    private void hideImmediately(View view, ToolViewDirection defaultDirection) {
+        ToolViewDirection direction = resolveDirection(view, defaultDirection);
+        view.animate().cancel();
+        view.setAlpha(0F);
+        switch (direction) {
+            case LEFT:
+                view.setTranslationX(-1.0f * view.getWidth());
+                view.setVisibility(View.GONE);
+                break;
+            case RIGHT:
+                view.setTranslationX((float) view.getWidth());
+                view.setVisibility(View.INVISIBLE);
+                break;
+            case TOP:
+                view.setTranslationY(-1.0f * view.getHeight());
+                view.setVisibility(View.GONE);
+                break;
+            case BOTTOM:
+                view.setTranslationY((float) view.getHeight());
+                view.setVisibility(View.GONE);
+                break;
         }
     }
 

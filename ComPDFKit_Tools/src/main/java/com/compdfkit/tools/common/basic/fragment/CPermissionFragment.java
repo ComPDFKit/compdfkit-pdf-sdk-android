@@ -23,15 +23,15 @@ public class CPermissionFragment extends Fragment {
 
     protected final static String[] STORAGE_PERMISSIONS = CPermissionUtil.STORAGE_PERMISSIONS;
 
-    protected CPermissionResultLauncher permissionResultLauncher = new CPermissionResultLauncher(this);
+    public CPermissionResultLauncher permissionResultLauncher = new CPermissionResultLauncher(this);
 
-    protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
+    public CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
 
     public boolean hasPermission(String permission){
         return ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED;
     }
 
-    protected void showPermissionsRequiredDialog(){
+    public void showPermissionsRequiredDialog(){
         CPermissionUtil.showPermissionsRequiredDialog(getParentFragmentManager(), getContext());
     }
 

@@ -1,5 +1,6 @@
 package com.compdfkit.pdfviewer.home;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -76,8 +77,10 @@ public class FunSamplesActivity extends AppCompatActivity implements View.OnClic
 //        editDialog.setSavePath(saveFile.getAbsolutePath());
 //        editDialog.setDefaultText("ComPDFKit");
 //                editDialog.setDefaultImagePath("xxx.png");
-        editDialog.setCompleteListener((success, saveAsNewFile, pdfFile) -> {
-            if (!TextUtils.isEmpty(pdfFile)){
+        editDialog.setCompleteListener((success, saveAsNewFile, pdfFile, pdfUri) -> {
+            if (pdfUri != null){
+                openPDF(pdfUri);
+            } else if (!TextUtils.isEmpty(pdfFile)){
                 openPDF(pdfFile);
             }
             editDialog.dismiss();
@@ -115,17 +118,27 @@ public class FunSamplesActivity extends AppCompatActivity implements View.OnClic
     private void showEncryptionDialog(CPDFDocument document){
         CDocumentEncryptionDialog encryptionDialog = CDocumentEncryptionDialog.newInstance();
         encryptionDialog.setDocument(document);
-        encryptionDialog.setEncryptionResultListener((isRemoveSecurity, result, filePath, password) -> openPDF(filePath));
+        encryptionDialog.setEncryptionResultListener((isRemoveSecurity, result, filePath, uri, password) -> {
+            if (uri != null) {
+                openPDF(uri);
+            } else {
+                openPDF(filePath);
+            }
+        });
         encryptionDialog.show(getSupportFragmentManager(), "showEncryptionDialog");
     }
 
     private void compressDialog(){
         CPDFCompressDialog compressDialog = new CPDFCompressDialog();
         compressDialog.setDocument(document);
-        compressDialog.setCompressDocumentListener((result, path) -> {
+        compressDialog.setCompressDocumentListener((result, path, uri) -> {
             compressDialog.dismiss();
-            if (result && !TextUtils.isEmpty(path)){
-                openPDF(path);
+            if (result){
+                if (uri != null) {
+                    openPDF(uri);
+                } else {
+                    openPDF(path);
+                }
                 CToastUtil.showLongToast(this, com.compdfkit.tools.R.string.tools_compressed_successfully);
             }
         });
@@ -134,6 +147,11 @@ public class FunSamplesActivity extends AppCompatActivity implements View.OnClic
 
     private void openPDF(String path){
         CPDFDocumentActivity.startActivity(this, path, "",
+                CPDFConfigurationUtils.normalConfig(this, "tools_default_configuration.json"));
+    }
+
+    private void openPDF(Uri uri){
+        CPDFDocumentActivity.startActivity(this, uri, "",
                 CPDFConfigurationUtils.normalConfig(this, "tools_default_configuration.json"));
     }
 }

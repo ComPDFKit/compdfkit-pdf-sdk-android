@@ -9,56 +9,45 @@
 
 package com.compdfkit.tools.common.views.pdfview;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.form.CPDFWidget;
-import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.edit.CPDFEditManager;
-import com.compdfkit.core.edit.CPDFEditPage;
 import com.compdfkit.core.edit.OnEditStatusChangeListener;
 import com.compdfkit.core.edit.OnSelectEditAreaChangeListener;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
-import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
-import com.compdfkit.tools.common.utils.CToastUtil;
-import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
-import com.compdfkit.tools.common.utils.dialog.CGotoPageDialog;
-import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
-import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
-import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
+import com.compdfkit.tools.common.views.pdfview.helper.CPDFDocumentHelper;
+import com.compdfkit.tools.common.views.pdfview.helper.CPDFErrorTipHelper;
+import com.compdfkit.tools.common.views.pdfview.helper.CPDFIndicatorHelper;
+import com.compdfkit.tools.common.views.pdfview.helper.CPDFSlideBarHelper;
+import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
+import com.compdfkit.ui.reader.CPDFSelectAnnotCallback;
 import com.compdfkit.ui.reader.IDocumentStatusCallback;
 import com.compdfkit.ui.reader.IReaderViewCallback;
 import com.compdfkit.ui.reader.OnFocusedTypeChangedListener;
+import com.compdfkit.ui.reader.OnViewModeChangedListener;
+import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
 import com.compdfkit.ui.widget.CPDFPageNavigator;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 /**
@@ -72,7 +61,7 @@ import java.util.UUID;
  * ︳　　　　　　　　　　 　　     　　　 ︳<br/>
  * ︳　　　　　　　　　　 　　     　　　 ︳<br/>
  * ︳　　　　　　　　　　 　　     　　　 ︳<br/>
- * ︳　　 　CPDFViewCtrl 　　      　　︳<br/>
+ * ︳ 　CPDFViewCtrl 　　      　　︳<br/>
  * ︳　　　　　　　　　　 　　     　　　 ︳<br/>
  * ︳　　　　　　　　　　 　　     　　　 ︳<br/>
  * ︳　　　　　　　　　　 　　     　　　 ︳<br/>
@@ -110,7 +99,9 @@ import java.util.UUID;
  * app:tools_enable_page_indicator="true|false"
  */
 public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallback,
-    OnFocusedTypeChangedListener {
+    OnFocusedTypeChangedListener, CPDFDocumentHelper.CPDFViewCtrlDelegate {
+
+  private static final String TAG = "CPDFViewCtrl";
 
   private CPDFReaderView cPdfReaderView;
 
@@ -118,20 +109,13 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   private final CPDFSlideBarController slideBarController = new CPDFSlideBarController(this);
 
+  /**
+   * Current page index. Public for Flutter/RN SDK access; external code
+   * should treat this as read-only.
+   */
   public int currentPageIndex = 0;
 
-  private boolean enableSliderBar = true;
-
-  private CPDFPageNavigator.NavigatorPosition slideBarPosition = CPDFPageNavigator.NavigatorPosition.RIGHT;
-
   private boolean hasExplicitSlideBarPositionAttr = false;
-
-  @DrawableRes
-  private int sliderBarIconResId = R.drawable.tools_ic_pdf_slider_bar;
-
-  private boolean enablePageIndicator = true;
-
-  private int pageIndicatorMarginBottom = 0;
 
   private List<CPDFIReaderViewCallback> readerViewCallbacks = new ArrayList<>();
 
@@ -139,32 +123,20 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   private List<OnSelectEditAreaChangeListener> selectEditAreaChangeListeners = new ArrayList<>();
 
-  private boolean isScrolling = false;
-
-  private Handler handler = new Handler(Looper.getMainLooper());
-
-  private ObjectAnimator pageIndicatorAnimator = null;
-
   private List<OnFocusedTypeChangedListener> pdfViewFocusedListenerList = new ArrayList<>();
+
+  private List<CPDFSelectAnnotCallback> pdfSelectAnnotCallbackList = new ArrayList<>();
+
+  private List<OnViewModeChangedListener> pdfViewModeChangedListenerList = new ArrayList<>();
+
+  private CPDFSelectAnnotCallback dispatchSelectAnnotCallback;
 
   private CPDFConfiguration cpdfConfiguration;
 
-  private COnSaveCallback saveGlobalCallback;
-
-  private COnSaveError saveGlobalErrorCallback;
-
-  private boolean isHiding = false;
-
-  private boolean isInitOpenPDF = true;
-
-  private int initPageIndex = 0;
-
-  private Runnable hideIndicatorRunnable = () -> {
-    if (pageIndicatorAnimator != null) {
-      isScrolling = false;
-      pageIndicatorAnimator.reverse();
-    }
-  };
+  // === Helpers ===
+  private CPDFDocumentHelper documentHelper;
+  private CPDFSlideBarHelper slideBarHelper;
+  private CPDFIndicatorHelper indicatorHelper;
 
   public CPDFViewCtrl(@NonNull Context context) {
     this(context, null);
@@ -178,24 +150,25 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     super(context, attrs, defStyleAttr);
     initAttr(context, attrs);
     initCPDFReaderView();
+    initHelpers();
   }
 
   private void initAttr(Context context, AttributeSet attributeSet) {
     try {
       TypedArray typedArray = context.obtainStyledAttributes(attributeSet,
           R.styleable.CPDFViewCtrl);
-      enableSliderBar = typedArray.getBoolean(R.styleable.CPDFViewCtrl_tools_enable_slider_bar,
+      boolean enableSliderBar = typedArray.getBoolean(R.styleable.CPDFViewCtrl_tools_enable_slider_bar,
           true);
-        hasExplicitSlideBarPositionAttr = typedArray.hasValue(
+      hasExplicitSlideBarPositionAttr = typedArray.hasValue(
           R.styleable.CPDFViewCtrl_tools_slider_bar_position);
-        slideBarPosition = parseSlideBarPosition(
+      CPDFPageNavigator.NavigatorPosition slideBarPosition = parseSlideBarPosition(
           typedArray.getInt(R.styleable.CPDFViewCtrl_tools_slider_bar_position, 2));
       slideBarController.setPosition(slideBarPosition);
-      sliderBarIconResId = typedArray.getResourceId(
+      int sliderBarIconResId = typedArray.getResourceId(
           R.styleable.CPDFViewCtrl_tools_slider_bar_icon, R.drawable.tools_ic_pdf_slider_bar);
-      enablePageIndicator = typedArray.getBoolean(
+      boolean enablePageIndicator = typedArray.getBoolean(
           R.styleable.CPDFViewCtrl_tools_enable_page_indicator, true);
-      pageIndicatorMarginBottom = typedArray.getDimensionPixelOffset(
+      int pageIndicatorMarginBottom = typedArray.getDimensionPixelOffset(
           R.styleable.CPDFViewCtrl_tools_page_indicator_margin_bottom, 0);
       if (enablePageIndicator) {
         indicatorView = new CPDFPageIndicatorView(getContext());
@@ -203,12 +176,25 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       CViewUtils.applyViewBackground(this,
           ContextCompat.getColor(getContext(), R.color.tools_pdf_view_ctrl_background_color));
       typedArray.recycle();
-    } catch (Exception ignored) {
-
+      // Store parsed values for helpers
+      pendingEnableSliderBar = enableSliderBar;
+      pendingSlideBarPosition = slideBarPosition;
+      pendingSliderBarIconResId = sliderBarIconResId;
+      pendingEnablePageIndicator = enablePageIndicator;
+      pendingPageIndicatorMarginBottom = pageIndicatorMarginBottom;
+    } catch (Exception e) {
+      CLog.e(TAG, "initAttr failed: " + e.getMessage());
     }
   }
 
-  private CPDFPageNavigator.NavigatorPosition parseSlideBarPosition(int value) {
+  // Temp fields for attr values until helpers are initialized
+  private boolean pendingEnableSliderBar = true;
+  private CPDFPageNavigator.NavigatorPosition pendingSlideBarPosition = CPDFPageNavigator.NavigatorPosition.RIGHT;
+  private int pendingSliderBarIconResId = R.drawable.tools_ic_pdf_slider_bar;
+  private boolean pendingEnablePageIndicator = true;
+ private int pendingPageIndicatorMarginBottom = 0;
+
+ private CPDFPageNavigator.NavigatorPosition parseSlideBarPosition(int value) {
     switch (value) {
       case 0:
         return CPDFPageNavigator.NavigatorPosition.LEFT;
@@ -240,12 +226,33 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
   }
 
-
   private void initCPDFReaderView() {
     cPdfReaderView = new CPDFReaderView(getContext());
     cPdfReaderView.setDoublePageMode(false);
     cPdfReaderView.setReaderViewCallback(this);
     cPdfReaderView.setOnFocusedTypeChangedListener(this);
+    dispatchSelectAnnotCallback = new CPDFSelectAnnotCallback() {
+      @Override
+      public void onAnnotationSelected(CPDFPageView pageView,
+                                       CPDFBaseAnnotImpl<CPDFAnnotation> annotImpl) {
+        for (CPDFSelectAnnotCallback callback : pdfSelectAnnotCallbackList) {
+          callback.onAnnotationSelected(pageView, annotImpl);
+        }
+      }
+
+      @Override
+      public void onAnnotationDeselected(CPDFPageView pageView,
+                                         CPDFBaseAnnotImpl<CPDFAnnotation> annotImpl) {
+        for (CPDFSelectAnnotCallback callback : pdfSelectAnnotCallbackList) {
+          callback.onAnnotationDeselected(pageView, annotImpl);
+        }
+      }
+    };
+    cPdfReaderView.setOnViewModeChangedListener(viewMode -> {
+      for (OnViewModeChangedListener listener : pdfViewModeChangedListenerList) {
+        listener.onViewModeChange(viewMode);
+      }
+    });
     addView(cPdfReaderView);
 
     CPDFEditManager editManager = cPdfReaderView.getEditManager();
@@ -282,67 +289,82 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     cPdfReaderView.setDocumentStatusCallback(new IDocumentStatusCallback() {
       @Override
       public void onLoading() {
-
       }
 
       @Override
       public void onLoadFailed() {
-
+        CLog.e(TAG, "onLoadFailed: PDF document failed to load");
       }
 
       @Override
       public void onLoadComplete() {
-        if (isInitOpenPDF){
-          currentPageIndex = initPageIndex;
-          syncSlideBar();
-          cPdfReaderView.post(()-> {
-            if (cPdfReaderView.getPageNum() != initPageIndex){
-              cPdfReaderView.setDisplayPageIndex(initPageIndex);
+        if (documentHelper != null && documentHelper.isInitOpenPDF()) {
+          currentPageIndex = documentHelper.getInitPageIndex();
+          slideBarHelper.syncSlideBar(currentPageIndex);
+          cPdfReaderView.post(() -> {
+            if (cPdfReaderView.getPageNum() != documentHelper.getInitPageIndex()) {
+              cPdfReaderView.setDisplayPageIndex(documentHelper.getInitPageIndex());
             }
             cPdfReaderView.post(slideBarController::syncReaderViewState);
           });
         }
       }
     });
-
   }
 
-  private void setErrorCallback() {
-    if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null){
-      if(!cpdfConfiguration.globalConfig.enableErrorTips){
-        return;
-      }
-    }
-    cPdfReaderView.setPdfErrorMessageCallback(errorId -> {
-      switch (errorId) {
-        case NO_TEXT_ON_PAGE:
-          CAlertDialog alertDialog = CAlertDialog.newInstance(
-              getContext().getString(R.string.tools_warning),
-              getContext().getString(R.string.tools_scan_pdf_annot_warning)
-          );
-          alertDialog.setConfirmClickListener(v -> alertDialog.dismiss());
-          FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
-          if (fragmentActivity != null) {
-            alertDialog.show(fragmentActivity.getSupportFragmentManager(), "alertDialog");
-          }
-          break;
-        case CANNOT_EDIT:
-          CToastUtil.showToast(getContext(), R.string.tools_can_not_edit);
-          break;
-        case NO_EMAIL_APP:
-          CToastUtil.showToast(getContext(), R.string.tools_reader_view_error_no_email);
-          break;
-        case NO_BROWSE_APP:
-          CToastUtil.showToast(getContext(), R.string.tools_reader_view_error_no_browser);
-          break;
-        case INVALID_LINK:
-          CToastUtil.showToast(getContext(), R.string.tools_reader_view_error_invalid_link);
-          break;
-        default:
-          break;
-      }
-    });
+  private void initHelpers() {
+    slideBarHelper = new CPDFSlideBarHelper(cPdfReaderView, slideBarController);
+    slideBarHelper.setEnableSliderBar(pendingEnableSliderBar);
+    slideBarHelper.setSlideBarPosition(pendingSlideBarPosition);
+    slideBarHelper.setSliderBarIconResId(pendingSliderBarIconResId);
+
+    indicatorHelper = new CPDFIndicatorHelper(cPdfReaderView, indicatorView,
+            pendingPageIndicatorMarginBottom, this);
+
+    documentHelper = new CPDFDocumentHelper(cPdfReaderView, this);
   }
+
+  // ========================================================================
+  // Delegate implementation (callbacks from CPDFDocumentHelper)
+  // ========================================================================
+
+  @Override
+  public void updateScaleForLayout() {
+    getCPdfReaderView().setScale(1f);
+  }
+
+  @Override
+  public void addPageIndicator() {
+    indicatorHelper.addPageIndicator();
+  }
+
+  @Override
+  public void applyErrorCallback() {
+    CPDFErrorTipHelper.applyErrorCallback(cPdfReaderView, cpdfConfiguration, getContext());
+  }
+
+  @Override
+  public void exitEditMode() {
+    documentHelper.exitEditMode();
+  }
+
+  @Override
+  public void detachSlideBar() {
+    slideBarHelper.detachSlideBar();
+  }
+
+  @Override
+  public void clearListeners() {
+    editStatusChangeListeners.clear();
+    selectEditAreaChangeListeners.clear();
+    pdfViewFocusedListenerList.clear();
+    pdfSelectAnnotCallbackList.clear();
+    pdfViewModeChangedListenerList.clear();
+  }
+
+  // ========================================================================
+  // View mode and vertical mode
+  // ========================================================================
 
   public void setViewMode(CPDFReaderView.ViewMode viewMode) {
     cPdfReaderView.setViewMode(viewMode);
@@ -350,253 +372,114 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   public void setVerticalMode(boolean verticalMode) {
     cPdfReaderView.setVerticalMode(verticalMode);
-    syncSlideBarPositionWithVerticalMode(verticalMode);
+    slideBarHelper.syncSlideBarPositionWithVerticalMode(verticalMode);
   }
 
-  private void syncSlideBarPositionWithVerticalMode(boolean verticalMode) {
-    CPDFPageNavigator.NavigatorPosition targetPosition = verticalMode
-        ? CPDFPageNavigator.NavigatorPosition.RIGHT
-        : CPDFPageNavigator.NavigatorPosition.BOTTOM;
-    if (slideBarPosition == targetPosition) {
-      return;
-    }
-    slideBarPosition = targetPosition;
-    slideBarController.setPosition(slideBarPosition);
-    if (cPdfReaderView != null && cPdfReaderView.getPDFDocument() != null) {
-      syncSlideBar();
-    }
+  // ========================================================================
+  // openPDF — delegates to CPDFDocumentHelper
+  // ========================================================================
+
+  /**
+   * @deprecated Use {@link #openPDF(String, String, int, COnOpenPdfFinishCallback)} for the full API.
+   */
+  @Deprecated
+  public void openPDF(String pdfFilePath) {
+    documentHelper.openPDF(pdfFilePath);
   }
 
   /**
-   * This method opens a PDF file located at the given file path.
-   *
-   * @param pdfFilePath The file path of the PDF file to be opened.
+   * @deprecated Use {@link #openPDF(String, String, int, COnOpenPdfFinishCallback)} for the full API.
    */
-  public void openPDF(String pdfFilePath) {
-    openPDF(pdfFilePath, null);
-  }
-
+  @Deprecated
   public void openPDF(String pdfFilePath, String password) {
-    openPDF(pdfFilePath, password, 0,  null);
+    documentHelper.openPDF(pdfFilePath, password);
   }
 
+  /**
+  * @deprecated Use {@link #openPDF(String, String, int, COnOpenPdfFinishCallback)} for the full API.
+  */
+  @Deprecated
   public void openPDF(String pdfFilePath, String password, int pageIndex) {
-    openPDF(pdfFilePath, password, pageIndex, null);
+    documentHelper.openPDF(pdfFilePath, password, pageIndex, null);
   }
 
-  public void openPDF(String pdfFilePath, String password, COnOpenPdfFinishCallback openPdfFinishCallback){
-      openPDF(pdfFilePath, password, 0, openPdfFinishCallback);
+  /**
+   * @deprecated Use {@link #openPDF(String, String, int, COnOpenPdfFinishCallback)} for the full API.
+   */
+  @Deprecated
+  public void openPDF(String pdfFilePath, String password, COnOpenPdfFinishCallback openPdfFinishCallback) {
+    documentHelper.openPDF(pdfFilePath, password, openPdfFinishCallback);
   }
-
 
   public void openPDF(String pdfFilePath, String password, int pageIndex,
       COnOpenPdfFinishCallback openPdfFinishCallback) {
-    CThreadPoolUtils.getInstance().executeIO(() -> {
-      // Create a new instance of the CPDFDocument class, passing in the current context.
-      CPDFDocument cpdfDocument = new CPDFDocument(getContext());
-      // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
-
-      CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfFilePath, password);
-      CThreadPoolUtils.getInstance().executeMain(() -> setPDFDocument(cpdfDocument, pdfFilePath, pageIndex, pdfDocumentError, openPdfFinishCallback));
-    });
+    documentHelper.openPDF(pdfFilePath, password, pageIndex, openPdfFinishCallback);
   }
 
+  /**
+   * @deprecated Use {@link #openPDF(Uri, String, int, COnOpenPdfFinishCallback)} for the full API.
+   */
+  @Deprecated
   public void openPDF(Uri pdfUri) {
-    openPDF(pdfUri, null);
+    documentHelper.openPDF(pdfUri);
   }
 
+  /**
+   * @deprecated Use {@link #openPDF(Uri, String, int, COnOpenPdfFinishCallback)} for the full API.
+   */
+  @Deprecated
   public void openPDF(Uri pdfUri, String password) {
-    openPDF(pdfUri, password,0, null);
+    documentHelper.openPDF(pdfUri, password);
   }
 
+  /**
+  * @deprecated Use {@link #openPDF(Uri, String, int, COnOpenPdfFinishCallback)} for the full API.
+  */
+  @Deprecated
   public void openPDF(Uri pdfUri, String password, int pageIndex) {
-    openPDF(pdfUri, password, pageIndex, null);
+    documentHelper.openPDF(pdfUri, password, pageIndex, null);
   }
 
+  /**
+   * @deprecated Use {@link #openPDF(Uri, String, int, COnOpenPdfFinishCallback)} for the full API.
+   */
+  @Deprecated
   public void openPDF(Uri pdfUri, String password, COnOpenPdfFinishCallback openPdfFinishCallback) {
-      openPDF(pdfUri, password, 0, openPdfFinishCallback);
+    documentHelper.openPDF(pdfUri, password, openPdfFinishCallback);
   }
 
   public void openPDF(Uri pdfUri, String password, int pageIndex, COnOpenPdfFinishCallback openPdfFinishCallback) {
-    CThreadPoolUtils.getInstance().executeIO(() -> {
-      // Create a new instance of the CPDFDocument class, passing in the current context.
-      CPDFDocument cpdfDocument = new CPDFDocument(getContext());
-      // Attempt to open the PDF file at the given file path using the open method of the CPDFDocument class.
-      CPDFDocument.PDFDocumentError pdfDocumentError = cpdfDocument.open(pdfUri, password);
-      CThreadPoolUtils.getInstance().executeMain(() -> setPDFDocument(cpdfDocument, pdfUri, pageIndex, pdfDocumentError, openPdfFinishCallback));
-    });
+    documentHelper.openPDF(pdfUri, password, pageIndex, openPdfFinishCallback);
   }
+
+  // ========================================================================
+  // setPDFDocument
+  // ========================================================================
 
   public void setPDFDocument(CPDFDocument cpdfDocument, Object pdf, int pageIndex,
       CPDFDocument.PDFDocumentError error, COnOpenPdfFinishCallback openPdfFinishCallback) {
-    isInitOpenPDF = true;
-    initPageIndex = pageIndex;
-    CLog.e("ComPDFKit", "CPDFViewCtrl-openPDF:" + error.name());
-    // Switch on the result of the open method to handle the different possible outcomes.
-    switch (error) {
-      // If the PDF file was successfully opened, set the PDF document of the CPdfReaderView instance to the opened document.
-      case PDFDocumentErrorSuccess:
-        CLog.e("ComPDFKit", "canWrite:" + cpdfDocument.isCanWrite() + ", hasRepaired:"
-            + cpdfDocument.hasRepaired());
-        cPdfReaderView.setPDFDocument(cpdfDocument);
-        updateScaleForLayout();
-        addPageIndicator();
-        if (cPdfReaderView.getEditManager() != null) {
-          cPdfReaderView.getEditManager().disable();
-        }
-        if (openPdfFinishCallback != null) {
-          openPdfFinishCallback.onOpenPdfFinishCallback();
-        }
-        if (!cpdfDocument.isCanWrite() && cpdfDocument.hasRepaired()) {
-          showWritePermissionsDialog(cpdfDocument);
-        }
-        setErrorCallback();
-        break;
-      // If the PDF file requires a password to be opened, do nothing for now.
-      case PDFDocumentErrorPassword:
-        FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
-        CVerifyPasswordDialogFragment verifyPasswordDialogFragment;
-        if (pdf instanceof String) {
-          verifyPasswordDialogFragment = CVerifyPasswordDialogFragment.newInstance(cpdfDocument,
-              (String) pdf);
-        } else {
-          verifyPasswordDialogFragment = CVerifyPasswordDialogFragment.newInstance(cpdfDocument,
-              (Uri) pdf);
-        }
-        verifyPasswordDialogFragment.setDismissListener(() -> {
-          if (getCPdfReaderView().getPDFDocument() == null) {
-            if (fragmentActivity != null) {
-              fragmentActivity.onBackPressed();
-            }
-          }
-        });
-        verifyPasswordDialogFragment.setVerifyCompleteListener(document -> {
-          cPdfReaderView.setPDFDocument(document);
-          updateScaleForLayout();
-          addPageIndicator();
-          if (cPdfReaderView.getEditManager() != null) {
-            cPdfReaderView.getEditManager().disable();
-          }
-          if (openPdfFinishCallback != null) {
-            openPdfFinishCallback.onOpenPdfFinishCallback();
-          }
-        });
-        if (fragmentActivity != null) {
-          verifyPasswordDialogFragment.show(fragmentActivity.getSupportFragmentManager(),
-              "verifyPwdDialog");
-        }
-        break;
-      // For all other errors, do nothing for now.
-      default:
-        break;
-    }
+    documentHelper.setPDFDocument(cpdfDocument, pdf, pageIndex, error, openPdfFinishCallback);
   }
 
   public void showWritePermissionsDialog(CPDFDocument document) {
-    FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
-    if (fragmentActivity == null) {
-      return;
-    }
-    Fragment rwPermissionDialog = fragmentActivity.getSupportFragmentManager()
-        .findFragmentByTag("rwPermissionDialog");
-    if (rwPermissionDialog != null && rwPermissionDialog instanceof DialogFragment) {
-      ((DialogFragment) rwPermissionDialog).dismiss();
-    }
-    CAlertDialog alertDialog = CAlertDialog.newInstance(
-        getContext().getString(R.string.tools_warning),
-        getContext().getString(R.string.tools_repair_pdf_file_mes)
-    );
-    alertDialog.setCancelClickListener(v -> alertDialog.dismiss());
-    alertDialog.setConfirmClickListener(v -> {
-      try {
-        File tempFile = new File(getContext().getCacheDir(),
-            CFileUtils.CACHE_FOLDER + File.separator + document.getFileName());
-        if (tempFile.exists()) {
-          String name = UUID.randomUUID().toString().substring(0, 4) + "_" + document.getFileName();
-          tempFile = new File(getContext().getCacheDir(),
-              CFileUtils.CACHE_FOLDER + File.separator + name);
-        }
-        boolean result = document.saveAs(tempFile.getAbsolutePath(), false);
-        if (result) {
-          openPDF(tempFile.getAbsolutePath());
-        }
-      } catch (Exception ignored) {
-      }
-      alertDialog.dismiss();
-    });
-    alertDialog.show(fragmentActivity.getSupportFragmentManager(), "rwPermissionDialog");
+    documentHelper.showWritePermissionsDialog(document);
   }
 
+  // ========================================================================
+  // savePDF
+  // ========================================================================
+
   public void savePDF(COnSaveCallback callback, COnSaveError error) {
-    boolean saveFileExtraFontSubset = false;
-    boolean saveIncremental = true;
-    if (cpdfConfiguration != null && cpdfConfiguration.globalConfig != null) {
-      saveFileExtraFontSubset = cpdfConfiguration.globalConfig.fileSaveExtraFontSubset;
-      saveIncremental = cpdfConfiguration.globalConfig.useSaveIncremental;
-    }
-    savePDF(saveIncremental, saveFileExtraFontSubset, callback, error);
+    documentHelper.savePDF(callback, error);
   }
 
   public void savePDF(boolean saveIncremental, boolean fontSubset, COnSaveCallback callback, COnSaveError error) {
-    CThreadPoolUtils.getInstance().executeMain(() -> {
-      cPdfReaderView.getInkDrawHelper().onSave();
-      cPdfReaderView.pauseAllRenderProcess();
-      cPdfReaderView.removeAllAnnotFocus();
-      if (cPdfReaderView.getContextMenuShowListener() != null) {
-        cPdfReaderView.getContextMenuShowListener().dismissContextMenu();
-      }
-      CPDFDocument document = cPdfReaderView.getPDFDocument();
-      if (document == null) {
-        if (error != null) {
-          error.error(new Exception("document is null"));
-        }
-        if (saveGlobalErrorCallback != null) {
-          saveGlobalErrorCallback.error(new Exception("document is null"));
-        }
-        return;
-      }
-      int contentEditorLoadType = getCPdfReaderView().getLoadType();
-      exitEditMode();
-      if (document.hasChanges()) {
-        CThreadPoolUtils.getInstance().executeIO(() -> {
-          try {
-            CLog.e("ComPDFKit", "useSaveIncremental: " + saveIncremental + ", extraFontSubset:" + fontSubset);
-            document.save(saveIncremental ? CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental : CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveNoIncremental,
-                    fontSubset);
-            if (document.shouleReloadDocument()) {
-              document.reload();
-              CThreadPoolUtils.getInstance().executeMain(() -> cPdfReaderView.reloadPages2());
-            }
-            CThreadPoolUtils.getInstance().executeMain(() -> {
-              restoreEdit(contentEditorLoadType);
-              if (callback != null) {
-                callback.callback(document.getAbsolutePath(), document.getUri());
-              }
-              if (saveGlobalCallback != null) {
-                saveGlobalCallback.callback(document.getAbsolutePath(), document.getUri());
-              }
-            });
-          } catch (CPDFDocumentException e) {
-            CLog.e("ComPDFKit", "save fail:" + e.getMessage());
-            if (error != null) {
-              error.error(e);
-            }
-            if (saveGlobalErrorCallback != null) {
-              saveGlobalErrorCallback.error(new Exception("document is null"));
-            }
-          }
-        });
-      } else {
-        restoreEdit(contentEditorLoadType);
-        if (callback != null) {
-          callback.callback(document.getAbsolutePath(), document.getUri());
-        }
-        if (saveGlobalCallback != null) {
-          saveGlobalCallback.callback(document.getAbsolutePath(), document.getUri());
-        }
-      }
-    });
+    documentHelper.savePDF(saveIncremental, fontSubset, callback, error);
   }
+
+  // ========================================================================
+  // Form / annotation / edit mode
+  // ========================================================================
 
   public void changeFormType(CPDFWidget.WidgetType widgetType) {
     cPdfReaderView.setCurrentFocusedType(CPDFAnnotation.Type.WIDGET);
@@ -615,30 +498,19 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     cPdfReaderView.setCurrentFocusedType(type);
   }
 
-  public void resetAnnotationType() {
-    cPdfReaderView.setTouchMode(CPDFReaderView.TouchMode.BROWSE);
-    cPdfReaderView.setCurrentFocusedType(CPDFAnnotation.Type.UNKNOWN);
-  }
+ public void resetAnnotationType() {
+   cPdfReaderView.setTouchMode(CPDFReaderView.TouchMode.BROWSE);
+  cPdfReaderView.setCurrentFocusedType(CPDFAnnotation.Type.UNKNOWN);
+}
 
-  public void exitEditMode() {
-    CPDFEditManager editManager = cPdfReaderView.getEditManager();
-    if (editManager != null && editManager.isEditMode()) {
-      editManager.endEdit();
-    }
-  }
 
-  private void restoreEdit(int curEditMode) {
-    if (curEditMode > CPDFEditPage.LoadNone && getCPdfReaderView().getViewMode() == CPDFReaderView.ViewMode.PDFEDIT) {
-      CPDFEditManager editManager = getCPdfReaderView().getEditManager();
-      if (!editManager.isEditMode()) {
-        editManager.beginEdit(curEditMode);
-      }
-    }
-  }
-
-  public com.compdfkit.ui.reader.CPDFReaderView getCPdfReaderView() {
+ public com.compdfkit.ui.reader.CPDFReaderView getCPdfReaderView() {
     return cPdfReaderView;
   }
+
+  // ========================================================================
+  // IReaderViewCallback dispatch
+  // ========================================================================
 
   @Override
   public void onTypeChanged(CPDFAnnotation.Type type) {
@@ -661,10 +533,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   @Override
   public void onMoveToChild(int pageIndex) {
     currentPageIndex = pageIndex;
-    isInitOpenPDF = false;
-    if (indicatorView != null) {
-      indicatorView.setCurrentPageIndex(pageIndex);
+    if (documentHelper != null) {
+      documentHelper.setInitOpenPDF(false);
     }
+    indicatorHelper.setCurrentPageIndex(pageIndex);
     if (readerViewCallbacks != null) {
       for (CPDFIReaderViewCallback readerViewCallback : readerViewCallbacks) {
         readerViewCallback.onMoveToChild(pageIndex);
@@ -674,7 +546,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   @Override
   public void onEndScroll() {
-    hidePageIndicator();
+    indicatorHelper.hidePageIndicator();
     if (readerViewCallbacks != null) {
       for (CPDFIReaderViewCallback readerViewCallback : readerViewCallbacks) {
         readerViewCallback.onEndScroll();
@@ -684,12 +556,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   @Override
   public void onScrolling() {
-    isHiding = false;
-    handler.removeCallbacks(hideIndicatorRunnable);
-    if (!isScrolling) {
-      isScrolling = true;
-      showPageIndicator();
-    }
+    indicatorHelper.onScrolling();
     if (readerViewCallbacks != null) {
       for (CPDFIReaderViewCallback readerViewCallback : readerViewCallbacks) {
         readerViewCallback.onScrolling();
@@ -706,176 +573,25 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
   }
 
-  private void syncSlideBar() {
-    CPDFDocument document = cPdfReaderView.getPDFDocument();
-    enableSliderBar = shouldEnableSlideBar(document);
-    if (!enableSliderBar || document == null) {
-      detachSlideBar();
-      return;
-    }
-    ensureSlideBarAttached();
-    applySlideBarAppearance(document);
-    syncSlideBarDocumentState(document);
-  }
-
-  private boolean shouldEnableSlideBar(@Nullable CPDFDocument document) {
-    if (document != null && document.getPageCount() <= 1) {
-      return false;
-    }
-    return cpdfConfiguration == null || cpdfConfiguration.readerViewConfig.enableSliderBar;
-  }
-
-  private void ensureSlideBarAttached() {
-    slideBarController.setPosition(slideBarPosition);
-    slideBarController.attachToParent();
-  }
-
-  private void applySlideBarAppearance(@NonNull CPDFDocument document) {
-    int labelTextSize = CPDFPageNumberPreviewRenderer.getDefaultTextSizePx(getContext());
-    int labelWidth = CPDFPageNumberPreviewRenderer.calculatePreviewWidth(getContext(), document, labelTextSize);
-    slideBarController.configureAppearance(
-            cPdfReaderView,
-        sliderBarIconResId,
-        labelWidth,
-        labelTextSize * 3 / 2,
-        new CPDFPageNumberPreviewRenderer(
-            ContextCompat.getColor(getContext(), R.color.tools_page_indicator_bg_color),
-            labelTextSize,
-            CDimensUtils.dp2px(getContext(), 3)),
-        new CPDFPageNavigator.OnDragListener() {
-      @Override
-      public void onDragBegin(int pageIndex) {
-        if (cPdfReaderView != null) {
-          cPdfReaderView.removeAllAnnotFocus();
-        }
-      }
-        });
-  }
-
-  private void syncSlideBarDocumentState(@NonNull CPDFDocument document) {
-    slideBarController.syncDocumentState(document.getPageCount(), currentPageIndex);
-  }
-
-  private void syncSlideBarPage(int pageIndex, int duration) {
-    if (!enableSliderBar || !slideBarController.hasNavigator()) {
-      return;
-    }
-    slideBarController.animateToPage(pageIndex, duration);
-  }
-
-  private void detachSlideBar() {
-    slideBarController.detachFromParent();
-  }
-
-  public void refreshSlideBarDocumentState() {
-    CPDFDocument document = cPdfReaderView != null ? cPdfReaderView.getPDFDocument() : null;
-    if (document == null) {
-      detachSlideBar();
-      return;
-    }
-    currentPageIndex = Math.min(currentPageIndex, Math.max(document.getPageCount() - 1, 0));
-    syncSlideBar();
-  }
-
-  public View getSlideBarView() {
-    return slideBarController.getView();
-  }
-
-  /**
-   * Add a page indicator in the lower left corner of the page.
-   * After clicking, a page number jump input box will pop up, and you can jump to the corresponding PDF page
-   * page input limit: 1 ~ pdf total page
-   *
-   * @see CPDFPageIndicatorView
-   */
-  private void addPageIndicator() {
-    if (!enablePageIndicator) {
-      removeView(indicatorView);
-      return;
-    }
-    removeView(indicatorView);
-    LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
-        LayoutParams.WRAP_CONTENT);
-    layoutParams.startToStart = LayoutParams.PARENT_ID;
-    layoutParams.endToEnd = LayoutParams.PARENT_ID;
-    layoutParams.bottomToBottom = LayoutParams.PARENT_ID;
-    int margin = CDimensUtils.dp2px(getContext(), 16);
-    layoutParams.setMargins(margin, 0, margin, pageIndicatorMarginBottom);
-    indicatorView.setLayoutParams(layoutParams);
-    indicatorView.setAlpha(0F);
-    addView(indicatorView);
-    CPDFDocument document = cPdfReaderView.getPDFDocument();
-    if (document == null) {
-      return;
-    }
-    int totalPageCount = cPdfReaderView.getPDFDocument().getPageCount();
-    indicatorView.setTotalPage(totalPageCount);
-    indicatorView.setCurrentPageIndex(0);
-    indicatorView.setPageIndicatorClickListener(pageIndex -> {
-      CGotoPageDialog dialog = CGotoPageDialog.newInstance(
-          (getContext().getString(R.string.tools_page) + String.format(" (%d/%d)", 1,
-              cPdfReaderView.getPDFDocument().getPageCount())));
-      dialog.setPageCount(cPdfReaderView.getPDFDocument().getPageCount());
-      dialog.setOnPDFDisplayPageIndexListener(page -> {
-        if (page <= cPdfReaderView.getPDFDocument().getPageCount() && page > 0) {
-          cPdfReaderView.setDisplayPageIndex(page - 1, true);
-          showPageIndicator();
-        }
-      });
-      FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(getContext());
-      if (fragmentActivity != null) {
-        dialog.show(fragmentActivity.getSupportFragmentManager(), "gotoPageDialog");
-      }
-    });
-    pageIndicatorAnimator = ObjectAnimator.ofFloat(indicatorView, "alpha", 0F, 1F);
-    pageIndicatorAnimator.setDuration(100);
-    pageIndicatorAnimator.setInterpolator(new FastOutLinearInInterpolator());
-    showPageIndicator();
-    postDelayed(this::hidePageIndicator, 110);
-  }
-
-  private void hidePageIndicator() {
-    if (!isHiding) {
-      isHiding = true;
-      handler.postDelayed(hideIndicatorRunnable, 3000);
-    }
-  }
-
-  private void showPageIndicator() {
-    if (pageIndicatorAnimator != null && indicatorView.getAlpha() != 1.0F) {
-      isHiding = false;
-      pageIndicatorAnimator.start();
-    }
-  }
-
-  public void addOnPDFFocusedTypeChangeListener(OnFocusedTypeChangedListener listener) {
-    pdfViewFocusedListenerList.add(listener);
-  }
-
-  public void addReaderViewCallback(CPDFIReaderViewCallback callback) {
-    this.readerViewCallbacks.add(callback);
-  }
-
-  public void enablePageIndicator(boolean enablePageIndicator) {
-    this.enablePageIndicator = enablePageIndicator;
-    addPageIndicator();
-  }
+  // ========================================================================
+  // Slide bar public API
+  // ========================================================================
 
   public void enableSliderBar(boolean enableSliderBar) {
-    this.enableSliderBar = enableSliderBar;
-    syncSlideBar();
+    slideBarHelper.setEnableSliderBar(enableSliderBar);
+    slideBarHelper.syncSlideBar(currentPageIndex);
   }
 
   public void setSlideBarPosition(@Nullable com.compdfkit.tools.common.pdf.config.ReaderViewConfig.SlideBarPosition position) {
-    slideBarPosition = parseSlideBarPosition(position);
-    slideBarController.setPosition(slideBarPosition);
+    CPDFPageNavigator.NavigatorPosition navPosition = parseSlideBarPosition(position);
+    slideBarHelper.setSlideBarPosition(navPosition);
     if (cPdfReaderView != null && cPdfReaderView.getPDFDocument() != null) {
-      syncSlideBar();
+      slideBarHelper.syncSlideBar(currentPageIndex);
     }
   }
 
   public boolean isEnableSliderBar() {
-    return enableSliderBar;
+    return slideBarHelper.isEnableSliderBar();
   }
 
   public boolean isSaveFileExtraFontSubset() {
@@ -886,8 +602,88 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     }
   }
 
+  public void refreshSlideBarDocumentState() {
+    currentPageIndex = slideBarHelper.refreshSlideBarDocumentState(currentPageIndex);
+  }
+
+  public View getSlideBarView() {
+    return slideBarHelper.getSlideBarView();
+  }
+
+  // ========================================================================
+  // Listener add/remove
+  // ========================================================================
+
+  public void addOnPDFFocusedTypeChangeListener(OnFocusedTypeChangedListener listener) {
+    pdfViewFocusedListenerList.add(listener);
+  }
+
+  public void addOnPDFSelectAnnotChangeListener(CPDFSelectAnnotCallback callback) {
+    if (callback != null && !pdfSelectAnnotCallbackList.contains(callback)) {
+      boolean shouldRegisterReaderCallback = pdfSelectAnnotCallbackList.isEmpty();
+      pdfSelectAnnotCallbackList.add(callback);
+      if (shouldRegisterReaderCallback) {
+        cPdfReaderView.setSelectAnnotCallback(dispatchSelectAnnotCallback);
+      }
+    }
+  }
+
+  public void removeOnPDFSelectAnnotChangeListener(CPDFSelectAnnotCallback callback) {
+    pdfSelectAnnotCallbackList.remove(callback);
+    if (pdfSelectAnnotCallbackList.isEmpty()) {
+      cPdfReaderView.setSelectAnnotCallback(null);
+    }
+  }
+
+  public void addOnPDFViewModeChangeListener(OnViewModeChangedListener listener) {
+    if (listener != null && !pdfViewModeChangedListenerList.contains(listener)) {
+      pdfViewModeChangedListenerList.add(listener);
+    }
+  }
+
+  public void removeOnPDFViewModeChangeListener(OnViewModeChangedListener listener) {
+    pdfViewModeChangedListenerList.remove(listener);
+  }
+
+  public void addReaderViewCallback(CPDFIReaderViewCallback callback) {
+    this.readerViewCallbacks.add(callback);
+  }
+
+  public void addEditStatusChangeListener(OnEditStatusChangeListener listener) {
+    editStatusChangeListeners.add(listener);
+  }
+
+  public void removeEditStatusChangeListener(OnEditStatusChangeListener listener) {
+    editStatusChangeListeners.remove(listener);
+  }
+
+  public void addSelectEditAreaChangeListener(OnSelectEditAreaChangeListener listener) {
+    selectEditAreaChangeListeners.add(listener);
+  }
+
+  public void removeSelectEditAreaChangeListener(OnSelectEditAreaChangeListener listener) {
+    selectEditAreaChangeListeners.remove(listener);
+  }
+
+  // ========================================================================
+  // Page indicator
+  // ========================================================================
+
+ public void enablePageIndicator(boolean enablePageIndicator) {
+    if (enablePageIndicator && indicatorView == null) {
+      indicatorView = new CPDFPageIndicatorView(getContext());
+    }
+    indicatorHelper.enablePageIndicator(enablePageIndicator, indicatorView);
+ }
+
+  // ========================================================================
+  // Configuration
+  // ========================================================================
+
   public void setCPDFConfiguration(CPDFConfiguration cpdfConfiguration) {
     this.cpdfConfiguration = cpdfConfiguration;
+    slideBarHelper.setCPDFConfiguration(cpdfConfiguration);
+    documentHelper.setCPDFConfiguration(cpdfConfiguration);
     if (!hasExplicitSlideBarPositionAttr
         && cpdfConfiguration != null
         && cpdfConfiguration.readerViewConfig != null) {
@@ -899,6 +695,10 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     return cpdfConfiguration;
   }
 
+  // ========================================================================
+  // Configuration changes — dead branch merged
+  // ========================================================================
+
   @Override
   protected void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
@@ -906,79 +706,38 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       @Override
       public void onGlobalLayout() {
         getCPdfReaderView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-          updateScaleForLayout();
-          refreshSlideBarDocumentState();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-          updateScaleForLayout();
-          refreshSlideBarDocumentState();
-        }
+        // Both landscape and portrait need the same scale refresh + slide bar sync.
+        updateScaleForLayout();
+        refreshSlideBarDocumentState();
       }
     });
-
   }
 
-  public void close(){
-    try {
-      getCPdfReaderView().getContextMenuShowListener().dismissContextMenu();
-      saveGlobalCallback = null;
-      saveGlobalErrorCallback = null;
-      editStatusChangeListeners.clear();
-      selectEditAreaChangeListeners.clear();
-      pdfViewFocusedListenerList.clear();
-      detachSlideBar();
-      if (getCPdfReaderView().getPDFDocument() != null) {
-        getCPdfReaderView().getPDFDocument().close();
-      }
+  // ========================================================================
+  // Close
+  // ========================================================================
 
-    } catch (Exception ignored){
-
-    }
+  public void close() {
+    documentHelper.close();
   }
-
-  /**
-   * Updates the scale based on the current reading mode and screen orientation.
-   */
-  public void updateScaleForLayout() {
-    getCPdfReaderView().setScale(1f);
-  }
-
 
   public void setSaveCallback(COnSaveCallback saveGlobalCallback, COnSaveError error) {
-    this.saveGlobalCallback = saveGlobalCallback;
-    this.saveGlobalErrorCallback = error;
+    documentHelper.setSaveCallback(saveGlobalCallback, error);
   }
 
-  public void addEditStatusChangeListener(OnEditStatusChangeListener listener){
-    editStatusChangeListeners.add(listener);
-  }
-
-  public void removeEditStatusChangeListener(OnEditStatusChangeListener listener){
-    editStatusChangeListeners.remove(listener);
-  }
-
-  public void addSelectEditAreaChangeListener(OnSelectEditAreaChangeListener listener){
-    selectEditAreaChangeListeners.add(listener);
-  }
-
-  public void removeSelectEditAreaChangeListener(OnSelectEditAreaChangeListener listener){
-    selectEditAreaChangeListeners.remove(listener);
-  }
+  // ========================================================================
+  // Callback interfaces
+  // ========================================================================
 
   public interface COnSaveCallback {
-
     void callback(String filePath, Uri pdfUri);
-
   }
 
   public interface COnSaveError {
-
     void error(Exception e);
   }
 
   public interface COnOpenPdfFinishCallback {
-
     void onOpenPdfFinishCallback();
   }
-
 }

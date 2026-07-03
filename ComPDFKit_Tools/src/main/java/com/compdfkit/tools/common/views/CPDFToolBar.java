@@ -83,6 +83,7 @@ public class CPDFToolBar extends FrameLayout {
     private AppCompatTextView tvToolBarTitle;
     private LinearLayout rightMenuContainer;
     private LinearLayout leftMenuContainer;
+    private LinearLayout titleContainer;
 
     private final LinkedHashSet<CPreviewMode> previewModes = new LinkedHashSet<>();
     private CPreviewMode currentPreviewMode = CPreviewMode.Viewer;
@@ -111,7 +112,7 @@ public class CPDFToolBar extends FrameLayout {
         rightMenuContainer = findViewById(R.id.ll_menu);
         leftMenuContainer = findViewById(R.id.ll_left_menu);
         tvToolBarTitle = findViewById(R.id.tv_tool_bar_title);
-        LinearLayout titleContainer = findViewById(R.id.ll_title);
+        titleContainer = findViewById(R.id.ll_title);
 
         titleContainer.setOnClickListener(v -> {
             if (previewModes.size() > 1) {
@@ -194,6 +195,7 @@ public class CPDFToolBar extends FrameLayout {
         CPDFConfiguration cfg = fragment.pdfView != null ? fragment.pdfView.getCPDFConfiguration() : null;
         if (cfg == null) return;
         if (toolbarConfig == null) return;
+        applyToolbarConfig(toolbarConfig);
         // Left
         if (toolbarConfig.customToolbarLeftItems != null && !toolbarConfig.customToolbarLeftItems.isEmpty()) {
             setCustomMenuItemsInternal(fragment, leftMenuContainer, toolbarConfig.customToolbarLeftItems);
@@ -205,6 +207,12 @@ public class CPDFToolBar extends FrameLayout {
             setCustomMenuItemsInternal(fragment, rightMenuContainer, toolbarConfig.customToolbarRightItems);
         } else {
             setDefaultMenuItemsInternal(fragment, rightMenuContainer, toolbarConfig.toolbarRightItems);
+        }
+    }
+
+    private void applyToolbarConfig(@NonNull ToolbarConfig toolbarConfig) {
+        if (titleContainer != null) {
+            titleContainer.setVisibility(toolbarConfig.mainToolbarTitleVisible ? View.VISIBLE : View.GONE);
         }
     }
 

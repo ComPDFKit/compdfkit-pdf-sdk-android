@@ -146,6 +146,7 @@ public class CPDFConfigurationUtils {
         toolbarConfig.customMoreMenuItems = getToolbarCustomActions(jsonObject.optJSONArray("customMoreMenuItems"));
 
         toolbarConfig.mainToolbarVisible = jsonObject.optBoolean("mainToolbarVisible", true);
+        toolbarConfig.mainToolbarTitleVisible = jsonObject.optBoolean("mainToolbarTitleVisible", true);
         toolbarConfig.annotationToolbarVisible = jsonObject.optBoolean("annotationToolbarVisible", true);
         toolbarConfig.contentEditorToolbarVisible = jsonObject.optBoolean("contentEditorToolbarVisible", true);
         toolbarConfig.formToolbarVisible = jsonObject.optBoolean("formToolbarVisible", true);
@@ -390,6 +391,7 @@ public class CPDFConfigurationUtils {
         annotationsConfig.autoShowSignPicker = jsonObject.optBoolean("autoShowSignPicker", true);
         annotationsConfig.autoShowStampPicker = jsonObject.optBoolean("autoShowStampPicker", true);
         annotationsConfig.autoShowLinkDialog = jsonObject.optBoolean("autoShowLinkDialog", true);
+        annotationsConfig.autoShowNoteEditDialog = jsonObject.optBoolean("autoShowNoteEditDialog", true);
         annotationsConfig.autoShowPicPicker = jsonObject.optBoolean("autoShowPicPicker", true);
         annotationsConfig.interceptNoteAction = jsonObject.optBoolean("interceptNoteAction", false);
         annotationsConfig.interceptLinkAction = jsonObject.optBoolean("interceptLinkAction", false);
@@ -628,9 +630,17 @@ public class CPDFConfigurationUtils {
         formsConfig.showCreateListBoxOptionsDialog = jsonObject.optBoolean("showCreateListBoxOptionsDialog", true);
         formsConfig.showCreateComboBoxOptionsDialog = jsonObject.optBoolean("showCreateComboBoxOptionsDialog", true);
         formsConfig.showCreatePushButtonOptionsDialog = jsonObject.optBoolean("showCreatePushButtonOptionsDialog", true);
-        formsConfig.interceptListBoxAction = jsonObject.optBoolean("interceptListBoxAction", false);
-        formsConfig.interceptComboBoxAction = jsonObject.optBoolean("interceptComboBoxAction", false);
-        formsConfig.interceptPushButtonAction = jsonObject.optBoolean("interceptPushButtonAction", false);
+        formsConfig.interceptAllFormWidgetActions = jsonObject.optBoolean("interceptAllFormWidgetActions", false);
+        JSONArray interceptFormWidgetActions = jsonObject.optJSONArray("interceptFormWidgetActions");
+        if (interceptFormWidgetActions != null) {
+            formsConfig.interceptFormWidgetActions = new ArrayList<>();
+            for (int i = 0; i < interceptFormWidgetActions.length(); i++) {
+                CPDFWidget.WidgetType widgetType = getWidgetType(interceptFormWidgetActions.optString(i));
+                if (widgetType != CPDFWidget.WidgetType.Widget_Unknown) {
+                    formsConfig.interceptFormWidgetActions.add(widgetType);
+                }
+            }
+        }
         return formsConfig;
     }
 

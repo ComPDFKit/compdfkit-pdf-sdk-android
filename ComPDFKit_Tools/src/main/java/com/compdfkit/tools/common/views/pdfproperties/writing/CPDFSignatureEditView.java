@@ -14,7 +14,6 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.compdfkit.ui.utils.CPDFBitmapUtils;
 import com.compdfkit.ui.utils.CPDFScreenUtils;
 
 import java.util.ArrayList;
@@ -23,6 +22,10 @@ import java.util.Iterator;
 public class CPDFSignatureEditView extends View {
 
     private final int padding = 50;
+
+    private static final int MAX_SIGNATURE_BITMAP_LONG_SIDE = 1600;
+
+    private static final int MAX_SIGNATURE_BITMAP_PIXELS = 512 * 1024;
 
 
     private ArrayList<PathPoints> drawPathPoints = null;
@@ -299,13 +302,51 @@ public class CPDFSignatureEditView extends View {
         }
     }
 
-    public Bitmap getBitmap(){
-        if (getDrawPathPoints() == null || getDrawPathPoints().size()<=0){
+    public Bitmap getBitmap() {
+        if (getDrawPathPoints() == null || getDrawPathPoints().size() <= 0) {
             return null;
         }
-        Bitmap signEditPic = CPDFBitmapUtils.loadBitmapFromView(this);
-        signEditPic = CPDFBitmapUtils.cropBitmap(signEditPic, getSignViewRect());
-        return signEditPic;
+        Rect signRect = getSignViewRect();
+        if (!signRect.intersect(0, 0, getWidth(), getHeight())) {
+            return null;
+        }
+        if (signRect.width() <= 0 || signRect.height() <= 0) {
+            return null;
+        }
+        float scale = getBitmapScale(signRect.width(), signRect.height());
+        Bitmap bitmap = createSignatureBitmap(signRect, scale);
+        if (bitmap != null) {
+            return bitmap;
+        }
+        return createSignatureBitmap(signRect, scale * 0.5F);
+    }
+
+    private float getBitmapScale(int width, int height) {
+        float scale = 1F;
+        int longSide = Math.max(width, height);
+        if (longSide > MAX_SIGNATURE_BITMAP_LONG_SIDE) {
+            scale = Math.min(scale, MAX_SIGNATURE_BITMAP_LONG_SIDE / (float) longSide);
+        }
+        long pixels = (long) width * height;
+        if (pixels > MAX_SIGNATURE_BITMAP_PIXELS) {
+            scale = Math.min(scale, (float) Math.sqrt(MAX_SIGNATURE_BITMAP_PIXELS / (double) pixels));
+        }
+        return scale;
+    }
+
+    private Bitmap createSignatureBitmap(Rect signRect, float scale) {
+        int bitmapWidth = Math.max(1, Math.round(signRect.width() * scale));
+        int bitmapHeight = Math.max(1, Math.round(signRect.height() * scale));
+        try {
+            Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            canvas.scale(scale, scale);
+            canvas.translate(-signRect.left, -signRect.top);
+            drawPaintPath(canvas);
+            return bitmap;
+        } catch (OutOfMemoryError error) {
+            return null;
+        }
     }
 
     class PathPoints {
@@ -336,6 +377,4 @@ public class CPDFSignatureEditView extends View {
         }
     }
 }
-
-
 

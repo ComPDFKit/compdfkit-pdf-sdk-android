@@ -296,24 +296,6 @@ public class CFileUtils {
         return intent;
     }
 
-    public static void notifyMediaStore(Context context, String filePath) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            Uri uri = Uri.fromFile(new File(filePath));
-            intent.setData(uri);
-            context.sendBroadcast(intent);
-        } catch (Exception ignored) {
-
-        }
-    }
-
-    public static Intent selectSystemDir(boolean isOnlyLocal) {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.putExtra("android.content.extra.SHOW_ADVANCED", isOnlyLocal);
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        return intent;
-    }
-
     public static void takeUriPermission(Context context, Uri uri) {
         try {
             context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -553,14 +535,13 @@ public class CFileUtils {
                 context.startActivity(intent);
                 return;
             }
-            String externalStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
             if (!TextUtils.isEmpty(filePath)) {
                 if (filePath.startsWith(context.getCacheDir().getAbsolutePath()) ||
                         filePath.startsWith(context.getFilesDir().getAbsolutePath())) {
                     Uri uri1 = getUriBySystem(context, new File(filePath));
                     intent.setData(uri1);
                     intent.putExtra(Intent.EXTRA_STREAM, uri1);
-                } else if (filePath.startsWith(externalStoragePath)) {
+                } else if (new File(filePath).exists()) {
                     Uri uri2 = CFileUtils.getUriBySystem(context, new File(filePath));
                     intent.setData(uri2);
                     intent.putExtra(Intent.EXTRA_STREAM, uri2);

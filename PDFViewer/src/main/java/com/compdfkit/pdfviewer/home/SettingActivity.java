@@ -113,10 +113,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             CPDFCommomUtils.gotoWebsite(this, getString(R.string.tools_privacy_policy_url), null);
         } else if (v.getId() == R.id.tv_terms_of_service) {
             CPDFCommomUtils.gotoWebsite(this, getString(R.string.tools_terms_of_service_url), null);
-        } else if (v.getId() == binding.toolBar.getIvToolBarBackBtn().getId()) {
-            onBackPressed();
-        }
+       } else if (v.getId() == binding.toolBar.getIvToolBarBackBtn().getId()) {
+            getOnBackPressedDispatcher().onBackPressed();
+       }
     }
 }
-
 

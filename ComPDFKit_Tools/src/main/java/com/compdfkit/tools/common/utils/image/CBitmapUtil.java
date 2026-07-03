@@ -39,9 +39,9 @@ public class CBitmapUtil {
             sourceBitmap.getPixels(pixels, 0, sourceWidth, 0, 0, sourceWidth, sourceHeight);
 
             int top = 0;
-            int bot = sourceHeight;
+            int bot = sourceHeight - 1;
             int left = 0;
-            int right = sourceWidth;
+            int right = sourceWidth - 1;
 
             a:
             for (int i = 0; i < sourceHeight; i++) {
@@ -90,8 +90,11 @@ public class CBitmapUtil {
                     }
                 }
             }
-            int realWidth = right - left;
-            int realHeight = bot - top;
+            int realWidth = right - left + 1;
+            int realHeight = bot - top + 1;
+            if (realWidth <= 0 || realHeight <= 0) {
+                return sourceBitmap;
+            }
 
             int[] realColors = new int[realWidth * realHeight];
             sourceBitmap.getPixels(realColors, 0, realWidth, left, top, realWidth, realHeight);

@@ -37,11 +37,16 @@ public class CompressSamplesImpl extends OpenPDFSamplesImpl {
         verifyDocument(filePath, uri, document -> {
             CPDFCompressDialog compressDialog = new CPDFCompressDialog();
             compressDialog.setDocument(document);
-            compressDialog.setCompressDocumentListener((result, path) -> {
+            compressDialog.setCompressDocumentListener((result, path, uri) -> {
                 compressDialog.dismiss();
-                if (result && !TextUtils.isEmpty(path)){
-                    CPDFDocumentActivity.startActivity(fragment.getContext(), path, "",
+                if (result){
+                    if (uri != null) {
+                        CPDFDocumentActivity.startActivity(fragment.getContext(), uri, "",
+                                FunDatas.getConfiguration(fragment.getContext(), CPreviewMode.Viewer));
+                    } else {
+                        CPDFDocumentActivity.startActivity(fragment.getContext(), path, "",
                             FunDatas.getConfiguration(fragment.getContext(), CPreviewMode.Viewer));
+                    }
                     CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_compressed_successfully);
                 }
             });

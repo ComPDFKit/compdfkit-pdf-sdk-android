@@ -10,12 +10,10 @@
 package com.compdfkit.pdfviewer.home.samples;
 
 import android.net.Uri;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import androidx.fragment.app.Fragment;
 
-import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.pdfviewer.R;
@@ -25,12 +23,11 @@ import com.compdfkit.pdfviewer.home.datas.SettingDatas;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
+import com.compdfkit.tools.common.utils.storage.CPDFPublicFileSaver;
+import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
 import com.compdfkit.tools.security.watermark.CWatermarkEditDialog;
-
-import java.io.File;
-
 
 public class WatermarkSamplesImpl extends OpenPDFSamplesImpl {
 
@@ -74,13 +71,17 @@ public class WatermarkSamplesImpl extends OpenPDFSamplesImpl {
                 watermarkEditDialog.setDocument(document);
                 watermarkEditDialog.setSaveFileExtraFontSubset(SettingDatas.isExtraFontSet(fragment.getContext()));
                 watermarkEditDialog.setPageIndex(0);
-                watermarkEditDialog.setCompleteListener((success, saveAsNewFile, pdfFile) -> {
+                watermarkEditDialog.setCompleteListener((success, saveAsNewFile, pdfFile, pdfUri) -> {
                     watermarkEditDialog.dismiss();
                     if (!success){
                         CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_add_failed);
                     } else {
                         CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_add_success);
-                        startPDFActivity(pdfFile, null, password);
+                        if (pdfUri != null) {
+                            startPDFActivity(null, pdfUri, password);
+                        } else {
+                            startPDFActivity(pdfFile, null, password);
+                        }
                     }
                 });
                 watermarkEditDialog.show(fragment.getChildFragmentManager(), "watermarkEditDialog");
@@ -100,39 +101,45 @@ public class WatermarkSamplesImpl extends OpenPDFSamplesImpl {
                     });
                     alertDialog.setConfirmClickListener(v1 -> {
                         alertDialog.dismiss();
-                        String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
+                        String dir = CPDFStorageManager.getDefaultDirectoryDialogPath();
                         CFileDirectoryDialog directoryDialog = CFileDirectoryDialog.newInstance(dir,
                                 fragment.getString(com.compdfkit.tools.R.string.tools_save_location), fragment.getString(com.compdfkit.tools.R.string.tools_save_to_this_directory));
                         directoryDialog.setSelectFolderListener(dir1 -> {
-                            try {
-                                // remove all watermark
-                                boolean result = true;
-                                for (int i = 0; i < document.getWatermarkCount(); i++) {
-                                    CPDFWatermark watermark = document.getWatermark(i);
-                                    if (watermark != null){
-                                        boolean success = watermark.clear();
-                                        if (!success){
-                                            result = false;
-                                        }
-                                    }else {
+                            boolean result = true;
+                            for (int i = 0; i < document.getWatermarkCount(); i++) {
+                                CPDFWatermark watermark = document.getWatermark(i);
+                                if (watermark != null){
+                                    boolean success = watermark.clear();
+                                    if (!success){
                                         result = false;
                                     }
-                                }
-                                if (result){
-                                    String fileName = CFileUtils.getFileNameNoExtension(document.getFileName());
-                                    File file = new File(dir1, fileName +fragment.getContext().getString(com.compdfkit.tools.R.string.tools_remove_watermark_suffix));
-                                    file = CFileUtils.renameNameSuffix(file);
-                                    document.saveAs(file.getAbsolutePath(), false);
-                                    document.close();
-                                    CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_removed_success);
-                                    startPDFActivity(file.getAbsolutePath(), null, password);
                                 }else {
-                                    CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_removed_failed);
-
+                                    result = false;
                                 }
-
-                            } catch (CPDFDocumentException e) {
-                                throw new RuntimeException(e);
+                            }
+                            if (result){
+                                String fileName = CFileUtils.getFileNameNoExtension(document.getFileName());
+                                String outputFileName = fileName + fragment.getContext().getString(com.compdfkit.tools.R.string.tools_remove_watermark_suffix);
+                                CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.savePdfToSelectedDirectory(
+                                        fragment.getContext(),
+                                        dir1,
+                                       outputFileName,
+                                        false,
+                                        tempPath -> document.saveAs(tempPath, false));
+                                result = saveResult.isSuccess();
+                                document.close();
+                                if (result) {
+                                    CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_removed_success);
+                                    if (saveResult.getPublicUri() != null) {
+                                        startPDFActivity(null, saveResult.getPublicUri(), password);
+                                    } else {
+                                        startPDFActivity(saveResult.getOpenPath(), null, password);
+                                    }
+                                } else {
+                                    CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_removed_failed);
+                                }
+                            }else {
+                                CToastUtil.showLongToast(fragment.getContext(), com.compdfkit.tools.R.string.tools_watermark_removed_failed);
                             }
                         });
                         directoryDialog.show(fragment.getChildFragmentManager(), "dirDialog");
