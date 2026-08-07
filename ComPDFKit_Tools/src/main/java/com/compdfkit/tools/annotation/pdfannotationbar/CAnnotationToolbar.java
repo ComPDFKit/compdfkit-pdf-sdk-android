@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.compdfkit.core.annotation.CPDFAnnotation;
-import com.compdfkit.core.undo.CPDFUndoManager;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfannotationbar.adapter.CPDFAnnotationToolListAdapter;
 import com.compdfkit.tools.annotation.pdfannotationbar.bean.CAnnotToolBean;
@@ -34,6 +33,7 @@ import com.compdfkit.tools.annotation.pdfannotationbar.data.CAnnotationToolDatas
 import com.compdfkit.tools.common.interfaces.COnAnnotationChangeListener;
 import com.compdfkit.tools.common.interfaces.COnAnnotationCreatePreparedListener;
 import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
+import com.compdfkit.tools.common.pdf.undo.InkUndoRedoCoordinator;
 import com.compdfkit.tools.common.utils.CListUtil;
 import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.annotation.CPDFAnnotationManager;
@@ -105,13 +105,13 @@ public class CAnnotationToolbar extends FrameLayout {
 
     private boolean listeningSelectAnnot = false;
 
-    public enum UndoManagerType {
-        AnnotUndo,
+    private boolean isInkEditing;
 
-        InkUndo
-    }
+    @Nullable
+    private InkUndoRedoCoordinator undoRedoCoordinator;
 
-    private UndoManagerType undoManagerType = UndoManagerType.AnnotUndo;
+    private final InkUndoRedoCoordinator.OnStateChangedListener undoRedoStateListener =
+            this::updateUndoRedoButtons;
 
     public CAnnotationToolbar(@NonNull Context context) {
         this(context, null);
@@ -149,6 +149,8 @@ public class CAnnotationToolbar extends FrameLayout {
 
     public void initWithPDFView(CPDFViewCtrl pdfView) {
         this.pdfView = pdfView;
+        undoRedoCoordinator = InkUndoRedoCoordinator.get(pdfView.getCPdfReaderView());
+        undoRedoCoordinator.addOnStateChangedListener(undoRedoStateListener);
         toolListAdapter.setList(CAnnotationToolDatas.getAnnotationList(pdfView));
         setupSelectedAnnotationCallbacks();
         this.pdfView.addOnPDFFocusedTypeChangeListener(type -> {
@@ -161,14 +163,14 @@ public class CAnnotationToolbar extends FrameLayout {
                     updateSettingButtonState();
                 }
                 if (toolListAdapter.getCurrentAnnotType() != CAnnotationType.INK_ERASER) {
-                    setUndoManagerType(UndoManagerType.AnnotUndo);
+                    setInkEditing(false);
                 }
             }else if (type == CPDFAnnotation.Type.INK){
                 if (toolListAdapter.getCurrentAnnotType() == CAnnotationType.INK) {
-                    setUndoManagerType(UndoManagerType.InkUndo);
+                    setInkEditing(true);
                 }
             }else {
-                setUndoManagerType(UndoManagerType.AnnotUndo);
+                setInkEditing(false);
             }
         });
         syncSelectAnnotListenerWithViewMode(pdfView.getCPdfReaderView().getViewMode());
@@ -274,26 +276,33 @@ public class CAnnotationToolbar extends FrameLayout {
                     || toolListAdapter.annotEnableSetting());
         }
     }
-    private void setUndoManagerType(UndoManagerType undoManagerType) {
-        this.undoManagerType = undoManagerType;
-        if (undoManagerType == UndoManagerType.InkUndo) {
-            CPDFReaderView.TInkDrawHelper helper = pdfView.getCPdfReaderView().getInkDrawHelper();
-            if (ivUndo != null) {
-                ivUndo.setEnabled(helper.canUndo());
-            }
-            if (ivRedo != null) {
-                ivRedo.setEnabled(helper.canRedo());
-            }
-        } else {
-            CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
-            if (ivRedo != null) {
-                ivRedo.setEnabled(undoManager.canRedo());
-            }
-            if (ivUndo != null) {
-                ivUndo.setEnabled(undoManager.canUndo());
-            }
-        }
+    private void setInkEditing(boolean isInkEditing) {
+        this.isInkEditing = isInkEditing;
+        updateUndoRedoButtons();
+    }
 
+    private void updateUndoRedoButtons() {
+        if (pdfView == null) {
+            return;
+        }
+        if (undoRedoCoordinator == null) {
+            return;
+        }
+        if (ivUndo != null) {
+            ivUndo.setEnabled(undoRedoCoordinator.canUndo(getInkUndoRedoMode(), isInkEditing));
+        }
+        if (ivRedo != null) {
+            ivRedo.setEnabled(undoRedoCoordinator.canRedo(getInkUndoRedoMode(), isInkEditing));
+        }
+    }
+
+    private AnnotationsConfig.InkUndoRedoMode getInkUndoRedoMode() {
+        if (pdfView == null || pdfView.getCPDFConfiguration() == null
+                || pdfView.getCPDFConfiguration().annotationsConfig == null
+                || pdfView.getCPDFConfiguration().annotationsConfig.inkUndoRedoMode == null) {
+            return AnnotationsConfig.InkUndoRedoMode.HYBRID;
+        }
+        return pdfView.getCPDFConfiguration().annotationsConfig.inkUndoRedoMode;
     }
 
     private void showAnnotStyleDialog() {
@@ -364,13 +373,14 @@ public class CAnnotationToolbar extends FrameLayout {
 
     public void switchAnnotationUnknown(){
         if (toolListAdapter.getCurrentAnnotType() == CAnnotationType.INK_ERASER) {
-            setUndoManagerType(UndoManagerType.AnnotUndo);
+            setInkEditing(false);
         }
         toolListAdapter.selectByType(CAnnotationType.UNKNOWN);
         clearSelectedAnnotationStyleTarget();
         updateSettingButtonState();
         pdfView.resetAnnotationType();
         pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
+        invalidateRedoHistory();
         pdfView.getCPdfReaderView().getInkDrawHelper().setMode(Mode.DRAW);
         annotationChangeListenersChanged(CAnnotationType.UNKNOWN);
     }
@@ -385,6 +395,7 @@ public class CAnnotationToolbar extends FrameLayout {
         updateSettingButtonState();
         AnnotationsConfig annotationsConfig = pdfView.getCPDFConfiguration().annotationsConfig;
         pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
+        invalidateRedoHistory();
         pdfView.getCPdfReaderView().removeAllAnnotFocus();
         switch (type) {
             case TEXT:
@@ -396,7 +407,7 @@ public class CAnnotationToolbar extends FrameLayout {
                 pdfView.getCPdfReaderView().getInkDrawHelper().setEffect(IInkDrawCallback.Effect.NORMAL);
                 break;
             case INK_ERASER:
-                setUndoManagerType(UndoManagerType.AnnotUndo);
+                setInkEditing(false);
                 pdfView.resetAnnotationType();
                 pdfView.getCPdfReaderView().setTouchMode(CPDFReaderView.TouchMode.ERASE_INK);
                 break;
@@ -457,87 +468,31 @@ public class CAnnotationToolbar extends FrameLayout {
     }
 
     private void redoUndoManager() {
-        pdfView.getCPdfReaderView().getUndoManager().enable(true);
-        CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
-        if (ivRedo != null) {
-            ivRedo.setEnabled(undoManager.canRedo());
+        if (undoRedoCoordinator == null) {
+            undoRedoCoordinator = InkUndoRedoCoordinator.get(pdfView.getCPdfReaderView());
+            undoRedoCoordinator.addOnStateChangedListener(undoRedoStateListener);
         }
-        if (ivUndo != null) {
-            ivUndo.setEnabled(undoManager.canUndo());
-        }
-        pdfView.getCPdfReaderView().getUndoManager().addOnUndoHistoryChangeListener((cpdfUndoManager, operation, type) -> {
-            if (undoManagerType == UndoManagerType.AnnotUndo){
-                boolean canUndo = cpdfUndoManager.canUndo();
-                boolean canRedo = cpdfUndoManager.canRedo();
-                if (ivUndo != null) {
-                    ivUndo.setEnabled(canUndo);
-                }
-                if (ivRedo != null) {
-                    ivRedo.setEnabled(canRedo);
-                }
-            }
-        });
-
-        CPDFReaderView.TInkDrawHelper helper = pdfView.getCPdfReaderView().getInkDrawHelper();
-        helper.setInkUndoRedoCallback((undo, redo) -> {
-            if (undoManagerType == UndoManagerType.InkUndo) {
-                if (ivUndo != null) {
-                    ivUndo.setEnabled(undo);
-                }
-                if (ivRedo != null) {
-                    ivRedo.setEnabled(redo);
-                }
-            }
-        });
+        updateUndoRedoButtons();
     }
 
     public void undo() {
-        if (undoManagerType == UndoManagerType.InkUndo) {
-            inkUndo();
-        }else {
-            annotUndo();
+        if (pdfView == null) {
+            return;
         }
+        if (undoRedoCoordinator != null) {
+            undoRedoCoordinator.undo(getInkUndoRedoMode(), isInkEditing);
+        }
+        updateUndoRedoButtons();
     }
 
     public void redo() {
-        if (undoManagerType == UndoManagerType.InkUndo) {
-            inkRedo();
-        }else {
-            annotRedo();
+        if (pdfView == null) {
+            return;
         }
-    }
-
-    public void annotUndo(){
-        try {
-            CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
-            if (undoManager.canUndo()) {
-                undoManager.undo();
-            }
-        } catch (Exception e) {
+        if (undoRedoCoordinator != null) {
+            undoRedoCoordinator.redo(getInkUndoRedoMode(), isInkEditing);
         }
-    }
-
-    public void annotRedo() {
-        try {
-            CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
-            if (undoManager.canRedo()) {
-                undoManager.redo();
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
-    private void inkUndo(){
-        if (pdfView != null) {
-            pdfView.getCPdfReaderView().getInkDrawHelper().onUndo();
-        }
-    }
-
-    private void inkRedo() {
-        if (pdfView != null) {
-            pdfView.getCPdfReaderView().getInkDrawHelper().onRedo();
-        }
+        updateUndoRedoButtons();
     }
 
     public void updateItemColor() {
@@ -617,7 +572,14 @@ public class CAnnotationToolbar extends FrameLayout {
         if (readerView.getViewMode() == ViewMode.ANNOT){
             if (readerView.getCurrentFocusedType() == CPDFAnnotation.Type.INK){
                 readerView.getInkDrawHelper().onSave();
+                invalidateRedoHistory();
             }
+        }
+    }
+
+    private void invalidateRedoHistory() {
+        if (undoRedoCoordinator != null) {
+            undoRedoCoordinator.invalidateRedoHistory();
         }
     }
 
@@ -716,6 +678,10 @@ public class CAnnotationToolbar extends FrameLayout {
             pdfView.removeOnPDFViewModeChangeListener(viewModeChangedListener);
         }
         viewModeChangedListener = null;
+        if (undoRedoCoordinator != null) {
+            undoRedoCoordinator.removeOnStateChangedListener(undoRedoStateListener);
+            undoRedoCoordinator = null;
+        }
         clearSelectedAnnotationStyleTarget();
         updateSettingButtonState();
     }

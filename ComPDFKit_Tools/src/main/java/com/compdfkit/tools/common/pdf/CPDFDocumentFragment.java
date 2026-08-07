@@ -257,6 +257,11 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         screenManager.bind(this);
         pdfView.setCPDFConfiguration(cpdfConfiguration);
         documentIOController.initDocument(() -> {
+            // Opening a document completes asynchronously on the main thread. The fragment
+            // can be detached or have its view destroyed before this callback is delivered.
+            if (!isAdded() || getView() == null || getContext() == null) {
+                return;
+            }
             toolbarController.initAll();
             searchController.init();
             applyConfiguration();

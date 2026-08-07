@@ -10,6 +10,8 @@
 package com.compdfkit.tools.viewer.pdfthumbnail;
 
 import android.content.res.Configuration;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.SparseIntArray;
 import android.view.View;
 
@@ -117,6 +119,13 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
             thumbnailListAdapter.setOnPageEditListener(() -> {
                 pageEditDialogFragment.setHasEdit(true);
             });
+            thumbnailListAdapter.setOnPageMoveListener((sourcePosition, targetPosition, callback) -> {
+                if (pageEditDialogFragment != null) {
+                    pageEditDialogFragment.movePage(sourcePosition, targetPosition, callback);
+                } else if (callback != null) {
+                    callback.onResult(false);
+                }
+            });
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 6);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
@@ -133,6 +142,9 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
                 @Override
                 public void onItemClick(RecyclerView.ViewHolder vh) {
                     int position = vh.getAdapterPosition();
+                    if (position == RecyclerView.NO_POSITION) {
+                        return;
+                    }
                     if (thumbnailListAdapter.isEdit()) {
                         thumbnailListAdapter.setItemClick(position);
                     } else {
@@ -192,14 +204,42 @@ public class CPDFEditThumbnailFragment extends CBasicThemeFragment {
     }
 
     public void setSelectPages(int[] pages) {
+        setSelectPages(pages, null);
+    }
+
+    /**
+     * Updates selected pages on the main thread and optionally runs a completion callback.
+     *
+     * @param pages zero-based page indexes that should be selected.
+     * @param completion callback invoked after the adapter receives the new selection.
+     */
+    public void setSelectPages(int[] pages, Runnable completion) {
         if (getActivity() != null) {
             getActivity().runOnUiThread(()->{
                 if (thumbnailListAdapter != null) {
                     thumbnailListAdapter.setSelectArr(pages);
                 }
+                if (completion != null) {
+                    completion.run();
+                }
             });
+        } else if (completion != null) {
+            runOnMainThread(completion);
         }
+    }
 
+    /**
+     * Runs a task on the Android main thread.
+     */
+    private void runOnMainThread(Runnable runnable) {
+        if (runnable == null) {
+            return;
+        }
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            runnable.run();
+        } else {
+            new Handler(Looper.getMainLooper()).post(runnable);
+        }
     }
 
     public void scrollToPosition(int position){

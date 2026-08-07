@@ -33,8 +33,6 @@ public class ReaderViewConfig implements Serializable {
 
     public boolean enableSliderBar = true;
 
-    public SlideBarPosition slideBarPosition = SlideBarPosition.Right;
-
     public boolean enablePageIndicator = true;
 
     public int pageSpacing = 10;
@@ -54,6 +52,8 @@ public class ReaderViewConfig implements Serializable {
 
     public boolean enableDoubleTapZoom = true;
 
+    public AccessibilityConfig accessibilityConfig = new AccessibilityConfig();
+
     public CPDFUiStyleConfig uiStyle;
 
     @NonNull
@@ -68,7 +68,6 @@ public class ReaderViewConfig implements Serializable {
                 "cropMode:" + cropMode + ", " +
                 "themes:" + themes.name() + ", " +
                 "enableSliderBar:" + enableSliderBar + ", " +
-                "slideBarPosition:" + slideBarPosition.name() + ", " +
                 "enablePageIndicator:" + enablePageIndicator + ", " +
                 "pageSpacing:" + pageSpacing + ", " +
                 "pageScale:" + pageScale + ", " +
@@ -76,10 +75,28 @@ public class ReaderViewConfig implements Serializable {
                 "enableMinScale:" + enableMinScale + ", " +
                 "margins:" + margins.toString() + ", " +
                 "annotationsVisible:" + annotationsVisible + ", " +
-                "enableCreateEditTextInput:" + enableCreateEditTextInput +
-                "enableCreateImagePickerDialog:" + enableCreateImagePickerDialog +
+                "enableCreateEditTextInput:" + enableCreateEditTextInput + ", " +
+                "enableCreateImagePickerDialog:" + enableCreateImagePickerDialog + ", " +
+                "enableDoubleTapZoom:" + enableDoubleTapZoom + ", " +
+                "accessibilityConfig:" + accessibilityConfig.toString() +
                 "]";
         return stringBuilder;
+    }
+
+    public static class AccessibilityConfig implements Serializable {
+
+        public boolean keyboardNavigationEnabled = false;
+
+        public boolean talkBackEnabled = false;
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "[accessibilityConfig: " +
+                    "keyboardNavigationEnabled:" + keyboardNavigationEnabled + ", " +
+                    "talkBackEnabled:" + talkBackEnabled +
+                    "]";
+        }
     }
 
     public enum DisplayMode{
@@ -102,14 +119,4 @@ public class ReaderViewConfig implements Serializable {
 
     }
 
-    public enum SlideBarPosition {
-
-        Left,
-
-        Top,
-
-        Right,
-
-        Bottom
-    }
 }

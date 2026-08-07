@@ -125,7 +125,7 @@ public class CDigitalSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
                 }
             }
         } else {
-            CToastUtil.showToast(readerView.getContext(), "Signature Fail");
+            CToastUtil.showToast(readerView.getContext(), readerView.getContext().getString(R.string.tools_digital_sign_failures));
         }
     }
 }

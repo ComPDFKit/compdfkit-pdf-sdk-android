@@ -14,6 +14,7 @@ import android.graphics.Color;
 
 import androidx.annotation.IntRange;
 
+import com.compdfkit.tools.common.pdf.config.FontConfig;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 
 public class AnnotFreetextAttr extends AnnotAttr {
@@ -27,6 +28,8 @@ public class AnnotFreetextAttr extends AnnotAttr {
     private Alignment alignment = Alignment.LEFT;
 
     private String psName;
+
+    private FontConfig fontConfig = new FontConfig();
 
     public String getFontColorHex() {
         return fontColor;
@@ -91,6 +94,14 @@ public class AnnotFreetextAttr extends AnnotAttr {
 
     public String getPsName() {
         return psName;
+    }
+
+    public FontConfig getFontConfig() {
+        return fontConfig;
+    }
+
+    public void setFontConfig(FontConfig fontConfig) {
+        this.fontConfig = fontConfig;
     }
 
     public enum Alignment {

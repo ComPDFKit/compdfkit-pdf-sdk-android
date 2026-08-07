@@ -1,13 +1,13 @@
 ext {
     android = [
             COMPILESDK: 36,
-            MINSDK: 21,
+            MINSDK: 23,
             TARGETSDK: 36,
-            VERSIONCODE: 1032,
-            VERSIONNAME: "2.6.9"
+            VERSIONCODE: 1033,
+            VERSIONNAME: "3.0.0"
     ]
     sdk = [
-            COMPDFKIT_SDK_VERSION : "2.6.9",
+            COMPDFKIT_SDK_VERSION : "3.0.0",
             COMPDFKIT_SDK_BUILD_TAG : "build_dev_03226198_202605141000"
     ]
 }

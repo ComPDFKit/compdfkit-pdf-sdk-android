@@ -54,6 +54,12 @@ public class AnnotationsConfig implements Serializable {
     public List<AnnotationTools> availableTools = new ArrayList<>();
 
     /**
+     * Controls which history source annotation Undo and Redo use while editing Ink.
+     * The default preserves immediate Ink editing while allowing a fallback to document history.
+     */
+    public InkUndoRedoMode inkUndoRedoMode = InkUndoRedoMode.HYBRID;
+
+    /**
      * Default annotation attributes set when opening CPDFDocumentActivity or CPDFDocumentFragment.
      * These attributes will be used for configuring annotations when they are added.
      */
@@ -78,6 +84,7 @@ public class AnnotationsConfig implements Serializable {
     public String toString() {
         return "[annotationsConfig: availableTypes:" + availableTypes.toString() +
             ", availableTools:" + availableTools.toString() +
+            ", inkUndoRedoMode: " + inkUndoRedoMode +
             ", initAttribute: " + initAttribute.toString() +
             ", autoShowSignPicker: " + autoShowSignPicker +
             ", autoShowStampPicker: " + autoShowStampPicker +
@@ -102,6 +109,31 @@ public class AnnotationsConfig implements Serializable {
                 return AnnotationTools.valueOf(result);
             } catch (Exception e) {
                 return null;
+            }
+        }
+    }
+
+    public enum InkUndoRedoMode implements Serializable {
+        INK_ONLY,
+
+        DOCUMENT_ONLY,
+
+        HYBRID;
+
+        public static InkUndoRedoMode fromString(String value) {
+            if (value == null) {
+                return null;
+            }
+            String normalized = value.replace("_", "").replace("-", "").toLowerCase();
+            switch (normalized) {
+                case "inkonly":
+                    return INK_ONLY;
+                case "documentonly":
+                    return DOCUMENT_ONLY;
+                case "hybrid":
+                    return HYBRID;
+                default:
+                    return null;
             }
         }
     }

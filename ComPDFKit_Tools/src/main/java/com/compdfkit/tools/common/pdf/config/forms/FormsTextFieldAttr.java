@@ -14,6 +14,7 @@ import android.graphics.Color;
 
 import androidx.annotation.FloatRange;
 
+import com.compdfkit.tools.common.pdf.config.FontConfig;
 import com.compdfkit.tools.common.pdf.config.annot.AnnotFreetextAttr;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 
@@ -27,6 +28,8 @@ public class FormsTextFieldAttr extends FormsAttr {
     private boolean multiline = true;
 
     private String psName;
+
+    private FontConfig fontConfig = new FontConfig();
 
     private AnnotFreetextAttr.Alignment alignment = AnnotFreetextAttr.Alignment.LEFT;
 
@@ -66,6 +69,14 @@ public class FormsTextFieldAttr extends FormsAttr {
 
     public void setPsName(String psName) {
         this.psName = psName;
+    }
+
+    public FontConfig getFontConfig() {
+        return fontConfig;
+    }
+
+    public void setFontConfig(FontConfig fontConfig) {
+        this.fontConfig = fontConfig;
     }
 
     public AnnotFreetextAttr.Alignment getAlignment() {

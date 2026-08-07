@@ -72,7 +72,7 @@ public class CDateUtil {
 
     public static String formatDate(String dateStr, String pattern){
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SimpleDateFormat outputFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(pattern, Locale.getDefault());
         try {
             Date date = inputFormat.parse(dateStr);
             String formattedOutput = outputFormat.format(date);

@@ -239,6 +239,7 @@
     <string name="tools_page_edit_insert_page_enterpage_tint">Ingrese una página</string>
     <string name="tools_page_edit_insert_page_filename">Nombre de archivo</string>
     <string name="tools_page_edit_insert_page_range">Rango de páginas</string>
+    <string name="tools_page_range_hint">1-%1$d</string>
     <string name="tools_page_edit_insert_page_allpage">Todas las páginas</string>
     <string name="tools_page_edit_insert_page_oddpage">Solo páginas impares</string>
     <string name="tools_page_edit_insert_page_evenpage">Solo páginas pares</string>
@@ -383,6 +384,8 @@
     <string name="tools_trust">Confiar</string>
     <string name="tools_add_to_trusted_cert">Agregar a certificados de confianza</string>
     <string name="tools_storage_space">Almacenamiento local</string>
+    <string name="tools_downloads">Descargas</string>
+    <string name="tools_documents">Documentos</string>
     <string name="tools_select_folder">Seleccionar carpeta</string>
     <string name="tools_save_to_this_directory">Guardar en este directorio</string>
     <string name="tools_directory_permission_denied_title">Se requiere acceso a carpetas</string>

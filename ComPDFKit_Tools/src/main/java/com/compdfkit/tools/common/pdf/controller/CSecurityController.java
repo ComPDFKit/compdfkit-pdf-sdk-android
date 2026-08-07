@@ -178,8 +178,11 @@ public class CSecurityController {
                                fragment.getContext(),
                                dir,
                                fileName,
-                                false,
-                               tempPath -> document.saveAs(tempPath, false, ctx.getConfiguration().globalConfig.fileSaveExtraFontSubset));
+                               false,
+                               tempPath -> document.saveAs(tempPath,
+                                       false,
+                                       false,
+                                       ctx.getConfiguration().globalConfig.fileSaveExtraFontSubset));
                         CThreadPoolUtils.getInstance().executeMain(() -> {
                             ctx.getBasicFragment().dismissLoadingDialog();
                             if (document.shouleReloadDocument()) {
@@ -195,6 +198,8 @@ public class CSecurityController {
                                 }
                                 CToastUtil.showLongToast(fragment.getContext(), R.string.tools_save_success);
                             } else {
+                                CLog.e(TAG, "flattenedPdf public save failed: " + saveResult.getErrorMessage()
+                                        + ", dir=" + dir + ", fileName=" + fileName);
                                 CToastUtil.showLongToast(fragment.getContext(), R.string.tools_save_failed);
                             }
                         });

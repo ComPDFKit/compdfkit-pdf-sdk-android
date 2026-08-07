@@ -84,7 +84,7 @@ public class CountryReginSpinnerAdapter extends BaseAdapter {
         if (convertView != null){
             AppCompatTextView textView = convertView.findViewById(R.id.tv_menu_title);
             Locale locale = list.get(position);
-            textView.setText(locale.getCountry() +" - " + locale.getDisplayName(Locale.US));
+            textView.setText(locale.getCountry() +" - " + locale.getDisplayName(Locale.getDefault()));
             textView.setTypeface(selectLocal != null && selectLocal == locale ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
             convertView.setBackgroundResource(locale == selectLocal ? R.drawable.tools_annotation_font_bold_bg : 0);
         }

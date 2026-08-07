@@ -264,6 +264,7 @@
     <string name="tools_page_edit_insert_page_enterpage_tint">请输入页码</string>
     <string name="tools_page_edit_insert_page_filename">文件名</string>
     <string name="tools_page_edit_insert_page_range">页面范围</string>
+    <string name="tools_page_range_hint">1-%1$d</string>
     <string name="tools_page_edit_insert_page_allpage">所有页面</string>
     <string name="tools_page_edit_insert_page_oddpage">奇数页</string>
     <string name="tools_page_edit_insert_page_evenpage">偶数页</string>
@@ -415,6 +416,8 @@
     <string name="tools_trust">信任</string>
     <string name="tools_add_to_trusted_cert">添加到可信任证书</string>
     <string name="tools_storage_space">本机存储</string>
+    <string name="tools_downloads">下载</string>
+    <string name="tools_documents">文档</string>
     <string name="tools_select_folder">选择文件夹</string>
     <string name="tools_save_to_this_directory">保存到该目录</string>
     <string name="tools_directory_permission_denied_title">需要文件夹访问权限</string>

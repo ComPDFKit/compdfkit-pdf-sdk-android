@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,9 +27,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
-import com.bumptech.glide.Glide;
 import com.compdfkit.core.document.CPDFDocument;
-import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
 import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
@@ -37,8 +36,8 @@ import com.compdfkit.tools.common.pdf.config.CPDFThumbnailConfig;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.CUriUtil;
-import com.compdfkit.tools.common.utils.glide.CPDFThumbnailCacheRevisionManager;
 import com.compdfkit.tools.common.utils.dialog.CAlertDialog;
+import com.compdfkit.tools.common.utils.glide.CPDFThumbnailCacheRevisionManager;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
@@ -49,6 +48,7 @@ import com.compdfkit.tools.docseditor.pdfpageeditinsert.CInsertBlankPageDialogFr
 import com.compdfkit.tools.docseditor.pdfpageeditinsert.CInsertPdfPageDialogFragment;
 import com.compdfkit.tools.docseditor.pdfpageeditinsert.CSelectInsertPageTypeDialogFragment;
 import com.compdfkit.tools.viewer.pdfthumbnail.CPDFEditThumbnailFragment;
+import com.compdfkit.tools.viewer.pdfthumbnail.adpater.CPDFEditThumbnailListAdapter;
 import com.compdfkit.ui.reader.CPDFReaderView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment {
+
+    private static final String TAG = "CPDFPageEdit";
 
     private CPageEditBar toolBar;
 
@@ -75,6 +77,9 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
     private boolean enterEdit = false;
     private boolean enableEditMode = true;
     private List<Integer> refreshHQApList = new ArrayList<>();
+    private volatile boolean pageOperationRunning = false;
+    private int[] pendingReplacePages = null;
+    private final CPDFPageEditOperationManager pageEditOperationManager = new CPDFPageEditOperationManager();
 
     private ActivityResultLauncher<Intent> replaceSelectDocumentLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getData() != null && result.getData().getData() != null) {
@@ -83,11 +88,14 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
             CPDFDocument selectDocument = new CPDFDocument(getContext());
             CPDFDocument.PDFDocumentError pdfDocumentError = selectDocument.open(selectUri);
             if (pdfDocumentError == PDFDocumentErrorSuccess) {
-                CThreadPoolUtils.getInstance().executeIO(() -> replacePage(selectDocument));
+                int[] replacePages = pendingReplacePages;
+                CThreadPoolUtils.getInstance().executeIO(() -> replacePage(selectDocument, replacePages));
             } else if (pdfDocumentError == PDFDocumentErrorPassword) {
                 CVerifyPasswordDialogFragment verifyPasswordDialogFragment;
                 verifyPasswordDialogFragment = CVerifyPasswordDialogFragment.newInstance(selectDocument, selectUri);
-                verifyPasswordDialogFragment.setVerifyCompleteListener(document -> replacePage(selectDocument));
+                int[] replacePages = pendingReplacePages;
+                verifyPasswordDialogFragment.setVerifyCompleteListener(document ->
+                        CThreadPoolUtils.getInstance().executeIO(() -> replacePage(selectDocument, replacePages)));
                 verifyPasswordDialogFragment.show(getChildFragmentManager(), "verifyPwdDialog");
             }
         }
@@ -165,20 +173,7 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
             getDialog().setCanceledOnTouchOutside(false);
             getDialog().setOnKeyListener((dialogInterface, keyCode, keyEvent) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
-                    if (editThumbnailFragment.isEdit()) {
-                        editThumbnailFragment.setEdit(false);
-                        toolBar.showEditButton(true);
-                        toolBar.showSelectButton(false);
-                        toolBar.showDoneButton(false);
-                        editToolBar.setVisibility(View.GONE);
-                        return true;
-                    } else {
-                        if (onEnterBackPressedListener != null) {
-                            onEnterBackPressedListener.onEnterBackPressed();
-                        }
-                        dismiss();
-                        return false;
-                    }
+                    return handleBackPressed();
                 }
                 return false;
             });
@@ -227,26 +222,11 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
 
         editToolBar.initWithPDFView(pdfView);
         toolBar.setBackBtnClickListener(v -> {
-            if (editThumbnailFragment.isEdit()) {
-                editThumbnailFragment.setEdit(false);
-                toolBar.showEditButton(true);
-                toolBar.showSelectButton(false);
-                toolBar.showDoneButton(false);
-                editToolBar.setVisibility(View.GONE);
-            } else {
-                if (onEnterBackPressedListener != null) {
-                    onEnterBackPressedListener.onEnterBackPressed();
-                }
-                dismiss();
-            }
+            handleBackPressed();
         });
         toolBar.setOnDoneClickCallback(() -> {
             if (editThumbnailFragment.isEdit()) {
-                editThumbnailFragment.setEdit(false);
-                toolBar.showEditButton(true);
-                toolBar.showSelectButton(false);
-                toolBar.showDoneButton(false);
-                editToolBar.setVisibility(View.GONE);
+                exitEditMode();
             }
         });
         toolBar.setOnEnableEditPageCallback((enable) -> {
@@ -260,98 +240,163 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         if (enableEditMode && enterEdit) {
             toolBar.enterEditMode();
         }
-        editToolBar.setInsertPageListener(v -> insertPage());
-        editToolBar.setReplacePageListener(view -> {
-            SparseIntArray pages = editThumbnailFragment.getSelectPages();
-            if (pages.size() == 0) {
-                CAlertDialog dialog = CAlertDialog.newInstance(getString(R.string.tools_page_edit_alert_title),
-                        getString(R.string.tools_page_edit_alert_content_nopage));
-                dialog.setConfirmClickListener((v) -> dialog.dismiss());
-                dialog.show(getChildFragmentManager(), "dialog");
-            } else {
-                replaceSelectDocumentLauncher.launch(CFileUtils.getContentIntent());
+        editToolBar.setInsertPageListener(v -> {
+            if (isPageStructureEditing()) {
+                return;
             }
+            insertPage();
+        });
+        editToolBar.setReplacePageListener(view -> {
+            if (isPageStructureEditing()) {
+                return;
+            }
+            SparseIntArray pages = editThumbnailFragment.getSelectPages();
+            if (!hasSelectedPages(pages)) {
+                return;
+            }
+            pendingReplacePages = snapshotSelectedPages(pages);
+            replaceSelectDocumentLauncher.launch(CFileUtils.getContentIntent());
         });
         editToolBar.setExtractPageListener(view -> {
-            SparseIntArray pages = editThumbnailFragment.getSelectPages();
-            if (pages.size() == 0) {
-                CAlertDialog dialog = CAlertDialog.newInstance(getString(R.string.tools_page_edit_alert_title),
-                        getString(R.string.tools_page_edit_alert_content_nopage));
-                dialog.setConfirmClickListener((v) -> dialog.dismiss());
-                dialog.show(getChildFragmentManager(), "dialog");
-            } else {
-                CThreadPoolUtils.getInstance().executeIO(() -> {
-                    String dir = Environment.DIRECTORY_DOWNLOADS + File.separator + CFileUtils.EXTRACT_FOLDER;
-                    Uri extractPDFUri = extractPage(dir);
-                    String fileName = CUriUtil.getUriFileName(getContext(), extractPDFUri);
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> {
-                            if (extractPDFUri != null) {
-                                CFileUtils.shareFile(requireContext(), getString(R.string.tools_share_to), "application/pdf", extractPDFUri);
-                            }
-                            String msg = extractPDFUri == null ? getString(R.string.tools_page_edit_extract_fail) : (getString(R.string.tools_page_edit_extract_ok) + " : " + dir + File.separator + fileName);
-                            CToastUtil.showToast(getContext(), msg);
-                        });
-                    }
-                });
+            if (isPageStructureEditing()) {
+                return;
             }
+            SparseIntArray pages = editThumbnailFragment.getSelectPages();
+            if (!hasSelectedPages(pages)) {
+                return;
+            }
+            int[] selectedPages = snapshotSelectedPages(pages);
+            setPageOperationRunning(true);
+            editThumbnailFragment.setRecyclerViewTouchable(false);
+            CThreadPoolUtils.getInstance().executeIO(() -> {
+                String dir = Environment.DIRECTORY_DOWNLOADS + File.separator + CFileUtils.EXTRACT_FOLDER;
+                Uri extractPDFUri = extractPages(dir, selectedPages);
+                String fileName = CUriUtil.getUriFileName(getContext(), extractPDFUri);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        if (extractPDFUri != null) {
+                            CFileUtils.shareFile(requireContext(), getString(R.string.tools_share_to), "application/pdf", extractPDFUri);
+                        }
+                        String msg = extractPDFUri == null ? getString(R.string.tools_page_edit_extract_fail) : (getString(R.string.tools_page_edit_extract_ok) + " : " + dir + File.separator + fileName);
+                        CToastUtil.showToast(getContext(), msg);
+                        finishPageOperation();
+                    });
+                } else {
+                    finishPageOperationOnMain();
+                }
+            });
         });
         editToolBar.setCopyPageListener(view -> {
-            SparseIntArray pages = editThumbnailFragment.getSelectPages();
-            if (pages.size() == 0) {
-                CAlertDialog dialog = CAlertDialog.newInstance(getString(R.string.tools_page_edit_alert_title),
-                        getString(R.string.tools_page_edit_alert_content_nopage));
-                dialog.setConfirmClickListener((v) -> dialog.dismiss());
-                dialog.show(getChildFragmentManager(), "dialog");
-            } else {
-                CThreadPoolUtils.getInstance().executeIO(this::copyPage);
+            if (isPageStructureEditing()) {
+                return;
             }
+            SparseIntArray pages = editThumbnailFragment.getSelectPages();
+            if (!hasSelectedPages(pages)) {
+                return;
+            }
+            int[] selectedPages = snapshotSelectedPages(pages);
+            setPageOperationRunning(true);
+            editThumbnailFragment.setRecyclerViewTouchable(false);
+            CThreadPoolUtils.getInstance().executeIO(() -> copyPages(selectedPages));
         });
         editToolBar.setRotatePageListener(view -> {
-            SparseIntArray pages = editThumbnailFragment.getSelectPages();
-            if (pages.size() == 0) {
-                CAlertDialog dialog = CAlertDialog.newInstance(getString(R.string.tools_page_edit_alert_title),
-                        getString(R.string.tools_page_edit_alert_content_nopage));
-                dialog.setConfirmClickListener((v) -> dialog.dismiss());
-                dialog.show(getChildFragmentManager(), "dialog");
-            } else {
-                CThreadPoolUtils.getInstance().executeIO(this::rotatePage);
+            if (isPageStructureEditing()) {
+                return;
             }
+            SparseIntArray pages = editThumbnailFragment.getSelectPages();
+            if (!hasSelectedPages(pages)) {
+                return;
+            }
+            int[] selectedPages = snapshotSelectedPages(pages);
+            setPageOperationRunning(true);
+            editThumbnailFragment.setRecyclerViewTouchable(false);
+            CThreadPoolUtils.getInstance().executeIO(() -> rotatePages(selectedPages));
         });
         editToolBar.setDeletePageListener(view -> {
+            if (isPageStructureEditing()) {
+                return;
+            }
             SparseIntArray pages = editThumbnailFragment.getSelectPages();
-            if (pages.size() == 0) {
-                CAlertDialog dialog = CAlertDialog.newInstance(getString(R.string.tools_page_edit_alert_title),
-                        getString(R.string.tools_page_edit_alert_content_nopage));
+            if (!hasSelectedPages(pages) || !checkPdfView()) {
+                return;
+            }
+            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+            if (pages.size() == document.getPageCount()) {
+                CAlertDialog dialog = CAlertDialog.newInstance(getString(R.string.tools_warning),
+                        getString(R.string.tools_page_edit_alert_content_allpage));
                 dialog.setConfirmClickListener((v) -> dialog.dismiss());
                 dialog.show(getChildFragmentManager(), "dialog");
-            } else {
-                if (!checkPdfView()) {
-                    return;
-                }
-                CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-                if (pages.size() == document.getPageCount()) {
-                    CAlertDialog dialog = CAlertDialog.newInstance(getString(R.string.tools_warning),
-                            getString(R.string.tools_page_edit_alert_content_allpage));
-                    dialog.setConfirmClickListener((v) -> dialog.dismiss());
-                    dialog.show(getChildFragmentManager(), "dialog");
-                } else {
-                    CThreadPoolUtils.getInstance().executeIO(this::deletePage);
-                }
+                return;
             }
+            int[] selectedPages = snapshotSelectedPages(pages);
+            setPageOperationRunning(true);
+            editThumbnailFragment.setRecyclerViewTouchable(false);
+            CThreadPoolUtils.getInstance().executeIO(() -> deletePages(selectedPages));
         });
-        if (getDialog() != null) {
-            getDialog().setOnKeyListener((dialog, keyCode, event) -> {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dismiss();
-                    return true;
-                }
-
-                return false;
-            });
-        }
     }
 
+    /**
+     * Returns true while a page operation is mutating the PDF document.
+     */
+    private boolean isPageStructureEditing() {
+        return pageOperationRunning;
+    }
+
+    /**
+     * Updates the operation guard used to prevent concurrent page mutations.
+     */
+    private void setPageOperationRunning(boolean running) {
+        pageOperationRunning = running;
+    }
+
+    /**
+     * Checks whether at least one page is selected and shows a warning when none is selected.
+     */
+    private boolean hasSelectedPages(SparseIntArray pages) {
+        if (pages != null && pages.size() > 0) {
+            return true;
+        }
+        CAlertDialog dialog = CAlertDialog.newInstance(getString(R.string.tools_page_edit_alert_title),
+                getString(R.string.tools_page_edit_alert_content_nopage));
+        dialog.setConfirmClickListener((v) -> dialog.dismiss());
+        dialog.show(getChildFragmentManager(), "dialog");
+        return false;
+    }
+
+    /**
+     * Handles toolbar and system back actions with the same edit-mode behavior.
+     */
+    private boolean handleBackPressed() {
+        if (isPageStructureEditing()) {
+            return true;
+        }
+        if (editThumbnailFragment != null && editThumbnailFragment.isEdit()) {
+            exitEditMode();
+            return true;
+        }
+        if (onEnterBackPressedListener != null) {
+            onEnterBackPressedListener.onEnterBackPressed();
+        }
+        dismiss();
+        return true;
+    }
+
+    /**
+     * Leaves edit mode and restores the toolbar to browse mode.
+     */
+    private void exitEditMode() {
+        if (editThumbnailFragment != null) {
+            editThumbnailFragment.setEdit(false);
+        }
+        toolBar.showEditButton(true);
+        toolBar.showSelectButton(false);
+        toolBar.showDoneButton(false);
+        editToolBar.setVisibility(View.GONE);
+    }
+
+    /**
+     * Displays the insert-page type picker and delegates the selected insert flow.
+     */
     private void insertPage() {
         CSelectInsertPageTypeDialogFragment insertDialogFragment = CSelectInsertPageTypeDialogFragment.newInstance();
         insertDialogFragment.setInsertBlankPageClickListener(view -> {
@@ -375,6 +420,9 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         insertDialogFragment.show(getChildFragmentManager(), "insert page");
     }
 
+    /**
+     * Shows the PDF insert dialog for a successfully opened source document.
+     */
     private void showInsertPDFPageDialog(CPDFDocument document) {
         CInsertPdfPageDialogFragment pdfPageDialogFragment = CInsertPdfPageDialogFragment.newInstance();
         pdfPageDialogFragment.initWithPDFView(pdfView);
@@ -391,205 +439,222 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
         pdfPageDialogFragment.show(getChildFragmentManager(), "pdf page");
     }
 
-    private boolean replacePage(CPDFDocument selectDocument) {
-        if (selectDocument == null) {
-            return false;
-        }
-        if (!checkPdfView()) {
-            return false;
-        }
-
-        CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-        SparseIntArray pagesArr = editThumbnailFragment.getSelectPages();
-        if (pagesArr == null || pagesArr.size() == 0) {
-            return false;
-        }
-        boolean res;
-
-        int[] insertPageNum = new int[selectDocument.getPageCount()];
-        for (int i = 0; i < insertPageNum.length; i++) {
-            insertPageNum[i] = i;
-        }
-
-        int[] pageNum = new int[pagesArr.size()];
-        for (int i = 0; i < pagesArr.size(); i++) {
-            pageNum[i] = pagesArr.keyAt(i);
-        }
-        res = document.importPages(selectDocument, insertPageNum, pageNum[pageNum.length - 1] + 1);
-        if (!res) {
-            return false;
-        }
-        hasEdit = true;
-        res = document.removePages(pageNum);
-        if (!res) {
-            return false;
-        }
-        CPDFThumbnailCacheRevisionManager.bumpRevision(document);
-
-        int[] insertPages = new int[insertPageNum.length];
-        for (int i = pageNum[pageNum.length - 1] + 1 - pageNum.length; i <= insertPageNum.length + (pageNum[pageNum.length - 1] + 1) - 1 - pageNum.length; i++) {
-            insertPages[i - (pageNum[pageNum.length - 1] + 1 - pageNum.length)] = i;
-        }
-        if (insertPages.length > 0) {
-            editThumbnailFragment.setSelectPages(insertPages);
-        }
-        return true;
-    }
-
-    private Uri extractPage(String publicDirectory) {
-        if (!checkPdfView()) {
-            return null;
-        }
-        SparseIntArray pagesArr = editThumbnailFragment.getSelectPages();
-        if (pagesArr == null || pagesArr.size() == 0) {
-            return null;
-        }
-        boolean res;
-        int[] pageNum = new int[pagesArr.size()];
-        for (int i = 0; i < pagesArr.size(); i++) {
-            pageNum[i] = pagesArr.keyAt(i);
-        }
-        // Downloads/compdfkit/extract/
-
-        Uri saveUri = CUriUtil.createFileUri(getContext(),
-                publicDirectory, getNewFileName(pageNum), "application/pdf");
-        if (saveUri == null) {
-            return null;
-        }
-        CPDFDocument newDocument = CPDFDocument.createDocument(getContext());
-        res = newDocument.importPages(pdfView.getCPdfReaderView().getPDFDocument(), pageNum, 0);
+    /**
+     * Replaces selected pages with pages from the selected source document.
+     */
+    private boolean replacePage(CPDFDocument selectDocument, int[] pageNum) {
+        setPageOperationRunning(true);
+        CThreadPoolUtils.getInstance().executeMain(() -> {
+            if (editThumbnailFragment != null) {
+                editThumbnailFragment.setRecyclerViewTouchable(false);
+            }
+        });
         try {
-            res &= newDocument.saveAs(saveUri, false, pdfView.isSaveFileExtraFontSubset());
-        } catch (Exception ignored) {
-        }
-        return res ? saveUri : null;
-    }
-
-    private boolean copyPage() {
-        if (!checkPdfView()) {
-            return false;
-        }
-        CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-        SparseIntArray pagesArr = editThumbnailFragment.getSelectPages();
-        if (pagesArr == null || pagesArr.size() == 0) {
-            return false;
-        }
-
-        List<CPDFPage> pageList = new ArrayList<>();
-        for (int i = 0; i < pagesArr.size(); i++) {
-            CPDFPage page = document.copyPage(pagesArr.keyAt(i));
-            if (page != null) {
-                pageList.add(page);
-            }
-        }
-
-        if (!pageList.isEmpty()) {
-            for (int i = pageList.size() - 1; i >= 0; i--) {
-                document.addPage(pageList.get(i), pagesArr.keyAt(pagesArr.size() - 1) + 1);
-            }
-            CPDFThumbnailCacheRevisionManager.bumpRevision(document);
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> pdfView.getCPdfReaderView().reloadPages());
-            }
-            int[] updatePages = new int[pagesArr.size()];
-            for (int i = 0; i < updatePages.length; i++) {
-                updatePages[i] = i + pagesArr.keyAt(pagesArr.size() - 1) + 1;
-            }
-            editThumbnailFragment.setSelectPages(updatePages);
-            hasEdit = true;
-        }
-        return true;
-    }
-
-    private boolean rotatePage() {
-        if (!checkPdfView()) {
-            return false;
-        }
-        CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-        SparseIntArray pagesArr = editThumbnailFragment.getSelectPages();
-        if (pagesArr == null || pagesArr.size() == 0) {
-            return false;
-        }
-
-        int[] pageNum = new int[pagesArr.size()];
-        for (int i = 0; i < pagesArr.size(); i++) {
-            pageNum[i] = pagesArr.keyAt(i);
-        }
-        for (int page : pageNum) {
-            CPDFPage selectedPage = document.pageAtIndex(page);
-            if (selectedPage == null) {
+            if (selectDocument == null || pageNum == null || pageNum.length == 0) {
                 return false;
             }
-            int rotation = selectedPage.getRotation();
-            if (!selectedPage.setRotation(rotation + 90)) {
+            if (!checkPdfView()) {
                 return false;
             }
-            if (!refreshHQApList.contains(page)) {
-                refreshHQApList.add(page);
+
+            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+            int[] insertedPages = pageEditOperationManager.replacePages(document, selectDocument, pageNum);
+            if (insertedPages == null) {
+                return false;
             }
+
             hasEdit = true;
+            if (insertedPages.length > 0) {
+                editThumbnailFragment.setSelectPages(insertedPages);
+            }
+            return true;
+        } finally {
+            pendingReplacePages = null;
+            finishPageOperationOnMain();
         }
-        CPDFThumbnailCacheRevisionManager.bumpRevision(document);
-        editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_ROTATE);
-        return true;
     }
 
-    private boolean deleteing = false;
-
-    private boolean deletePage() {
-        if (!checkPdfView() || deleteing) {
-            return false;
+    /**
+     * Exports selected pages into a new PDF file.
+     */
+    private Uri extractPages(String publicDirectory, int[] pageNum) {
+        if (!checkPdfView()) {
+            return null;
         }
-        CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-        SparseIntArray pagesArr = editThumbnailFragment.getSelectPages();
-        if (pagesArr == null || pagesArr.size() == 0) {
-            return false;
-        }
+        return pageEditOperationManager.extractPages(
+                getContext(),
+                pdfView.getCPdfReaderView().getPDFDocument(),
+                pageNum,
+                publicDirectory,
+                pdfView.isSaveFileExtraFontSubset());
+    }
 
-        int[] pageNum = new int[pagesArr.size()];
+    /**
+     * Creates an immutable snapshot of the selected page indexes.
+     */
+    private int[] snapshotSelectedPages(SparseIntArray pagesArr) {
+        int[] selectedPages = new int[pagesArr.size()];
         for (int i = 0; i < pagesArr.size(); i++) {
-            pageNum[i] = pagesArr.keyAt(i);
+            selectedPages[i] = pagesArr.keyAt(i);
         }
-        deleteing = true;
-        editThumbnailFragment.setRecyclerViewTouchable(false);
-        CThreadPoolUtils.getInstance().executeIO(()->{
-            boolean removed = document.removePages(pageNum);
+        return selectedPages;
+    }
+
+    /**
+     * Copies selected pages and selects the newly inserted copies.
+     */
+    private void copyPages(int[] selectedPages) {
+        boolean finishOnMain = true;
+        try {
+            if (!checkPdfView()) {
+                return;
+            }
+            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+            int[] copiedPages = pageEditOperationManager.copyPages(document, selectedPages);
+            if (copiedPages == null) {
+                return;
+            }
+
+            hasEdit = true;
+            editThumbnailFragment.setSelectPages(copiedPages, this::finishPageOperation);
+            finishOnMain = false;
+        } catch (Exception e) {
+            Log.e(TAG, "copyPage failed", e);
+        } finally {
+            if (finishOnMain) {
+                finishPageOperationOnMain();
+            }
+        }
+    }
+
+    /**
+     * Restores interaction after a page operation finishes or fails.
+     */
+    private void finishPageOperation() {
+        if (editThumbnailFragment != null) {
+            editThumbnailFragment.setRecyclerViewTouchable(true);
+        }
+        setPageOperationRunning(false);
+    }
+
+    /**
+     * Restores interaction on the Android main thread.
+     */
+    private void finishPageOperationOnMain() {
+        CThreadPoolUtils.getInstance().executeMain(this::finishPageOperation);
+    }
+
+    /**
+     * Rotates selected pages and refreshes their thumbnails.
+     */
+    private boolean rotatePages(int[] pageNum) {
+        boolean finishOnMain = true;
+        try {
+            if (!checkPdfView()) {
+                return false;
+            }
+            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+            if (pageNum == null || pageNum.length == 0) {
+                return false;
+            }
+
+            if (!pageEditOperationManager.rotatePages(document, pageNum)) {
+                return false;
+            }
+            for (int page : pageNum) {
+                if (!refreshHQApList.contains(page)) {
+                    refreshHQApList.add(page);
+                }
+            }
+            hasEdit = true;
+            editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_ROTATE);
+            finishPageOperationOnMain();
+            finishOnMain = false;
+            return true;
+        } finally {
+            if (finishOnMain) {
+                finishPageOperationOnMain();
+            }
+        }
+    }
+
+    /**
+     * Deletes selected pages and refreshes the thumbnail list.
+     */
+    private boolean deletePages(int[] pageNum) {
+        boolean finishOnMain = true;
+        try {
+            if (!checkPdfView()) {
+                return false;
+            }
+            CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+            if (pageNum == null || pageNum.length == 0) {
+                return false;
+            }
+            boolean removed = pageEditOperationManager.deletePages(document, pageNum);
             CThreadPoolUtils.getInstance().executeMain(()->{
                 editThumbnailFragment.setSelectAll(false);
                 if (removed) {
-                    CPDFThumbnailCacheRevisionManager.bumpRevision(document);
                     editThumbnailFragment.updatePagesArr(pageNum, CPDFEditThumbnailFragment.UPDATE_TYPE_DELETE);
                 }
-                editThumbnailFragment.setRecyclerViewTouchable(true);
                 hasEdit = removed || hasEdit;
-                deleteing = false;
+                finishPageOperation();
             });
-        });
-
+            finishOnMain = false;
+        } catch (Exception e) {
+            Log.e(TAG, "deletePage failed", e);
+            finishPageOperationOnMain();
+            finishOnMain = false;
+        } finally {
+            if (finishOnMain) {
+                finishPageOperationOnMain();
+            }
+        }
         return true;
     }
 
+    /**
+     * Moves a page after a thumbnail drag request has been accepted.
+     */
+    public void movePage(int sourcePosition, int targetPosition,
+                         CPDFEditThumbnailListAdapter.MoveResultCallback callback) {
+        if (isPageStructureEditing() || !checkPdfView()) {
+            if (callback != null) {
+                callback.onResult(false);
+            }
+            return;
+        }
+        setPageOperationRunning(true);
+        if (editThumbnailFragment != null) {
+            editThumbnailFragment.setRecyclerViewTouchable(false);
+        }
+        CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
+        CThreadPoolUtils.getInstance().executeIO(() -> {
+            boolean moved = false;
+            try {
+                moved = pageEditOperationManager.movePage(document, sourcePosition, targetPosition);
+                hasEdit = moved || hasEdit;
+            } catch (Exception e) {
+                Log.e(TAG, "movePage failed", e);
+            }
+            boolean result = moved;
+            CThreadPoolUtils.getInstance().executeMain(() -> {
+                finishPageOperation();
+                if (callback != null) {
+                    callback.onResult(result);
+                }
+            });
+        });
+    }
+
+    /**
+     * Checks whether the current PDF view and document are available.
+     */
     private boolean checkPdfView() {
         if (pdfView == null || pdfView.getCPdfReaderView() == null) {
             return false;
         }
         return pdfView.getCPdfReaderView().getPDFDocument() != null;
-    }
-
-    private String getNewFileName(int[] exportPages) {
-        CPDFDocument document = pdfView.getCPdfReaderView().getPDFDocument();
-        String fileName = document.getFileName();
-        StringBuilder newName = new StringBuilder(fileName.substring(0, fileName.indexOf(".pdf")));
-        newName.append("_Page");
-        for (int i = 0; i < exportPages.length; i++) {
-            if (i != 0) {
-                newName.append(",").append(exportPages[i] + 1);
-            } else {
-                newName.append(exportPages[i] + 1);
-            }
-        }
-        newName.append(".pdf");
-        return newName.toString();
     }
 
     @Override
@@ -599,16 +664,6 @@ public class CPDFPageEditDialogFragment extends CBasicBottomSheetDialogFragment 
 
     private void intEditThumbnailFragment() {
         editThumbnailFragment.initFragment();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        try {
-            Glide.get(getContext().getApplicationContext()).clearMemory();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     @Override

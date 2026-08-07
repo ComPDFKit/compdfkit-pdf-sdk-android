@@ -313,7 +313,7 @@ public class CWatermarkPageFragment extends CBasicThemeFragment {
      */
     public boolean applyWatermark() {
         if (watermark != null) {
-            return watermarkPageView.modifyWatermark(watermark);
+            return watermarkPageView.modifyWatermark(watermark, false);
         } else {
             return watermarkPageView.createWatermark();
         }

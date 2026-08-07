@@ -17,7 +17,7 @@
       android:resizeableActivity="true"
       android:theme="@style/ComPDFKit.Theme.Light"
       android:windowSoftInputMode="adjustPan"
-      tools:replace="android:theme">
+      tools:replace="android:theme,android:exported">
       <intent-filter
         android:scheme="http"
         tools:ignore="AppLinkUrlError">

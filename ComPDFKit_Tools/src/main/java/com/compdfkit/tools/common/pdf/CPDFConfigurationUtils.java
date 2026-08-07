@@ -32,6 +32,7 @@ import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
 import com.compdfkit.tools.common.pdf.config.CustomToolbarItem;
 import com.compdfkit.tools.common.pdf.config.FormsConfig;
+import com.compdfkit.tools.common.pdf.config.FontConfig;
 import com.compdfkit.tools.common.pdf.config.GlobalConfig;
 import com.compdfkit.tools.common.pdf.config.ModeConfig;
 import com.compdfkit.tools.common.pdf.config.ReaderViewConfig;
@@ -224,20 +225,6 @@ public class CPDFConfigurationUtils {
             default:break;
         }
         readerViewConfig.enableSliderBar = jsonObject.optBoolean("enableSliderBar", true);
-        switch (jsonObject.optString("slideBarPosition", "right").toLowerCase()) {
-            case "left":
-                readerViewConfig.slideBarPosition = ReaderViewConfig.SlideBarPosition.Left;
-                break;
-            case "top":
-                readerViewConfig.slideBarPosition = ReaderViewConfig.SlideBarPosition.Top;
-                break;
-            case "bottom":
-                readerViewConfig.slideBarPosition = ReaderViewConfig.SlideBarPosition.Bottom;
-                break;
-            default:
-                readerViewConfig.slideBarPosition = ReaderViewConfig.SlideBarPosition.Right;
-                break;
-        }
         readerViewConfig.enablePageIndicator = jsonObject.optBoolean("enablePageIndicator", true);
         readerViewConfig.pageSpacing = jsonObject.optInt("pageSpacing", 10);
         readerViewConfig.pageScale = (float) jsonObject.optDouble("pageScale", 1.0);
@@ -247,6 +234,13 @@ public class CPDFConfigurationUtils {
         readerViewConfig.enableCreateEditTextInput = jsonObject.optBoolean("enableCreateEditTextInput", true);
         readerViewConfig.enableCreateImagePickerDialog = jsonObject.optBoolean("enableCreateImagePickerDialog", true);
         readerViewConfig.enableDoubleTapZoom = jsonObject.optBoolean("enableDoubleTapZoom", true);
+        JSONObject accessibilityJsonObject = jsonObject.optJSONObject("accessibilityConfig");
+        if (accessibilityJsonObject != null) {
+            readerViewConfig.accessibilityConfig.keyboardNavigationEnabled =
+                    accessibilityJsonObject.optBoolean("keyboardNavigationEnabled", false);
+            readerViewConfig.accessibilityConfig.talkBackEnabled =
+                    accessibilityJsonObject.optBoolean("talkBackEnabled", false);
+        }
         JSONArray marginsJsonArray = jsonObject.optJSONArray("margins");
         if (marginsJsonArray != null && marginsJsonArray.length() == 4) {
             int left = marginsJsonArray.optInt(0, 0);
@@ -266,6 +260,11 @@ public class CPDFConfigurationUtils {
             return annotationsConfig;
         }
         annotationsConfig.annotationAuthor = jsonObject.optString("annotationAuthor", "");
+        AnnotationsConfig.InkUndoRedoMode inkUndoRedoMode =
+                AnnotationsConfig.InkUndoRedoMode.fromString(jsonObject.optString("inkUndoRedoMode", null));
+        if (inkUndoRedoMode != null) {
+            annotationsConfig.inkUndoRedoMode = inkUndoRedoMode;
+        }
         List<CAnnotationType> annotationTypes = new ArrayList<>();
         JSONArray availableAnnotTypes = jsonObject.optJSONArray("availableTypes");
         if (availableAnnotTypes != null) {
@@ -482,8 +481,8 @@ public class CPDFConfigurationUtils {
 
                 String familyName = annotJsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
                 String styleName = annotJsonObject.optString("styleName", "Regular");
-                String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(familyName, styleName);
-                freetextAttr.setPsName(psName);
+                freetextAttr.setFontConfig(createFontConfig(familyName, styleName));
+
                 annotAttr = freetextAttr;
                 break;
             default:
@@ -535,9 +534,7 @@ public class CPDFConfigurationUtils {
 
                 String familyName = textAttrJsonObj.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
                 String styleName = textAttrJsonObj.optString("styleName", "Regular");
-                String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(familyName, styleName);
-
-                textAttr.setPsName(psName);
+                textAttr.setFontConfig(createFontConfig(familyName, styleName));
                 switch (textAttrJsonObj.optString("alignment", "left")){
                     case "center":
                         textAttr.setAlignment(CPDFEditTextArea.PDFEditAlignType.PDFEditAlignMiddle);
@@ -665,6 +662,13 @@ public class CPDFConfigurationUtils {
         }
     }
 
+    private static FontConfig createFontConfig(String familyName, String styleName) {
+        FontConfig fontConfig = new FontConfig();
+        fontConfig.setFamilyName(familyName);
+        fontConfig.setStyleName(styleName);
+        return fontConfig;
+    }
+
     private static FormsAttr getFormsAttr(CPDFWidget.WidgetType widgetType, JSONObject jsonObject) {
         FormsAttr formsAttr = null;
         switch (widgetType) {
@@ -677,9 +681,8 @@ public class CPDFConfigurationUtils {
                 textFieldAttr.setFontSize(jsonObject.optInt("fontSize", 20));
                 String familyName = jsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
                 String styleName = jsonObject.optString("styleName", "Regular");
-                String psName = CPDFTextAttribute.FontNameHelper.obtainFontName(familyName, styleName);
+                textFieldAttr.setFontConfig(createFontConfig(familyName, styleName));
 
-                textFieldAttr.setPsName(psName);
                 textFieldAttr.setAlignment(AnnotFreetextAttr.Alignment.fromString(jsonObject.optString("alignment", AnnotFreetextAttr.Alignment.LEFT.name())));
                 textFieldAttr.setMultiline(jsonObject.optBoolean("multiline", true));
                 formsAttr = textFieldAttr;
@@ -714,9 +717,7 @@ public class CPDFConfigurationUtils {
 
                 String listBoxFamilyName = jsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
                 String listBoxStyleName = jsonObject.optString("styleName", "Regular");
-                String listBoxPsName = CPDFTextAttribute.FontNameHelper.obtainFontName(listBoxFamilyName, listBoxStyleName);
-
-                formsListBoxAttr.setPsName(listBoxPsName);
+                formsListBoxAttr.setFontConfig(createFontConfig(listBoxFamilyName, listBoxStyleName));
                 formsAttr = formsListBoxAttr;
                 break;
             case Widget_ComboBox:
@@ -729,10 +730,7 @@ public class CPDFConfigurationUtils {
 
                 String comboBoxFamilyName = jsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
                 String comboBoxStyleName = jsonObject.optString("styleName", "Regular");
-                String comboBoxPsName = CPDFTextAttribute.FontNameHelper.obtainFontName(comboBoxFamilyName, comboBoxStyleName);
-
-                comboBoxAttr.setPsName(comboBoxPsName);
-
+                comboBoxAttr.setFontConfig(createFontConfig(comboBoxFamilyName, comboBoxStyleName));
                 formsAttr = comboBoxAttr;
                 break;
             case Widget_PushButton:
@@ -746,9 +744,7 @@ public class CPDFConfigurationUtils {
 
                 String pushButtonFamilyName = jsonObject.optString("familyName", CPDFTextAttribute.FontNameHelper.Font_Default_Type);
                 String pushButtonStyleName = jsonObject.optString("styleName", "Regular");
-                String pushButtonPsName = CPDFTextAttribute.FontNameHelper.obtainFontName(pushButtonFamilyName, pushButtonStyleName);
-                pushButtonAttr.setPsName(pushButtonPsName);
-
+                pushButtonAttr.setFontConfig(createFontConfig(pushButtonFamilyName, pushButtonStyleName));
                 formsAttr = pushButtonAttr;
                 break;
             case Widget_SignatureFields:

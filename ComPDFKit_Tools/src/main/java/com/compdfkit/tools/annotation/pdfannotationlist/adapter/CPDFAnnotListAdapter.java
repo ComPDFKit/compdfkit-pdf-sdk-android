@@ -241,6 +241,50 @@ public class CPDFAnnotListAdapter  extends CBaseQuickAdapter<CPDFAnnotListItem, 
         notifyItemChanged(position, REFRESH_MARKED_STATUS);
     }
 
+    public boolean removeAnnotationItem(int position) {
+        if (position < 0 || position >= list.size()) {
+            return false;
+        }
+        CPDFAnnotListItem item = list.get(position);
+        if (item.isHeader()) {
+            return false;
+        }
+
+        int headerPosition = findHeaderPosition(position);
+        if (headerPosition < 0) {
+            remove(position);
+            return true;
+        }
+
+        boolean hasNextContentInGroup = position + 1 < list.size()
+            && !list.get(position + 1).isHeader();
+        list.remove(position);
+        notifyItemRemoved(position);
+
+        CPDFAnnotListItem headerItem = list.get(headerPosition);
+        if (hasNextContentInGroup) {
+            headerItem.setAnnotationCount(Math.max(0, headerItem.getAnnotationCount() - 1));
+            notifyItemChanged(headerPosition);
+        } else {
+            list.remove(headerPosition);
+            notifyItemRemoved(headerPosition);
+        }
+        return true;
+    }
+
+    public boolean containsItem(CPDFAnnotListItem item) {
+        return item != null && list.contains(item);
+    }
+
+    private int findHeaderPosition(int position) {
+        for (int i = position - 1; i >= 0; i--) {
+            if (list.get(i).isHeader()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void setShowMoreMenu(boolean showMoreMenu) {
         this.showMoreMenu = showMoreMenu;
     }

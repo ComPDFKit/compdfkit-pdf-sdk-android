@@ -386,10 +386,10 @@ public class CWatermarkPageView extends FrameLayout {
         if (watermark == null) {
             return false;
         }
-        return modifyWatermark(watermark);
+        return modifyWatermark(watermark, true);
     }
 
-    public boolean modifyWatermark(CPDFWatermark watermark) {
+    public boolean modifyWatermark(CPDFWatermark watermark, boolean isCreate) {
         RectF pageSize = document.getPageSize(pageIndex);
         if (watermarkView.getWatermarkType() == CWatermarkView.EditType.TXT) {
             watermark.setScale(watermarkView.getScale());
@@ -418,8 +418,11 @@ public class CWatermarkPageView extends FrameLayout {
         watermark.setFullScreen(isTile);
         watermark.setHorizontalSpacing(getSpacing());
         watermark.setVerticalSpacing(getSpacing());
-        watermark.update();
-        return watermark.release();
+        if (isCreate){
+            return watermark.create();
+        } else {
+            return watermark.update();
+        }
     }
 
     private float getSpacing() {

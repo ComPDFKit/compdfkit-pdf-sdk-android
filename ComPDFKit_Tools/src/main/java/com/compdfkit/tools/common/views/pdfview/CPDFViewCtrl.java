@@ -115,8 +115,6 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
    */
   public int currentPageIndex = 0;
 
-  private boolean hasExplicitSlideBarPositionAttr = false;
-
   private List<CPDFIReaderViewCallback> readerViewCallbacks = new ArrayList<>();
 
   private List<OnEditStatusChangeListener> editStatusChangeListeners = new ArrayList<>();
@@ -159,8 +157,6 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
           R.styleable.CPDFViewCtrl);
       boolean enableSliderBar = typedArray.getBoolean(R.styleable.CPDFViewCtrl_tools_enable_slider_bar,
           true);
-      hasExplicitSlideBarPositionAttr = typedArray.hasValue(
-          R.styleable.CPDFViewCtrl_tools_slider_bar_position);
       CPDFPageNavigator.NavigatorPosition slideBarPosition = parseSlideBarPosition(
           typedArray.getInt(R.styleable.CPDFViewCtrl_tools_slider_bar_position, 2));
       slideBarController.setPosition(slideBarPosition);
@@ -203,24 +199,6 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
       case 3:
         return CPDFPageNavigator.NavigatorPosition.BOTTOM;
       case 2:
-      default:
-        return CPDFPageNavigator.NavigatorPosition.RIGHT;
-    }
-  }
-
-  private CPDFPageNavigator.NavigatorPosition parseSlideBarPosition(
-      @Nullable com.compdfkit.tools.common.pdf.config.ReaderViewConfig.SlideBarPosition position) {
-    if (position == null) {
-      return CPDFPageNavigator.NavigatorPosition.RIGHT;
-    }
-    switch (position) {
-      case Left:
-        return CPDFPageNavigator.NavigatorPosition.LEFT;
-      case Top:
-        return CPDFPageNavigator.NavigatorPosition.TOP;
-      case Bottom:
-        return CPDFPageNavigator.NavigatorPosition.BOTTOM;
-      case Right:
       default:
         return CPDFPageNavigator.NavigatorPosition.RIGHT;
     }
@@ -582,14 +560,6 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     slideBarHelper.syncSlideBar(currentPageIndex);
   }
 
-  public void setSlideBarPosition(@Nullable com.compdfkit.tools.common.pdf.config.ReaderViewConfig.SlideBarPosition position) {
-    CPDFPageNavigator.NavigatorPosition navPosition = parseSlideBarPosition(position);
-    slideBarHelper.setSlideBarPosition(navPosition);
-    if (cPdfReaderView != null && cPdfReaderView.getPDFDocument() != null) {
-      slideBarHelper.syncSlideBar(currentPageIndex);
-    }
-  }
-
   public boolean isEnableSliderBar() {
     return slideBarHelper.isEnableSliderBar();
   }
@@ -684,11 +654,6 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
     this.cpdfConfiguration = cpdfConfiguration;
     slideBarHelper.setCPDFConfiguration(cpdfConfiguration);
     documentHelper.setCPDFConfiguration(cpdfConfiguration);
-    if (!hasExplicitSlideBarPositionAttr
-        && cpdfConfiguration != null
-        && cpdfConfiguration.readerViewConfig != null) {
-      setSlideBarPosition(cpdfConfiguration.readerViewConfig.slideBarPosition);
-    }
   }
 
   public CPDFConfiguration getCPDFConfiguration() {

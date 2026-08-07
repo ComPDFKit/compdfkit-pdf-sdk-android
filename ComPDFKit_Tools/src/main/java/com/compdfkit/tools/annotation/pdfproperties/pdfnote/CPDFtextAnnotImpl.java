@@ -46,7 +46,6 @@ public class CPDFtextAnnotImpl extends CPDFTextAnnotImpl {
          editDialog.setDeleteListener(v -> {
              CPDFPageView cpdfPageView = (CPDFPageView) pageView;
              cpdfPageView.deleteAnnotation(this);
-             cpdfTextAnnotation.removeFromPage();
              editDialog.dismiss();
          });
          FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());

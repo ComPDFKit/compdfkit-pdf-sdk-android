@@ -50,6 +50,7 @@
   },
   "annotationsConfig": {
     "annotationAuthor": "Guest",
+    "inkUndoRedoMode": "hybrid",
     "autoShowSignPicker": true,
     "autoShowStampPicker": true,
     "autoShowPicPicker": true,
@@ -271,7 +272,6 @@
     "cropMode": false,
     "themes": "light",
     "enableSliderBar": true,
-    "slideBarPosition": "right",
     "enablePageIndicator": true,
     "pageSpacing": 10,
     "margins": [0, 0, 0, 0],
@@ -282,6 +282,10 @@
     "enableCreateEditTextInput": true,
     "enableCreateImagePickerDialog": true,
     "enableDoubleTapZoom": false,
+    "accessibilityConfig": {
+      "keyboardNavigationEnabled": false,
+      "talkBackEnabled": false
+    },
     "uiStyle": {
       "bookmarkIcon": "",
       "icons": {
@@ -358,7 +362,7 @@
       "textSize": 80,
       "textColor": "#FF000000",
       "scale": 1.0,
-      "rotation": -45,
+      "rotation": 0,
       "opacity": 255,
       "isFront": false,
       "isTilePage": false

@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
-                    android:drawableRight="@drawable/tools_ic_right_arrow"
+                    android:drawableEnd="@drawable/tools_ic_right_arrow"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
@@ -171,4 +171,3 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

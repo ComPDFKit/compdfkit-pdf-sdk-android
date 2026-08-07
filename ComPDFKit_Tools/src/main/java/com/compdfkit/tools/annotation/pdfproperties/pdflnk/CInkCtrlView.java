@@ -23,6 +23,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.pdf.CPDFDocumentFragment;
+import com.compdfkit.tools.common.pdf.config.AnnotationsConfig;
+import com.compdfkit.tools.common.pdf.undo.InkUndoRedoCoordinator;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CAnnotStyle;
 import com.compdfkit.tools.common.views.pdfproperties.pdfstyle.CStyleDialogFragment;
@@ -47,6 +49,12 @@ public class CInkCtrlView extends FrameLayout implements View.OnClickListener {
     private AppCompatImageView ivRedo;
 
     private CPDFViewCtrl pdfView;
+
+    @Nullable
+    private InkUndoRedoCoordinator undoRedoCoordinator;
+
+    private final InkUndoRedoCoordinator.OnStateChangedListener undoRedoStateListener =
+            this::updateUndoRedoButtons;
 
     public CInkCtrlView(@NonNull Context context) {
         this(context, null);
@@ -79,13 +87,49 @@ public class CInkCtrlView extends FrameLayout implements View.OnClickListener {
 
     public void initWithPDFView(CPDFViewCtrl pdfView) {
         this.pdfView = pdfView;
-        CPDFReaderView.TInkDrawHelper helper = pdfView.getCPdfReaderView().getInkDrawHelper();
-        helper.setInkUndoRedoCallback((b, b1) -> {
-            ivUndo.setEnabled(b);
-            ivRedo.setEnabled(b1);
-        });
-        ivUndo.setEnabled(helper.canUndo());
-        ivRedo.setEnabled(helper.canRedo());
+        undoRedoCoordinator = InkUndoRedoCoordinator.get(pdfView.getCPdfReaderView());
+        undoRedoCoordinator.addOnStateChangedListener(undoRedoStateListener);
+        updateUndoRedoButtons();
+    }
+
+    private void updateUndoRedoButtons() {
+        if (pdfView == null) {
+            return;
+        }
+        if (undoRedoCoordinator == null) {
+            return;
+        }
+        ivUndo.setEnabled(undoRedoCoordinator.canUndo(getInkUndoRedoMode(), true));
+        ivRedo.setEnabled(undoRedoCoordinator.canRedo(getInkUndoRedoMode(), true));
+    }
+
+    private AnnotationsConfig.InkUndoRedoMode getInkUndoRedoMode() {
+        if (pdfView == null || pdfView.getCPDFConfiguration() == null
+                || pdfView.getCPDFConfiguration().annotationsConfig == null
+                || pdfView.getCPDFConfiguration().annotationsConfig.inkUndoRedoMode == null) {
+            return AnnotationsConfig.InkUndoRedoMode.HYBRID;
+        }
+        return pdfView.getCPDFConfiguration().annotationsConfig.inkUndoRedoMode;
+    }
+
+    private void undo() {
+        if (pdfView == null) {
+            return;
+        }
+        if (undoRedoCoordinator != null) {
+            undoRedoCoordinator.undo(getInkUndoRedoMode(), true);
+        }
+        updateUndoRedoButtons();
+    }
+
+    private void redo() {
+        if (pdfView == null) {
+            return;
+        }
+        if (undoRedoCoordinator != null) {
+            undoRedoCoordinator.redo(getInkUndoRedoMode(), true);
+        }
+        updateUndoRedoButtons();
     }
 
     @Override
@@ -101,17 +145,14 @@ public class CInkCtrlView extends FrameLayout implements View.OnClickListener {
                 }
             }
         } else if (v.getId() == R.id.iv_ink_undo) {
-            if (pdfView != null) {
-                pdfView.getCPdfReaderView().getInkDrawHelper().onUndo();
-            }
+            undo();
         } else if (v.getId() == R.id.iv_ink_redo) {
-            if (pdfView != null) {
-                pdfView.getCPdfReaderView().getInkDrawHelper().onRedo();
-            }
+            redo();
         } else if (v.getId() == R.id.tv_ink_clean) {
             if (pdfView != null) {
                 ivEraser.setSelected(false);
                 pdfView.getCPdfReaderView().getInkDrawHelper().onClean();
+                invalidateRedoHistory();
                 pdfView.getCPdfReaderView().getInkDrawHelper().setMode(IInkDrawCallback.Mode.DRAW);
                 pdfView.resetAnnotationType();
             }
@@ -120,6 +161,7 @@ public class CInkCtrlView extends FrameLayout implements View.OnClickListener {
                 ivEraser.setSelected(false);
                 pdfView.getCPdfReaderView().getInkDrawHelper().setMode(IInkDrawCallback.Mode.DRAW);
                 pdfView.getCPdfReaderView().getInkDrawHelper().onSave();
+                invalidateRedoHistory();
                 pdfView.resetAnnotationType();
             }
         } else if (v.getId() == R.id.iv_ink_setting) {
@@ -149,6 +191,12 @@ public class CInkCtrlView extends FrameLayout implements View.OnClickListener {
                 CPDFDocumentFragment documentFragment = (CPDFDocumentFragment) fragment;
                 documentFragment.annotationToolbar.updateItemColor();
             }
+        }
+    }
+
+    private void invalidateRedoHistory() {
+        if (undoRedoCoordinator != null) {
+            undoRedoCoordinator.invalidateRedoHistory();
         }
     }
 }

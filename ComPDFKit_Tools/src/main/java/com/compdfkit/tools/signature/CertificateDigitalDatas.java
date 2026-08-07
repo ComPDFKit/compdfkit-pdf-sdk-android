@@ -198,9 +198,7 @@ public class CertificateDigitalDatas {
         try {
             CPDFReaderView readerView = pdfView.getCPdfReaderView();
             CPDFDocument document = readerView.getPDFDocument();
-            boolean result = document.removeSignature(signature, true, readerView::refreshSignatureWidget);
-            document.save(CPDFDocument.PDFDocumentSaveType.PDFDocumentSaveIncremental, pdfView.isSaveFileExtraFontSubset());
-            return result;
+            return document.removeSignature(signature, true, readerView::refreshSignatureWidget);
         } catch (Exception e) {
             return false;
         }

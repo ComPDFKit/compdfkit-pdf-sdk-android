@@ -191,7 +191,7 @@ public class CPDFReplyDetailsDialogFragment extends CBasicBottomSheetDialogFragm
                 });
                 moreMenu.addItem(R.string.tools_delete, v -> {
                     CPDFReplyAnnotation replyAnnotation = adapter.list.get(position);
-                    boolean result = replyAnnotation.removeFromPageIncludeReplyAnnot();
+                    boolean result = replyAnnotation.pdfPage.deleteAnnotation(replyAnnotation);
                     if (result) {
                         annotReplyListAdapter.remove(position);
                         updateTotalCount();

@@ -53,9 +53,9 @@ public class CFileDirectoryTitleAdapter extends CBaseQuickAdapter<CFileDirectory
             }else {
                 String name = item.getFile().getName();
                 if (Environment.DIRECTORY_DOWNLOADS.equals(name)) {
-                    holder.setText(R.id.tv_name, "Downloads");
+                    holder.setText(R.id.tv_name, R.string.tools_downloads);
                 } else if (Environment.DIRECTORY_DOCUMENTS.equals(name)) {
-                    holder.setText(R.id.tv_name, "Documents");
+                    holder.setText(R.id.tv_name, R.string.tools_documents);
                 } else {
                     holder.setText(R.id.tv_name, name);
                 }

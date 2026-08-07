@@ -69,6 +69,8 @@ public class ContentEditorConfig implements Serializable {
 
         private String psName;
 
+        private FontConfig fontConfig = new FontConfig();
+
         private CPDFEditTextArea.PDFEditAlignType alignment = CPDFEditTextArea.PDFEditAlignType.PDFEditAlignLeft;
 
         public String getFontColorHex() {
@@ -117,6 +119,14 @@ public class ContentEditorConfig implements Serializable {
 
         public String getPsName() {
             return psName;
+        }
+
+        public FontConfig getFontConfig() {
+            return fontConfig;
+        }
+
+        public void setFontConfig(FontConfig fontConfig) {
+            this.fontConfig = fontConfig;
         }
 
         public int getFontColorAlpha() {

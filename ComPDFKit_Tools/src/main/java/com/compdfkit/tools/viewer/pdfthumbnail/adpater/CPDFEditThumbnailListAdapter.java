@@ -10,7 +10,6 @@ package com.compdfkit.tools.viewer.pdfthumbnail.adpater;
 
 import android.graphics.Bitmap;
 import android.graphics.RectF;
-import android.os.AsyncTask;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.compdfkit.core.document.CPDFAbility;
-import com.compdfkit.core.document.CPDFAbility.Ability;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.interfaces.COnSetPDFDisplayPageIndexListener;
 import com.compdfkit.tools.common.utils.glide.CPDFGlideLogUtils;
-import com.compdfkit.tools.common.utils.glide.CPDFThumbnailCacheRevisionManager;
 import com.compdfkit.tools.common.utils.glide.CPDFWrapper;
+import com.compdfkit.tools.common.utils.glide.wrapper.impl.CPDFDocumentPageWrapper;
 import com.compdfkit.tools.common.utils.viewutils.CDimensUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.tools.docseditor.drag.CDefaultItemTouchHelpCallback;
@@ -55,12 +52,11 @@ public class CPDFEditThumbnailListAdapter
 
     private OnPageEditListener onPageEditListener = null;
 
-    private boolean hasEditAbility = false;
+    private OnPageMoveListener onPageMoveListener = null;
 
     public CPDFEditThumbnailListAdapter(CPDFDocument cPdfDocument, int currentPageIndex) {
         this.cPdfDocument = cPdfDocument;
         this.currentPageIndex = currentPageIndex;
-        hasEditAbility = CPDFAbility.checkAbility(Ability.EDIT_IMAGE) || CPDFAbility.checkAbility(Ability.EDIT_TEXT) || CPDFAbility.checkAbility(Ability.EDIT_PATH);
     }
 
     @NonNull
@@ -114,28 +110,32 @@ public class CPDFEditThumbnailListAdapter
     public void onBindViewHolder(
             @NonNull CPDFEditThumbnailListAdapter.CPDFThumbnailItemViewHolder holder, int position) {
 
-        int[] size = calculateItemSize(holder, holder.getAdapterPosition());
-        CPDFWrapper wrapper = CPDFWrapper.fromDocument(cPdfDocument, holder.getAdapterPosition());
+        if (position == RecyclerView.NO_POSITION) {
+            return;
+        }
+        int[] size = calculateItemSize(holder, position);
+        CPDFDocumentPageWrapper pageWrapper = new CPDFDocumentPageWrapper(cPdfDocument, position);
+        pageWrapper.setDrawAnnotation(true);
+        CPDFWrapper wrapper = new CPDFWrapper(pageWrapper);
+
         CPDFGlideLogUtils.logRequestStart(wrapper, size[0], size[1]);
 
         RequestBuilder<Bitmap> requestBuilder = Glide.with(holder.itemView.getContext())
                 .asBitmap()
                 .load(wrapper)
                 .listener(CPDFGlideLogUtils.createRequestListener(wrapper))
-                .override(size[0], size[1]);
-        if (hasEditAbility){
-            requestBuilder = requestBuilder
+                .override(size[0], size[1])
+                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE);
-        }
         requestBuilder
                 .into(holder.ivThumbnailImage);
-        holder.tvPageIndex.setText(String.valueOf(holder.getAdapterPosition() + 1));
-        updateSelectStatus(holder);
+        holder.tvPageIndex.setText(String.valueOf(position + 1));
+        updateSelectStatus(holder, position);
     }
 
-    private void updateSelectStatus(CPDFThumbnailItemViewHolder holder) {
+    private void updateSelectStatus(CPDFThumbnailItemViewHolder holder, int position) {
         if (isEdit) {
-            if (selectArr.get(holder.getAdapterPosition()) == 1) {
+            if (selectArr.get(position) == 1) {
                 holder.ivSelect.setSelected(true);
                 holder.tvPageIndex.setSelected(true);
                 holder.clThumbnail.setSelected(true);
@@ -148,8 +148,8 @@ public class CPDFEditThumbnailListAdapter
         } else {
             holder.ivSelect.setSelected(false);
             holder.ivSelect.setVisibility(View.GONE);
-            holder.tvPageIndex.setSelected(holder.getAdapterPosition() == currentPageIndex);
-            holder.clThumbnail.setSelected(holder.getAdapterPosition() == currentPageIndex);
+            holder.tvPageIndex.setSelected(position == currentPageIndex);
+            holder.clThumbnail.setSelected(position == currentPageIndex);
         }
     }
 
@@ -190,7 +190,7 @@ public class CPDFEditThumbnailListAdapter
                 selectArr.put(i, 1);
                 RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(i);
                 if (viewHolder != null) {
-                    updateSelectStatus((CPDFThumbnailItemViewHolder) viewHolder);
+                    updateSelectStatus((CPDFThumbnailItemViewHolder) viewHolder, i);
                 } else {
                     notifyItemChanged(i);
                 }
@@ -205,7 +205,7 @@ public class CPDFEditThumbnailListAdapter
                 selectArr.removeAt(size);
                 RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(key);
                 if (viewHolder != null) {
-                    updateSelectStatus((CPDFThumbnailItemViewHolder) viewHolder);
+                    updateSelectStatus((CPDFThumbnailItemViewHolder) viewHolder, key);
                 } else {
                     notifyItemChanged(key);
                 }
@@ -231,6 +231,16 @@ public class CPDFEditThumbnailListAdapter
         this.onPageEditListener = onPageEditListener;
     }
 
+    /**
+     * Sets the callback that performs the actual PDF page move outside the adapter.
+     *
+     * <p>The adapter only owns visual movement and selection state. The host is responsible for
+     * mutating the CPDFDocument and reporting whether the move succeeded.</p>
+     */
+    public void setOnPageMoveListener(OnPageMoveListener onPageMoveListener) {
+        this.onPageMoveListener = onPageMoveListener;
+    }
+
     @Override
     public void onSwiped(int adapterPosition) {
     }
@@ -248,124 +258,89 @@ public class CPDFEditThumbnailListAdapter
     @Override
     public void onMoved(
             RecyclerView.ViewHolder sourceViewHolder, int sourcePosition, int targetPosition) {
-        AsyncTask<Void, Void, Boolean> asyncTask =
-                new AsyncTask<Void, Void, Boolean>() {
-                    @Override
-                    protected Boolean doInBackground(Void... voids) {
-                        boolean isSuccess;
-                        try {
-                            isSuccess = cPdfDocument.movePage(sourcePosition, targetPosition);
-                            if (isSuccess) {
-                                CPDFThumbnailCacheRevisionManager.bumpRevision(cPdfDocument);
-                            }
-                            if (sourcePosition < targetPosition) { 
-                                List<Integer> selected = new ArrayList<>();
-                                for (int i = sourcePosition; i <= targetPosition; i++) {
-                                    if (selectArr.get(i) == 1) {
-                                        selected.add(i);
-                                        selectArr.removeAt(selectArr.indexOfKey(i));
-                                    }
-                                }
-                                for (int i = 0; i < selected.size(); i++) {
-                                    if (selected.get(i) == sourcePosition) {
-                                        continue;
-                                    }
-                                    selectArr.put(selected.get(i) - 1, 1);
-                                }
-                                if (selected.size() > 0) {
-                                    if (selected.get(0) == sourcePosition) {
-                                        selectArr.put(targetPosition, 1);
-                                    }
-                                }
-                            } else { 
-                                List<Integer> selected = new ArrayList<>();
-                                for (int i = sourcePosition; i >= targetPosition; i--) {
-                                    if (selectArr.get(i) == 1) {
-                                        selected.add(i);
-                                        selectArr.removeAt(selectArr.indexOfKey(i));
-                                    }
-                                }
-                                for (int i = 0; i < selected.size(); i++) {
-                                    if (selected.get(i) == sourcePosition) {
-                                        continue;
-                                    }
-                                    selectArr.put(selected.get(i) + 1, 1);
-                                }
-                                if (selected.size() > 0) {
-                                    if (selected.get(0) == sourcePosition) {
-                                        selectArr.put(targetPosition, 1);
-                                    }
-                                }
-                            }
-                            if (currentPageIndex == sourcePosition) {
-                                currentPageIndex = targetPosition;
-                            } else if (currentPageIndex == targetPosition) {
-                                if (sourcePosition < targetPosition) {
-                                    currentPageIndex = targetPosition - 1;
-                                } else {
-                                    currentPageIndex = targetPosition + 1;
-                                }
-                            } else {
-                                if (sourcePosition < currentPageIndex && currentPageIndex < targetPosition) {
-                                    currentPageIndex--;
-                                } else if (targetPosition < currentPageIndex && currentPageIndex < sourcePosition) {
-                                    currentPageIndex++;
-                                }
-                            }
-                        } catch (Exception e) {
-                            return false;
-                        }
-                        return isSuccess;
-                    }
+        if (onPageMoveListener == null) {
+            notifyDataSetChanged();
+            return;
+        }
+        onPageMoveListener.onPageMove(sourcePosition, targetPosition, success -> {
+            if (success) {
+                applyMoveResult(sourcePosition, targetPosition);
+            } else {
+                notifyDataSetChanged();
+            }
+        });
+    }
 
-                    @Override
-                    protected void onPostExecute(Boolean aBoolean) {
-                        super.onPostExecute(aBoolean);
-                        if (aBoolean) {
-                            if (onPageEditListener != null) {
-                                onPageEditListener.onEdit();
-                            }
-                            if (displayPageIndexListener != null) {
-                                displayPageIndexListener.displayPage(currentPageIndex);
-                            }
-                            int start = sourcePosition < targetPosition ? sourcePosition : targetPosition;
-                            int count = Math.abs(sourcePosition - targetPosition) + 1;
-                            notifyItemRangeChanged(start, count);
-                        }
-                    }
-                };
-        asyncTask.execute();
+    private void applyMoveResult(int sourcePosition, int targetPosition) {
+        if (sourcePosition < targetPosition) {
+            List<Integer> selected = new ArrayList<>();
+            for (int i = sourcePosition; i <= targetPosition; i++) {
+                if (selectArr.get(i) == 1) {
+                    selected.add(i);
+                    selectArr.removeAt(selectArr.indexOfKey(i));
+                }
+            }
+            for (int i = 0; i < selected.size(); i++) {
+                if (selected.get(i) == sourcePosition) {
+                    continue;
+                }
+                selectArr.put(selected.get(i) - 1, 1);
+            }
+            if (selected.size() > 0) {
+                if (selected.get(0) == sourcePosition) {
+                    selectArr.put(targetPosition, 1);
+                }
+            }
+        } else {
+            List<Integer> selected = new ArrayList<>();
+            for (int i = sourcePosition; i >= targetPosition; i--) {
+                if (selectArr.get(i) == 1) {
+                    selected.add(i);
+                    selectArr.removeAt(selectArr.indexOfKey(i));
+                }
+            }
+            for (int i = 0; i < selected.size(); i++) {
+                if (selected.get(i) == sourcePosition) {
+                    continue;
+                }
+                selectArr.put(selected.get(i) + 1, 1);
+            }
+            if (selected.size() > 0) {
+                if (selected.get(0) == sourcePosition) {
+                    selectArr.put(targetPosition, 1);
+                }
+            }
+        }
+        if (currentPageIndex == sourcePosition) {
+            currentPageIndex = targetPosition;
+        } else if (currentPageIndex == targetPosition) {
+            if (sourcePosition < targetPosition) {
+                currentPageIndex = targetPosition - 1;
+            } else {
+                currentPageIndex = targetPosition + 1;
+            }
+        } else {
+            if (sourcePosition < currentPageIndex && currentPageIndex < targetPosition) {
+                currentPageIndex--;
+            } else if (targetPosition < currentPageIndex && currentPageIndex < sourcePosition) {
+                currentPageIndex++;
+            }
+        }
+        if (onPageEditListener != null) {
+            onPageEditListener.onEdit();
+        }
+        if (displayPageIndexListener != null) {
+            displayPageIndexListener.displayPage(currentPageIndex);
+        }
+        int start = sourcePosition < targetPosition ? sourcePosition : targetPosition;
+        int count = Math.abs(sourcePosition - targetPosition) + 1;
+        notifyItemRangeChanged(start, count);
     }
 
     @Override
     public void onSwaped(
             RecyclerView.ViewHolder sourceViewHolder, RecyclerView.ViewHolder targetViewHolder) {
-        int sourcePosition = sourceViewHolder.getAdapterPosition();
-        int targetPosition = targetViewHolder.getAdapterPosition();
-        AsyncTask<Void, Void, Boolean> asyncTask =
-                new AsyncTask<Void, Void, Boolean>() {
-                    @Override
-                    protected Boolean doInBackground(Void... voids) {
-                        boolean isSuccess;
-                        try {
-                            isSuccess = cPdfDocument.exchangePage(sourcePosition, targetPosition);
-                        } catch (Exception e) {
-                            return false;
-                        }
-                        return isSuccess;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Boolean aBoolean) {
-                        super.onPostExecute(aBoolean);
-                        if (aBoolean) {
-                            notifyDataSetChanged();
-                        } else {
-
-                        }
-                    }
-                };
-        asyncTask.execute();
+        notifyDataSetChanged();
     }
 
     static class CPDFThumbnailItemViewHolder extends RecyclerView.ViewHolder {
@@ -388,5 +363,31 @@ public class CPDFEditThumbnailListAdapter
 
     public interface OnPageEditListener {
         void onEdit();
+    }
+
+    /**
+     * Requests a page move from the host that owns the PDF document.
+     */
+    public interface OnPageMoveListener {
+        /**
+         * Moves a page in the underlying document and reports the result.
+         *
+         * @param sourcePosition zero-based source page index.
+         * @param targetPosition zero-based target page index.
+         * @param callback callback used to notify the adapter whether the move succeeded.
+         */
+        void onPageMove(int sourcePosition, int targetPosition, MoveResultCallback callback);
+    }
+
+    /**
+     * Receives the result of an asynchronous page move request.
+     */
+    public interface MoveResultCallback {
+        /**
+         * Called when the host finishes moving the page.
+         *
+         * @param success true when the underlying document was moved successfully.
+         */
+        void onResult(boolean success);
     }
 }

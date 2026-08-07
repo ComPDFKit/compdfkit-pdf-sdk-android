@@ -231,7 +231,7 @@ public class CActionEditDialogFragment extends CBasicBottomSheetDialogFragment i
             etText.setText(url);
             etText.setInputType(InputType.TYPE_CLASS_TEXT);
         } else if (tabLayout.getSelectedTabPosition() == 1) {
-            etText.setHint("1~" + pageCount);
+            etText.setHint(getString(R.string.tools_page_range_hint, pageCount));
             String text = currentPage <=0 ? "" : String.valueOf(currentPage);
             etText.setText(text);
             etText.setInputType(InputType.TYPE_CLASS_NUMBER);

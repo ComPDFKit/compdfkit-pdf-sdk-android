@@ -10,12 +10,10 @@
 package com.compdfkit.tools.annotation.pdfannotationlist;
 
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -32,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.annotation.CPDFReplyAnnotation;
 import com.compdfkit.core.document.CPDFDocument;
-import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfannotationlist.adapter.CPDFAnnotListAdapter;
 import com.compdfkit.tools.annotation.pdfannotationlist.bean.CPDFAnnotListItem;
@@ -46,7 +43,6 @@ import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaGlobalMenuItem;
 import com.compdfkit.tools.common.pdf.config.bota.CPDFBotaItemMenu;
 import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
-import com.compdfkit.tools.common.utils.CPermissionUtil;
 import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
@@ -60,7 +56,6 @@ import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 import com.compdfkit.ui.reader.CPDFPageView;
 import com.compdfkit.ui.reader.CPDFReaderView;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -293,6 +288,29 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
         }
     }
 
+    private boolean deleteAnnotationItem(CPDFAnnotListItem item, int position) {
+        if (item == null || item.isHeader()) {
+            return false;
+        }
+        CPDFAnnotation annotation = item.getAttr();
+        if (annotation == null) {
+            return false;
+        }
+
+        CPDFReaderView readerView = pdfView.getCPdfReaderView();
+        CPDFPageView pageView = (CPDFPageView) readerView.getChild(item.getPage());
+        if (pageView != null) {
+            pageView.deleteAnnotation(annotation);
+        } else {
+            annotation.pdfPage.deleteAnnotation(annotation);
+        }
+        boolean removed = listAdapter.removeAnnotationItem(position);
+        if (removed) {
+            clEmptyView.setVisibility(listAdapter.list.isEmpty() ? View.VISIBLE : View.GONE);
+        }
+        return removed;
+    }
+
     /**
      * Displays the more options menu for the selected annotation, including:
      * adding an annotation reply, showing the annotation reply list, and deleting the annotation.
@@ -327,21 +345,8 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
                             v -> showReplyDetailsFragment(item, position));
                         break;
                     case CPDFBotaAnnotationMenu.MORE_MENU_ID_DELETE:
-                        moreMenu.addItem(R.string.tools_delete_annotation, v -> {
-                            CPDFReaderView readerView = pdfView.getCPdfReaderView();
-                            CPDFPageView pageView = (CPDFPageView) readerView.getChild(
-                                item.getPage());
-                            if (pageView != null) {
-                                pageView.deleteAnnotation(item.getAttr());
-                                listAdapter.remove(position);
-                            } else {
-                                CPDFAnnotation annotation = item.getAttr();
-                                annotation.removeFromPage();
-                                annotation.close();
-                                listAdapter.remove(position);
-                            }
-                            pdfView.getCPdfReaderView().postDelayed(() -> updateAnnotationList(false), 450);
-                        });
+                        moreMenu.addItem(R.string.tools_delete_annotation,
+                            v -> deleteAnnotationItem(item, position));
                         break;
                 }
             }
@@ -357,21 +362,19 @@ public class CPDFAnnotationListFragment extends CBasicThemeFragment {
         replyDetailsDialogFragment.setCPDFAnnotation(item.getAttr());
         replyDetailsDialogFragment.setAnnotAuthor(
             pdfView.getCPDFConfiguration().annotationsConfig.annotationAuthor);
+        final boolean[] annotationRemoved = {false};
         replyDetailsDialogFragment.setUpdateAnnotationListListener(() -> {
-            CPDFAnnotation annotation = item.getAttr();
-            CPDFReaderView readerView = pdfView.getCPdfReaderView();
-            CPDFPageView pageView = (CPDFPageView) readerView.getChild(item.getPage());
-            if (pageView != null){
-                pageView.deleteAnnotation(annotation);
-            }else {
-                annotation.removeFromPage();
-                annotation.close();
-            }
-            listAdapter.remove(position);
-            pdfView.getCPdfReaderView().postDelayed(() -> updateAnnotationList(false), 450);
+            annotationRemoved[0] = deleteAnnotationItem(item, position);
         });
         replyDetailsDialogFragment.setDismissListener(
-            () -> listAdapter.notifyItemChanged(position));
+            () -> {
+                if (!annotationRemoved[0] && listAdapter.containsItem(item)) {
+                    int currentPosition = listAdapter.list.indexOf(item);
+                    if (currentPosition >= 0) {
+                        listAdapter.notifyItemChanged(currentPosition);
+                    }
+                }
+            });
         replyDetailsDialogFragment.show(getChildFragmentManager(), "replyDetailsDialogFragment");
     }
 

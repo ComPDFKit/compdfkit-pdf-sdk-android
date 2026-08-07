@@ -13,6 +13,8 @@ import android.graphics.Color;
 
 import androidx.annotation.FloatRange;
 
+import com.compdfkit.tools.common.pdf.config.FontConfig;
+
 public class FormsListBoxAttr extends FormsAttr {
 
     private String fontColor;
@@ -20,6 +22,8 @@ public class FormsListBoxAttr extends FormsAttr {
     private float fontSize = 20;
 
     private String psName;
+
+    private FontConfig fontConfig = new FontConfig();
 
     public String getFontColorHex() {
         return fontColor;
@@ -54,5 +58,13 @@ public class FormsListBoxAttr extends FormsAttr {
 
     public void setPsName(String psName) {
         this.psName = psName;
+    }
+
+    public FontConfig getFontConfig() {
+        return fontConfig;
+    }
+
+    public void setFontConfig(FontConfig fontConfig) {
+        this.fontConfig = fontConfig;
     }
 }

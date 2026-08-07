@@ -28,6 +28,7 @@ import com.compdfkit.core.annotation.CPDFLineAnnotation;
 import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.annotation.form.CPDFWidget;
 import com.compdfkit.core.document.CPDFDocument;
+import com.compdfkit.core.document.CPDFSdk;
 import com.compdfkit.core.edit.CPDFEditConfig.Builder;
 import com.compdfkit.core.edit.CPDFEditManager;
 import com.compdfkit.tools.R;
@@ -42,6 +43,7 @@ import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.RectStyle;
 import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.ScreenshotRectStyle;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.pdf.config.FontConfig;
 import com.compdfkit.tools.common.pdf.config.ModeConfig;
 import com.compdfkit.tools.common.pdf.config.ReaderViewConfig;
 import com.compdfkit.tools.common.pdf.config.ToolbarConfig;
@@ -67,6 +69,7 @@ import com.compdfkit.ui.attribute.CPDFAnnotAttribute;
 import com.compdfkit.ui.attribute.CPDFEditorTextAttr;
 import com.compdfkit.ui.attribute.CPDFReaderAttribute;
 import com.compdfkit.ui.reader.CPDFReaderView;
+import com.compdfkit.ui.reader.accessibility.CPDFAccessibilityConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -141,6 +144,14 @@ public class CPDFApplyConfigUtil {
             readerView.setPageSameWidth(readerViewConfig.pageSameWidth);
             readerView.setMinScaleEnable(readerViewConfig.enableMinScale);
             readerView.setEnableDoubleClickScale(readerViewConfig.enableDoubleTapZoom);
+            ReaderViewConfig.AccessibilityConfig accessibilityConfig =
+                readerViewConfig.accessibilityConfig != null
+                    ? readerViewConfig.accessibilityConfig
+                    : new ReaderViewConfig.AccessibilityConfig();
+            readerView.setAccessibilityConfig(CPDFAccessibilityConfig.newBuilder()
+                .setKeyboardNavigationEnabled(accessibilityConfig.keyboardNavigationEnabled)
+                .setTalkBackEnabled(accessibilityConfig.talkBackEnabled)
+                .build());
             switch (readerViewConfig.themes) {
                 case Dark:
                     int darkColor = ContextCompat.getColor(fragment.getContext(),
@@ -422,7 +433,7 @@ public class CPDFApplyConfigUtil {
         style.setFontColor(freetextAttr.getFontColor());
         style.setTextColorOpacity(freetextAttr.getFontColorAlpha());
         style.setFontSize(freetextAttr.getFontSize());
-        style.setExternFontName(freetextAttr.getPsName());
+        style.setExternFontName(resolvePsName(freetextAttr.getPsName(), freetextAttr.getFontConfig()));
         style.setAlignment(freetextAttr.getAnnotStyleAlignment());
         builder.setAnnotStyle(style);
 
@@ -505,7 +516,7 @@ public class CPDFApplyConfigUtil {
         editorTextAttr.setAlignment(textAttr.getAlignment());
 
         editorTextAttr.setTextAttribute(
-            new CPDFTextAttribute(textAttr.getPsName(), textAttr.getFontSize(),
+            new CPDFTextAttribute(resolvePsName(textAttr.getPsName(), textAttr.getFontConfig()), textAttr.getFontSize(),
                 textAttr.getFontColor()));
         editorTextAttr.onstore();
     }
@@ -529,7 +540,7 @@ public class CPDFApplyConfigUtil {
         textFieldStyle.setFontSize((int) textField.getFontSize());
         textFieldStyle.setAlignment(textField.getAnnotStyleAlignment());
         textFieldStyle.setFormMultiLine(textField.isMultiline());
-        textFieldStyle.setExternFontName(textField.getPsName());
+        textFieldStyle.setExternFontName(resolvePsName(textField.getPsName(), textField.getFontConfig()));
         builder.setAnnotStyle(textFieldStyle);
 
         FormsCheckBoxAttr checkBox = initAttribute.checkBox;
@@ -549,7 +560,7 @@ public class CPDFApplyConfigUtil {
         listBoxStyle.setFontColor(listBoxAttr.getFontColor());
         listBoxStyle.setFontSize((int) listBoxAttr.getFontSize());
         listBoxStyle.setBorderWidth(listBoxAttr.getBorderWidth());
-        listBoxStyle.setExternFontName(listBoxAttr.getPsName());
+        listBoxStyle.setExternFontName(resolvePsName(listBoxAttr.getPsName(), listBoxAttr.getFontConfig()));
 
         builder.setAnnotStyle(listBoxStyle);
 
@@ -560,7 +571,7 @@ public class CPDFApplyConfigUtil {
         comboBoxStyle.setFontColor(comboBoxAttr.getFontColor());
         comboBoxStyle.setFontSize((int) comboBoxAttr.getFontSize());
         comboBoxStyle.setBorderWidth(comboBoxAttr.getBorderWidth());
-        comboBoxStyle.setExternFontName(comboBoxAttr.getPsName());
+        comboBoxStyle.setExternFontName(resolvePsName(comboBoxAttr.getPsName(), comboBoxAttr.getFontConfig()));
 
         builder.setAnnotStyle(comboBoxStyle);
 
@@ -572,7 +583,7 @@ public class CPDFApplyConfigUtil {
         pushButtonStyle.setBorderColor(pushButtonAttr.getBorderColor());
         pushButtonStyle.setBorderWidth(pushButtonAttr.getBorderWidth());
         pushButtonStyle.setFormDefaultValue(pushButtonAttr.getTitle());
-        pushButtonStyle.setExternFontName(pushButtonAttr.getPsName());
+        pushButtonStyle.setExternFontName(resolvePsName(pushButtonAttr.getPsName(), pushButtonAttr.getFontConfig()));
 
         builder.setAnnotStyle(pushButtonStyle);
 
@@ -585,6 +596,17 @@ public class CPDFApplyConfigUtil {
         builder.setAnnotStyle(signatureFieldsStyle);
 
         builder.init(fragment.pdfView, true);
+    }
+
+    private String resolvePsName(String configuredPsName, FontConfig fontConfig) {
+        if (!TextUtils.isEmpty(configuredPsName)) {
+            return configuredPsName;
+        }
+        if (!CPDFSdk.isInitialized() || fontConfig == null) {
+            return CPDFTextAttribute.FontNameHelper.Font_Default_Type;
+        }
+        return CPDFTextAttribute.FontNameHelper.obtainFontName(
+            fontConfig.getFamilyName(), fontConfig.getStyleName());
     }
 
     public int getGlobalThemeId(Context context, CPDFConfiguration configuration) {

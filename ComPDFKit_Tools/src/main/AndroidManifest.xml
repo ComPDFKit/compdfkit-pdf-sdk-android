@@ -28,7 +28,7 @@
 
         <activity
             android:name=".common.pdf.CPDFDocumentActivity"
-            android:exported="true"
+            android:exported="false"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|density"
             android:resizeableActivity="true"
             android:theme="@style/ComPDFKit.Theme.Light"

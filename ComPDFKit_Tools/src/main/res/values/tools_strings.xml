@@ -267,6 +267,7 @@
     <string name="tools_page_edit_insert_page_enterpage_tint">Please Enter a Page</string>
     <string name="tools_page_edit_insert_page_filename">File Name</string>
     <string name="tools_page_edit_insert_page_range">Page Range</string>
+    <string name="tools_page_range_hint">1-%1$d</string>
     <string name="tools_page_edit_insert_page_allpage">All Pages</string>
     <string name="tools_page_edit_insert_page_oddpage">Odd Pages Only</string>
     <string name="tools_page_edit_insert_page_evenpage">Even Pages Only</string>
@@ -417,6 +418,8 @@
     <string name="tools_trust">Trust</string>
     <string name="tools_add_to_trusted_cert">Add to Trusted Certificates</string>
     <string name="tools_storage_space">Local Storage</string>
+    <string name="tools_downloads">Downloads</string>
+    <string name="tools_documents">Documents</string>
     <string name="tools_select_folder">Select folder</string>
     <string name="tools_save_to_this_directory">Save to this directory</string>
     <string name="tools_directory_permission_denied_title">Folder Access Required</string>

@@ -391,15 +391,23 @@ public class CPDFStampTextView extends View {
         return rectF;
     }
 
+    private RectF getSingleLineTextRectf(String contentStr, TextPaint paint) {
+        Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+        return new RectF(0, 0, paint.measureText(contentStr), fontMetrics.bottom - fontMetrics.top);
+    }
+
+    private TextPaint getDatePaint() {
+        if ("".equals(getContent())) {
+            return textPaint;
+        } else {
+            return datePaint;
+        }
+    }
+
     private void calculateWidthAndHeight(float availableMaxWidth) {
         setTextSize(defaultTextSize);
         availableMaxWidth = Math.max(1, availableMaxWidth);
-        RectF dateRect;
-        if ("".equals(content)) {
-            dateRect = getTextRectf(getDateStr(), textPaint, availableMaxWidth);
-        } else {
-            dateRect = getTextRectf(getDateStr(), datePaint, availableMaxWidth);
-        }
+        RectF dateRect = getSingleLineTextRectf(getDateStr(), getDatePaint());
         RectF textRect = getTextRectf(content.length() > 0 ? content : defaultContent, textPaint, availableMaxWidth);
         currentHeight = textRect.bottom + 2 * gap;
         if (getTimeType() != TimeType.NULL) {
@@ -414,12 +422,7 @@ public class CPDFStampTextView extends View {
         if (width > maxContentLan) {
             textSize = textSize * maxContentLan / width;
             setTextSize(textSize);
-            RectF dateRectTemp;
-            if ("".equals(content)) {
-                dateRectTemp = getTextRectf(getDateStr(), textPaint, maxContentLan);
-            } else {
-                dateRectTemp = getTextRectf(getDateStr(), datePaint, maxContentLan);
-            }
+            RectF dateRectTemp = getSingleLineTextRectf(getDateStr(), getDatePaint());
             RectF textRectTemp = getTextRectf(content.length() > 0 ? content : defaultContent, textPaint, maxContentLan);
             currentHeight = textRectTemp.bottom + 2 * gap;
             if (getTimeType() != TimeType.NULL) {
@@ -506,22 +509,9 @@ public class CPDFStampTextView extends View {
         } else {
             canvas.translate(gap, gap);
         }
-        TextPaint paint;
-        if ("".equals(getContent())) {
-            paint = textPaint;
-        } else {
-            paint = datePaint;
-        }
-        CPDFStaticLayout staticLayout = new CPDFStaticLayout(
-                getDateStr(),
-                paint,
-                getContentLayoutWidth(),
-                Layout.Alignment.ALIGN_NORMAL,
-                SPACING_MULT,
-                SPACING_ADD,
-                true
-        );
-        staticLayout.draw(canvas);
+        TextPaint paint = getDatePaint();
+        Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+        canvas.drawText(getDateStr(), 0, -fontMetrics.ascent, paint);
         canvas.restore();
     }
 

@@ -42,6 +42,7 @@ import com.compdfkit.tools.common.views.pdfview.CPDFViewCtrl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CPDFAnnotDatas {
@@ -59,6 +60,7 @@ public class CPDFAnnotDatas {
                 List<CPDFAnnotation> pageAnnotations = document.pageAtIndex(i).getAnnotations();
                 List<CPDFAnnotListItem> annotListItems = convertPageAnnotations(pageAnnotations);
                 if (!annotListItems.isEmpty()){
+                    sortByModifyDate(annotListItems);
                     CPDFAnnotListItem headerItem = new CPDFAnnotListItem();
                     headerItem.setHeader(true);
                     headerItem.setAnnotationCount(annotListItems.size());
@@ -70,6 +72,28 @@ public class CPDFAnnotDatas {
         }catch (Exception ignored){
         }
         return list;
+    }
+
+    private static void sortByModifyDate(List<CPDFAnnotListItem> annotListItems) {
+        Collections.sort(annotListItems, (first, second) -> {
+            CPDFDate firstDate = first.getAttr().getRecentlyModifyDate();
+            CPDFDate secondDate = second.getAttr().getRecentlyModifyDate();
+            boolean firstDateValid = firstDate != null && firstDate.isValid();
+            boolean secondDateValid = secondDate != null && secondDate.isValid();
+
+            if (!firstDateValid || !secondDateValid) {
+                if (firstDateValid) {
+                    return -1;
+                }
+                if (secondDateValid) {
+                    return 1;
+                }
+                return 0;
+            }
+            return Long.compare(
+                    CDateUtil.transformToTimestamp(firstDate),
+                    CDateUtil.transformToTimestamp(secondDate));
+        });
     }
 
     private static List<CPDFAnnotListItem> convertPageAnnotations(List<CPDFAnnotation> list){
@@ -292,7 +316,7 @@ public class CPDFAnnotDatas {
                     CPDFReplyAnnotation[] replyAnnotations = annotation.getAllReplyAnnotations();
                     if (replyAnnotations != null){
                         for (CPDFReplyAnnotation replyAnnotation : replyAnnotations) {
-                            replyAnnotation.removeFromPageIncludeReplyAnnot();
+                            replyAnnotation.pdfPage.deleteAnnotation(replyAnnotation);
                         }
                     }
                 }
@@ -306,8 +330,7 @@ public class CPDFAnnotDatas {
             if (annotation == null || !annotation.isValid()){
                 continue;
             }
-            annotation.removeFromPage();
-            annotation.close();
+            annotation.pdfPage.deleteAnnotation(annotation);
         }
         return true;
     }

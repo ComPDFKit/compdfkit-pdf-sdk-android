@@ -373,9 +373,10 @@ public class CUriUtil {
                 + ", fileName=" + fileName
                 + ", mimeType=" + mimeType
                 + ", sdk=" + Build.VERSION.SDK_INT);
+        String uniqueFileName = resolveUniqueMediaStoreDisplayName(context, publicDirectory, fileName, mimeType);
         long currentTime = System.currentTimeMillis() / 1000;
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName);
+        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, uniqueFileName);
         contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, mimeType);
         contentValues.put(MediaStore.Files.FileColumns.DATE_ADDED, currentTime);
         contentValues.put(MediaStore.Files.FileColumns.DATE_MODIFIED, currentTime);
@@ -384,7 +385,7 @@ public class CUriUtil {
             contentValues.put(MediaStore.Files.FileColumns.IS_PENDING, 0);
             contentValues.put(MediaStore.Files.FileColumns.DATE_TAKEN, currentTime);
         }else {
-            String path = CPDFStorageManager.getLegacyPublicDirectoryPath(publicDirectory) + File.separator + fileName;
+            String path = CPDFStorageManager.getLegacyPublicDirectoryPath(publicDirectory) + File.separator + uniqueFileName;
             contentValues.put(MediaStore.Files.FileColumns.DATA, path);
             File parentFile = new File(path).getParentFile();
             boolean created = parentFile != null && (parentFile.exists() || parentFile.mkdirs());
@@ -393,6 +394,7 @@ public class CUriUtil {
         Uri collectionUri = getMediaStoreCollectionUri(publicDirectory, mimeType);
         CLog.d(STORAGE_TAG, "createFileUri collectionUri=" + safeUri(collectionUri));
         Uri uri = context.getContentResolver().insert(collectionUri, contentValues);
+        normalizeInsertedMediaStoreDisplayName(context, uri, fileName, uniqueFileName);
         CLog.d(STORAGE_TAG, "createFileUri result uri=" + safeUri(uri));
         return uri;
     }
@@ -464,9 +466,10 @@ public class CUriUtil {
                 + ", fileName=" + fileName
                 + ", mimeType=" + mimeType
                 + ", sdk=" + Build.VERSION.SDK_INT);
+        String uniqueFileName = resolveUniqueMediaStoreDisplayName(context, publicDirectory, fileName, mimeType);
         long currentTime = System.currentTimeMillis() / 1000;
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName);
+        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, uniqueFileName);
         contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, mimeType);
         contentValues.put(MediaStore.Files.FileColumns.DATE_ADDED, currentTime);
         contentValues.put(MediaStore.Files.FileColumns.DATE_MODIFIED, currentTime);
@@ -475,7 +478,7 @@ public class CUriUtil {
             contentValues.put(MediaStore.Files.FileColumns.IS_PENDING, 1);
             contentValues.put(MediaStore.Files.FileColumns.DATE_TAKEN, currentTime);
         } else {
-            String path = CPDFStorageManager.getLegacyPublicDirectoryPath(publicDirectory) + File.separator + fileName;
+            String path = CPDFStorageManager.getLegacyPublicDirectoryPath(publicDirectory) + File.separator + uniqueFileName;
             contentValues.put(MediaStore.Files.FileColumns.DATA, path);
             File parentFile = new File(path).getParentFile();
             if (parentFile != null) {
@@ -486,8 +489,127 @@ public class CUriUtil {
         Uri collectionUri = getMediaStoreCollectionUri(publicDirectory, mimeType);
         CLog.d(STORAGE_TAG, "createPendingFileUri collectionUri=" + safeUri(collectionUri));
         Uri uri = context.getContentResolver().insert(collectionUri, contentValues);
+        normalizeInsertedMediaStoreDisplayName(context, uri, fileName, uniqueFileName);
         CLog.d(STORAGE_TAG, "createPendingFileUri result uri=" + safeUri(uri));
         return uri;
+    }
+
+    private static String resolveUniqueMediaStoreDisplayName(Context context,
+                                                             String publicDirectory,
+                                                             String fileName,
+                                                             String mimeType) {
+        if (context == null || TextUtils.isEmpty(fileName) || Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            return fileName;
+        }
+        String baseName = CFileUtils.getFileNameNoExtension(fileName);
+        String extension = CFileUtils.getFileExtension(fileName);
+        String candidate = fileName;
+        int index = 1;
+        while (mediaStoreDisplayNameExists(context, publicDirectory, candidate, mimeType)) {
+            candidate = buildDisplayNameWithIndex(baseName, extension, index++);
+        }
+        if (!fileName.equals(candidate)) {
+            CLog.d(STORAGE_TAG, "resolveUniqueMediaStoreDisplayName fileName=" + fileName
+                    + ", uniqueFileName=" + candidate
+                    + ", publicDirectory=" + publicDirectory);
+        }
+        return candidate;
+    }
+
+    private static void normalizeInsertedMediaStoreDisplayName(Context context,
+                                                               Uri uri,
+                                                               String originalFileName,
+                                                               String requestedFileName) {
+        if (context == null || uri == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            return;
+        }
+        String actualFileName = getUriFileName(context, uri);
+        if (TextUtils.isEmpty(actualFileName) || actualFileName.equals(requestedFileName)) {
+            return;
+        }
+        String baseName = CFileUtils.getFileNameNoExtension(originalFileName);
+        String extension = CFileUtils.getFileExtension(originalFileName);
+        for (int index = 1; index <= 1000; index++) {
+            String candidate = buildDisplayNameWithIndex(baseName, extension, index);
+            if (candidate.equals(actualFileName)) {
+                return;
+            }
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, candidate);
+            try {
+                context.getContentResolver().update(uri, contentValues, null, null);
+                String updatedFileName = getUriFileName(context, uri);
+                if (candidate.equals(updatedFileName)) {
+                    CLog.d(STORAGE_TAG, "normalizeInsertedMediaStoreDisplayName originalFileName="
+                            + originalFileName + ", requestedFileName=" + requestedFileName
+                            + ", actualFileName=" + actualFileName
+                            + ", normalizedFileName=" + candidate);
+                    return;
+                }
+                actualFileName = updatedFileName;
+            } catch (Exception e) {
+                CLog.e(STORAGE_TAG, "normalizeInsertedMediaStoreDisplayName fail originalFileName="
+                        + originalFileName + ", candidate=" + candidate + ", error=" + e.getMessage());
+                return;
+            }
+        }
+        CLog.e(STORAGE_TAG, "normalizeInsertedMediaStoreDisplayName exhausted originalFileName="
+                + originalFileName + ", actualFileName=" + actualFileName);
+    }
+
+    private static String buildDisplayNameWithIndex(String baseName, String extension, int index) {
+        return TextUtils.isEmpty(extension)
+                ? baseName + "(" + index + ")"
+                : baseName + "(" + index + ")." + extension;
+    }
+
+    private static boolean mediaStoreDisplayNameExists(Context context,
+                                                       String publicDirectory,
+                                                       String fileName,
+                                                       String mimeType) {
+        Cursor cursor = null;
+        try {
+            Uri collectionUri = getMediaStoreCollectionUri(publicDirectory, mimeType);
+            String normalizedPath = normalizeMediaStoreRelativePath(publicDirectory);
+            String alternatePath = toggleTrailingSlash(normalizedPath);
+            String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + "=? AND ("
+                    + MediaStore.Files.FileColumns.RELATIVE_PATH + "=? OR "
+                    + MediaStore.Files.FileColumns.RELATIVE_PATH + "=?)";
+            String[] selectionArgs = new String[]{fileName, normalizedPath, alternatePath};
+            String[] projection = new String[]{MediaStore.Files.FileColumns.DISPLAY_NAME};
+            cursor = context.getContentResolver().query(collectionUri, projection, selection, selectionArgs, null);
+            return cursor != null && cursor.moveToFirst();
+        } catch (Exception e) {
+            CLog.e(STORAGE_TAG, "mediaStoreDisplayNameExists query fail fileName=" + fileName
+                    + ", publicDirectory=" + publicDirectory
+                    + ", error=" + e.getMessage());
+            return false;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    private static String normalizeMediaStoreRelativePath(String publicDirectory) {
+        if (TextUtils.isEmpty(publicDirectory)) {
+            return "";
+        }
+        String normalized = publicDirectory.replace('\\', '/');
+        while (normalized.startsWith("/")) {
+            normalized = normalized.substring(1);
+        }
+        while (normalized.endsWith("/") && normalized.length() > 1) {
+            normalized = normalized.substring(0, normalized.length() - 1);
+        }
+        return normalized;
+    }
+
+    private static String toggleTrailingSlash(String relativePath) {
+        if (TextUtils.isEmpty(relativePath)) {
+            return "";
+        }
+        return relativePath.endsWith("/") ? relativePath.substring(0, relativePath.length() - 1) : relativePath + "/";
     }
 
     private static Uri getMediaStoreCollectionUri(String publicDirectory, String mimeType) {
