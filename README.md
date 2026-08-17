@@ -178,8 +178,8 @@ This section will help you quickly get started with ComPDF SDK to make an Androi
 Edit it and add the complete `ComPDF SDK` dependency:
 
     dependencies {
-      implementation 'com.compdf:compdfkit:2.6.9'
-      implementation 'com.compdf:compdfkit-ui:2.6.9'
+      implementation 'com.compdf:compdfkit:3.0.1'
+      implementation 'com.compdf:compdfkit-ui:3.0.1'
     }
 
 3. Apply for read and write permissions in `AndroidManifest.xml`:

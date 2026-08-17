@@ -14,7 +14,6 @@ import android.text.TextUtils;
 
 import androidx.fragment.app.Fragment;
 
-import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.core.watermark.CPDFWatermark;
 import com.compdfkit.pdfviewer.R;
@@ -126,13 +125,7 @@ public class WatermarkSamplesImpl extends OpenPDFSamplesImpl {
                                         dir1,
                                        outputFileName,
                                         false,
-                                        tempPath -> {
-                                            try {
-                                                return document.saveAs(tempPath, false);
-                                            } catch (CPDFDocumentException e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                        });
+                                        tempPath -> document.saveAs(tempPath, false));
                                 result = saveResult.isSuccess();
                                 document.close();
                                 if (result) {
