@@ -6,7 +6,7 @@ The ComPDF Android PDF Library provides an easy-to-use Java API that allows dire
 
 > If you find ComPDF SDK useful, please consider giving us a ⭐ **Star** on GitHub — it helps us grow and improve! Got questions or ideas? Join the conversation in our [Discussions](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/discussions).
 
-![Android Demo GIF](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Android%20Demo%20GIF.gif)
+![Android Demo GIF](./image-android/Android%20Demo%20GIF.gif)
 
 **Why ComPDF SDK for Android?**
 
@@ -133,7 +133,7 @@ The ComPDF Android PDF Library provides an easy-to-use Java API that allows dire
 
 ComPDF SDK for Android delivers a smooth, feature-rich PDF experience on mobile devices.
 
-![ComPDF SDK for Android UI](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/ComPDF%20SDK%20for%20Android%20UI.png)
+<img src="./image-android/ComPDF%20SDK%20for%20Android%20UI.png" alt="ComPDF SDK for Android UI" style="zoom:50%;" />
 
 ## Requirements
 
@@ -141,7 +141,7 @@ ComPDF SDK for Android delivers a smooth, feature-rich PDF experience on mobile 
 
 * Android Studio 3.2 or newer (support AndroidX).
 * Project specifications:
-  * A `minSdkVersion` of `19` or higher.
+  * A `minSdkVersion` of `23` or higher.
   * A `compileSdkVersion` of `30` or higher.
   * A `targetSdkVersion` of `34` or higher.
   * Android ABI(s): x86, x86_64, armeabi-v7a, arm64-v8a.
@@ -150,12 +150,15 @@ ComPDF SDK for Android delivers a smooth, feature-rich PDF experience on mobile 
 
 This section will help you quickly get started with ComPDF SDK to make an Android app in Java with step-by-step instructions. Through the following steps, you will get a simple application that can display the contents of a specified PDF file.
 
-### Video Guide: Build an Android PDF Editor in Java [![image-youtube-20250615](./image-android/1776838379387.png)](https://youtu.be/SgBidb_eYjA?si=_UX7oECMc7NvC_nv)
+### Video Guide: Build an Android PDF Editor in Java
+
+[![image-youtube-20250615](./image-android/1776838379387.png)](https://youtu.be/SgBidb_eYjA?si=_UX7oECMc7NvC_nv)
+
 ### Create a New Project
 
 1. Use Android Studio to create a Phone & Tablet project. Here we create a **No Activity** project.
 
-![Create a New Android Project](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Create%20a%20New%20Android%20Project.png)
+![Create a New Android Project](./image-android/Create%20a%20New%20Android%20Project.png)
 
 ### Installation
 
@@ -163,45 +166,50 @@ This section will help you quickly get started with ComPDF SDK to make an Androi
 
 1. Open the `settings.gradle` file located in your project's root directory and add the `mavenCentral` repository:
 
-    dependencyResolutionManagement {
-        repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-        repositories {
-            google()
-    +       mavenCentral()
-        }
-    }
+```diff
+dependencyResolutionManagement {
+	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+		repositories {
+				google()
++       mavenCentral()
+		}
+}
+```
 
-2. Open the `build.gradle` file in the application module directory:
+3. Open the `build.gradle` file in the application module directory:
 
-![Integrate With Gradle](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Integrate%20With%20Gradle.png)
+![Integrate With Gradle](./image-android/Integrate%20With%20Gradle.png)
 
 Edit it and add the complete `ComPDF SDK` dependency:
-
+```groovy
     dependencies {
-      implementation 'com.compdf:compdfkit:3.0.1'
-      implementation 'com.compdf:compdfkit-ui:3.0.1'
+      implementation 'com.compdf:compdfkit:3.0.2'
+      implementation 'com.compdf:compdfkit-ui:3.0.2'
     }
-
+```
 3. Apply for read and write permissions in `AndroidManifest.xml`:
-
+```xml
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+```
 
 **Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permissions to external storage at runtime.*
 
 4. If you use an online license, please add network access permissions in `AndroidManifest.xml`:
-
+```xml
     <uses-permission android:name="android.permission.INTERNET"/>
+```
 
 #### Integrate Manually
 
 1. Copy ***"ComPDFKit.aar"*** and ***"ComPDFKit-UI.aar"*** to the ***"libs"*** directory of the **app**.
 
-![Integrate Manually](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%201.png))
+![Integrate Manually](./image-android/Display%20a%20PDF%20Document%20-%201.png)
 
 
 2. Add the following code into the **app** dictionary's ***"build.gradle"*** file:
 
+    ```groovy
     ...
     dependencies {
         /*ComPDF SDK*/
@@ -209,28 +217,36 @@ Edit it and add the complete `ComPDF SDK` dependency:
         ...
     }
     ...
+    ```
 
 3. Add [ComPDF SDK for Android](https://www.compdf.com/android?utm_source=github&utm_medium=compdfkit-pdf-sdk-android&utm_campaign=compdfkit_pdf_sdk_android_repo&ref_platform_id=github_compdfkit) as a dependency to the project. Inside the **app** dictionary's ***"build.gradle"***, add ***"ComPDFKit.aar"***, ***"ComPDFKit-UI.aar"***, and the related support libraries to the `dependencies`. For simplicity, update the dependencies as follows:
 
+    ```groovy
     dependencies {
         ...
         //glide
         implementation 'com.github.bumptech.glide:glide:4.12.0'
         annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-    
+
         implementation 'androidx.documentfile:documentfile:1.0.1'
+
     }
+    ```
 
 4. Apply for read and write permissions in `AndroidManifest.xml`:
 
+    ```xml
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    ```
 
 **Note:** *On your apps that target Android 6.0 or higher, make sure to check for and request read and write permissions to external storage at runtime.*
 
 5. If you use an online license, please add network access permissions in `AndroidManifest.xml`:
 
+    ```xml
     <uses-permission android:name="android.permission.INTERNET"/>
+    ```
 
 ### Apply the License Key
 
@@ -238,54 +254,64 @@ Add this license in the **AndroidManifest.xml** of the main module. In version *
 
 * **Online license**
 
+    ```xml
     <!-- Each ComPDF license is bound to a specific applicationId -->
     <!-- For example: com.compdfkit.pdfviewer -->
     <meta-data
         android:name="compdfkit_key_online"
         android:value="Your ComPDF Key" />
+    ```
 
 You can also initialize ComPDF SDK in code using:
 
-    CPDFSdk.init(context, "your compdfkit license", false);
+```java
+CPDFSdk.init(context, "your compdfkit license", false);
+```
 
 * **Offline license**
 
+    ```xml
     <!-- Each ComPDF license is bound to a specific applicationId -->
     <!-- For example: com.compdfkit.pdfviewer -->
     <meta-data
         android:name="compdfkit_key"
         android:value="Your ComPDF Key" />
+    ```
 
 You can also initialize ComPDF SDK in code using:
 
-    CPDFSdk.init(context, "your compdfkit license");
+```java
+CPDFSdk.init(context, "your compdfkit license");
+```
 
 ### Add Proguard Rules
 
 In the `proguard-rules.pro` file, please add the obfuscation configuration information for `compdfkit` as follows:
 
-    -keep class com.compdfkit.ui.** {*;}
-    -keep class com.compdfkit.core.** {*;}
+```proguard
+-keep class com.compdfkit.ui.** {*;}
+-keep class com.compdfkit.core.** {*;}
+```
 
 ### Display a PDF Document
 
 1. Copy a PDF document into the **assets** directory of your Android project. For example, import the file ***"Quick Start Guide.pdf"*** to the path **src/main/assets**.
 
-![Display a PDF Document  1](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%201.png)
+![Display a PDF Document  1](./image-android/Display%20a%20PDF%20Document%20-%201.png)
 
 2. Create a new **Empty Activity** under your package, and set the activity name to **MainActivity**.
 
-![Display a PDF Document  2](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%202.png)
+![Display a PDF Document  2](./image-android/Display%20a%20PDF%20Document%20-%202.png)
 
 Android Studio will automatically generate a source file called ***"MainActivity.java"*** and a layout file called ***"activity_main.xml"***.
 
 The source file:
 
-![Display a PDF Document  3](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%203.png)
+![Display a PDF Document  3](./image-android/Display%20a%20PDF%20Document%20-%203.png)
 
 The layout file:
 
-![Display a PDF Document  4](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%204.png)
+![Display a PDF Document  4](./image-android/Display%20a%20PDF%20Document%20-%204.png)
 
 3. Create a `CPDFReaderView` in your ***"activity_main.xml"*** to display the contents of the PDF document:
 
@@ -307,7 +333,7 @@ The layout file:
         android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-```
+ ```
 
 Get the `CPDFReaderView` from the layout or create a `CPDFReaderView` directly in the code in the corresponding ***MainActivity.java*** file:
 ```Java
@@ -516,7 +542,7 @@ public class MainActivity extends AppCompatActivity {
 
 7. Run the application.
 
-![Display a PDF Document  5](https://github.com/ComPDFKit/compdfkit-pdf-sdk-android/blob/main/image-android/Display%20a%20PDF%20Document%20-%205.png)
+<img src="./image-android/Display%20a%20PDF%20Document%20-%205.png" alt="Display a PDF Document  5" style="zoom: 50%;" />
 
 Now, with the help of ComPDF SDK, you can get a simple application to display a PDF file.
 

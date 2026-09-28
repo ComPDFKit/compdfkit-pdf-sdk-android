@@ -60,6 +60,6 @@ dependencies {
     api project(path: ':ComPDFKit_Tools')
 
     // or
-    // implementation ('com.compdf:compdfkit-tools:3.0.0')
+    // implementation ('com.compdf:compdfkit-tools:3.0.2')
 }
 configurations.all { resolutionStrategy.cacheChangingModulesFor 0, 'seconds' }

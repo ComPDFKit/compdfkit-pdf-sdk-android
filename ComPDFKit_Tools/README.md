@@ -53,6 +53,28 @@ CPDFDocumentFragment documentFragment = CPDFDocumentFragment.newInstance(
   configuration);
 ```
 
+### Ink Undo/Redo Behavior
+
+While editing an Ink annotation, configure the source used by Undo and Redo through
+`configuration.annotationsConfig.inkUndoRedoMode`. The default is `HYBRID`: it uses Ink
+stroke history first, then falls back to document annotation history when Ink has no
+available operation. In hybrid mode, Redo replays the exact sources previously undone,
+so it never changes order merely because Ink history is available.
+
+```java
+// Default: Ink first, then document history.
+configuration.annotationsConfig.inkUndoRedoMode = AnnotationsConfig.InkUndoRedoMode.HYBRID;
+
+// Preserve the previous behavior: only undo or redo current Ink strokes.
+configuration.annotationsConfig.inkUndoRedoMode = AnnotationsConfig.InkUndoRedoMode.INK_ONLY;
+
+// Always operate on document annotation history, including while editing Ink.
+configuration.annotationsConfig.inkUndoRedoMode = AnnotationsConfig.InkUndoRedoMode.DOCUMENT_ONLY;
+```
+
+The JSON equivalent in `annotationsConfig` is `"inkUndoRedoMode": "hybrid"`,
+`"inkOnly"`, or `"documentOnly"`.
+
 ### Watermark
 
 If you only need to use the watermark function, you can use `CWatermarkEditDialog` alone. The following is an example of use:
