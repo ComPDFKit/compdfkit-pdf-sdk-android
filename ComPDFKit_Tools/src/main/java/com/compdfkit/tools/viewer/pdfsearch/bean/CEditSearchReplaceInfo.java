@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import com.compdfkit.core.edit.CPDFEditFindSelection;
 import com.compdfkit.core.edit.CPDFEditRange;
 import com.compdfkit.core.page.CPDFTextPage;
-import com.compdfkit.core.page.CPDFTextRange;
 
 public class CEditSearchReplaceInfo extends CSearchTextInfo {
     public CPDFEditFindSelection selection;
@@ -17,31 +16,14 @@ public class CEditSearchReplaceInfo extends CSearchTextInfo {
     }
 
     public void initHighLightTextData(Context context, CPDFTextPage textPage){
-        if (textPage == null || context == null) {
+        if (textPage == null || context == null || selection == null || TextUtils.isEmpty(keyword)) {
             return;
         }
         CPDFEditRange textRange = this.selection.getRange();
         if (textRange == null) {
             return;
         }
-
-        int targetStart = textRange.getLocation() - 20;
-        int length;
-        if (targetStart > 0) {
-            length = textRange.getLength() + 40;
-        } else {
-            length = textRange.getLength() + 40 + targetStart;
-            targetStart = 0;
-        }
-        CPDFTextRange targetTextRange = new CPDFTextRange(targetStart, length);
-        String target = textPage.getText(targetTextRange);
-        if (target == null) {
-            return;
-        }
-        target = target.replaceAll("(\\r\\n)+ ", "");
-        if (TextUtils.isEmpty(keyword)) {
-            return;
-        }
-        this.stringBuilder = highlight(context, target, keyword);
+        this.stringBuilder = buildHighlightedSnippet(context, textPage,
+                textRange.getLocation(), textRange.getLength());
     }
 }

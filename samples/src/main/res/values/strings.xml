@@ -54,7 +54,7 @@
     <string name="encrypt_test_desc">This sample shows how to set user password and permission password, decrypt, set document permission</string>
 
     <string name="pdf_a_test_title">PDFA</string>
-    <string name="pdf_a_test_desc">This sample shows how to convert PDF to PDFA1a and PDFA1b formats</string>
+    <string name="pdf_a_test_desc">This sample shows how to convert PDF to PDF/A, PDF/X, PDF/E, PDF/VT and PDF/UA formats</string>
 
     <string name="flatten_test_title">Flatten</string>
     <string name="flatten_test_desc">This sample shows how to create a copy of Flattened</string>
@@ -63,7 +63,7 @@
     <string name="annotation_import_export_test_desc">This sample shows how to set up the export and import of annotations. The document from which the annotations are exported is an xfdf file</string>
 
     <string name="digital_signature_title">DigitalSignature</string>
-    <string name="digital_signature_desc">This sample demonstrates the creation of digital certificates, the generation of digital signatures, the verification of digital certificates, the validation of digital signatures, the reading of digital signature information, certificate trust, and signature removal functionality.</string>
+    <string name="digital_signature_desc">This sample demonstrates digital certificate creation, digital signing, embedded RFC 3161 timestamps, certificate verification, signature validation, signature information, certificate trust, and signature removal.</string>
 
     <string name="content_editor_title">ContentEditor</string>
     <string name="content_editor_desc">This example shows how to insert text and images through the content editing function.</string>
@@ -73,6 +73,16 @@
 
     <string name="annotation_reply_title">AnnotationReply</string>
     <string name="annotation_reply_desc">This example shows how to add comments, delete replies, etc.</string>
+
+
+    <string name="compare_test_title">Compare</string>
+    <string name="compare_test_desc">This sample shows how to compare two documents: text/image/annotation/path/shading targets, the CompType bit mask, custom highlight colors with a generated result document, and overlay comparison for drawings.</string>
+
+    <string name="attachment_test_title">Attachment</string>
+    <string name="attachment_test_desc">This sample shows how to add, list, read, export, modify and remove PDF embedded attachments.</string>
+
+    <string name="compress_test_title">Compress</string>
+    <string name="compress_test_desc">This sample shows how to compress a document: the low/standard/high quality presets, custom optimize flags, per image type compression algorithms, progress and cancellation, in memory optimization with cached options, the legacy compress levels and saving an optimized copy to a stream.</string>
 
 
     <string name="tools_allowed">Allowed</string>

@@ -152,3 +152,27 @@ private void openPDF(String path){
 ```
 
 <img src="screenshots/img_3.jpg" style="zoom: 30%;" />
+
+### Tap text selection
+
+[CPDFTapTextSelectionController](./src/main/java/com/compdfkit/tools/common/pdf/CPDFTapTextSelectionController.java)
+provides opt-in text selection for PDF page taps. The default `AUTO` mode tries
+paragraph, line, then word selection and stops at the first drawable selection.
+Use `PARAGRAPH`, `LINE`, or `WORD` for a single granularity. Paragraph detection
+uses reading-layer layout within the current page and column.
+
+Create the controller on the main thread after creating the reader view, call
+`attach()`, and keep the instance until calling `detach()` in `onDestroyView()`.
+The class Javadoc includes a complete lifecycle example. The controller now uses
+`IReaderViewCallback.onPageTap(PointF)` from the matching SDK AAR. Eligible page
+taps return `true`, even when selection finds no text, suppressing all legacy
+`onTapMainDocArea()` callbacks for that tap so fullscreen/toolbars do not toggle.
+Unsupported interaction modes return `false`; page gaps retain legacy behavior.
+`CPDFViewCtrl` forwards `onPageTap` to its registered `CPDFIReaderViewCallback`
+listeners, notifying all listeners with separate points and returning their combined
+consumption result to the SDK. Other point callbacks still receive consumed taps.
+
+`CPDFDocumentFragment` does not install this controller automatically. Applications
+can opt in by attaching a controller and selecting `LINE`, `WORD`, `PARAGRAPH`, or
+`AUTO`; the default remains `AUTO`. Use `LINE` to select only the tapped line without
+paragraph or word fallback.

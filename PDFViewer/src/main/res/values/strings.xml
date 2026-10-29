@@ -2,7 +2,7 @@
     <string name="app_name">ComPDFKit</string>
 
     <!--    Setting Activity start -->
-    <string name="home_title">ComPDFKit Demo for Android</string>
+    <string name="home_title">ComPDF Demo for Android</string>
     <string name="tools_settings">Settings</string>
     <string name="tools_global_setting">Settings</string>
     <string name="tools_highlight_links">Highlight Links</string>

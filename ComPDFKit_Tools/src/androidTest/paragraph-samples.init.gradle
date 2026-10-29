@@ -1,0 +1,12 @@
+// Run the main SDK wrapper from ComPDFKit_Android/ and pass this file using -I.
+// Reuse SDK test initialization without changing production dependencies or manifests.
+gradle.beforeProject { p ->
+    if (p.path == ':ComPDFKit-UI') {
+        p.afterEvaluate {
+            def toolsModule = p.project(':ComPDFKit_Tools')
+            p.android.sourceSets.androidTest.java.srcDir(toolsModule.file('src/androidTest/java'))
+            p.android.sourceSets.androidTest.manifest.srcFile(toolsModule.file('src/androidTest/AndroidManifest.xml'))
+            p.dependencies.add('androidTestImplementation', toolsModule)
+        }
+    }
+}

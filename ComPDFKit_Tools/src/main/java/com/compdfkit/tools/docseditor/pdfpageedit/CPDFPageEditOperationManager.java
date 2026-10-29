@@ -17,6 +17,7 @@ import com.compdfkit.core.page.CPDFPage;
 import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.glide.CPDFThumbnailCacheRevisionManager;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,11 @@ import java.util.List;
  * <p>This class contains no Fragment, RecyclerView, toolbar, or Toast logic.</p>
  */
 class CPDFPageEditOperationManager {
+
+    // Leaves room for MediaStore to append a duplicate-name index within a 255-byte filename limit.
+    private static final int MAX_EXTRACT_FILE_NAME_BYTES = 240;
+    private static final String EXTRACT_FILE_EXTENSION = ".pdf";
+    private static final String DEFAULT_EXTRACT_FILE_NAME = "Extract";
 
     /**
      * Imports all pages from the source document and removes the pages being replaced.
@@ -70,7 +76,7 @@ class CPDFPageEditOperationManager {
         }
 
         Uri saveUri = CUriUtil.createFileUri(context, publicDirectory,
-                buildExtractFileName(sourceDocument, selectedPages), "application/pdf");
+                buildExtractFileName(sourceDocument.getFileName(), selectedPages.length), "application/pdf");
         if (saveUri == null) {
             return null;
         }
@@ -216,20 +222,48 @@ class CPDFPageEditOperationManager {
         return pages;
     }
 
-    private String buildExtractFileName(CPDFDocument document, int[] exportPages) {
-        String fileName = document.getFileName();
-        int extensionIndex = fileName == null ? -1 : fileName.toLowerCase().indexOf(".pdf");
-        String baseName = extensionIndex > 0 ? fileName.substring(0, extensionIndex) : "Extract";
-        StringBuilder newName = new StringBuilder(baseName);
-        newName.append("_Page");
-        for (int i = 0; i < exportPages.length; i++) {
-            if (i != 0) {
-                newName.append(",");
-            }
-            newName.append(exportPages[i] + 1);
+    static String buildExtractFileName(String sourceFileName, int exportPageCount) {
+        String baseName = getFileNameWithoutExtension(sourceFileName);
+        boolean hasSourceFileName = !baseName.isEmpty();
+        if (!hasSourceFileName) {
+            baseName = DEFAULT_EXTRACT_FILE_NAME;
         }
-        newName.append(".pdf");
-        return newName.toString();
+
+        String suffix = hasSourceFileName
+                ? "_Extract_" + exportPageCount + "Pages" + EXTRACT_FILE_EXTENSION
+                : "_" + exportPageCount + "Pages" + EXTRACT_FILE_EXTENSION;
+        int maxBaseNameBytes = MAX_EXTRACT_FILE_NAME_BYTES
+                - suffix.getBytes(StandardCharsets.UTF_8).length;
+        return truncateUtf8(baseName, Math.max(0, maxBaseNameBytes)) + suffix;
+    }
+
+    private static String getFileNameWithoutExtension(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            return "";
+        }
+        int extensionIndex = fileName.lastIndexOf('.');
+        return extensionIndex > 0 ? fileName.substring(0, extensionIndex) : fileName;
+    }
+
+    private static String truncateUtf8(String value, int maxBytes) {
+        if (value.getBytes(StandardCharsets.UTF_8).length <= maxBytes) {
+            return value;
+        }
+
+        StringBuilder result = new StringBuilder();
+        int byteCount = 0;
+        for (int index = 0; index < value.length(); ) {
+            int codePoint = value.codePointAt(index);
+            String character = new String(Character.toChars(codePoint));
+            int characterBytes = character.getBytes(StandardCharsets.UTF_8).length;
+            if (byteCount + characterBytes > maxBytes) {
+                break;
+            }
+            result.append(character);
+            byteCount += characterBytes;
+            index += Character.charCount(codePoint);
+        }
+        return result.toString();
     }
 
 }

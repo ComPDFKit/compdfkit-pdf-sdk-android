@@ -17,7 +17,7 @@
         app:tools_enable_slider_bar="true"
         app:tools_page_indicator_margin_bottom="20dp"
         app:tools_slider_bar_icon="@drawable/tools_ic_pdf_slider_bar"
-        app:tools_slider_bar_position="right" />
+        app:tools_slider_bar_position="left" />
 
     <View
         android:id="@+id/block_view"

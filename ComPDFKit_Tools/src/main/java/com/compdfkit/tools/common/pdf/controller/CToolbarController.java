@@ -124,6 +124,7 @@ public class CToolbarController {
 
         pdfView.getCPdfReaderView().setPdfAddAnnotCallback((cpdfPageView, cpdfBaseAnnot) -> {
             CPDFAnnotation annotation = cpdfBaseAnnot.onGetAnnotation();
+            boolean isProgrammaticCreation = CAnnotationCreationContext.isProgrammaticCreation();
             if (annotation.getType() != CPDFAnnotation.Type.WIDGET) {
                 annotation.setTitle(ctx.getConfiguration().annotationsConfig.annotationAuthor);
                 annotation.updateAp();
@@ -134,7 +135,7 @@ public class CToolbarController {
 
             // Programmatic additions should still emit creation callbacks, but must not
             // open the post-creation editing dialogs reserved for toolbar-created forms.
-            if (CAnnotationCreationContext.isProgrammaticCreation()) {
+            if (isProgrammaticCreation) {
                 return;
             }
 
@@ -149,6 +150,11 @@ public class CToolbarController {
                 CPDFAnnotationManager annotationManager = new CPDFAnnotationManager();
                 annotationManager.showPushButtonActionDialog(fragment.getChildFragmentManager(), pdfView.getCPdfReaderView(),
                         cpdfBaseAnnot, cpdfPageView);
+            }
+
+            if (annotation.getType() == CPDFAnnotation.Type.WIDGET
+                    && !pdfView.getCPdfReaderView().isContinuousCreation()) {
+                fragment.formToolBar.clearToolSelection();
             }
         });
     }

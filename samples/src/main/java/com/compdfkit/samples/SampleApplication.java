@@ -17,9 +17,12 @@ import com.compdfkit.core.document.CPDFSdk;
 import com.compdfkit.samples.samples.AnnotationImportExportTest;
 import com.compdfkit.samples.samples.AnnotationReplyTest;
 import com.compdfkit.samples.samples.AnnotationTest;
+import com.compdfkit.samples.samples.AttachmentTest;
 import com.compdfkit.samples.samples.BackgroundTest;
 import com.compdfkit.samples.samples.BatesTest;
 import com.compdfkit.samples.samples.BookmarkTest;
+import com.compdfkit.samples.samples.CompareTest;
+import com.compdfkit.samples.samples.CompressTest;
 import com.compdfkit.samples.samples.ContentEditorTest;
 import com.compdfkit.samples.samples.DigitalSignaturesTest;
 import com.compdfkit.samples.samples.DocumentInfoTest;
@@ -83,5 +86,8 @@ public class SampleApplication extends Application {
         samplesList.add(new PDFATest());
         samplesList.add(new FlattenTest());
         samplesList.add(new ContentEditorTest());
+        samplesList.add(new CompareTest());
+        samplesList.add(new AttachmentTest());
+        samplesList.add(new CompressTest());
     }
 }

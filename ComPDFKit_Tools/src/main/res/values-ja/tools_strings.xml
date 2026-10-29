@@ -60,6 +60,7 @@
     <string name="tools_sorry_no_contents">結果はありません</string>
     <string name="tools_result">結果</string>
     <string name="tools_search_result_found">%d 件の結果</string>
+    <string name="tools_search_result_index">%1$d/%2$d</string>
     <string name="tools_please_enter_the_password_below">以下にパスワードを入力してください。</string>
     <string name="tools_please_enter_the_password">パスワードを入力してください</string>
     <string name="tools_password">パスワード</string>
@@ -442,6 +443,7 @@
     <string name="tools_find">検索</string>
     <string name="tools_replace_with">置換後の文字列</string>
     <string name="tools_replace_all">すべて置換</string>
+    <string name="tools_replace_all_completed">すべて置換しました</string>
     <string name="tools_ignore_case">大文字と小文字を無視する</string>
     <string name="tools_whole_words_only">単語全体のみ</string>
     <string name="tools_setting">設定</string>
@@ -503,4 +505,41 @@
     <string name="tools_bota">ボタ</string>
     <string name="tools_menu">メニュー</string>
     <string name="tools_saveing">保存中…</string>
+
+    <!-- Custom Compression Settings -->
+    <string name="tools_custom_compression_settings">カスタム圧縮パラメータ</string>
+    <string name="tools_image_settings">画像設定</string>
+    <string name="tools_image_quality">画質</string>
+    <string name="tools_image_quality_low">低い</string>
+    <string name="tools_image_quality_medium">真ん中</string>
+    <string name="tools_image_quality_high">高い</string>
+    <string name="tools_if_image_exceeds">画像がXX PPIを超える場合:</string>
+    <string name="tools_downsample_to">対象画像をXX PPIに圧縮します:</string>
+    <string name="tools_ppi">PPI</string>
+    <string name="tools_font_settings">フォント設定</string>
+    <string name="tools_remove_font_embedding">フォント埋め込みをキャンセル</string>
+    <string name="tools_discard_objects">放棄する対象</string>
+    <string name="tools_discard_form_actions">フォーム送信、インポート、リセット操作をすべて中止します。</string>
+    <string name="tools_discard_javascript">すべてのJavaScriptアクションを破棄する</string>
+    <string name="tools_discard_page_thumbnails">埋め込みページサムネイルを廃止する</string>
+    <string name="tools_discard_document_tags">ドキュメントタグを破棄する</string>
+    <string name="tools_discard_bookmarks">ブックマークを破棄する</string>
+    <string name="tools_discard_user_data">ユーザーデータを破棄する</string>
+    <string name="tools_discard_comments_forms">コメント、フォーム、マルチメディアはすべて破棄してください。</string>
+    <string name="tools_discard_document_info">文書情報とメタデータを破棄する</string>
+    <string name="tools_discard_object_data">すべてのオブジェクトデータを破棄する</string>
+    <string name="tools_discard_file_attachments">添付ファイルを破棄する</string>
+    <string name="tools_discard_layer_content">結果として得られたレイヤーの内容を破棄し、表示されているレイヤーを結合します。</string>
+    <string name="tools_discard_other_data">その他のデータを破棄する</string>
+    <string name="tools_discard_invalid_bookmarks">無効なブックマークを破棄する</string>
+    <string name="tools_discard_invalid_links">無効なリンクを破棄する</string>
+
+    <!-- Compression Error Messages -->
+    <string name="tools_error_exceeds_ppi_must_be_greater">しきい値PPIは目標PPIより大きくする必要があります</string>
+    <string name="tools_error_invalid_ppi_value">有効なPPI値を入力してください</string>
+
+    <!-- Digital Signature Status -->
+    <string name="tools_signature_includes_timestamp">署名にはタイムスタンプが埋め込まれています</string>
+    <string name="tools_signature_ltv_enabled">署名が有効になっているLTV</string>
+
 </resources>

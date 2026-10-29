@@ -65,6 +65,7 @@
     <string name="tools_sorry_no_contents">无匹配的结果</string>
     <string name="tools_result">搜索结果</string>
     <string name="tools_search_result_found">%d 条搜索结果</string>
+    <string name="tools_search_result_index">%1$d/%2$d</string>
 
     <string name="tools_please_enter_the_password_below">输入密码以查看文档</string>
     <string name="tools_please_enter_the_password">请输入密码</string>
@@ -486,6 +487,7 @@
     <string name="tools_find">查找</string>
     <string name="tools_replace_with">替换为</string>
     <string name="tools_replace_all">全部替换</string>
+    <string name="tools_replace_all_completed">全部替换完成</string>
     <string name="tools_ignore_case">忽略大小写</string>
     <string name="tools_whole_words_only">全词匹配</string>
     <string name="tools_setting">设置</string>
@@ -556,5 +558,40 @@
     <string name="tools_menu">菜单</string>
     <string name="tools_saveing">保存中…</string>
 
+    <!-- Custom Compression Settings -->
+    <string name="tools_custom_compression_settings">自定义压缩参数</string>
+    <string name="tools_image_settings">图像设置</string>
+    <string name="tools_image_quality">图像质量</string>
+    <string name="tools_image_quality_low">低</string>
+    <string name="tools_image_quality_medium">中</string>
+    <string name="tools_image_quality_high">高</string>
+    <string name="tools_if_image_exceeds">若图片超过:</string>
+    <string name="tools_downsample_to">压缩目标至:</string>
+    <string name="tools_ppi">PPI</string>
+    <string name="tools_font_settings">字体设置</string>
+    <string name="tools_remove_font_embedding">取消字体嵌入</string>
+    <string name="tools_discard_objects">放弃对象</string>
+    <string name="tools_discard_form_actions">放弃所有表单提交、导入和重置动作</string>
+    <string name="tools_discard_javascript">放弃所有 JavaScript 动作</string>
+    <string name="tools_discard_page_thumbnails">放弃嵌入的页面缩略图</string>
+    <string name="tools_discard_document_tags">放弃文档标签</string>
+    <string name="tools_discard_bookmarks">放弃书签</string>
+    <string name="tools_discard_user_data">放弃用户数据</string>
+    <string name="tools_discard_comments_forms">放弃所有注释、表单和多媒体</string>
+    <string name="tools_discard_document_info">放弃文档信息和元数据</string>
+    <string name="tools_discard_object_data">放弃所有的对象数据</string>
+    <string name="tools_discard_file_attachments">放弃文件附件</string>
+    <string name="tools_discard_layer_content">放弃因此的图层内容并拼合可见的图层</string>
+    <string name="tools_discard_other_data">放弃其他数据</string>
+    <string name="tools_discard_invalid_bookmarks">放弃无效书签</string>
+    <string name="tools_discard_invalid_links">放弃无效链接</string>
+
+    <!-- Compression Error Messages -->
+    <string name="tools_error_exceeds_ppi_must_be_greater">触发阈值PPI必须大于压缩目标PPI</string>
+    <string name="tools_error_invalid_ppi_value">请输入有效的PPI数值</string>
+
+    <!-- Digital Signature Status -->
+    <string name="tools_signature_includes_timestamp">签名包含嵌入的时间戳</string>
+    <string name="tools_signature_ltv_enabled">签名已启用 LTV</string>
 
 </resources>

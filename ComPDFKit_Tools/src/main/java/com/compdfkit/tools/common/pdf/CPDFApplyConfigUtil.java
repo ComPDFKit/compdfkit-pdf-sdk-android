@@ -43,6 +43,7 @@ import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.RectStyle;
 import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.ScreenshotRectStyle;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.pdf.config.CreationConfig;
 import com.compdfkit.tools.common.pdf.config.FontConfig;
 import com.compdfkit.tools.common.pdf.config.ModeConfig;
 import com.compdfkit.tools.common.pdf.config.ReaderViewConfig;
@@ -118,6 +119,11 @@ public class CPDFApplyConfigUtil {
     private void applyReaderViewConfig(CPDFDocumentFragment fragment,
         CPDFConfiguration configuration) {
         CPDFReaderView readerView = fragment.pdfView.getCPdfReaderView();
+        CreationConfig creationConfig = configuration.creationConfig != null
+            ? configuration.creationConfig
+            : new CreationConfig();
+        readerView.setContinuousCreation(creationConfig.continuousCreation);
+        readerView.setAutoSelectCreatedAnnotation(creationConfig.autoSelectCreatedAnnotation);
         if (configuration.readerViewConfig != null) {
             ReaderViewConfig readerViewConfig = configuration.readerViewConfig;
             readerView.setLinkHighlight(readerViewConfig.linkHighlight);
@@ -516,7 +522,7 @@ public class CPDFApplyConfigUtil {
         editorTextAttr.setAlignment(textAttr.getAlignment());
 
         editorTextAttr.setTextAttribute(
-            new CPDFTextAttribute(resolvePsName(textAttr.getPsName(), textAttr.getFontConfig()), textAttr.getFontSize(),
+            new CPDFTextAttribute(resolvePsName(textAttr.getFontConfig()), textAttr.getFontSize(),
                 textAttr.getFontColor()));
         editorTextAttr.onstore();
     }
@@ -602,6 +608,10 @@ public class CPDFApplyConfigUtil {
         if (!TextUtils.isEmpty(configuredPsName)) {
             return configuredPsName;
         }
+        return resolvePsName(fontConfig);
+    }
+
+    public String resolvePsName(FontConfig fontConfig) {
         if (!CPDFSdk.isInitialized() || fontConfig == null) {
             return CPDFTextAttribute.FontNameHelper.Font_Default_Type;
         }

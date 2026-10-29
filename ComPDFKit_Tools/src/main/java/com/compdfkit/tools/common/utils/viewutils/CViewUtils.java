@@ -185,6 +185,15 @@ public class CViewUtils {
     }
 
     public static int getThemeStyle(Context context, int themeResId){
+        // Prefer the host Activity's active theme. This preserves day/night resource
+        // resolution for standalone integrations such as PDFViewer.
+        int styleId = CViewUtils.getThemeAttrResourceId(context.getTheme(), themeResId);
+        if (styleId != 0) {
+            return styleId;
+        }
+
+        // The SDK configuration remains the fallback for hosts that do not expose
+        // ComPDFKit's theme attributes directly.
         int themeId = CPDFApplyConfigUtil.getInstance().getGlobalThemeId();
         Resources.Theme mTheme = context.getResources().newTheme();
         mTheme.applyStyle(themeId, true);

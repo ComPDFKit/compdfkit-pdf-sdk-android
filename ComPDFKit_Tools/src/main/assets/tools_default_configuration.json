@@ -10,6 +10,10 @@
       "signatures"
     ]
   },
+  "creationConfig": {
+    "continuousCreation": true,
+    "autoSelectCreatedAnnotation": true
+  },
   "toolbarConfig": {
     "mainToolbarVisible": true,
     "mainToolbarTitleVisible": true,

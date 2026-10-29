@@ -210,7 +210,8 @@
 
     </style>
 
-    <style name="ComPDFKit.Theme.BottomSheetDialog.Dark.Transparent" tools:ignore="ResourceName">
+    <style name="ComPDFKit.Theme.BottomSheetDialog.Dark.Transparent"
+        parent="ComPDFKit.Theme.BottomSheetDialog.Dark" tools:ignore="ResourceName">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="bottomSheetStyle">@style/ComPDFKit.Theme.BottomSheetStyle.Transparent</item>
         <item name="compdfkit_BottomSheetDialog_CloseIcon">@drawable/tools_ic_grey_oval_close_dark</item>
@@ -220,7 +221,8 @@
 
     </style>
 
-    <style name="ComPDFKit.Theme.BottomSheetDialog.Light.Transparent" tools:ignore="ResourceName">
+    <style name="ComPDFKit.Theme.BottomSheetDialog.Light.Transparent"
+        parent="ComPDFKit.Theme.BottomSheetDialog.Light" tools:ignore="ResourceName">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="bottomSheetStyle">@style/ComPDFKit.Theme.BottomSheetStyle.Transparent</item>
         <item name="compdfkit_BottomSheetDialog_CloseIcon">@drawable/tools_ic_grey_oval_close</item>

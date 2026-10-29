@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="tools_compress_action_height">48dp</dimen>
+    <dimen name="tools_compress_action_bottom">24dp</dimen>
+    <dimen name="tools_compress_action_outer_margin">16dp</dimen>
+    <dimen name="tools_compress_action_gap">8dp</dimen>
+    <dimen name="tools_compress_action_container_land_height">72dp</dimen>
+</resources>

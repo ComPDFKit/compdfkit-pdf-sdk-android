@@ -27,6 +27,14 @@ import com.compdfkit.ui.reader.CPDFReaderView;
 public class CPDFtextAnnotAttachHelper extends CPDFTextAnnotAttachHelper {
     @Override
     protected void onAddTextAnnot(CPDFTextAnnotImpl cpdfTextAnnot) {
+        if (!readerView.isAutoSelectCreatedAnnotation()) {
+            CPDFDocumentFragment documentFragment = getDocumentFragment();
+            if (documentFragment != null) {
+                documentFragment.annotationToolbar.annotationCreatePreparedListenersChanged(
+                        CAnnotationType.TEXT, cpdfTextAnnot.onGetAnnotation());
+            }
+            return;
+        }
         cpdfTextAnnot.setFocused(true);
         if (!shouldAutoShowNoteEditDialog()) {
             CPDFDocumentFragment documentFragment = getDocumentFragment();

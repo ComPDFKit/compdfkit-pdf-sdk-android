@@ -25,7 +25,7 @@ import java.io.File;
 
 public class BackgroundTest extends PDFSamples {
 
-    public BackgroundTest(){
+    public BackgroundTest() {
         setTitle(R.string.background_test_title);
         setDescription(R.string.background_test_desc);
     }
@@ -41,7 +41,7 @@ public class BackgroundTest extends PDFSamples {
     }
 
 
-    private void addColorBackground(){
+    private void addColorBackground() {
         outputListener.println();
         outputListener.println("Samples 1 : Set the document background color");
         CPDFDocument document = new CPDFDocument(context);
@@ -51,16 +51,16 @@ public class BackgroundTest extends PDFSamples {
         background.setColor(Color.RED);
         background.setOpacity(1F);
         background.setPages("0,1,2,3,4");
-        printBackgroundInfo(background);
         background.update();
         background.release();
         File file = new File(outputDir(), "backgroundTest/AddColorBackgroundTest.pdf");
         saveSamplePDF(document, file, true);
         outputListener.println("Done. Result saved in AddColorBackgroundTest.pdf");
+        printSavedBackgroundInfo(file);
         printDividingLine();
     }
 
-    private void addImageBackground(){
+    private void addImageBackground() {
         outputListener.println("Samples 2 : Set the document background image");
         CPDFDocument document = new CPDFDocument(context);
         document.open(FileUtils.getAssetsTempFile(context, "CommonFivePage.pdf"));
@@ -70,19 +70,19 @@ public class BackgroundTest extends PDFSamples {
         background.setImage(backgroundImage, CPDFImageScaleType.SCALETYPE_center);
         background.setOpacity(1F);
         background.setPages("0,1,2,3,4");
-        printBackgroundInfo(background);
         background.update();
         background.release();
         File file = new File(outputDir(), "backgroundTest/AddImageBackgroundTest.pdf");
         saveSamplePDF(document, file, true);
         outputListener.println("Done. Result saved in AddImageBackgroundTest.pdf");
+        printSavedBackgroundInfo(file);
         printDividingLine();
     }
 
     /**
      * Sample 3 : Delete document background
      */
-    private void deleteBackground(){
+    private void deleteBackground() {
         outputListener.println("Samples 3 : Delete document background");
         CPDFDocument document = new CPDFDocument(context);
         File sampleFile = new File(outputDir(),
@@ -94,15 +94,40 @@ public class BackgroundTest extends PDFSamples {
         //update pages
         //background.setPages("0,2,3,4");
         //background.update();
-        //background.release();
+        background.release();
         File file = new File(outputDir(), "backgroundTest/DeleteBackgroundTest.pdf");
         saveSamplePDF(document, file, true);
         outputListener.println("Done. Result saved in DeleteBackgroundTest.pdf");
     }
 
-    private void printBackgroundInfo(CPDFBackground background){
-        outputListener.println("Type : " + background.getType().name());
-        if (background.getType() == CPDFBackground.Type.Color){
+    private void printSavedBackgroundInfo(File file) {
+        CPDFDocument document = new CPDFDocument(context);
+        CPDFDocument.PDFDocumentError error = document.open(file.getAbsolutePath());
+        if (error != CPDFDocument.PDFDocumentError.PDFDocumentErrorSuccess) {
+            outputListener.println("Failed to reopen the saved file: " + error);
+            document.close();
+            return;
+        }
+
+        outputListener.println("Background information read from the saved file:");
+        CPDFBackground background = document.getBackground();
+        if (background == null) {
+            outputListener.println("No background information found.");
+            document.close();
+            return;
+        }
+        try {
+            printBackgroundInfo(background);
+        } finally {
+            background.release();
+            document.close();
+        }
+    }
+
+    private void printBackgroundInfo(CPDFBackground background) {
+        CPDFBackground.Type type = background.getType();
+        outputListener.println("Type : " + type.name());
+        if (type == CPDFBackground.Type.Color) {
             outputListener.println(String.format("Color : red:%d, green:%d, blue:%d, alpha:%d",
                     Color.red(background.getColor()),
                     Color.green(background.getColor()),
@@ -110,11 +135,14 @@ public class BackgroundTest extends PDFSamples {
                     Color.alpha(background.getColor())));
         }
         outputListener.println("Opacity : " + background.getOpacity());
+        outputListener.println("Scale : " + background.getScale());
         outputListener.println("Rotation : " + background.getRotation());
         outputListener.println("Vertalign : " + background.getVertalign().name());
         outputListener.println("Horizalign : " + background.getHorizalign().name());
-        outputListener.println("VertOffset : " + background.getXOffset());
-        outputListener.println("HorizOffset : " + background.getYOffset());
+        outputListener.println("VertOffset : " + background.getYOffset());
+        outputListener.println("HorizOffset : " + background.getXOffset());
+        outputListener.println("AllowsView : " + background.isAllowsView());
+        outputListener.println("AllowsPrint : " + background.isAllowsPrint());
         outputListener.println("Pages : " + background.getPages());
     }
 }

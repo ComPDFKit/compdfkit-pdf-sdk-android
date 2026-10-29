@@ -10,9 +10,11 @@
 package com.compdfkit.pdfviewer.home;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,5 +71,23 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Handle UI mode (day/night theme) changes
+        int currentNightMode = newConfig.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                // Switched to day mode - recreate to apply light theme
+                recreate();
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                // Switched to night mode - recreate to apply dark theme
+                recreate();
+                break;
+        }
     }
 }

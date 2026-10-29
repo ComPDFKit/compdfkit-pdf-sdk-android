@@ -49,7 +49,9 @@ open class SampleDetailActivity : AppCompatActivity() {
             pdfSamples?.outputFileList?.clear()
         }
         btnRun.setOnClickListener {
-            pdfSamples?.run(outputListener)
+            Thread {
+                pdfSamples?.run(outputListener)
+            }.start()
         }
         btnOpenFiles.setOnClickListener {
             pdfSamples?.let { pdfSamples ->
@@ -89,5 +91,4 @@ open class SampleDetailActivity : AppCompatActivity() {
         }
     }
 }
-
 

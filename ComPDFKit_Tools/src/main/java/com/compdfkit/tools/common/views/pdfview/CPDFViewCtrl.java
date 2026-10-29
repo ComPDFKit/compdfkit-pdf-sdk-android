@@ -12,6 +12,7 @@ package com.compdfkit.tools.common.views.pdfview;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
@@ -497,6 +498,19 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
         onFocusedTypeChangedListener.onTypeChanged(type);
       }
     }
+  }
+
+  @Override
+  public boolean onPageTap(PointF point) {
+    boolean consumed = false;
+    if (readerViewCallbacks != null) {
+      CPDFIReaderViewCallback[] callbacks = readerViewCallbacks.toArray(new CPDFIReaderViewCallback[0]);
+      for (CPDFIReaderViewCallback callback : callbacks) {
+        // Notify every listener with an isolated point, even after one consumes the tap.
+        consumed |= callback.onPageTap(new PointF(point.x, point.y));
+      }
+    }
+    return consumed;
   }
 
   @Override

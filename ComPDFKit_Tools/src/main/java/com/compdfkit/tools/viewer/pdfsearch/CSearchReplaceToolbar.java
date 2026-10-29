@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.FragmentActivity;
@@ -137,6 +138,8 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
 
     private AppCompatImageView ivSearchList;
 
+    private AppCompatTextView tvSearchCount;
+
     private Group groupSearchBefore;
 
     private Group groupSearchAfter;
@@ -156,6 +159,18 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
     private AsyncTask<Void, Void, List<CSearchTextInfo>> searchTask;
 
     private List<CSearchTextInfo> searchTextInfos = null;
+
+    /**
+     * Flattened match list (header entries excluded) backing the index/total indicator
+     * and the previous/next navigation. Kept in sync with {@link #currentMatchIndex}.
+     */
+    private final List<CSearchTextInfo> matches = new ArrayList<>();
+
+    /** Zero-based position within {@link #matches}; -1 when there is no active match. */
+    private int currentMatchIndex = -1;
+
+    /** Keywords the cached {@link #matches} were produced for; {@code null} when empty. */
+    private String matchesKeywords = null;
 
     Lock lock = new ReentrantLock();
 
@@ -190,6 +205,7 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
         AppCompatImageView ivPrevious = rootView.findViewById(R.id.iv_previous);
         AppCompatImageView ivNext = rootView.findViewById(R.id.iv_next);
         ivSearchList = rootView.findViewById(R.id.iv_search_list);
+        tvSearchCount = rootView.findViewById(R.id.tv_search_count);
         groupSearchBefore = rootView.findViewById(R.id.group_search_before);
         groupSearchAfter = rootView.findViewById(R.id.group_search_after);
         etReplace = rootView.findViewById(R.id.et_replace_with);
@@ -235,6 +251,7 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
                         ivSearchList.setVisibility(groupSearchAfter.getVisibility());
                     }
                 }
+                updateSearchCount();
                 CPDFReaderView readerView = pdfView.getCPdfReaderView();
                 if (viewType == ViewType.SearchReplace && tabLayout.getSelectedTabPosition() == 1) {
                     if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator) {
@@ -275,7 +292,12 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(s)) {
+                // Editing the keyword invalidates the results on screen: drop them so the
+                // index/total indicator and previous/next can never refer to a stale result
+                // set. resetSearch() clears matchesKeywords, so this fires once per edit
+                // rather than on every keystroke.
+                if (TextUtils.isEmpty(s)
+                        || (matchesKeywords != null && !TextUtils.equals(matchesKeywords, s))) {
                     resetSearch();
                 }
             }
@@ -313,11 +335,20 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
         } else if (v.getId() == R.id.iv_search) {
             searchFirst();
         } else if (v.getId() == R.id.iv_previous) {
-            cpdfSearch.searchBackward();
+            navigate(-1);
         } else if (v.getId() == R.id.iv_next) {
-            cpdfSearch.searchForward();
+            navigate(1);
         } else if (v.getId() == R.id.iv_search_list) {
             hideKeyboard();
+            if (searchTextInfos != null && !searchTextInfos.isEmpty()
+                    && TextUtils.equals(matchesKeywords, etSearch.getText().toString())) {
+                // searchFirst() already fetched the full result set. Reuse it instead of running
+                // a second full-document pass, which would also reset the searcher's cursor and
+                // drop the current highlight. The copy is deliberate: cancelTask() clears
+                // searchTextInfos, and the dialog outlives this call.
+                showSearchList(new ArrayList<>(searchTextInfos));
+                return;
+            }
             if (viewType == ViewType.SearchReplace) {
                 if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator) {
                     ((ContentEditorSearchReplaceDecorator) cpdfSearch).recordSelectIndex();
@@ -337,9 +368,10 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
             hideKeyboard();
             showLoadingDialog();
             if (cpdfSearch instanceof ContentEditorSearchReplaceDecorator) {
-                ((ContentEditorSearchReplaceDecorator) cpdfSearch).replaceAll(etReplace.getText().toString(), () -> {
-                    dismissLoadingDialog();
-                });
+                // Do not dismiss the loading dialog here: refreshAfterReplaceAll() re-runs the
+                // search and keeps its own dialog up until the new results are in.
+                ((ContentEditorSearchReplaceDecorator) cpdfSearch).replaceAll(etReplace.getText().toString(),
+                        this::refreshAfterReplaceAll);
             }
         } else if (v.getId() == toolBar.getIvToolBarBackBtn().getId()) {
             closeSearch(true);
@@ -394,25 +426,158 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
         }
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        // The full-document traversal can outlive this view; without this a finished task
+        // would touch a document the reader has already closed.
+        cancelTask();
+        super.onDetachedFromWindow();
+    }
+
+    /**
+     * Run the search for the current keywords and select the first match.
+     *
+     * <p>This is a single full-document pass: the same result list drives the selection, the
+     * index/total indicator and the previous/next navigation. The searcher is stateful —
+     * every {@code getSearchResults()} call reconfigures it and resets its internal cursor —
+     * so a second pass purely to count the matches would clobber the selection made by the
+     * first one.
+     */
     private void searchFirst() {
-        startSearch(etSearch.getText().toString(), 1, list -> {
+        searchFirst(true);
+    }
+
+    private void searchFirst(boolean showNoResultsToast) {
+        // The cached matches belong to the previous run; drop them up front so previous/next
+        // can never act on stale coordinates while the new search is running.
+        matches.clear();
+        currentMatchIndex = -1;
+        matchesKeywords = null;
+        updateSearchCount();
+        String keywords = etSearch.getText().toString();
+        startSearch(keywords, Integer.MAX_VALUE, list -> {
             searchTextInfos = list;
-            boolean hasResult = list.size() > 0;
+            applyMatches(keywords, list);
+            boolean hasResult = !matches.isEmpty();
             groupSearchBefore.setVisibility(hasResult ? GONE : VISIBLE);
             groupSearchAfter.setVisibility(hasResult ? VISIBLE : GONE);
             if (tabLayout.getSelectedTabPosition() == 1) {
                 ivSearchList.setVisibility(View.GONE);
             }
             if (hasResult) {
-                CSearchTextInfo searchTextInfo = searchTextInfos.get(0);
-                cpdfSearch.select(searchTextInfo.page, searchTextInfo.textRangeIndex);
+                CSearchTextInfo first = matches.get(0);
+                cpdfSearch.select(first.page, first.textRangeIndex);
+                updateSearchCount();
             } else {
                 resetSearch();
-                CToastUtil.showLongToast(getContext(), R.string.tools_sorry_no_contents);
+                if (showNoResultsToast) {
+                    CToastUtil.showLongToast(getContext(), R.string.tools_sorry_no_contents);
+                }
             }
         });
         etSearch.clearFocus();
         CViewUtils.hideKeyboard(etSearch);
+    }
+
+    /**
+     * Cache {@code list} as the match set for {@code keywords} and point the indicator at its
+     * first entry. Only the flattened matches are kept — the per-page header entries produced
+     * by the search implementations are dropped, so the total matches what the user can
+     * actually step through.
+     */
+    private void applyMatches(String keywords, List<CSearchTextInfo> list) {
+        matches.clear();
+        if (list != null) {
+            for (CSearchTextInfo info : list) {
+                if (!info.isHeader) {
+                    matches.add(info);
+                }
+            }
+        }
+        matchesKeywords = matches.isEmpty() ? null : keywords;
+        currentMatchIndex = matches.isEmpty() ? -1 : 0;
+    }
+
+    /**
+     * Re-run the search after "replace all" so the index/total indicator reflects the
+     * rewritten document.
+     *
+     * <p>Replacing clears the searcher's state, so the cached matches are stale by
+     * definition. Normally every occurrence is gone and the toolbar falls back to its
+     * pre-search state; when the replacement text still contains the keyword (for example
+     * replacing "a" with "ab") matches remain, and the indicator is repopulated from them.
+     */
+    private void refreshAfterReplaceAll() {
+        CToastUtil.showLongToast(getContext(), R.string.tools_replace_all_completed);
+        if (TextUtils.isEmpty(etSearch.getText())) {
+            dismissLoadingDialog();
+            resetSearch();
+            return;
+        }
+        // searchFirst() clears the cache before dispatching and keeps a loading dialog up for
+        // the duration, so there is no window in which previous/next can select pre-replace
+        // coordinates.
+        searchFirst(false);
+    }
+
+    /**
+     * Move the selection {@code step} matches forward (positive) or backward (negative),
+     * wrapping around at both ends, and select the resulting match.
+     *
+     * <p>Navigation is driven by the cached {@link #matches} rather than
+     * {@code searchForward()}/{@code searchBackward()} so the indicator can never drift out
+     * of sync with the highlighted match. The cache is populated by the same pass that makes
+     * the first selection, so it is always ready by the time these buttons are visible; a
+     * cache miss means the results are gone or stale and stepping is a no-op.
+     */
+    private void navigate(int step) {
+        if (cpdfSearch == null) {
+            return;
+        }
+        if (matches.isEmpty() || !TextUtils.equals(matchesKeywords, etSearch.getText().toString())) {
+            return;
+        }
+        int size = matches.size();
+        currentMatchIndex = ((currentMatchIndex + step) % size + size) % size;
+        CSearchTextInfo target = matches.get(currentMatchIndex);
+        cpdfSearch.select(target.page, target.textRangeIndex);
+        updateSearchCount();
+    }
+
+    /** Point the indicator at the match identified by {@code page}/{@code textRangeIndex}. */
+    private void syncIndicatorTo(int page, int textRangeIndex) {
+        int index = indexOf(page, textRangeIndex);
+        if (index >= 0) {
+            currentMatchIndex = index;
+            updateSearchCount();
+        }
+    }
+
+    private int indexOf(int page, int textRangeIndex) {
+        for (int i = 0; i < matches.size(); i++) {
+            CSearchTextInfo info = matches.get(i);
+            if (info.page == page && info.textRangeIndex == textRangeIndex) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /** Render the indicator as {@code index/total}, hiding it when there is nothing to show. */
+    private void updateSearchCount() {
+        if (tvSearchCount == null) {
+            return;
+        }
+        if (currentMatchIndex < 0 || matches.isEmpty()) {
+            tvSearchCount.setText("");
+            tvSearchCount.setVisibility(GONE);
+            return;
+        }
+        tvSearchCount.setText(getContext().getString(R.string.tools_search_result_index,
+                currentMatchIndex + 1, matches.size()));
+        // Shown on both the search and replace rows: previous/next stay active under the
+        // replace tab, so the indicator has to track them there too.
+        tvSearchCount.setVisibility(groupSearchAfter.getVisibility() == VISIBLE ? VISIBLE : GONE);
     }
 
     private void startSearch(String keywords, int searchCount, CSearchToolbar.OnSearchResultListener searchResultListener) {
@@ -431,6 +596,9 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
 
             @Override
             protected List<CSearchTextInfo> doInBackground(Void... voids) {
+                if (cpdfSearch == null) {
+                    return new ArrayList<>();
+                }
                 if (searchCount == 1) {
                     List<CSearchTextInfo> list = new ArrayList<>();
                     CSearchTextInfo textInfo = cpdfSearch.searchFirst(keywords, ignoreCase, wholeWordsOnly);
@@ -446,6 +614,10 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
             @Override
             protected void onPostExecute(List<CSearchTextInfo> list) {
                 super.onPostExecute(list);
+                if (isCancelled()) {
+                    // A newer search superseded this one; its results would be stale.
+                    return;
+                }
                 if (searchResultListener != null) {
                     searchResultListener.result(list);
                 }
@@ -497,6 +669,8 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
             searchResultDialog.dismiss();
             pdfView.getCPdfReaderView().setDisplayPageIndex(clickItem.page);
             cpdfSearch.select(clickItem.page, clickItem.textRangeIndex);
+            // Keep the index/total indicator in sync with the item picked from the list.
+            syncIndicatorTo(clickItem.page, clickItem.textRangeIndex);
         });
     }
 
@@ -510,6 +684,13 @@ public class CSearchReplaceToolbar extends LinearLayout implements View.OnClickL
             }
             if (groupSearchAfter != null) {
                 groupSearchAfter.setVisibility(GONE);
+            }
+            matches.clear();
+            currentMatchIndex = -1;
+            matchesKeywords = null;
+            if (tvSearchCount != null) {
+                tvSearchCount.setText("");
+                tvSearchCount.setVisibility(GONE);
             }
         }catch (Exception e){
 

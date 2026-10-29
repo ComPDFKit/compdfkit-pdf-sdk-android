@@ -30,6 +30,14 @@ import java.io.File
 
 class DigitalSignaturesTest : PDFSamples() {
 
+    companion object {
+        private const val CERTIFICATE_PASSWORD = "ComPDFKit"
+        private const val TIMESTAMP_TSA_URL = "http://timestamp.digicert.com"
+        private const val TIMESTAMP_SIGNATURE_FILE_NAME = "CommonFivePage_TimestampSigned.pdf"
+    }
+
+    private var generatedCertificateFile: File? = null
+
     init {
         setTitle(R.string.digital_signature_title)
         setDescription(R.string.digital_signature_desc)
@@ -49,23 +57,28 @@ class DigitalSignaturesTest : PDFSamples() {
         createSignature()
 
         //--------
-        //Samples 2: Verify signature
+        //Samples 2: Create and verify a digital signature with an embedded RFC 3161 timestamp
+        createTimestampedSignature()
+        verifyEmbeddedTimestamp()
+
+        //--------
+        //Samples 3: Verify signature
         verifySignatureInfo()
 
         //--------
-        //Samples 3: Verify certificate
+        //Samples 4: Verify certificate
         verifyCertificate()
 
         //--------
-        //Samples 4: Print digital signature info
+        //Samples 5: Print digital signature info
         printDigitalSignatureInfo()
 
         //--------
-        //Samples 5: Trust certificate
+        //Samples 6: Trust certificate
         trustCertificate()
 
         //--------
-        //Samples 6:Remove digital signature from PDF document
+        //Samples 7:Remove digital signature from PDF document
         removeDigitalSignature()
         printFooter()
     }
@@ -88,7 +101,7 @@ class DigitalSignaturesTest : PDFSamples() {
      */
     private fun generateCertificate() {
         outputListener?.println("generate certificate")
-        val password = "ComPDFKit"
+        val password = CERTIFICATE_PASSWORD
         val ownerInfo = CPDFOwnerInfo().apply {
             commonName = "Alan"
             orgnize = "ComPDFKit"
@@ -98,6 +111,7 @@ class DigitalSignaturesTest : PDFSamples() {
         }
         val flag = CertUsage.PDFAll
         val certFile = File(outputDir(), "certificate/Certificate.pfx")
+        generatedCertificateFile = certFile
         certFile.parentFile?.mkdirs()
         val result = CPDFSignature.generatePKCS12Cert(ownerInfo, password, certFile.absolutePath, flag)
         if (result) {
@@ -108,8 +122,105 @@ class DigitalSignaturesTest : PDFSamples() {
         printDividingLine()
     }
 
+    private fun createTimestampedSignature() {
+        outputListener?.println("Create digital signature with embedded timestamp.")
+        val certificateFile = generatedCertificateFile
+        if (certificateFile == null || !certificateFile.exists()) {
+            outputListener?.println("Timestamp signature skipped: generated certificate is unavailable.")
+            printDividingLine()
+            return
+        }
+
+        val document = CPDFDocument(context())
+        document.open(getAssetsTempFile(context(), "CommonFivePage.pdf"))
+        val page = document.pageAtIndex(0)
+        val pageSize = page.size
+        val signatureWidget = page.addFormWidget(CPDFWidget.WidgetType.Widget_SignatureFields) as CPDFSignatureWidget
+        signatureWidget.fieldName = "TimestampSignature"
+        signatureWidget.fillColor = Color.parseColor("#FF96B4D2")
+        signatureWidget.rect = page.convertRectToPage(
+                false,
+                pageSize.width(),
+                pageSize.height(),
+                RectF(28f, 350f, 180f, 300f)
+        )
+        signatureWidget.updateAp()
+
+        val sigConfig = CPDFDigitalSigConfig().apply {
+            text = "Timestamp signature"
+            textColor = Color.BLACK
+            contentColor = Color.BLACK
+            content = "RFC 3161 timestamp\nTSA: $TIMESTAMP_TSA_URL"
+            isContentAlginLeft = false
+            isDrawLogo = false
+        }
+
+        val file = File(outputDir(), "digitalSignature/$TIMESTAMP_SIGNATURE_FILE_NAME")
+        file.parentFile?.mkdirs()
+        if (signatureWidget.updateApWithDigitalSigConfig(sigConfig)) {
+            val signed = document.writeSignature(
+                    signatureWidget,
+                    file.absolutePath,
+                    certificateFile.absolutePath,
+                    CERTIFICATE_PASSWORD,
+                    "SG",
+                    "Embed an RFC 3161 timestamp.",
+                    CPDFDocument.PDFDocMdpP.PDFDocMdpPForbidAllModify,
+                    TIMESTAMP_TSA_URL
+            )
+            if (signed) {
+                addFileList(file.absolutePath)
+                outputListener?.println("Done. File saved in $TIMESTAMP_SIGNATURE_FILE_NAME")
+                outputListener?.println("Create timestamped digital signature done")
+            } else {
+                outputListener?.println("Timestamp signature failed. TSA unavailable or request rejected: $TIMESTAMP_TSA_URL")
+            }
+        } else {
+            outputListener?.println("Timestamp signature failed: could not update signature appearance.")
+        }
+        document.close()
+        printDividingLine()
+    }
+
+    private fun verifyEmbeddedTimestamp() {
+        outputListener?.println("Verify embedded timestamp.")
+        val file = File(outputDir(), "digitalSignature/$TIMESTAMP_SIGNATURE_FILE_NAME")
+        if (!file.exists()) {
+            outputListener?.println("Embedded timestamp verification skipped: timestamped signature file is unavailable.")
+            printDividingLine()
+            return
+        }
+
+        val document = CPDFDocument(context())
+        document.open(file.absolutePath)
+        var embeddedTimestampFound = false
+        for (i in 0 until document.signatureCount) {
+            val signature = document.getPdfSignature(i)
+            val source = signature.timestampSource
+            outputListener?.println("Signature $i timestamp source: $source")
+            if (source == CPDFSignature.TimestampSource.EMBEDDED) {
+                embeddedTimestampFound = true
+            }
+        }
+        outputListener?.println(
+                if (embeddedTimestampFound) {
+                    "Embedded timestamp verification succeeded."
+                } else {
+                    "Embedded timestamp was not detected."
+                }
+        )
+        document.close()
+        printDividingLine()
+    }
+
     private fun createSignature() {
         outputListener?.println("Create digital signature.")
+        val certificateFile = generatedCertificateFile
+        if (certificateFile == null || !certificateFile.exists()) {
+            outputListener?.println("Digital signature skipped: generated certificate is unavailable.")
+            printDividingLine()
+            return
+        }
         val document = CPDFDocument(context())
         document.open(getAssetsTempFile(context(), "CommonFivePage.pdf"))
         //Insert a Form Signature Widget (unsigned)
@@ -128,8 +239,8 @@ class DigitalSignaturesTest : PDFSamples() {
         val fileName = getNameWithoutExtension(document.fileName) + "_Signed.pdf"
         val file = File(outputDir(), "digitalSignature/$fileName")
         file.parentFile?.mkdirs()
-        val password = "ComPDFKit"
-        val certPath = getAssetsTempFile(context(), "Certificate.pfx")
+        val password = CERTIFICATE_PASSWORD
+        val certPath = certificateFile.absolutePath
         val cpdfx509 = CPDFSignature.getX509ByPKCS12Cert(certPath, password)
         val location = cpdfx509.certInfo.subject.country
         val reason = "I am the owner of the document."
@@ -219,9 +330,15 @@ class DigitalSignaturesTest : PDFSamples() {
 
     private fun verifyCertificate() {
         outputListener?.println("verify certificate")
+        val certificateFile = generatedCertificateFile
+        if (certificateFile == null || !certificateFile.exists()) {
+            outputListener?.println("Certificate verification skipped: generated certificate is unavailable.")
+            printDividingLine()
+            return
+        }
         // Verify whether the specified certificate file is trusted
-        val certFilePath = getAssetsTempFile(context(), "Certificate.pfx")
-        val password = "ComPDFKit"
+        val certFilePath = certificateFile.absolutePath
+        val password = CERTIFICATE_PASSWORD
         if (CPDFSignature.checkPKCS12Password(certFilePath, password)) {
             val x509 = CPDFSignature.getX509ByPKCS12Cert(certFilePath, password)
             x509.addToTrustedCertificates(context())

@@ -1,0 +1,9 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:drawable="@drawable/tools_custom_compress_input" />
+  <item
+    android:width="16dp"
+    android:height="16dp"
+    android:gravity="end|center_vertical"
+    android:right="8dp"
+    android:drawable="@drawable/tools_custom_compress_arrow_down" />
+</layer-list>

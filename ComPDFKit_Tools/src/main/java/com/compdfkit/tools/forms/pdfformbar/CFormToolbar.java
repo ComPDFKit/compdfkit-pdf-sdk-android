@@ -98,7 +98,7 @@ public class CFormToolbar extends FrameLayout {
     }
 
     public void reset(){
-        toolListAdapter.selectByType(CPDFWidget.WidgetType.Widget_Unknown);
+        clearToolSelection();
         rvFormList.scrollToPosition(0);
         CPDFUndoManager undoManager = pdfView.getCPdfReaderView().getUndoManager();
         if (ivRedo != null) {
@@ -107,6 +107,11 @@ public class CFormToolbar extends FrameLayout {
         if (ivUndo != null) {
             ivUndo.setEnabled(undoManager.canUndo());
         }
+    }
+
+    /** Clears the selected form creation tool without changing other toolbar state. */
+    public void clearToolSelection() {
+        toolListAdapter.selectByType(CPDFWidget.WidgetType.Widget_Unknown);
     }
 
     private void switchFormType(CFormToolBean bean) {

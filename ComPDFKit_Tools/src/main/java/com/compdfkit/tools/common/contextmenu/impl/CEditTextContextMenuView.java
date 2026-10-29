@@ -27,6 +27,7 @@ import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
 import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
 import com.compdfkit.tools.common.utils.activitycontracts.CImageResultContracts;
 import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
@@ -173,8 +174,10 @@ public class CEditTextContextMenuView implements ContextMenuEditTextProvider {
                         CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
                         if (configuration != null) {
                             ContentEditorConfig.TextAttr textAttr = configuration.contentEditorConfig.initAttribute.text;
+                            String psName = CPDFApplyConfigUtil.getInstance()
+                                    .resolvePsName(textAttr.getFontConfig());
                             pageView.addEditTextArea(point,
-                                    textAttr.getPsName(),
+                                    psName,
                                     textAttr.getFontSize(),
                                     textAttr.getFontColor(),
                                     textAttr.getFontColorAlpha(),

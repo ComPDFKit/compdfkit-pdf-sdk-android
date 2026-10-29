@@ -375,6 +375,9 @@ public class CAnnotationToolbar extends FrameLayout {
         if (toolListAdapter.getCurrentAnnotType() == CAnnotationType.INK_ERASER) {
             setInkEditing(false);
         }
+        if (toolListAdapter.getCurrentAnnotType() == CAnnotationType.FREETEXT){
+            pdfView.getCPdfReaderView().commitFreetextDrafts();
+        }
         toolListAdapter.selectByType(CAnnotationType.UNKNOWN);
         clearSelectedAnnotationStyleTarget();
         updateSettingButtonState();
@@ -448,6 +451,7 @@ public class CAnnotationToolbar extends FrameLayout {
                     annotationCreatePreparedListenersChanged(CAnnotationType.PIC, null);
                 }
                 break;
+
             default:
                 pdfView.changeAnnotationType(CPDFAnnotation.Type.valueOf(type.name()));
                 break;

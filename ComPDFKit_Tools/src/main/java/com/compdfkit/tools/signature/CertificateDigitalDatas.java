@@ -3,22 +3,29 @@
  * <p>
  * THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY INTERNATIONAL COPYRIGHT LAW
  * AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE ComPDFKit LICENSE AGREEMENT.
- * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
- * This notice may not be removed from this file.
+ * UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES. This notice
+ * may not be removed from this file.
  */
 
 package com.compdfkit.tools.signature;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
 import com.compdfkit.core.annotation.form.CPDFSignatureWidget;
 import com.compdfkit.core.document.CPDFDocument;
+import com.compdfkit.core.signature.CPDFLtvReadinessResult;
+import com.compdfkit.core.signature.CPDFLtvService;
 import com.compdfkit.core.signature.CPDFOwnerInfo;
 import com.compdfkit.core.signature.CPDFSignature;
+import com.compdfkit.core.signature.CPDFSignatureValidationOptions;
+import com.compdfkit.core.signature.CPDFSignatureValidationReport;
+import com.compdfkit.core.signature.CPDFSignatureValidationResult;
+import com.compdfkit.core.signature.CPDFSignatureValidator;
 import com.compdfkit.core.signature.CPDFSigner;
 import com.compdfkit.core.signature.CPDFX509;
 import com.compdfkit.tools.R;
@@ -36,6 +43,8 @@ import java.util.List;
 
 public class CertificateDigitalDatas {
 
+    private static final String TAG = "CertificateDigitalDatas";
+
     /**
      * Generate a digital signature certificate based on relevant information
      *
@@ -45,7 +54,8 @@ public class CertificateDigitalDatas {
      * @param fileName  Certificate file name
      * @return Whether a certificate was generated
      */
-    public static boolean generatePKCS12Cert(CPDFOwnerInfo ownerInfo, String password, String saveDir, String fileName, CPDFSignature.CertUsage certUsage) {
+    public static boolean generatePKCS12Cert(CPDFOwnerInfo ownerInfo, String password,
+        String saveDir, String fileName, CPDFSignature.CertUsage certUsage) {
         String pfxPath = new File(saveDir, fileName).getAbsolutePath();
         return CPDFSignature.generatePKCS12Cert(ownerInfo, password, pfxPath, certUsage);
     }
@@ -94,6 +104,16 @@ public class CertificateDigitalDatas {
     }
 
     /**
+     * Whether the document's DSS/VRI LTV material is ready.
+     */
+    public static boolean documentLtvReady(CPDFDocument document) {
+        CPDFLtvReadinessResult result = CPDFLtvService.assessReadiness(document);
+        return result != null
+            && result.isSuccess()
+            && result.getReadinessInfo().isLtvReady();
+    }
+
+    /**
      * Write digital signature into pdf document
      *
      * @param document       PDF document object
@@ -103,20 +123,21 @@ public class CertificateDigitalDatas {
      * @param savePath        Document save path
      */
     public static boolean writeSignature(CPDFDocument document,
-                                         CPDFSignatureWidget signatureWidget,
-                                         String location,
-                                         String reason,
-                                         String certPath,
-                                         String password,
-                                         String savePath
+        CPDFSignatureWidget signatureWidget,
+        String location,
+        String reason,
+        String certPath,
+        String password,
+        String savePath
     ) {
+//        String tsaUrl = "http://timestamp.digicert.com";
         return document.writeSignature(signatureWidget,
-                savePath,
-                certPath,
-                password,
-                location,
-                reason,
-                CPDFDocument.PDFDocMdpP.PDFDocMdpPForbidAllModify
+            savePath,
+            certPath,
+            password,
+            location,
+            reason,
+            CPDFDocument.PDFDocMdpP.PDFDocMdpPForbidAllModify
         );
     }
 
@@ -126,15 +147,18 @@ public class CertificateDigitalDatas {
      * @param signature Digital signature object
      * @param document PDF document object
      */
-    public static CPDFSignatureStatusInfo verifyGetSignatureStatusInfo(CPDFDocument document, CPDFSignature signature) {
+    public static CPDFSignatureStatusInfo verifyGetSignatureStatusInfo(CPDFDocument document,
+        CPDFSignature signature) {
         CPDFSigner signer = signature.getSignerArr()[0];
         boolean verifyValid = signature.verify(document);
         boolean notChanged = signature.verifyDocument(document);
         // The signature is valid and the signature has not been modified to be valid
         boolean isSignVerified = verifyValid && notChanged;
         // Check if the certificate is trusted
-        boolean certChainTrusted = signer.getCert().verifyGetChain(document.getContext(), signature);
-        boolean certificateIsTrusted = signer.getCert().checkCertificateIsTrusted(document.getContext());
+        boolean certChainTrusted = signer.getCert()
+            .verifyGetChain(document.getContext(), signature);
+        boolean certificateIsTrusted = signer.getCert()
+            .checkCertificateIsTrusted(document.getContext());
         boolean isTrusted = certChainTrusted || certificateIsTrusted;
         boolean isExpired = signer.getCert().isExpired();
         SignatureStatus status;
@@ -145,13 +169,39 @@ public class CertificateDigitalDatas {
         } else {
             status = SignatureStatus.FAILURE;
         }
-        return new CPDFSignatureStatusInfo(document.getContext(), signature, status, isSignVerified, isExpired, notChanged, isTrusted);
+
+        CPDFSignatureValidationOptions options = new CPDFSignatureValidationOptions()
+            .setCheckRevocation(true);
+        CPDFSignatureValidationResult result =
+            CPDFSignatureValidator.validate(document, options);
+        CPDFSignatureValidationReport report = null;
+        if (result != null) {
+            for (CPDFSignatureValidationReport r : result.getReports()) {
+                if (r == null) {
+                    continue;
+                }
+                if (r.getFieldName() != null && r.getFieldName().equals(signature.getFieldName())) {
+                    report = r;
+                    break;
+                }
+            }
+        }
+        if (report == null) {
+            Log.w(TAG, "No validation report found for field=" + signature.getFieldName());
+        }
+
+        boolean ltvEnabled = documentLtvReady(document);
+        boolean embeddedTimestamp = report != null && report.hasEmbeddedTimestamp();
+
+        return new CPDFSignatureStatusInfo(document.getContext(), signature,
+            status, isSignVerified, isExpired, notChanged, isTrusted, ltvEnabled, embeddedTimestamp);
     }
 
-    public static boolean certIsTrusted(Context context, CPDFSignature signature, CPDFX509 cpdfx509){
+    public static boolean certIsTrusted(Context context, CPDFSignature signature,
+        CPDFX509 cpdfx509) {
         boolean certChainTrusted = cpdfx509.verifyGetChain(context, signature);
         boolean certificateIsTrusted = cpdfx509.checkCertificateIsTrusted(context);
-        return  certChainTrusted || certificateIsTrusted;
+        return certChainTrusted || certificateIsTrusted;
     }
 
     /**
@@ -167,7 +217,8 @@ public class CertificateDigitalDatas {
             boolean hasInValid = false;
             boolean hasUnknownStatusSign = false;
             for (CPDFSignature signature : signatures) {
-                CPDFSignatureStatusInfo statusInfo = verifyGetSignatureStatusInfo(document, signature);
+                CPDFSignatureStatusInfo statusInfo = verifyGetSignatureStatusInfo(document,
+                    signature);
                 if (statusInfo.getStatus() == SignatureStatus.FAILURE) {
                     // Invalid digital signature
                     hasInValid = true;
@@ -178,7 +229,9 @@ public class CertificateDigitalDatas {
             }
             // Invalid signature in digital signature collection
             if (hasInValid) {
-                String info = document.getContext().getString(signatures.size() == 1 ? R.string.tools_sign_the_sign_is_in_valid : R.string.tools_sign_at_least_one_signature_is_invalid);
+                String info = document.getContext().getString(
+                    signatures.size() == 1 ? R.string.tools_sign_the_sign_is_in_valid
+                        : R.string.tools_sign_at_least_one_signature_is_invalid);
                 return new CPDFDocumentSignInfo(SignatureStatus.FAILURE, info);
             }
             String info;
@@ -217,7 +270,8 @@ public class CertificateDigitalDatas {
         return list;
     }
 
-    private static void loopVerifyGetChain(Context context, List<CPDFX509> list, CPDFSignature signature, CPDFX509 cert) {
+    private static void loopVerifyGetChain(Context context, List<CPDFX509> list,
+        CPDFSignature signature, CPDFX509 cert) {
         cert.verifyGetChain(context, signature);
         CPDFX509[] cpdfX509s = cert.getChain();
         if (cpdfX509s != null && cpdfX509s.length > 0) {
@@ -228,25 +282,25 @@ public class CertificateDigitalDatas {
     }
 
 
-    public static String getOwnerContent(CPDFOwnerInfo ownerInfo, String separator){
+    public static String getOwnerContent(CPDFOwnerInfo ownerInfo, String separator) {
         StringBuilder builder = new StringBuilder();
         List<String> infos = new ArrayList<>();
-        if (!TextUtils.isEmpty(ownerInfo.getCountry())){
-            infos.add("C="+ownerInfo.getCountry());
+        if (!TextUtils.isEmpty(ownerInfo.getCountry())) {
+            infos.add("C=" + ownerInfo.getCountry());
         }
-        if (!TextUtils.isEmpty(ownerInfo.getOrgnize())){
-            infos.add("O="+ownerInfo.getOrgnize());
+        if (!TextUtils.isEmpty(ownerInfo.getOrgnize())) {
+            infos.add("O=" + ownerInfo.getOrgnize());
         }
-        if (!TextUtils.isEmpty(ownerInfo.getOrgnizeUnit())){
-            infos.add("OU="+ownerInfo.getOrgnizeUnit());
+        if (!TextUtils.isEmpty(ownerInfo.getOrgnizeUnit())) {
+            infos.add("OU=" + ownerInfo.getOrgnizeUnit());
         }
-        if (!TextUtils.isEmpty(ownerInfo.getCommonName())){
-            infos.add("CN="+ownerInfo.getCommonName());
+        if (!TextUtils.isEmpty(ownerInfo.getCommonName())) {
+            infos.add("CN=" + ownerInfo.getCommonName());
         }
         for (int i = 0; i < infos.size(); i++) {
             String item = infos.get(i);
             builder.append(item);
-            if (i != infos.size() -1){
+            if (i != infos.size() - 1) {
                 builder.append(separator);
             }
         }

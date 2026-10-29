@@ -86,8 +86,25 @@
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:barrierAllowsGoneWidgets="false"
             app:barrierDirection="start"
-            app:constraint_referenced_ids="iv_clean,iv_previous" />
+            app:constraint_referenced_ids="tv_search_count,iv_clean,iv_previous" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_search_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_previous"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1/10"
+            tools:visibility="visible" />
 
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -167,7 +184,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="iv_previous,iv_next,iv_search_list" />
+            app:constraint_referenced_ids="tv_search_count,iv_previous,iv_next,iv_search_list" />
 
         <View
             android:layout_width="match_parent"

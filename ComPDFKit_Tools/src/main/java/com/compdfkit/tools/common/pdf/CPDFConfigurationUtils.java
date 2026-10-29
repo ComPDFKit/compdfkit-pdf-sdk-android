@@ -30,6 +30,7 @@ import com.compdfkit.tools.common.pdf.config.CPDFUiStyleConfig.FocusBorderStyle;
 import com.compdfkit.tools.common.pdf.config.CPDFWatermarkConfig;
 import com.compdfkit.tools.common.pdf.config.ContentEditorConfig;
 import com.compdfkit.tools.common.pdf.config.ContextMenuConfig;
+import com.compdfkit.tools.common.pdf.config.CreationConfig;
 import com.compdfkit.tools.common.pdf.config.CustomToolbarItem;
 import com.compdfkit.tools.common.pdf.config.FormsConfig;
 import com.compdfkit.tools.common.pdf.config.FontConfig;
@@ -87,6 +88,7 @@ public class CPDFConfigurationUtils {
             configuration.annotationsConfig = parseAnnotationsConfig(rootJsonObject.optJSONObject("annotationsConfig"));
             configuration.contentEditorConfig = parseContentEditorConfig(rootJsonObject.optJSONObject("contentEditorConfig"));
             configuration.formsConfig = parseFormsConfig(rootJsonObject.optJSONObject("formsConfig"));
+            configuration.creationConfig = parseCreationConfig(rootJsonObject.optJSONObject("creationConfig"));
             configuration.readerViewConfig = parseReaderViewConfig(rootJsonObject.optJSONObject("readerViewConfig"));
             configuration.globalConfig = parseGlobalConfig(rootJsonObject.optJSONObject("global"));
             configuration.contextMenuConfig = parseContextMenuConfig(rootJsonObject.optJSONObject("contextMenuConfig"));
@@ -94,6 +96,16 @@ public class CPDFConfigurationUtils {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private static CreationConfig parseCreationConfig(@Nullable JSONObject jsonObject) {
+        CreationConfig creationConfig = new CreationConfig();
+        if (jsonObject == null) {
+            return creationConfig;
+        }
+        creationConfig.continuousCreation = jsonObject.optBoolean("continuousCreation", true);
+        creationConfig.autoSelectCreatedAnnotation = jsonObject.optBoolean("autoSelectCreatedAnnotation", true);
+        return creationConfig;
     }
 
     private static ModeConfig parseModeConfig(@Nullable JSONObject jsonObject) {
@@ -984,7 +996,7 @@ public class CPDFConfigurationUtils {
     }
 
     private static ContextMenuConfig parseContextMenuConfig(@Nullable JSONObject jsonObject) {
-        return ContextMenuConfig.fromJson(jsonObject);
+        return jsonObject == null ? new ContextMenuConfig() : ContextMenuConfig.fromJson(jsonObject);
     }
 
 

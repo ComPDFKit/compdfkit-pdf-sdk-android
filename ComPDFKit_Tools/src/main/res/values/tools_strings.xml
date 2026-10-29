@@ -65,6 +65,7 @@
     <string name="tools_sorry_no_contents">No Results</string>
     <string name="tools_result">Results</string>
     <string name="tools_search_result_found">%d Results</string>
+    <string name="tools_search_result_index">%1$d/%2$d</string>
 
     <string name="tools_please_enter_the_password_below">Please Enter the Password Below.</string>
     <string name="tools_please_enter_the_password">Please Enter The Password</string>
@@ -493,6 +494,7 @@
     <string name="tools_find">Find</string>
     <string name="tools_replace_with">Replace with</string>
     <string name="tools_replace_all">Replace All</string>
+    <string name="tools_replace_all_completed">Replace all completed</string>
     <string name="tools_ignore_case">Ignore Case</string>
     <string name="tools_whole_words_only">Whole Words only</string>
     <string name="tools_setting">Setting</string>
@@ -569,4 +571,42 @@
     <string name="tools_bota">BOTA</string>
     <string name="tools_menu">Menu</string>
     <string name="tools_saveing">Saving…</string>
+
+    <!-- Custom Compression Settings -->
+    <string name="tools_custom_compression_settings">Custom Compression Settings</string>
+    <string name="tools_image_settings">Image Settings</string>
+    <string name="tools_image_quality">Image Quality</string>
+    <string name="tools_image_quality_low">Low</string>
+    <string name="tools_image_quality_medium">Medium</string>
+    <string name="tools_image_quality_high">High</string>
+    <string name="tools_if_image_exceeds">If the image exceeds:</string>
+    <string name="tools_downsample_to">Downsample to:</string>
+    <string name="tools_ppi">PPI</string>
+    <string name="tools_font_settings">Font Settings</string>
+    <string name="tools_remove_font_embedding">Remove Font Embedding</string>
+    <string name="tools_discard_objects">Discard Objects</string>
+    <string name="tools_discard_form_actions">Discard All Form Submit, Import, and Reset Actions</string>
+    <string name="tools_discard_javascript">Discard All JavaScript Actions</string>
+    <string name="tools_discard_page_thumbnails">Discard Embedded Page Thumbnails</string>
+    <string name="tools_discard_document_tags">Discard Document Tags</string>
+    <string name="tools_discard_bookmarks">Discard Bookmarks</string>
+    <string name="tools_discard_user_data">Discard User Data</string>
+    <string name="tools_discard_comments_forms">Discard All Comments, Forms, and Multimedia</string>
+    <string name="tools_discard_document_info">Discard Document Information and Metadata</string>
+    <string name="tools_discard_object_data">Discard All Object Data</string>
+    <string name="tools_discard_file_attachments">Discard File Attachments</string>
+    <string name="tools_discard_layer_content">Discard Layer Content and Flatten Visible Layers</string>
+    <string name="tools_discard_other_data">Discard Other Data</string>
+    <string name="tools_discard_invalid_bookmarks">Discard Invalid Bookmarks</string>
+    <string name="tools_discard_invalid_links">Discard Invalid Links</string>
+
+    <!-- Compression Error Messages -->
+    <string name="tools_error_exceeds_ppi_must_be_greater">The threshold PPI must be greater than the target PPI</string>
+    <string name="tools_error_invalid_ppi_value">Please enter a valid PPI value</string>
+
+    <!-- Digital Signature Status -->
+    <string name="tools_signature_info_prefix" translatable="false">•&#160;&#160;&#160;</string>
+    <string name="tools_signature_includes_timestamp">The signature includes an embedded timestamp</string>
+    <string name="tools_signature_ltv_enabled">LTV is enabled for this signature</string>
+
 </resources>

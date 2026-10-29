@@ -17,6 +17,7 @@ import com.compdfkit.samples.samples.AnnotationTest
 import com.compdfkit.samples.samples.BackgroundTest
 import com.compdfkit.samples.samples.BatesTest
 import com.compdfkit.samples.samples.BookmarkTest
+import com.compdfkit.samples.samples.CompressTest
 import com.compdfkit.samples.samples.ContentEditorTest
 import com.compdfkit.samples.samples.DigitalSignaturesTest
 import com.compdfkit.samples.samples.DocumentInfoTest
@@ -71,6 +72,7 @@ class SampleApplication : Application() {
         samplesList.add(PDFATest())
         samplesList.add(FlattenTest())
         samplesList.add(ContentEditorTest())
+        samplesList.add(CompressTest())
     }
 
     companion object {

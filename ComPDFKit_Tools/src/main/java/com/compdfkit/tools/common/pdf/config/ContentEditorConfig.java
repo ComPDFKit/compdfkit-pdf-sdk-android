@@ -3,7 +3,6 @@ package com.compdfkit.tools.common.pdf.config;
 
 import android.graphics.Color;
 
-import com.compdfkit.core.annotation.CPDFTextAttribute;
 import com.compdfkit.core.edit.CPDFEditTextArea;
 
 import java.io.Serializable;
@@ -67,8 +66,6 @@ public class ContentEditorConfig implements Serializable {
 
         private int fontColorAlpha = 255;
 
-        private String psName;
-
         private FontConfig fontConfig = new FontConfig();
 
         private CPDFEditTextArea.PDFEditAlignType alignment = CPDFEditTextArea.PDFEditAlignType.PDFEditAlignLeft;
@@ -111,14 +108,6 @@ public class ContentEditorConfig implements Serializable {
 
         public void setItalic(boolean italic) {
             isItalic = italic;
-        }
-
-        public void setPsName(String psName) {
-            this.psName = psName;
-        }
-
-        public String getPsName() {
-            return psName;
         }
 
         public FontConfig getFontConfig() {

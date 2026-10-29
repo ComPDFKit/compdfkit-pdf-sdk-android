@@ -20,13 +20,19 @@ import java.util.List;
 
 public class CPDFSignatureStatusInfo {
 
-    public CPDFSignatureStatusInfo(Context context, CPDFSignature signature, SignatureStatus status, boolean isValid, boolean isExpired, boolean notChanged, boolean isCertTrusted){
+    public CPDFSignatureStatusInfo(Context context, CPDFSignature signature, SignatureStatus status, boolean isValid, boolean isExpired, boolean notChanged, boolean isCertTrusted, boolean isEnabledLtv, boolean hasEmbeddedTimestamp){
         this.signature = signature;
         this.isValid = isValid;
         this.isExpired = isExpired;
         this.notChanged = notChanged;
         this.isCertTrusted = isCertTrusted;
         this.status = status;
+        this.isEnabledLtv = isEnabledLtv;
+        this.hasEmbeddedTimestamp = hasEmbeddedTimestamp;
+        refreshCertAuthorityStatements(context);
+    }
+
+    public void refreshCertAuthorityStatements(Context context){
         List<String> list = new ArrayList<>();
         if (isCertTrusted){
             list.add(context.getString(R.string.tools_signer_identity_is_valid));
@@ -50,6 +56,12 @@ public class CPDFSignatureStatusInfo {
         }else {
             list.add(context.getString(R.string.tools_sign_document_has_been_modified));
         }
+        if (isEnabledLtv){
+            list.add(context.getString(R.string.tools_signature_ltv_enabled));
+        }
+        if (hasEmbeddedTimestamp){
+            list.add(context.getString(R.string.tools_signature_includes_timestamp));
+        }
         this.certAuthorityStatements = list.toArray(new String[list.size()]);
     }
 
@@ -68,6 +80,27 @@ public class CPDFSignatureStatusInfo {
 
 
     private String[] certAuthorityStatements;
+
+    private boolean isEnabledLtv;
+
+    private boolean hasEmbeddedTimestamp;
+
+
+    public boolean isEnabledLtv() {
+        return isEnabledLtv;
+    }
+
+    public void setEnabledLtv(boolean enabledLtv) {
+        isEnabledLtv = enabledLtv;
+    }
+
+    public boolean isHasEmbeddedTimestamp() {
+        return hasEmbeddedTimestamp;
+    }
+
+    public void setHasEmbeddedTimestamp(boolean hasEmbeddedTimestamp) {
+        this.hasEmbeddedTimestamp = hasEmbeddedTimestamp;
+    }
 
     public CPDFSignature getSignature() {
         return signature;

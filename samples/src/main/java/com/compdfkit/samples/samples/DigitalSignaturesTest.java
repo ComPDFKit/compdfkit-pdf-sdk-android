@@ -33,6 +33,12 @@ import java.io.File;
 
 public class DigitalSignaturesTest extends PDFSamples {
 
+    private static final String CERTIFICATE_PASSWORD = "ComPDFKit";
+    private static final String TIMESTAMP_TSA_URL = "http://timestamp.digicert.com";
+    private static final String TIMESTAMP_SIGNATURE_FILE_NAME = "CommonFivePage_TimestampSigned.pdf";
+
+    private File generatedCertificateFile;
+
     public DigitalSignaturesTest() {
         setTitle(R.string.digital_signature_title);
         setDescription(R.string.digital_signature_desc);
@@ -53,23 +59,28 @@ public class DigitalSignaturesTest extends PDFSamples {
         createSignature();
 
         //--------
-        //Samples 2: Verify signature
+        //Samples 2: Create and verify a digital signature with an embedded RFC 3161 timestamp
+        createTimestampedSignature();
+        verifyEmbeddedTimestamp();
+
+        //--------
+        //Samples 3: Verify signature
         verifySignatureInfo();
 
         //--------
-        //Samples 3: Verify certificate
+        //Samples 4: Verify certificate
         verifyCertificate();
 
         //--------
-        //Samples 4: Print digital signature info
+        //Samples 5: Print digital signature info
         printDigitalSignatureInfo();
 
         //--------
-        //Samples 5: Trust certificate
+        //Samples 6: Trust certificate
         trustCertificate();
 
         //--------
-        //Samples 6:Remove digital signature from PDF document
+        //Samples 7:Remove digital signature from PDF document
         removeDigitalSignature();
 
         printFooter();
@@ -93,7 +104,7 @@ public class DigitalSignaturesTest extends PDFSamples {
      */
     private void generateCertificate() {
         outputListener.println("generate certificate");
-        String password = "ComPDFKit";
+        String password = CERTIFICATE_PASSWORD;
         CPDFOwnerInfo ownerInfo = new CPDFOwnerInfo();
         ownerInfo.setCommonName("Alan");
         ownerInfo.setOrgnize("ComPDFKit");
@@ -102,6 +113,7 @@ public class DigitalSignaturesTest extends PDFSamples {
         ownerInfo.setOrgnizeUnit("R&D Department");
         CPDFSignature.CertUsage flag = CPDFSignature.CertUsage.PDFAll;
         File certFile = new File(outputDir(), "certificate/Certificate_2048.pfx");
+        generatedCertificateFile = certFile;
         certFile.getParentFile().mkdirs();
         boolean result = CPDFSignature.generatePKCS12Cert(ownerInfo, password, certFile.getAbsolutePath(), flag);
 
@@ -113,9 +125,92 @@ public class DigitalSignaturesTest extends PDFSamples {
         printDividingLine();
     }
 
+    private void createTimestampedSignature() {
+        outputListener.println("Create digital signature with embedded timestamp.");
+        if (generatedCertificateFile == null || !generatedCertificateFile.exists()) {
+            outputListener.println("Timestamp signature skipped: generated certificate is unavailable.");
+            printDividingLine();
+            return;
+        }
+
+        CPDFDocument document = new CPDFDocument(context);
+        document.open(FileUtils.getAssetsTempFile(context, "CommonFivePage.pdf"));
+        CPDFPage page = document.pageAtIndex(0);
+        RectF pageSize = page.getSize();
+        CPDFSignatureWidget signatureWidget = (CPDFSignatureWidget) page.addFormWidget(CPDFWidget.WidgetType.Widget_SignatureFields);
+        signatureWidget.setFieldName("TimestampSignature");
+        signatureWidget.setFillColor(0xFF96B4D2);
+        signatureWidget.setRect(page.convertRectToPage(false, pageSize.width(), pageSize.height(), new RectF(28, 350, 180, 300)));
+        signatureWidget.updateAp();
+
+        CPDFDigitalSigConfig sigConfig = new CPDFDigitalSigConfig();
+        sigConfig.setText("Timestamp signature");
+        sigConfig.setTextColor(0xFF000000);
+        sigConfig.setContentColor(0xFF000000);
+        sigConfig.setContent("RFC 3161 timestamp\nTSA: " + TIMESTAMP_TSA_URL);
+        sigConfig.setContentAlginLeft(false);
+        sigConfig.setDrawLogo(false);
+
+        File file = new File(outputDir(), "digitalSignature/" + TIMESTAMP_SIGNATURE_FILE_NAME);
+        file.getParentFile().mkdirs();
+        if (signatureWidget.updateApWithDigitalSigConfig(sigConfig)) {
+            boolean signed = document.writeSignature(signatureWidget,
+                    file.getAbsolutePath(),
+                    generatedCertificateFile.getAbsolutePath(),
+                    CERTIFICATE_PASSWORD,
+                    "SG",
+                    "Embed an RFC 3161 timestamp.",
+                    CPDFDocument.PDFDocMdpP.PDFDocMdpPForbidAllModify,
+                    TIMESTAMP_TSA_URL);
+            if (signed) {
+                addFileList(file.getAbsolutePath());
+                outputListener.println("Done. File saved in " + TIMESTAMP_SIGNATURE_FILE_NAME);
+                outputListener.println("Create timestamped digital signature done");
+            } else {
+                outputListener.println("Timestamp signature failed. TSA unavailable or request rejected: " + TIMESTAMP_TSA_URL);
+            }
+        } else {
+            outputListener.println("Timestamp signature failed: could not update signature appearance.");
+        }
+        document.close();
+        printDividingLine();
+    }
+
+    private void verifyEmbeddedTimestamp() {
+        outputListener.println("Verify embedded timestamp.");
+        File file = new File(outputDir(), "digitalSignature/" + TIMESTAMP_SIGNATURE_FILE_NAME);
+        if (!file.exists()) {
+            outputListener.println("Embedded timestamp verification skipped: timestamped signature file is unavailable.");
+            printDividingLine();
+            return;
+        }
+
+        CPDFDocument document = new CPDFDocument(context);
+        document.open(file.getAbsolutePath());
+        boolean embeddedTimestampFound = false;
+        for (int i = 0; i < document.getSignatureCount(); i++) {
+            CPDFSignature signature = document.getPdfSignature(i);
+            CPDFSignature.TimestampSource source = signature.getTimestampSource();
+            outputListener.println("Signature " + i + " timestamp source: " + source);
+            if (source == CPDFSignature.TimestampSource.EMBEDDED) {
+                embeddedTimestampFound = true;
+            }
+        }
+        outputListener.println(embeddedTimestampFound
+                ? "Embedded timestamp verification succeeded."
+                : "Embedded timestamp was not detected.");
+        document.close();
+        printDividingLine();
+    }
+
 
     private void createSignature() {
         outputListener.println("Create digital signature.");
+        if (generatedCertificateFile == null || !generatedCertificateFile.exists()) {
+            outputListener.println("Digital signature skipped: generated certificate is unavailable.");
+            printDividingLine();
+            return;
+        }
 
         CPDFDocument document = new CPDFDocument(context);
         document.open(FileUtils.getAssetsTempFile(context, "CommonFivePage.pdf"));
@@ -136,9 +231,9 @@ public class DigitalSignaturesTest extends PDFSamples {
         String fileName = FileUtils.getNameWithoutExtension(document.getFileName()) + "_Signed.pdf";
         File file = new File(outputDir(), "digitalSignature/" + fileName);
         file.getParentFile().mkdirs();
-        String password = "ComPDFKit";
+        String password = CERTIFICATE_PASSWORD;
 
-        String certPath = FileUtils.getAssetsTempFile(context, "Certificate.pfx");
+        String certPath = generatedCertificateFile.getAbsolutePath();
         CPDFX509 cpdfx509 = CPDFSignature.getX509ByPKCS12Cert(certPath, password);
         String location = cpdfx509.getCertInfo().getSubject().getCountry();
         String reason = "I am the owner of the document.";
@@ -230,9 +325,14 @@ public class DigitalSignaturesTest extends PDFSamples {
 
     private void verifyCertificate() {
         outputListener.println("verify certificate");
+        if (generatedCertificateFile == null || !generatedCertificateFile.exists()) {
+            outputListener.println("Certificate verification skipped: generated certificate is unavailable.");
+            printDividingLine();
+            return;
+        }
         // Verify whether the specified certificate file is trusted
-        String certFilePath = FileUtils.getAssetsTempFile(context, "Certificate.pfx");
-        String password = "ComPDFKit";
+        String certFilePath = generatedCertificateFile.getAbsolutePath();
+        String password = CERTIFICATE_PASSWORD;
         if (CPDFSignature.checkPKCS12Password(certFilePath, password)) {
             CPDFX509 x509 = CPDFSignature.getX509ByPKCS12Cert(certFilePath, password);
             boolean result = x509.addToTrustedCertificates(context);

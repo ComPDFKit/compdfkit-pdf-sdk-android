@@ -26,6 +26,8 @@ public class CPDFConfiguration implements Serializable {
 
     public FormsConfig formsConfig = new FormsConfig();
 
+    public CreationConfig creationConfig = new CreationConfig();
+
     public ReaderViewConfig readerViewConfig = new ReaderViewConfig();
 
     public GlobalConfig globalConfig = new GlobalConfig();

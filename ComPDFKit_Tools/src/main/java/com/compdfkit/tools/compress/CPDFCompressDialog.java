@@ -10,25 +10,26 @@
 package com.compdfkit.tools.compress;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.net.Uri;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.compdfkit.core.common.CPDFDocumentException;
 import com.compdfkit.core.document.CPDFDocument;
+import com.compdfkit.core.document.CPDFDocument.CPDFOptimizeOptions;
+import com.compdfkit.core.document.CPDFDocument.CPDFOptimizeResult;
+import com.compdfkit.core.document.CPDFDocument.OptimizeListener;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.common.basic.fragment.CBasicBottomSheetDialogFragment;
-import com.compdfkit.tools.common.utils.CFileUtils;
 import com.compdfkit.tools.common.utils.CLog;
 import com.compdfkit.tools.common.utils.CPermissionUtil;
-import com.compdfkit.tools.common.utils.CToastUtil;
 import com.compdfkit.tools.common.utils.CUriUtil;
 import com.compdfkit.tools.common.utils.activitycontracts.CMultiplePermissionResultLauncher;
 import com.compdfkit.tools.common.utils.activitycontracts.CSelectPDFDocumentResultContract;
@@ -36,13 +37,10 @@ import com.compdfkit.tools.common.utils.storage.CPDFPublicFileSaver;
 import com.compdfkit.tools.common.utils.storage.CPDFStorageManager;
 import com.compdfkit.tools.common.utils.threadpools.CThreadPoolUtils;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
-import com.compdfkit.tools.common.utils.viewutils.EditTextUtils;
 import com.compdfkit.tools.common.views.CToolBar;
 import com.compdfkit.tools.common.views.CVerifyPasswordDialogFragment;
 import com.compdfkit.tools.common.views.directory.CFileDirectoryDialog;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,6 +48,20 @@ import java.util.List;
 public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implements
     View.OnClickListener,
     CompoundButton.OnCheckedChangeListener {
+
+  private static final int LOW_UPPER_PPI = 120;
+  private static final int LOW_TARGET_PPI = 96;
+  private static final int LOW_QUALITY = 30;
+  private static final int STANDARD_UPPER_PPI = 180;
+  private static final int STANDARD_TARGET_PPI = 150;
+  private static final int STANDARD_QUALITY = 45;
+  private static final int HIGH_UPPER_PPI = 220;
+  private static final int HIGH_TARGET_PPI = 150;
+  private static final int HIGH_QUALITY = 75;
+
+  private static final String FILE_DIRECTORY_DIALOG_TAG = "fileDirectoryDialog";
+  private static final String CUSTOM_OPTIONS_DIALOG_TAG = "customCompressOptionsDialog";
+  private static final String LOADING_DIALOG_TAG = "compressLoadingDialog";
 
   private AppCompatTextView tvFileName;
 
@@ -67,8 +79,6 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
 
   private AppCompatRadioButton rbQualityCustom;
 
-  private AppCompatEditText etCustomQuality;
-
   private View savePathView;
 
   private AppCompatButton btnCancel;
@@ -77,10 +87,17 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
 
   private AppCompatTextView tvSavePath;
 
+  private AppCompatTextView tvCustomCompressOptions;
+
+  private CPDFOptimizeOptions optimizeOptions = new CPDFOptimizeOptions();
+
   private CPDFDocument document;
 
-  private List<AppCompatRadioButton> radioButtons = new ArrayList<>();
-  protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher = new CMultiplePermissionResultLauncher(this);
+  private volatile boolean isCancellationRequested = false;
+
+  private List<AppCompatRadioButton> radioButtons;
+  protected CMultiplePermissionResultLauncher multiplePermissionResultLauncher =
+      new CMultiplePermissionResultLauncher(this);
 
   private String savePath = CPDFStorageManager.getDefaultDirectoryDialogPath();
 
@@ -90,15 +107,15 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
       new CSelectPDFDocumentResultContract(), uri -> {
         if (uri != null) {
           verifyDocument(uri, document -> {
-            this.document = document;
+            replaceDocument(document);
             setDocumentInfo();
           });
         }
       });
-  private CPDFCompressLoadingDialog loadingDialog;
+  private volatile CPDFCompressLoadingDialog loadingDialog;
 
   public void setDocument(CPDFDocument document) {
-    this.document = document;
+    replaceDocument(document);
   }
 
 
@@ -125,6 +142,12 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
 
   @Override
   protected void onCreateView(View rootView) {
+    bindViews(rootView);
+    bindListeners();
+    updateCustomOptionsButtonState();
+  }
+
+  private void bindViews(View rootView) {
     toolBar = rootView.findViewById(R.id.tool_bar);
     tvSwap = rootView.findViewById(R.id.tv_swap);
     tvFileName = rootView.findViewById(R.id.tv_title);
@@ -133,26 +156,28 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
     rbQualityStandard = rootView.findViewById(R.id.rb_quality_standard);
     rbQualityHigh = rootView.findViewById(R.id.rb_quality_high);
     rbQualityCustom = rootView.findViewById(R.id.rb_quality_custom);
-    etCustomQuality = rootView.findViewById(R.id.et_custom_quality);
     savePathView = rootView.findViewById(R.id.view_save_path);
     btnCancel = rootView.findViewById(R.id.btn_cancel);
     btnCompress = rootView.findViewById(R.id.btn_compress);
     tvSavePath = rootView.findViewById(R.id.tv_save_path);
+    tvCustomCompressOptions = rootView.findViewById(R.id.tv_custom_compress_options);
+    radioButtons = Arrays.asList(
+        rbQualityLow, rbQualityStandard, rbQualityHigh, rbQualityCustom);
+  }
+
+  private void bindListeners() {
     tvSwap.setOnClickListener(this);
     btnCompress.setOnClickListener(this);
     btnCancel.setOnClickListener(this);
     savePathView.setOnClickListener(this);
+    tvCustomCompressOptions.setOnClickListener(this);
     toolBar.setBackBtnClickListener(v -> {
-      CViewUtils.hideKeyboard(etCustomQuality);
       dismiss();
     });
     rbQualityLow.setOnCheckedChangeListener(this);
     rbQualityStandard.setOnCheckedChangeListener(this);
     rbQualityHigh.setOnCheckedChangeListener(this);
     rbQualityCustom.setOnCheckedChangeListener(this);
-    radioButtons.addAll(
-        Arrays.asList(rbQualityLow, rbQualityStandard, rbQualityHigh, rbQualityCustom));
-    etCustomQuality.setFilters(new InputFilter[]{EditTextUtils.inputRangeFilter(1, 120)});
   }
 
   @Override
@@ -163,34 +188,42 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
 
   @Override
   public void onClick(View v) {
-    if (v.getId() == R.id.tv_swap) {
+    int viewId = v.getId();
+    if (viewId == R.id.tv_swap) {
       selectDocumentLauncher.launch(null);
-    } else if (v.getId() == R.id.btn_cancel) {
+    } else if (viewId == R.id.btn_cancel) {
       dismiss();
-    } else if (v.getId() == R.id.btn_compress) {
-      if (CPDFStorageManager.shouldRequestLegacyWritePermission()) {
-        multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
-          if (CPermissionUtil.hasStoragePermissions(getContext())) {
-            startCompress();
-          } else {
-            if (!CPermissionUtil.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-              CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
-            }
-          }
-        });
-      }else {
-        startCompress();
-      }
-
-    } else if (v.getId() == R.id.view_save_path) {
+    } else if (viewId == R.id.btn_compress) {
+      requestStoragePermissionIfNeeded();
+    } else if (viewId == R.id.view_save_path) {
       showSelectDirDialog();
+    } else if (viewId == R.id.tv_custom_compress_options && rbQualityCustom.isChecked()) {
+      showCustomCompressOptionsDialog();
     }
   }
 
-  private void startCompress(){
+  private void requestStoragePermissionIfNeeded() {
+    if (!CPDFStorageManager.shouldRequestLegacyWritePermission()) {
+      startCompress();
+      return;
+    }
+
+    multiplePermissionResultLauncher.launch(CPermissionUtil.STORAGE_PERMISSIONS, result -> {
+      if (CPermissionUtil.hasStoragePermissions(getContext())) {
+        startCompress();
+      } else if (!CPermissionUtil.shouldShowRequestPermissionRationale(
+          requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        CPermissionUtil.showPermissionsRequiredDialog(getChildFragmentManager(), getContext());
+      }
+    });
+  }
+
+  private void startCompress() {
+    showLoadingDialog();
     CThreadPoolUtils.getInstance().executeIO(() -> {
       compressPDF((result, path, uri) -> {
         CThreadPoolUtils.getInstance().executeMain(() -> {
+          dismissLoadingDialog();
           if (compressDocumentListener != null) {
             compressDocumentListener.compress(result, path, uri);
           }
@@ -199,30 +232,35 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
     });
   }
 
-  private void showSelectDirDialog(){
+  private void showSelectDirDialog() {
     String rootDir = CPDFStorageManager.getDefaultDirectoryDialogPath();
     CFileDirectoryDialog dialog = CFileDirectoryDialog.newInstance(rootDir,
         getContext().getString(R.string.tools_select_folder),
         getContext().getString(R.string.tools_save_to_this_directory));
     dialog.setSelectFolderListener(this::setSavePath);
-    dialog.show(getChildFragmentManager(), "fileDirectoryDialog");
+    dialog.show(getChildFragmentManager(), FILE_DIRECTORY_DIALOG_TAG);
+  }
+
+  private void showCustomCompressOptionsDialog() {
+    CPDFCustomCompressOptionsDialog dialog = CPDFCustomCompressOptionsDialog.newInstance(optimizeOptions);
+    dialog.setOnOptionsConfiguredListener(options -> {
+      optimizeOptions = options;
+    });
+    dialog.show(getChildFragmentManager(), CUSTOM_OPTIONS_DIALOG_TAG);
   }
 
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     if (isChecked) {
       updateRadioButtonStatus(buttonView);
-      if (buttonView.getId() == R.id.rb_quality_custom) {
-        etCustomQuality.setEnabled(true);
-        etCustomQuality.setFocusableInTouchMode(true);
-        etCustomQuality.requestFocus();
-        CViewUtils.showKeyboard(etCustomQuality);
-      } else {
-        etCustomQuality.setFocusableInTouchMode(false);
-        etCustomQuality.setEnabled(false);
-        etCustomQuality.setText("");
-      }
+      updateCustomOptionsButtonState();
     }
+  }
+
+  private void updateCustomOptionsButtonState() {
+    boolean isCustomChecked = rbQualityCustom.isChecked();
+    tvCustomCompressOptions.setEnabled(isCustomChecked);
+    tvCustomCompressOptions.setAlpha(isCustomChecked ? 1.0f : 0.5f);
   }
 
   private void updateRadioButtonStatus(CompoundButton checkButton) {
@@ -253,57 +291,83 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
     tvSavePath.setText(savePath);
   }
 
+  private void showLoadingDialog() {
+    loadingDialog = CPDFCompressLoadingDialog.newInstance(document.getPageCount());
+    loadingDialog.show(getParentFragmentManager(), LOADING_DIALOG_TAG);
+  }
+
+  private void dismissLoadingDialog() {
+    if (loadingDialog != null) {
+      loadingDialog.dismiss();
+      loadingDialog = null;
+    }
+  }
+
   private void compressPDF(COnCompressDocumentListener listener) {
-    if (rbQualityCustom.isChecked()) {
-      if (TextUtils.isEmpty(etCustomQuality.getText())) {
-        CToastUtil.showLongToast(getContext(), R.string.tools_please_enter_percentage);
-        listener.compress(false, null, null);
-        return;
-      }
-      int quality = Integer.parseInt(etCustomQuality.getText().toString());
-      loadingDialog = CPDFCompressLoadingDialog.newInstance(
-          document.getPageCount());
-      loadingDialog.show(getParentFragmentManager(), "compressLoadingDialog");
-      String fileName = document.getFileName();
-      CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.savePdfToSelectedDirectory(
-          getContext(), savePath, fileName, false, tempPath -> {
-            CLog.e("ComPDFKit", "Compress:quality:" + quality);
-            return document.saveAsCompressOptimize(tempPath, quality, pageIndex -> {
+    CPDFOptimizeOptions options = getOptimizeOptions();
+    String fileName = document.getFileName();
+    CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.savePdfToSelectedDirectory(
+        getContext(), savePath, fileName, false,
+        tempPath -> optimizeDocument(tempPath, options));
+    listener.compress(saveResult.isSuccess(), saveResult.getOpenPath(), saveResult.getPublicUri());
+  }
+
+  private boolean optimizeDocument(String tempPath, CPDFOptimizeOptions options) {
+    try {
+      CPDFOptimizeResult result = document.optimizeSaveAsCopy(
+          tempPath, options, new OptimizeListener() {
+            @Override
+            public boolean isCancelled() {
+              return isCancellationRequested;
+            }
+
+            @Override
+            public void onUpdate(int pageIndex) {
               if (loadingDialog != null) {
                 loadingDialog.setCompressProgress(pageIndex);
               }
-            });
+            }
           });
-      loadingDialog.dismiss();
-      listener.compress(saveResult.isSuccess(), saveResult.getOpenPath(), saveResult.getPublicUri());
-    } else {
-      CPDFDocument.PDFDocumentCompressLevel level;
-      if (rbQualityLow.isChecked()) {
-        level = CPDFDocument.PDFDocumentCompressLevel.MICRO;
-      } else if (rbQualityStandard.isChecked()) {
-        level = CPDFDocument.PDFDocumentCompressLevel.STANDARD;
-      } else if (rbQualityHigh.isChecked()) {
-        level = CPDFDocument.PDFDocumentCompressLevel.HIGH;
-      } else {
-        level = CPDFDocument.PDFDocumentCompressLevel.STANDARD;
-      }
-      loadingDialog = CPDFCompressLoadingDialog.newInstance(
-          document.getPageCount());
-      loadingDialog.show(getParentFragmentManager(), "compressLoadingDialog");
-      String fileName = document.getFileName();
-      CPDFPublicFileSaver.SaveResult saveResult = CPDFPublicFileSaver.savePdfToSelectedDirectory(
-          getContext(), savePath, fileName, false, tempPath -> {
-            CLog.e("ComPDFKit", "Compress:level:" + level.name());
-            return document.saveAsCompressOptimize(tempPath, level, pageIndex -> {
-                if (loadingDialog != null) {
-                  loadingDialog.setCompressProgress(pageIndex);
-                }
-            });
-          });
-      loadingDialog.dismiss();
-      listener.compress(saveResult.isSuccess(), saveResult.getOpenPath(), saveResult.getPublicUri());
+      return result.isSuccess();
+    } catch (CPDFDocumentException e) {
+      CLog.e("ComPDFKit", "Compress failed: " + e.getMessage());
+      return false;
+    }
+  }
+
+  private CPDFOptimizeOptions getOptimizeOptions() {
+    if (rbQualityCustom.isChecked()) {
+      return optimizeOptions;
     }
 
+    CPDFOptimizeOptions options = new CPDFOptimizeOptions();
+    options.monochromeImageOptions = getImageOptimizeOptions();
+    return options;
+  }
+
+  private CPDFDocument.CPDFImageOptimizeOptions getImageOptimizeOptions() {
+    CPDFDocument.CPDFImageOptimizeOptions imageOptimizeOptions = new CPDFDocument.CPDFImageOptimizeOptions();
+    if (rbQualityLow.isChecked()) {
+      imageOptimizeOptions.upperPpi = LOW_UPPER_PPI;
+      imageOptimizeOptions.targetPpi = LOW_TARGET_PPI;
+      imageOptimizeOptions.quality = LOW_QUALITY;
+    } else if (rbQualityStandard.isChecked()) {
+      imageOptimizeOptions.upperPpi = STANDARD_UPPER_PPI;
+      imageOptimizeOptions.targetPpi = STANDARD_TARGET_PPI;
+      imageOptimizeOptions.quality = STANDARD_QUALITY;
+    } else if (rbQualityHigh.isChecked()) {
+      imageOptimizeOptions.upperPpi = HIGH_UPPER_PPI;
+      imageOptimizeOptions.targetPpi = HIGH_TARGET_PPI;
+      imageOptimizeOptions.quality = HIGH_QUALITY;
+    }
+    return imageOptimizeOptions;
+  }
+
+  private void replaceDocument(CPDFDocument newDocument) {
+    if (document != null && document != newDocument) {
+      document.close();
+    }
+    document = newDocument;
   }
 
 
@@ -317,6 +381,8 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
       }
     } else if (error == CPDFDocument.PDFDocumentError.PDFDocumentErrorPassword) {
       showVerifyPasswordDialog(document, uri, listener);
+    } else {
+      document.close();
     }
   }
 
@@ -330,6 +396,13 @@ public class CPDFCompressDialog extends CBasicBottomSheetDialogFragment implemen
       }
     });
     verifyPasswordDialogFragment.show(getChildFragmentManager(), "verifyPasswordDialog");
+  }
+
+  @Override
+  public void onDismiss(DialogInterface dialog) {
+    super.onDismiss(dialog);
+    isCancellationRequested = true;
+    dismissLoadingDialog();
   }
 
   @Override
