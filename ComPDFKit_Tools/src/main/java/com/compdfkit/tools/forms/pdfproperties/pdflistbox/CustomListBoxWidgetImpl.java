@@ -23,7 +23,7 @@ public class CustomListBoxWidgetImpl extends CPDFListboxWidgetImpl {
 
     @Override
     public void onListboxFocused(CPDFListboxWidget cpdfListboxWidget) {
-        if (CFormWidgetActionInterceptor.intercept(cpdfListboxWidget)) {
+        if (CFormWidgetActionInterceptor.intercept(readerView, cpdfListboxWidget)) {
             return;
         }
          CFormOptionSelectDialogFragment selectDialogFragment = CFormOptionSelectDialogFragment.newInstance();

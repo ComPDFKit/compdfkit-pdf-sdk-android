@@ -183,8 +183,8 @@ dependencyResolutionManagement {
 Edit it and add the complete `ComPDF SDK` dependency:
 ```groovy
     dependencies {
-      implementation 'com.compdf:compdfkit:3.0.2'
-      implementation 'com.compdf:compdfkit-ui:3.0.2'
+      implementation 'com.compdf:compdfkit:3.2.1'
+      implementation 'com.compdf:compdfkit-ui:3.2.1'
     }
 ```
 3. Apply for read and write permissions in `AndroidManifest.xml`:
@@ -250,38 +250,15 @@ Edit it and add the complete `ComPDF SDK` dependency:
 
 ### Apply the License Key
 
-Add this license in the **AndroidManifest.xml** of the main module. In version **1.13.0**, we introduced a brand-new online authentication license scheme for ComPDF SDK. By default, the SDK performs online authentication. If you are using a version prior to **1.13.0**, please refer to the following example to configure the SDK for offline authentication mode:<br/>
-
-* **Online license**
-
-    ```xml
-    <!-- Each ComPDF license is bound to a specific applicationId -->
-    <!-- For example: com.compdfkit.pdfviewer -->
-    <meta-data
-        android:name="compdfkit_key_online"
-        android:value="Your ComPDF Key" />
-    ```
-
-You can also initialize ComPDF SDK in code using:
+Initialize the ComPDF SDK and authenticate using the following method. The SDK will automatically distinguish between online and offline activation:
 
 ```java
-CPDFSdk.init(context, "your compdfkit license", false);
-```
-
-* **Offline license**
-
-    ```xml
-    <!-- Each ComPDF license is bound to a specific applicationId -->
-    <!-- For example: com.compdfkit.pdfviewer -->
-    <meta-data
-        android:name="compdfkit_key"
-        android:value="Your ComPDF Key" />
-    ```
-
-You can also initialize ComPDF SDK in code using:
-
-```java
-CPDFSdk.init(context, "your compdfkit license");
+String xmlPath = "assets://Android.xml";
+// You can also pass the file path of the XML to initialize the SDK
+// String xmlPath = "/data/user/0/your_package/files/license/Android.xml";
+CPDFSdk.initWithPath(this, xmlPath, (verifyCode, verifyMsg) -> {
+  Log.e("ComPDF", "verifyCode: " + verifyCode + ", verifyMsg: " + verifyMsg);
+});
 ```
 
 ### Add Proguard Rules

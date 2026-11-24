@@ -17,7 +17,7 @@ public class CustomCheckBoxWidgetImpl extends CPDFCheckboxWidgetImpl {
 
     @Override
     public void onCheckBoxFocused(CPDFCheckboxWidget checkboxWidget) {
-        if (CFormWidgetActionInterceptor.intercept(onGetAnnotation())) {
+        if (CFormWidgetActionInterceptor.intercept(readerView, onGetAnnotation())) {
             return;
         }
         super.onCheckBoxFocused(checkboxWidget);

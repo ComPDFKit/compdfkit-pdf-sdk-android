@@ -9,31 +9,19 @@
 
 package com.compdfkit.tools.annotation.pdfproperties.pdfnote;
 
-import android.util.Log;
 import androidx.fragment.app.FragmentActivity;
 
 import com.compdfkit.core.annotation.CPDFTextAnnotation;
-import com.compdfkit.tools.common.pdf.CPDFApplyConfigUtil;
-import com.compdfkit.tools.common.pdf.config.CPDFConfiguration;
-import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventCallbackHelper;
-import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventField;
-import com.compdfkit.tools.common.utils.customevent.CPDFCustomEventType;
 import com.compdfkit.tools.common.utils.viewutils.CViewUtils;
 import com.compdfkit.ui.proxy.CPDFTextAnnotImpl;
 import com.compdfkit.ui.reader.CPDFPageView;
-import java.util.Map;
 
 
 public class CPDFtextAnnotImpl extends CPDFTextAnnotImpl {
 
     @Override
     protected void onTouchTextAnnot(CPDFTextAnnotation cpdfTextAnnotation) {
-        CPDFConfiguration configuration = CPDFApplyConfigUtil.getInstance().getConfiguration();
-        if (configuration != null && configuration.annotationsConfig != null && configuration.annotationsConfig.interceptNoteAction) {
-            Map<String, Object> extraMap = new java.util.HashMap<>();
-            extraMap.put(CPDFCustomEventField.CUSTOM_EVENT_TYPE, CPDFCustomEventType.INTERCEPT_ANNOTATION_DO_ACTION);
-            extraMap.put(CPDFCustomEventField.ANNOTATION, cpdfTextAnnotation);
-            CPDFCustomEventCallbackHelper.getInstance().notifyClick("", extraMap);
+        if (com.compdfkit.tools.annotation.pdfproperties.CAnnotationActionInterceptor.intercept(readerView, cpdfTextAnnotation)) {
             return;
         }
          setFocused(true);

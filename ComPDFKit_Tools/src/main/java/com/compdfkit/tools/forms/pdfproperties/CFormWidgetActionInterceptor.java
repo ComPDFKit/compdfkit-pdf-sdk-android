@@ -21,6 +21,14 @@ import java.util.Map;
 
 public class CFormWidgetActionInterceptor {
 
+    public static boolean intercept(com.compdfkit.ui.reader.ReaderView reader, CPDFWidget widget) {
+        com.compdfkit.tools.common.pdf.CPDFActionContext context =
+                com.compdfkit.tools.common.pdf.CPDFActionContext.get(reader);
+        return context != null && context.intercept(widget);
+    }
+
+    /** @deprecated Bind configuration to CPDFViewCtrl and use the reader overload. */
+    @Deprecated
     public static boolean intercept(CPDFWidget widget) {
         if (!shouldIntercept(widget)) {
             return false;
@@ -43,6 +51,6 @@ public class CFormWidgetActionInterceptor {
         }
         FormsConfig formsConfig = configuration.formsConfig;
         return formsConfig.interceptAllFormWidgetActions
-                || formsConfig.interceptFormWidgetActions.contains(widget.getWidgetType());
+                || (formsConfig.interceptFormWidgetActions != null && formsConfig.interceptFormWidgetActions.contains(widget.getWidgetType()));
     }
 }

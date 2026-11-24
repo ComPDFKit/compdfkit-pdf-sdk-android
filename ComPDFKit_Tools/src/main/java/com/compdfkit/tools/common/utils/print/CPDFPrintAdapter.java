@@ -1,6 +1,5 @@
 package com.compdfkit.tools.common.utils.print;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,6 +16,7 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.print.pdf.PrintedPdfDocument;
 import android.util.SparseIntArray;
+import android.util.Log;
 
 import androidx.print.PrintHelper;
 
@@ -25,9 +25,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class CPDFPrintAdapter extends PrintDocumentAdapter {
+    private static final String TAG = "CPDFPrintAdapter";
     private static final int MILS_PER_INCH = 1000;
 
     public static final float SD = 1.5f;
@@ -41,7 +41,7 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
     private int totalpages;
     private PrintAttributes currentAttributes;
     private IPrintCallback iPrintCallback;
-    private final Stack<AsyncTask> mStack = new Stack<>();
+    private AsyncTask<Void, Void, Throwable> activeTask;
 
     public CPDFPrintAdapter(Context context, int totalpages, String jobName, IPrintCallback iPrintCallback) {
         this.context = context.getApplicationContext();
@@ -85,18 +85,18 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
                     .setPageCount(totalpages)
                     .build();
             // Content layout reflow is complete
-            callback.onLayoutFinished(info, true);
+            callback.onLayoutFinished(info, !newAttributes.equals(oldAttributes));
         } else {
             // Otherwise report an error to the print framework
             callback.onLayoutFailed("Page count calculation failed.");
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
     @Override
     public void onWrite(PageRange[] pageRanges, ParcelFileDescriptor destination, CancellationSignal cancellationSignal, WriteResultCallback callback) {
         final AsyncTask<Void, Void, Throwable> asyncTask = new AsyncTask<Void, Void, Throwable>() {
             final SparseIntArray writtenPages = new SparseIntArray();
+            final long startTime = System.currentTimeMillis();
 
             @Override
             protected Throwable doInBackground(Void... voids) {
@@ -109,6 +109,7 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
 
                     // Create a new PdfDocument with the requested page attributes
                     mPdfDocument = new PrintedPdfDocument(context, currentAttributes);
+                    long renderStart = System.currentTimeMillis();
 
                     for (int i = 0; i < totalpages; i++) {
                         // Check to see if this page is in the output range.
@@ -135,8 +136,12 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
                         return null;
                     }
 
-                    // Write the document.
+                    Log.d(TAG, "Rendered " + writtenPages.size() + " pages in "
+                            + (System.currentTimeMillis() - renderStart) + " ms");
+                    long writeStart = System.currentTimeMillis();
                     mPdfDocument.writeTo(new FileOutputStream(destination.getFileDescriptor()));
+                    Log.d(TAG, "Wrote PDF in " + (System.currentTimeMillis() - writeStart)
+                            + " ms; total " + (System.currentTimeMillis() - startTime) + " ms");
                     return null;
                 } catch (Exception e) {
                     return e;
@@ -170,22 +175,22 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
                     }
                 }
             }
+
+            @Override
+            protected void onCancelled(Throwable throwable) {
+                closeDestination(destination);
+                callback.onWriteCancelled();
+            }
         };
-        mStack.push(asyncTask);
+        activeTask = asyncTask;
         asyncTask.execute();
     }
 
     @Override
     public void onFinish() {
         try {
-            while (!mStack.empty()) {
-                try {
-                    AsyncTask asyncTask = mStack.pop();
-                    if ((null != asyncTask) && !asyncTask.isCancelled()) {
-                        asyncTask.cancel(true);
-                    }
-                } catch (Exception ignored) {
-                }
+            if (activeTask != null && !activeTask.isCancelled()) {
+                activeTask.cancel(true);
             }
         } finally {
             if (null != iPrintCallback) {
@@ -205,7 +210,7 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
         return false;
     }
 
-    private void drawPage(PdfDocument.Page page, int pagenumber) {
+    private void drawPage(PdfDocument.Page page, int pagenumber) throws IOException {
         Canvas canvas = page.getCanvas();
         Bitmap bitmap = null;
         try {
@@ -217,7 +222,11 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
                 bitmap = iPrintCallback.onWriteBitmap(pagenumber, (int) (pageWidth * resolutionScale), isDrawAnnot);
             }
 
-            if (null != bitmap) {
+            if (bitmap == null || bitmap.isRecycled()) {
+                throw new IOException("Failed to render page " + pagenumber);
+            }
+
+            if (bitmap != null) {
                 
                 float scale = Math.min((float) pageWidth / bitmap.getWidth(), (float) pageHeight / bitmap.getHeight());
                 if (scale > 1) {
@@ -226,6 +235,8 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
 
                 Matrix matrix = new Matrix();
                 matrix.postScale(scale, scale);
+                matrix.postTranslate((pageWidth - bitmap.getWidth() * scale) / 2f,
+                        (pageHeight - bitmap.getHeight() * scale) / 2f);
 
 
 //                int translateX = Math.abs((int) (bitmap.getWidth() * scale) - pageWidth);
@@ -244,8 +255,6 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
 //                paint.setTextSize(32);
 //                canvas.drawText(String.format(Locale.US, "PageNum: %s;PageWidth: %s", (pagenumber + 1), (int) (pageWidth * resolutionScale)), leftMargin, titleBaseLine, paint);
 //            }
-        } catch (Exception e) {
-            canvas.drawColor(Color.WHITE);
         } finally {
             if ((null != bitmap) && !bitmap.isRecycled()) {
                 bitmap.recycle();
@@ -262,27 +271,28 @@ public class CPDFPrintAdapter extends PrintDocumentAdapter {
     private PageRange[] computeWrittenPageRanges(SparseIntArray writtenPages) {
         final List<PageRange> pageRanges = new ArrayList<>();
 
-        int start = -1;
-        int end;
+        if (writtenPages.size() == 0) return new PageRange[0];
+        int start = writtenPages.valueAt(0);
+        int end = start;
         final int writtenPageCount = writtenPages.size();
-        for (int i = 0; i < writtenPageCount; i++) {
-            if (start < 0) {
-                start = writtenPages.valueAt(i);
+        for (int i = 1; i < writtenPageCount; i++) {
+            int page = writtenPages.valueAt(i);
+            if (page == end + 1) {
+                end = page;
+            } else {
+                pageRanges.add(new PageRange(start, end));
+                start = end = page;
             }
-            int oldEnd = end = start;
-            while (i < writtenPageCount && (end - oldEnd) <= 1) {
-                oldEnd = end;
-                end = writtenPages.valueAt(i);
-                i++;
-            }
-            @SuppressLint("Range") PageRange pageRange = new PageRange(start, end);
-            pageRanges.add(pageRange);
-            start = -1;
         }
+        pageRanges.add(new PageRange(start, end));
 
         PageRange[] pageRangesArray = new PageRange[pageRanges.size()];
         pageRanges.toArray(pageRangesArray);
         return pageRangesArray;
+    }
+
+    private void closeDestination(ParcelFileDescriptor destination) {
+        try { destination.close(); } catch (IOException ignored) { }
     }
 
     public interface IPrintCallback extends PrintHelper.OnPrintFinishCallback {

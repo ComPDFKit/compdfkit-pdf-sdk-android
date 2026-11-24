@@ -30,6 +30,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.compdfkit.core.annotation.CPDFAnnotation;
 import com.compdfkit.core.document.CPDFDocument;
 import com.compdfkit.tools.R;
 import com.compdfkit.tools.annotation.pdfannotationbar.CAnnotationToolbar;
@@ -61,8 +62,16 @@ import com.compdfkit.tools.forms.pdfformbar.CFormToolbar;
 import com.compdfkit.tools.signature.CSignatureToolBar;
 import com.compdfkit.tools.signature.verify.CVerifySignStatusView;
 import com.compdfkit.tools.viewer.pdfsearch.CSearchReplaceToolbar;
+import com.compdfkit.ui.proxy.CPDFAnnotationActionInterceptor;
+import com.compdfkit.ui.proxy.CPDFAnnotationOverlayRenderer;
 import com.compdfkit.ui.reader.CPDFAddAnnotCallback;
 import com.compdfkit.ui.reader.CPDFReaderView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Main PDF document fragment.
@@ -111,6 +120,10 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
     public CFillScreenChangeListener fillScreenChangeListener;
 
     private CPDFDocumentFragmentInitListener initListener;
+
+    // Registrations made before pdfView exists; insertion order is drawing/call order.
+    private final Set<CPDFAnnotationOverlayRenderer> pendingOverlayRenderers = new LinkedHashSet<>();
+    private final Set<CPDFAnnotationActionInterceptor> pendingActionInterceptors = new LinkedHashSet<>();
 
     private final ActivityResultLauncher<Void> selectDocumentLauncher = registerForActivityResult(
             new CSelectPDFDocumentResultContract(), uri -> {
@@ -256,6 +269,7 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
         initControllers();
         screenManager.bind(this);
         pdfView.setCPDFConfiguration(cpdfConfiguration);
+        applyPendingAnnotationCustomizations(pdfView);
         documentIOController.initDocument(() -> {
             // Opening a document completes asynchronously on the main thread. The fragment
             // can be detached or have its view destroyed before this callback is delivered.
@@ -394,6 +408,128 @@ public class CPDFDocumentFragment extends CBasicPDFFragment {
 
     public void sharePDF(CPDFViewCtrl pdfView) {
         documentIOController.sharePDF(pdfView);
+    }
+
+    // ========================================================================
+    // Custom annotation appearance and action interception (SDK 3.2.1).
+    // Callable right after newInstance(): registrations made before the view
+    // exists are queued and applied in onViewCreated(), before the document
+    // opens. Afterwards every call delegates to CPDFViewCtrl.
+    // ========================================================================
+
+    /**
+     * Adds a renderer that draws application-defined content on top of annotations and form
+     * fields. Can be called before the fragment view is created. Call on the main thread.
+     *
+     * @see CPDFViewCtrl#addAnnotationOverlayRenderer(CPDFAnnotationOverlayRenderer)
+     */
+    public void addAnnotationOverlayRenderer(@NonNull CPDFAnnotationOverlayRenderer renderer) {
+        if (renderer == null) {
+            return;
+        }
+        if (pdfView != null) {
+            pdfView.addAnnotationOverlayRenderer(renderer);
+        } else {
+            pendingOverlayRenderers.add(renderer);
+        }
+    }
+
+    /**
+     * Removes a renderer added with {@link #addAnnotationOverlayRenderer}. Call on the main thread.
+     */
+    public void removeAnnotationOverlayRenderer(@NonNull CPDFAnnotationOverlayRenderer renderer) {
+        if (renderer == null) {
+            return;
+        }
+        pendingOverlayRenderers.remove(renderer);
+        if (pdfView != null) {
+            pdfView.removeAnnotationOverlayRenderer(renderer);
+        }
+    }
+
+    /**
+     * @return the registered overlay renderers in drawing order. Before the view is created this
+     * is an unmodifiable copy of the queued renderers; afterwards an unmodifiable live view.
+     */
+    @NonNull
+    public List<CPDFAnnotationOverlayRenderer> getAnnotationOverlayRenderers() {
+        if (pdfView != null) {
+            return pdfView.getAnnotationOverlayRenderers();
+        }
+        return Collections.unmodifiableList(new ArrayList<>(pendingOverlayRenderers));
+    }
+
+    /**
+     * Redraws the overlay of one annotation. Ignored before the view is created.
+     */
+    public void invalidateAnnotationOverlay(@NonNull CPDFAnnotation annotation) {
+        if (pdfView != null) {
+            pdfView.invalidateAnnotationOverlay(annotation);
+        }
+    }
+
+    /**
+     * Redraws all overlays on the displayed pages. Ignored before the view is created.
+     */
+    public void invalidateAnnotationOverlays() {
+        if (pdfView != null) {
+            pdfView.invalidateAnnotationOverlays();
+        }
+    }
+
+    /**
+     * Adds an interceptor that receives taps on annotations and form fields before the default
+     * action runs. Can be called before the fragment view is created. Call on the main thread.
+     *
+     * @see CPDFViewCtrl#addAnnotationActionInterceptor(CPDFAnnotationActionInterceptor)
+     */
+    public void addAnnotationActionInterceptor(@NonNull CPDFAnnotationActionInterceptor interceptor) {
+        if (interceptor == null) {
+            return;
+        }
+        if (pdfView != null) {
+            pdfView.addAnnotationActionInterceptor(interceptor);
+        } else {
+            pendingActionInterceptors.add(interceptor);
+        }
+    }
+
+    /**
+     * Removes an interceptor added with {@link #addAnnotationActionInterceptor}.
+     * Call on the main thread.
+     */
+    public void removeAnnotationActionInterceptor(@NonNull CPDFAnnotationActionInterceptor interceptor) {
+        if (interceptor == null) {
+            return;
+        }
+        pendingActionInterceptors.remove(interceptor);
+        if (pdfView != null) {
+            pdfView.removeAnnotationActionInterceptor(interceptor);
+        }
+    }
+
+    /**
+     * @return the registered action interceptors in call order. Before the view is created this
+     * is an unmodifiable copy of the queued interceptors; afterwards an unmodifiable live view.
+     */
+    @NonNull
+    public List<CPDFAnnotationActionInterceptor> getAnnotationActionInterceptors() {
+        if (pdfView != null) {
+            return pdfView.getAnnotationActionInterceptors();
+        }
+        return Collections.unmodifiableList(new ArrayList<>(pendingActionInterceptors));
+    }
+
+    /** Registers the queued renderers and interceptors on {@code view}, then clears the queues. */
+    void applyPendingAnnotationCustomizations(@NonNull CPDFViewCtrl view) {
+        for (CPDFAnnotationOverlayRenderer renderer : pendingOverlayRenderers) {
+            view.addAnnotationOverlayRenderer(renderer);
+        }
+        for (CPDFAnnotationActionInterceptor interceptor : pendingActionInterceptors) {
+            view.addAnnotationActionInterceptor(interceptor);
+        }
+        pendingOverlayRenderers.clear();
+        pendingActionInterceptors.clear();
     }
 
     // ========================================================================

@@ -41,7 +41,7 @@ public class SignatureWidgetImpl extends CPDFSignatureWidgetImpl {
 
     @Override
     public void onSignatureWidgetFocused(CPDFSignatureWidget cpdfSignatureWidget) {
-        if (CFormWidgetActionInterceptor.intercept(cpdfSignatureWidget)) {
+        if (CFormWidgetActionInterceptor.intercept(readerView, cpdfSignatureWidget)) {
             return;
         }
         FragmentActivity fragmentActivity = CViewUtils.getFragmentActivity(readerView.getContext());

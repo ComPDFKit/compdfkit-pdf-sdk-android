@@ -35,7 +35,7 @@ public class CPDFCustomEventCallbackHelper {
 
     public void notifyClick(String identifier, java.util.Map<String, Object> extraMap) {
         extraMap.put(CPDFCustomEventField.IDENTIFIER, identifier);
-        for (CPDFCustomEventCallback callback : callbacks) {
+        for (CPDFCustomEventCallback callback : new ArrayList<>(callbacks)) {
             callback.click(extraMap);
         }
     }
@@ -44,7 +44,7 @@ public class CPDFCustomEventCallbackHelper {
         java.util.Map<String, Object> extraMap = new java.util.HashMap<>();
         extraMap.put(CPDFCustomEventField.IDENTIFIER, identifier);
         extraMap.put(key, value);
-        for (CPDFCustomEventCallback callback : callbacks) {
+        for (CPDFCustomEventCallback callback : new ArrayList<>(callbacks)) {
             callback.click(extraMap);
         }
     }

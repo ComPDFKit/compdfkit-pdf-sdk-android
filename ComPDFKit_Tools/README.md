@@ -19,6 +19,10 @@ dependencies {
 
 ## Usage
 
+For unified annotation/form action interception, legacy configuration migration,
+per-reader callbacks and the debug acceptance screen, see
+[Action interception](../docs/annotation-action-interception/README.md).
+
 The ComPDFKit_Tools module provides two main components: [CPDFDocumentActivity](./src/main/java/com/compdfkit/tools/common/pdf/CPDFDocumentActivity.java) and [CPDFDocumentFragment.java](./src/main/java/com/compdfkit/tools/common/pdf/CPDFDocumentFragment.java). These components enable you to easily implement PDF functionalities.
 
 ### CPDFDocumentActivity
@@ -52,6 +56,60 @@ CPDFDocumentFragment documentFragment = CPDFDocumentFragment.newInstance(
   password,
   configuration);
 ```
+
+### Custom Annotation Appearance
+
+Requires ComPDFKit SDK 3.2.1 or later. `CPDFDocumentFragment` and `CPDFViewCtrl` expose the
+SDK annotation overlay renderer and action interceptor APIs, so you can draw your own content
+on top of annotations and form fields and handle their taps without subclassing:
+
+```java
+CPDFDocumentFragment fragment = CPDFDocumentFragment.newInstance(path, password, configuration);
+
+// Can be called right after newInstance(); registrations made before the view is
+// created are applied before the document opens.
+SignaturePlaceholderRenderer renderer = new SignaturePlaceholderRenderer();
+fragment.addAnnotationOverlayRenderer(renderer);
+fragment.addAnnotationActionInterceptor(event -> {
+    if (event.getActionType() == CPDFAnnotationActionEvent.ActionType.FORM_FILL
+            && event.getAnnotation() instanceof CPDFSignatureWidget) {
+        startMySigningFlow(event);
+        return true;   // consume the tap; the default action does not run
+    }
+    return false;      // let the next interceptor or the default action handle it
+});
+
+// After the business data shown by an overlay changes:
+fragment.invalidateAnnotationOverlay(annotation);
+
+// Remove the customization (overlays are redrawn automatically):
+fragment.removeAnnotationOverlayRenderer(renderer);
+```
+
+| Method | Notes |
+| --- | --- |
+| `addAnnotationOverlayRenderer` / `removeAnnotationOverlayRenderer` | Renderers draw in registration order. Adding a registered renderer has no effect. Overlays redraw automatically. |
+| `getAnnotationOverlayRenderers` | Unmodifiable list in drawing order. |
+| `invalidateAnnotationOverlay` / `invalidateAnnotationOverlays` | Redraw after your own data changes. Ignored before the view is created. |
+| `addAnnotationActionInterceptor` / `removeAnnotationActionInterceptor` | Called in registration order until one returns `true`. Adding a registered interceptor has no effect. |
+| `getAnnotationActionInterceptors` | Unmodifiable list in call order. |
+
+Behavior:
+
+- Call all methods on the main thread; renderers and interceptors are also called on the main thread.
+- Registrations belong to the reader view, not to the document. They stay active when another document is opened in the same fragment.
+- Types listed in `annotationsConfig.interceptAnnotationActions` / `formsConfig.interceptFormWidgetActions`
+  (or all types when the `interceptAll...` flags are set) are handled by the Tools configuration first and
+  do not reach your interceptors. Leave those settings empty when you use interceptors.
+- If you replace a Tools implementation with `getAnnotImplRegistry().registImpl(...)`, the Tools
+  configuration interception no longer applies to that type; your interceptors still do.
+- Overlays are display only: they are not written to the PDF and do not appear when saving, printing,
+  flattening, sharing, or in thumbnails.
+- If a renderer or interceptor references an Activity or other long-lived object, remove it in `onDestroy`.
+
+For renderer coordinates, `CPDFAnnotationOverlayContext`, touchable overlays, action types and
+`CPDFAnnotation.setCustomData`, see the ComPDFKit Android developer guide
+"Custom annotation overlays and action interception".
 
 ### Ink Undo/Redo Behavior
 
@@ -176,3 +234,12 @@ consumption result to the SDK. Other point callbacks still receive consumed taps
 can opt in by attaching a controller and selecting `LINE`, `WORD`, `PARAGRAPH`, or
 `AUTO`; the default remains `AUTO`. Use `LINE` to select only the tapped line without
 paragraph or word fallback.
+
+
+### 点击配置迁移补充
+
+interceptNoteAction / interceptLinkAction 已弃用，请使用 interceptAllAnnotationActions / interceptAnnotationActions。
+任一新字段显式提供时，新配置优先（包括 false 和空列表）；只有两个新字段都未设置才迁移旧字段。
+解析缺省配置后、绑定前仍可设置旧字段；未设置的新字段保持 null，绑定时转换为有效默认值。
+绑定后修改配置需再次调用 setCPDFConfiguration，新接入使用新字段。
+[配置示例与自动化测试](../docs/annotation-action-interception/README.md)。

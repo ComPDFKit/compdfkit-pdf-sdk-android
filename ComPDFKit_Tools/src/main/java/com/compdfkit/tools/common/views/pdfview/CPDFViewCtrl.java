@@ -44,6 +44,8 @@ import com.compdfkit.ui.reader.IDocumentStatusCallback;
 import com.compdfkit.ui.reader.IReaderViewCallback;
 import com.compdfkit.ui.reader.OnFocusedTypeChangedListener;
 import com.compdfkit.ui.reader.OnViewModeChangedListener;
+import com.compdfkit.ui.proxy.CPDFAnnotationActionInterceptor;
+import com.compdfkit.ui.proxy.CPDFAnnotationOverlayRenderer;
 import com.compdfkit.ui.proxy.CPDFBaseAnnotImpl;
 import com.compdfkit.ui.widget.CPDFPageNavigator;
 
@@ -207,6 +209,8 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   private void initCPDFReaderView() {
     cPdfReaderView = new CPDFReaderView(getContext());
+    com.compdfkit.tools.annotation.pdfproperties.CActionProxyRegistry.register(cPdfReaderView);
+    com.compdfkit.tools.common.pdf.CPDFActionContext.bind(cPdfReaderView, new CPDFConfiguration());
     cPdfReaderView.setDoublePageMode(false);
     cPdfReaderView.setReaderViewCallback(this);
     cPdfReaderView.setOnFocusedTypeChangedListener(this);
@@ -363,6 +367,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
    */
   @Deprecated
   public void openPDF(String pdfFilePath) {
+    ensureActionContext();
     documentHelper.openPDF(pdfFilePath);
   }
 
@@ -371,6 +376,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
    */
   @Deprecated
   public void openPDF(String pdfFilePath, String password) {
+    ensureActionContext();
     documentHelper.openPDF(pdfFilePath, password);
   }
 
@@ -379,6 +385,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   */
   @Deprecated
   public void openPDF(String pdfFilePath, String password, int pageIndex) {
+    ensureActionContext();
     documentHelper.openPDF(pdfFilePath, password, pageIndex, null);
   }
 
@@ -387,11 +394,13 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
    */
   @Deprecated
   public void openPDF(String pdfFilePath, String password, COnOpenPdfFinishCallback openPdfFinishCallback) {
+    ensureActionContext();
     documentHelper.openPDF(pdfFilePath, password, openPdfFinishCallback);
   }
 
   public void openPDF(String pdfFilePath, String password, int pageIndex,
       COnOpenPdfFinishCallback openPdfFinishCallback) {
+    ensureActionContext();
     documentHelper.openPDF(pdfFilePath, password, pageIndex, openPdfFinishCallback);
   }
 
@@ -400,6 +409,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
    */
   @Deprecated
   public void openPDF(Uri pdfUri) {
+    ensureActionContext();
     documentHelper.openPDF(pdfUri);
   }
 
@@ -408,6 +418,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
    */
   @Deprecated
   public void openPDF(Uri pdfUri, String password) {
+    ensureActionContext();
     documentHelper.openPDF(pdfUri, password);
   }
 
@@ -416,6 +427,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   */
   @Deprecated
   public void openPDF(Uri pdfUri, String password, int pageIndex) {
+    ensureActionContext();
     documentHelper.openPDF(pdfUri, password, pageIndex, null);
   }
 
@@ -424,10 +436,12 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
    */
   @Deprecated
   public void openPDF(Uri pdfUri, String password, COnOpenPdfFinishCallback openPdfFinishCallback) {
+    ensureActionContext();
     documentHelper.openPDF(pdfUri, password, openPdfFinishCallback);
   }
 
   public void openPDF(Uri pdfUri, String password, int pageIndex, COnOpenPdfFinishCallback openPdfFinishCallback) {
+    ensureActionContext();
     documentHelper.openPDF(pdfUri, password, pageIndex, openPdfFinishCallback);
   }
 
@@ -485,6 +499,86 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
  public com.compdfkit.ui.reader.CPDFReaderView getCPdfReaderView() {
     return cPdfReaderView;
+  }
+
+  // ========================================================================
+  // Custom annotation appearance and action interception (SDK 3.2.1).
+  // Thin delegates to CPDFReaderView; duplicate registration, automatic
+  // redraw and read-only views are implemented by the SDK.
+  // ========================================================================
+
+  /**
+   * Adds a renderer that draws application-defined content on top of annotations and form
+   * fields. Renderers draw in registration order; adding a registered renderer has no effect.
+   * The overlays are redrawn automatically. Call on the main thread.
+   *
+   * @see CPDFReaderView#addAnnotationOverlayRenderer(CPDFAnnotationOverlayRenderer)
+   */
+  public void addAnnotationOverlayRenderer(@NonNull CPDFAnnotationOverlayRenderer renderer) {
+    cPdfReaderView.addAnnotationOverlayRenderer(renderer);
+  }
+
+  /**
+   * Removes a renderer added with {@link #addAnnotationOverlayRenderer}. The overlays are
+   * redrawn automatically. Call on the main thread.
+   */
+  public void removeAnnotationOverlayRenderer(@NonNull CPDFAnnotationOverlayRenderer renderer) {
+    cPdfReaderView.removeAnnotationOverlayRenderer(renderer);
+  }
+
+  /**
+   * @return an unmodifiable live view of the registered overlay renderers, in drawing order.
+   */
+  @NonNull
+  public List<CPDFAnnotationOverlayRenderer> getAnnotationOverlayRenderers() {
+    return cPdfReaderView.getAnnotationOverlayRenderers();
+  }
+
+  /**
+   * Redraws the overlay of one annotation, for example after the business data it displays
+   * changed. The annotation appearance is not regenerated. Call on the main thread.
+   */
+  public void invalidateAnnotationOverlay(@NonNull CPDFAnnotation annotation) {
+    cPdfReaderView.invalidateAnnotationOverlay(annotation);
+  }
+
+  /**
+   * Redraws the overlays of all annotations on the pages currently displayed.
+   * Call on the main thread.
+   */
+  public void invalidateAnnotationOverlays() {
+    cPdfReaderView.invalidateAnnotationOverlays();
+  }
+
+  /**
+   * Adds an interceptor that receives taps on annotations and form fields before the default
+   * action runs. Interceptors are called in registration order until one returns true; adding a
+   * registered interceptor has no effect. Call on the main thread.
+   *
+   * <p>Annotation and form types intercepted by the Tools configuration
+   * ({@code interceptAnnotationActions} / {@code interceptFormWidgetActions}) are consumed
+   * before reader-level interceptors and therefore do not reach this interceptor.</p>
+   *
+   * @see CPDFReaderView#addAnnotationActionInterceptor(CPDFAnnotationActionInterceptor)
+   */
+  public void addAnnotationActionInterceptor(@NonNull CPDFAnnotationActionInterceptor interceptor) {
+    cPdfReaderView.addAnnotationActionInterceptor(interceptor);
+  }
+
+  /**
+   * Removes an interceptor added with {@link #addAnnotationActionInterceptor}.
+   * Call on the main thread.
+   */
+  public void removeAnnotationActionInterceptor(@NonNull CPDFAnnotationActionInterceptor interceptor) {
+    cPdfReaderView.removeAnnotationActionInterceptor(interceptor);
+  }
+
+  /**
+   * @return an unmodifiable live view of the registered action interceptors, in call order.
+   */
+  @NonNull
+  public List<CPDFAnnotationActionInterceptor> getAnnotationActionInterceptors() {
+    return cPdfReaderView.getAnnotationActionInterceptors();
   }
 
   // ========================================================================
@@ -666,6 +760,7 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
 
   public void setCPDFConfiguration(CPDFConfiguration cpdfConfiguration) {
     this.cpdfConfiguration = cpdfConfiguration;
+    com.compdfkit.tools.common.pdf.CPDFActionContext.bind(cPdfReaderView, cpdfConfiguration);
     slideBarHelper.setCPDFConfiguration(cpdfConfiguration);
     documentHelper.setCPDFConfiguration(cpdfConfiguration);
   }
@@ -696,7 +791,26 @@ public class CPDFViewCtrl extends ConstraintLayout implements IReaderViewCallbac
   // Close
   // ========================================================================
 
+  private void ensureActionContext() {
+    if (com.compdfkit.tools.common.pdf.CPDFActionContext.get(cPdfReaderView) == null) {
+      com.compdfkit.tools.common.pdf.CPDFActionContext.bind(cPdfReaderView, cpdfConfiguration);
+    }
+  }
+
+  /** Route intercepted actions to this view only; null consumes without notification. */
+  public void setActionInterceptCallback(
+      com.compdfkit.tools.common.interfaces.CPDFCustomEventCallback callback) {
+    com.compdfkit.tools.common.pdf.CPDFActionContext context =
+        com.compdfkit.tools.common.pdf.CPDFActionContext.get(cPdfReaderView);
+    if (context == null) {
+      com.compdfkit.tools.common.pdf.CPDFActionContext.bind(cPdfReaderView, cpdfConfiguration);
+      context = com.compdfkit.tools.common.pdf.CPDFActionContext.get(cPdfReaderView);
+    }
+    context.setCallback(callback);
+  }
+
   public void close() {
+    com.compdfkit.tools.common.pdf.CPDFActionContext.release(cPdfReaderView);
     documentHelper.close();
   }
 

@@ -94,6 +94,7 @@ public class CPDFConfigurationUtils {
             configuration.contextMenuConfig = parseContextMenuConfig(rootJsonObject.optJSONObject("contextMenuConfig"));
             return configuration;
         } catch (Exception e) {
+            android.util.Log.e("CPDFConfiguration", "Invalid configuration", e);
             return null;
         }
     }
@@ -404,9 +405,55 @@ public class CPDFConfigurationUtils {
         annotationsConfig.autoShowLinkDialog = jsonObject.optBoolean("autoShowLinkDialog", true);
         annotationsConfig.autoShowNoteEditDialog = jsonObject.optBoolean("autoShowNoteEditDialog", true);
         annotationsConfig.autoShowPicPicker = jsonObject.optBoolean("autoShowPicPicker", true);
-        annotationsConfig.interceptNoteAction = jsonObject.optBoolean("interceptNoteAction", false);
-        annotationsConfig.interceptLinkAction = jsonObject.optBoolean("interceptLinkAction", false);
+        if (jsonObject.has("interceptNoteAction") || jsonObject.has("interceptLinkAction")) {
+            android.util.Log.w("CPDFConfiguration", "interceptNoteAction/interceptLinkAction are deprecated; use annotation all/list fields.");
+        }
+        if (jsonObject.has("interceptAllAnnotationActions") || jsonObject.has("interceptAnnotationActions")) {
+            Object all = jsonObject.opt("interceptAllAnnotationActions");
+            if (jsonObject.has("interceptAllAnnotationActions") && !(all instanceof Boolean)) {
+                throw new IllegalArgumentException("interceptAllAnnotationActions must be a boolean");
+            }
+            annotationsConfig.interceptAllAnnotationActions = Boolean.TRUE.equals(all);
+            annotationsConfig.interceptAnnotationActions = new ArrayList<>();
+            if (jsonObject.has("interceptAnnotationActions")) {
+                JSONArray types = jsonObject.optJSONArray("interceptAnnotationActions");
+                if (types == null) throw new IllegalArgumentException("interceptAnnotationActions must be an array");
+                for (int i = 0; i < types.length(); i++) {
+                    Object value = types.opt(i);
+                    if (!(value instanceof String)) throw new IllegalArgumentException("Annotation action type must be a string");
+                    CPDFAnnotation.Type type = parseActionAnnotationType((String) value);
+                    if (type == null) throw new IllegalArgumentException("Unsupported annotation action type: " + value);
+                    if (!annotationsConfig.interceptAnnotationActions.contains(type)) {
+                        annotationsConfig.interceptAnnotationActions.add(type);
+                    }
+                }
+            }
+        } else {
+            annotationsConfig.interceptNoteAction = jsonObject.optBoolean("interceptNoteAction", false);
+            annotationsConfig.interceptLinkAction = jsonObject.optBoolean("interceptLinkAction", false);
+        }
+        // Preserve unspecified fields for native assignments before reader binding.
         return annotationsConfig;
+    }
+
+    private static CPDFAnnotation.Type parseActionAnnotationType(String value) {
+        switch (value.toLowerCase(java.util.Locale.ROOT)) {
+            case "note": return CPDFAnnotation.Type.TEXT;
+            case "link": return CPDFAnnotation.Type.LINK;
+            case "highlight": return CPDFAnnotation.Type.HIGHLIGHT;
+            case "underline": return CPDFAnnotation.Type.UNDERLINE;
+            case "strikeout": return CPDFAnnotation.Type.STRIKEOUT;
+            case "squiggly": return CPDFAnnotation.Type.SQUIGGLY;
+            case "square": return CPDFAnnotation.Type.SQUARE;
+            case "circle": return CPDFAnnotation.Type.CIRCLE;
+            case "line": case "arrow": return CPDFAnnotation.Type.LINE;
+            case "ink": return CPDFAnnotation.Type.INK;
+            case "freetext": return CPDFAnnotation.Type.FREETEXT;
+            case "stamp": case "pic": case "signature": return CPDFAnnotation.Type.STAMP;
+            case "sound": return CPDFAnnotation.Type.SOUND;
+            case "redact": return CPDFAnnotation.Type.REDACT;
+            default: return null;
+        }
     }
 
     private static AnnotAttr getAnnotAttrItems(CAnnotationType annotationType, JSONObject annotJsonObject) {

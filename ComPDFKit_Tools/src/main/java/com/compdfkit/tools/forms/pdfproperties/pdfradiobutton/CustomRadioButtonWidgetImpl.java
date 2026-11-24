@@ -16,7 +16,7 @@ import com.compdfkit.ui.proxy.form.CPDFRadiobuttonWidgetImpl;
 public class CustomRadioButtonWidgetImpl extends CPDFRadiobuttonWidgetImpl {
     @Override
     public void onRadioButtonFocused(CPDFRadiobuttonWidget radiobuttonWidget) {
-        if (CFormWidgetActionInterceptor.intercept(onGetAnnotation())) {
+        if (CFormWidgetActionInterceptor.intercept(readerView, onGetAnnotation())) {
             return;
         }
         super.onRadioButtonFocused(radiobuttonWidget);

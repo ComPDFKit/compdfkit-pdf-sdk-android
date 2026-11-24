@@ -75,9 +75,35 @@ public class AnnotationsConfig implements Serializable {
 
     public boolean autoShowPicPicker = true;
 
-    public boolean interceptNoteAction = false;
+    /** @deprecated Use interceptAnnotationActions with Type.TEXT instead. */
+    @Deprecated
+    public transient boolean interceptNoteAction = false;
 
-    public boolean interceptLinkAction = false;
+    /** @deprecated Use interceptAnnotationActions with Type.LINK instead. */
+    @Deprecated
+    public transient boolean interceptLinkAction = false;
+
+    /** Null means unspecified until configuration binding; the effective default is false. */
+    public Boolean interceptAllAnnotationActions;
+
+    /** Null means unspecified; an explicitly empty list disables legacy flags. */
+    public List<com.compdfkit.core.annotation.CPDFAnnotation.Type> interceptAnnotationActions;
+
+    /** Resolve legacy inputs once, before using or exporting this configuration. */
+    public void normalizeActionInterception() {
+        boolean useLegacy = interceptAllAnnotationActions == null && interceptAnnotationActions == null;
+        if (interceptAllAnnotationActions == null) interceptAllAnnotationActions = false;
+        if (interceptAnnotationActions == null) interceptAnnotationActions = new ArrayList<>();
+        if (useLegacy) {
+            if (interceptNoteAction) interceptAnnotationActions.add(com.compdfkit.core.annotation.CPDFAnnotation.Type.TEXT);
+            if (interceptLinkAction) interceptAnnotationActions.add(com.compdfkit.core.annotation.CPDFAnnotation.Type.LINK);
+        }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream output) throws java.io.IOException {
+        normalizeActionInterception();
+        output.defaultWriteObject();
+    }
 
     @NonNull
     @Override

@@ -23,7 +23,7 @@ public class CustomComboBoxWidgetImpl extends CPDFComboboxWidgetImpl {
 
     @Override
     public void onComboboxFocused(CPDFComboboxWidget cpdfComboboxWidget) {
-        if (CFormWidgetActionInterceptor.intercept(cpdfComboboxWidget)) {
+        if (CFormWidgetActionInterceptor.intercept(readerView, cpdfComboboxWidget)) {
             return;
         }
         CFormOptionSelectDialogFragment selectDialogFragment = CFormOptionSelectDialogFragment.newInstance();

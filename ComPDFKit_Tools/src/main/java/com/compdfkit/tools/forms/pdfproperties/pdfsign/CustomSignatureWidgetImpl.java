@@ -33,7 +33,7 @@ public class CustomSignatureWidgetImpl extends CPDFSignatureWidgetImpl {
 
     @Override
     public void onSignatureWidgetFocused(CPDFSignatureWidget cpdfSignatureWidget) {
-        if (CFormWidgetActionInterceptor.intercept(cpdfSignatureWidget)) {
+        if (CFormWidgetActionInterceptor.intercept(readerView, cpdfSignatureWidget)) {
             return;
         }
         CStyleManager styleManager = new CStyleManager(this, pageView);

@@ -134,22 +134,11 @@ public class CBasicPDFActivity extends CPermissionActivity {
     }
 
     protected void registerAnnotHelper(CPDFViewCtrl pdfView) {
-        pdfView.getCPdfReaderView().getAnnotImplRegistry().registAttachHelper(CPDFTextAnnotation.class, CPDFtextAnnotAttachHelper.class);
-        pdfView.getCPdfReaderView().getAnnotImplRegistry().registImpl(CPDFTextAnnotation.class, CPDFtextAnnotImpl.class);
-        pdfView.getCPdfReaderView().getAnnotImplRegistry().registAttachHelper(CPDFLinkAnnotation.class, CLinkAnnotAttachHelper.class);
+        // Default proxies and attach helpers are installed by CPDFViewCtrl.
     }
 
     protected void registerFormHelper(CPDFViewCtrl pdfView) {
         pdfView.getCPdfReaderView().getAnnotImplRegistry()
-                .registImpl(CPDFTextWidget.class, CustomTextWidgetImpl.class)
-                .registImpl(CPDFCheckboxWidget.class, CustomCheckBoxWidgetImpl.class)
-                .registImpl(CPDFRadiobuttonWidget.class, CustomRadioButtonWidgetImpl.class)
-                //Register the CustomComboBoxWidgetImpl.class to implement a custom dropdown options popup.
-                .registImpl(CPDFComboboxWidget.class, CustomComboBoxWidgetImpl.class)
-                // Register the CustomListBoxWidgetImpl.class to implement a custom dropdown options popup.
-                .registImpl(CPDFListboxWidget.class, CustomListBoxWidgetImpl.class)
-                .registImpl(CPDFPushbuttonWidget.class, CPushButtonWidgetImpl.class)
-                // Register the CustomSignatureWidgetImpl.class to implement a custom dropdown options popup.
                 .registImpl(CPDFSignatureWidget.class, CustomSignatureWidgetImpl.class);
     }
 

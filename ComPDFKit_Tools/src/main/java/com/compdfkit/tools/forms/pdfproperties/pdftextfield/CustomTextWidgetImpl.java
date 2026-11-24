@@ -16,7 +16,7 @@ public class CustomTextWidgetImpl extends CPDFTextWidgetImpl {
 
     @Override
     public void onTextWidgetFocused() {
-        if (CFormWidgetActionInterceptor.intercept(onGetAnnotation())) {
+        if (CFormWidgetActionInterceptor.intercept(readerView, onGetAnnotation())) {
             return;
         }
         super.onTextWidgetFocused();
